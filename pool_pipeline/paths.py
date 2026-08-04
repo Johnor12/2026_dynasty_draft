@@ -13,8 +13,8 @@ the key ``match_sleeper.py`` writes into every pool player.
 Paths are anchored to this file, not to the current directory, so every stage can
 be run from anywhere:
 
-    python3 pool_pipeline/pipeline.py
-    cd pool_pipeline && python3 build_pool.py
+    uv run pool_pipeline/pipeline.py
+    cd pool_pipeline && uv run build_pool.py
 
 Both write the same ``pool.json``. Every script still takes explicit paths on the
 command line; these are only the defaults.

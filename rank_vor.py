@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 """Value over replacement for this league, with an optimal-drafter draft simulation.
 
-    python3 rank_vor.py                    # pool.json + draft.json -> rankings.json
-    python3 rank_vor.py --report           # + validation/convergence summary on stderr
-    python3 rank_vor.py --no-draft         # ignore the live board, rank the whole pool
-    python3 rank_vor.py --selftest         # verify the lineup solver and the board loader
-    python3 rank_vor.py --flat             # emit a bare JSON array instead of an object
+    uv run rank_vor.py                     # pool.json + draft.json -> rankings.json
+    uv run rank_vor.py --report            # + validation/convergence summary on stderr
+    uv run rank_vor.py --no-draft          # ignore the live board, rank the whole pool
+    uv run rank_vor.py --selftest          # verify the lineup solver and the board loader
+    uv run rank_vor.py --flat              # emit a bare JSON array instead of an object
 
 Scope is this league and nothing else. The only value input is `points_3yr` from
 `pool.json` (built by build_pool.py) — three-year points at 0.5/rec with a 0.5 TE

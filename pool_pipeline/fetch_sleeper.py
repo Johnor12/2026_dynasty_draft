@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Download Sleeper's full NFL player dump. **Manual step — not a pipeline stage.**
 
-    python3 pool_pipeline/fetch_sleeper.py
+    uv run pool_pipeline/fetch_sleeper.py
 
 Sleeper publishes every player it knows about at ``/v1/players/nfl`` as one ~14 MB
 object keyed by their player id (12k entries, ~4k of them QB/RB/WR/TE). Their docs
@@ -23,10 +23,10 @@ download. The sidecar exists so the age of the dump survives a file copy — the
 match stage stamps ``fetched_at`` into pool.json and warns when it goes stale.
 
 Usage:
-    python3 fetch_sleeper.py                 # -> data/sleeper_players.json
-    python3 fetch_sleeper.py --force         # re-download even if fresh
-    python3 fetch_sleeper.py --max-age 0     # same thing
-    python3 fetch_sleeper.py -o other.json
+    uv run fetch_sleeper.py                  # -> data/sleeper_players.json
+    uv run fetch_sleeper.py --force          # re-download even if fresh
+    uv run fetch_sleeper.py --max-age 0      # same thing
+    uv run fetch_sleeper.py -o other.json
 """
 
 from __future__ import annotations

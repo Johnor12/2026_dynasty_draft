@@ -60,7 +60,7 @@ analyst comments and profile paths are not carried: recover them from projection
 which this script only reads.
 
 Usage:
-    python3 build_pool.py [projections.json] [-o pool.json] [--limit 350] [--report]
+    uv run build_pool.py [projections.json] [-o pool.json] [--limit 350] [--report]
 """
 
 from __future__ import annotations

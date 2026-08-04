@@ -14,8 +14,8 @@ is cheaper than a shared module that couples a network fetch to an html parse.
 
 Paths are anchored to this file, not to the current directory, so it runs from anywhere:
 
-    python3 draft_pipeline/fetch_draft.py
-    cd draft_pipeline && python3 fetch_draft.py
+    uv run draft_pipeline/fetch_draft.py
+    cd draft_pipeline && uv run fetch_draft.py
 
 Both write the same ``draft.json``. The script still takes explicit paths on the command
 line; these are only the defaults.

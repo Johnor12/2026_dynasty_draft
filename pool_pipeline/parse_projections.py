@@ -34,7 +34,7 @@ derives clean ``rank_by_3d_value``/``positional_rank_by_3d_value`` from the
 .5 PPR superflex 3D values, which are self-consistent.
 
 Usage:
-    python3 parse_projections.py [input.html] [-o output.json] [--report]
+    uv run parse_projections.py [input.html] [-o output.json] [--report]
 """
 
 from __future__ import annotations

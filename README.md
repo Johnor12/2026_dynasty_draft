@@ -4,6 +4,23 @@ projections.html contains projections and rankings from a provider (draftsharks)
 
 My league is .5 ppr with a .5 ppr tight end premium. Our rosters are 1 QB, 2 RB, 3 WR, 1 TE, 2 WRT, 1 WRTQ (superflex), with 15 man benches, 3 IR slots, and 4 rookie year taxi spots. The league has 10 teams (290 drafted players). We're doing a snake draft with a 3rd round reversal. My draft slot is 1.02, so my picks are: 1.02, 2.9, 3.9, 4.2, 5.9, 6.2 ... 28.2, 29.9.
 
+## setup
+
+[uv](https://docs.astral.sh/uv/) manages the interpreter; there is nothing to install
+beyond it.
+
+```
+uv sync          # create .venv on the pinned Python (3.12, see .python-version)
+uv run <script>  # run any script below — from the repo root or from inside a pipeline
+```
+
+Every dependency is the standard library: `html.parser` for the projections parse,
+`urllib.request` for both Sleeper fetches, arithmetic for the ranker. `pyproject.toml`
+declares no packages and `uv.lock` therefore locks none — uv is here for a pinned
+interpreter and a reproducible env, not for resolving wheels. Nothing needs activating:
+`uv run` finds the project by walking up from the current directory, so both invocation
+styles the scripts document work unchanged.
+
 ## layout
 
 Two independent pipelines, each publishing one file at the repo root. Everything a
@@ -45,11 +62,11 @@ and is where that join is actually performed.
 ## pool pipeline
 
 ```
-python3 pool_pipeline/pipeline.py             # html -> projections.json -> pool.json + ids
-python3 pool_pipeline/pipeline.py --report    # + every stage's validation summary on stderr
-python3 pool_pipeline/pipeline.py --only pool # single stage
-python3 pool_pipeline/fetch_sleeper.py        # refresh the Sleeper dump (manual, ~14 MB)
-python3 rank_vor.py                           # pool.json + draft.json -> rankings.json
+uv run pool_pipeline/pipeline.py              # html -> projections.json -> pool.json + ids
+uv run pool_pipeline/pipeline.py --report     # + every stage's validation summary on stderr
+uv run pool_pipeline/pipeline.py --only pool  # single stage
+uv run pool_pipeline/fetch_sleeper.py         # refresh the Sleeper dump (manual, ~14 MB)
+uv run rank_vor.py                            # pool.json + draft.json -> rankings.json
 ```
 
 Three stages, ordered: `parse_projections.py` (html -> `projections.json`, the full
@@ -74,9 +91,9 @@ data is built.
 `parse_projections.py` turns `data/projections.html` into `data/projections.json` — 900 players, ~2.5 MB, about 1.5s. Python stdlib only (`html.parser`), no dependencies.
 
 ```
-python3 pool_pipeline/parse_projections.py                      # -> data/projections.json
-python3 pool_pipeline/parse_projections.py --report             # + validation summary on stderr
-python3 pool_pipeline/parse_projections.py in.html -o out.json
+uv run pool_pipeline/parse_projections.py                       # -> data/projections.json
+uv run pool_pipeline/parse_projections.py --report              # + validation summary on stderr
+uv run pool_pipeline/parse_projections.py in.html -o out.json
 ```
 
 No browser or JS execution is needed: the page is server-rendered and **every scoring scheme is already in the DOM** as `data-scoring-value-*` attributes on each cell. Alpine.js only toggles which one is visible. So all 8 schemes (`standard`, `half_ppr`, `ppr`, `te_premium`, each also `_superflex`) come straight out of the static markup.
@@ -97,9 +114,9 @@ Each player gets identity fields (id, name, position, team, age, bye, rookie fla
 ~100 KB — by throwing away everything a 10-team superflex dynasty draft can't use:
 
 ```
-python3 pool_pipeline/build_pool.py                       # projections.json -> pool.json
-python3 pool_pipeline/build_pool.py --report              # + validation summary on stderr
-python3 pool_pipeline/build_pool.py --limit 450 -o big.json
+uv run pool_pipeline/build_pool.py                        # projections.json -> pool.json
+uv run pool_pipeline/build_pool.py --report               # + validation summary on stderr
+uv run pool_pipeline/build_pool.py --limit 450 -o big.json
 ```
 
 Three cuts, in order: **positions** (QB/RB/WR/TE only — K and IDP have no roster slot,
@@ -147,9 +164,9 @@ age and position are already in the pool, and a second disagreeing copy would ju
 the question of which to trust.
 
 ```
-python3 pool_pipeline/fetch_sleeper.py           # manual download -> data/sleeper_players.json
-python3 pool_pipeline/fetch_sleeper.py --force   # ignore the 24h re-download guard
-python3 pool_pipeline/match_sleeper.py --report  # join + print every risky match and every miss
+uv run pool_pipeline/fetch_sleeper.py            # manual download -> data/sleeper_players.json
+uv run pool_pipeline/fetch_sleeper.py --force    # ignore the 24h re-download guard
+uv run pool_pipeline/match_sleeper.py --report   # join + print every risky match and every miss
 ```
 
 **The download is a separate, manual step and never runs as part of the pipeline.** It's
@@ -208,10 +225,10 @@ to wrap a single step. The draft is
 number of the league's draft URL.
 
 ```
-python3 draft_pipeline/fetch_draft.py              # -> draft.json
-python3 draft_pipeline/fetch_draft.py --report     # + the board's validation summary
-python3 draft_pipeline/fetch_draft.py --selftest   # check the board geometry offline
-python3 draft_pipeline/fetch_draft.py --me someone # whose picks get is_mine
+uv run draft_pipeline/fetch_draft.py               # -> draft.json
+uv run draft_pipeline/fetch_draft.py --report      # + the board's validation summary
+uv run draft_pipeline/fetch_draft.py --selftest    # check the board geometry offline
+uv run draft_pipeline/fetch_draft.py --me someone  # whose picks get is_mine
 ```
 
 **It is on demand and deliberately uncached** — the mirror image of `fetch_sleeper.py`,
@@ -271,11 +288,11 @@ exercised by the roster that acquired it. `rankings.json` then covers the **undr
 players only**, ranked over each other.
 
 ```
-python3 rank_vor.py                     # pool.json + draft.json -> rankings.json
-python3 rank_vor.py --report            # + the board it started from, per team
-python3 rank_vor.py --no-draft          # ignore draft.json: rank the whole pool
-python3 rank_vor.py --draft other.json  # a different board
-python3 rank_vor.py --selftest          # lineup solver + board loader, offline
+uv run rank_vor.py                      # pool.json + draft.json -> rankings.json
+uv run rank_vor.py --report             # + the board it started from, per team
+uv run rank_vor.py --no-draft           # ignore draft.json: rank the whole pool
+uv run rank_vor.py --draft other.json   # a different board
+uv run rank_vor.py --selftest           # lineup solver + board loader, offline
 ```
 
 The method itself is unchanged, and that is checked rather than asserted: a `draft.json`

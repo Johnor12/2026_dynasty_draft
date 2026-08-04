@@ -46,10 +46,10 @@ lists NFL players, and a deep-dynasty pool legitimately contains people who are 
 in Sleeper yet.
 
 Usage:
-    python3 match_sleeper.py                    # pool.json in place
-    python3 match_sleeper.py --report           # + every tier-3 join and every miss
-    python3 match_sleeper.py -o annotated.json  # write elsewhere, leave pool.json alone
-    python3 match_sleeper.py --skip-if-missing  # no dump -> warn and exit 0 (pipeline use)
+    uv run match_sleeper.py                     # pool.json in place
+    uv run match_sleeper.py --report            # + every tier-3 join and every miss
+    uv run match_sleeper.py -o annotated.json   # write elsewhere, leave pool.json alone
+    uv run match_sleeper.py --skip-if-missing   # no dump -> warn and exit 0 (pipeline use)
 """
 
 from __future__ import annotations
@@ -455,7 +455,7 @@ def main(argv: list[str] | None = None) -> int:
     if not args.players.is_file():
         message = (
             f"sleeper dump {paths.display(args.players)} not found — run "
-            "`python3 pool_pipeline/fetch_sleeper.py` (manual, ~14 MB)"
+            "`uv run pool_pipeline/fetch_sleeper.py` (manual, ~14 MB)"
         )
         if args.skip_if_missing:
             print(f"warning: {message}; {ID_FIELD} not added", file=sys.stderr)

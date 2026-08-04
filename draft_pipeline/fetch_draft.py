@@ -6,7 +6,7 @@ It reads nothing on disk and writes one file:
 
     Sleeper's draft API  ->  draft.json
 
-    python3 draft_pipeline/fetch_draft.py
+    uv run draft_pipeline/fetch_draft.py
 
 ``pool_pipeline/`` is the repo's other pipeline (provider html -> ``pool.json``) and is
 entirely separate: local, offline, deterministic, three ordered stages, re-run when the
@@ -73,11 +73,11 @@ a traded pick landing with its acquirer, and the negative control that an *un*ap
 trade is caught by the live check above.
 
 Usage:
-    python3 fetch_draft.py                      # -> draft.json
-    python3 fetch_draft.py --report             # + validation summary, incl. the pool join
-    python3 fetch_draft.py --selftest           # check the board geometry offline, then exit
-    python3 fetch_draft.py --draft-id 123 -o other.json
-    python3 fetch_draft.py --me someusername    # whose picks get is_mine
+    uv run fetch_draft.py                       # -> draft.json
+    uv run fetch_draft.py --report              # + validation summary, incl. the pool join
+    uv run fetch_draft.py --selftest            # check the board geometry offline, then exit
+    uv run fetch_draft.py --draft-id 123 -o other.json
+    uv run fetch_draft.py --me someusername     # whose picks get is_mine
 """
 
 from __future__ import annotations

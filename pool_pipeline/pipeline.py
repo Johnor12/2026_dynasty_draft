@@ -31,11 +31,11 @@ Ranking (`rank_vor.py`) is deliberately not a stage here: it consumes pool.json,
 simulation seed and strategy knobs, and is re-run far more often than the data is rebuilt.
 
 Usage:
-    python3 pool_pipeline/pipeline.py                     # html -> projections.json -> pool.json
-    python3 pool_pipeline/pipeline.py --report            # + every stage's validation summary
-    python3 pool_pipeline/pipeline.py --only pool         # single stage
-    python3 pool_pipeline/pipeline.py --only sleeper      # re-join ids onto an existing pool.json
-    python3 pool_pipeline/fetch_sleeper.py                # refresh the Sleeper dump (manual)
+    uv run pool_pipeline/pipeline.py                      # html -> projections.json -> pool.json
+    uv run pool_pipeline/pipeline.py --report             # + every stage's validation summary
+    uv run pool_pipeline/pipeline.py --only pool          # single stage
+    uv run pool_pipeline/pipeline.py --only sleeper       # re-join ids onto an existing pool.json
+    uv run pool_pipeline/fetch_sleeper.py                 # refresh the Sleeper dump (manual)
 """
 
 from __future__ import annotations
