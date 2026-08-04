@@ -222,6 +222,44 @@ def draft_block(board: Board) -> dict | None:
     return block
 
 
+def example_rosters(draft: Draft, board: Board) -> list[dict]:
+    """Every team's final roster from the deterministic draft, for eyeballing smells.
+
+    Rosters read in pick order: the live board's made picks first (labelled 'made' — the
+    board does not keep their pick numbers), then the simulated picks with the pick they
+    were taken at. Rookies are flagged because the 4 taxi spots mean every team must end
+    the draft with at least 4 of them.
+    """
+    names = _team_names(board)
+    out: list[dict] = []
+    for slot in range(1, TEAMS + 1):
+        roster, off = draft.rosters[slot - 1], draft.off_pool[slot - 1]
+        counts = {pos: 0 for pos in POSITIONS}
+        for p in roster:
+            counts[p.position] += 1
+        for o in off:
+            if o.get("position") in counts:
+                counts[o["position"]] += 1
+        picks = []
+        for p in roster:
+            pick_no = draft.pick_of.get(p.player_id)
+            label = pick_label(pick_no) if pick_no else "made"
+            picks.append(f"{label} {p.name} ({p.position}{', R' if p.is_rookie else ''})")
+        picks += [f"{o['pick']} {o['name']} ({o['position']}, off-pool)" for o in off]
+        out.append(
+            {
+                "draft_slot": slot,
+                "team": names.get(slot),
+                "is_mine": slot == board.my_slot,
+                "players": len(roster) + len(off),
+                "rookies": sum(p.is_rookie for p in roster),
+                "positions": counts,
+                "picks": picks,
+            }
+        )
+    return out
+
+
 def build_payload(
     players: list[Player],
     pool_meta: dict,
@@ -261,6 +299,16 @@ def build_payload(
         },
         "pool": pool_meta,
         "draft": draft_block(board),
+        "example_draft": {
+            "note": (
+                "Full final rosters from the single deterministic draft at the converged "
+                "levels — the same draft sim_pick and my_next_picks report. Made picks are "
+                "facts from the live board; every pending pick is the model drafting. Read "
+                "it for smells: position hoarding, a position left to the last rounds, "
+                "fewer than 4 rookies to fill the taxi spots."
+            ),
+            "rosters": example_rosters(draft, board),
+        },
         "my_next_picks": {
             "note": (
                 "The model's own choice at each of my next picks, from the deterministic "

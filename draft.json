@@ -1,13 +1,13 @@
 {
   "source": "https://api.sleeper.app/v1/draft/1388293618208374784",
-  "fetched_at": "2026-08-04T17:12:39+00:00",
+  "fetched_at": "2026-08-04T21:23:49+00:00",
   "draft_id": "1388293618208374784",
   "league_id": "1388293617071714304",
   "league_name": "Dudes",
   "season": "2026",
   "status": "drafting",
   "started_at": "2026-08-04T13:02:55+00:00",
-  "last_picked_at": "2026-08-04T16:01:45+00:00",
+  "last_picked_at": "2026-08-04T21:18:55+00:00",
   "format": {
     "type": "snake",
     "teams": 10,
@@ -16,16 +16,16 @@
     "scoring_type": "dynasty_2qb"
   },
   "pick_count": 290,
-  "picks_made": 4,
-  "picks_pending": 286,
+  "picks_made": 8,
+  "picks_pending": 282,
   "on_the_clock": {
-    "pick_no": 5,
+    "pick_no": 9,
     "round": 1,
-    "pick_in_round": 5,
-    "draft_slot": 5,
-    "user_id": "870397485556875264",
-    "username": "dirtydole",
-    "slot": "1.05"
+    "pick_in_round": 9,
+    "draft_slot": 9,
+    "user_id": "207916077173182464",
+    "username": "dccb31",
+    "slot": "1.09"
   },
   "me": {
     "username": "johnor",
@@ -41,12 +41,12 @@
     "user_id": "1127785716420898816",
     "username": "johnor",
     "slot": "2.09",
-    "picks_away": 14
+    "picks_away": 10
   },
   "board_derivation": {
     "method": "snake, order reverses at round 3; traded picks applied",
-    "checked_against_made_picks": 4,
-    "slot_and_roster_agree": 4,
+    "checked_against_made_picks": 8,
+    "slot_and_roster_agree": 8,
     "rounds_exercised": [
       1
     ],
@@ -225,12 +225,12 @@
       "user_id": "870397485556875264",
       "username": "dirtydole",
       "is_mine": false,
-      "status": "pending",
-      "sleeper_id": null,
-      "name": null,
-      "position": null,
-      "team": null,
-      "is_keeper": null
+      "status": "made",
+      "sleeper_id": "9493",
+      "name": "Puka Nacua",
+      "position": "WR",
+      "team": "LAR",
+      "is_keeper": false
     },
     {
       "pick_no": 6,
@@ -241,12 +241,12 @@
       "user_id": "1114302275305979904",
       "username": "samlemonskoff",
       "is_mine": false,
-      "status": "pending",
-      "sleeper_id": null,
-      "name": null,
-      "position": null,
-      "team": null,
-      "is_keeper": null
+      "status": "made",
+      "sleeper_id": "4984",
+      "name": "Josh Allen",
+      "position": "QB",
+      "team": "BUF",
+      "is_keeper": false
     },
     {
       "pick_no": 7,
@@ -257,12 +257,12 @@
       "user_id": "1128381875430596608",
       "username": "UGrizz14",
       "is_mine": false,
-      "status": "pending",
-      "sleeper_id": null,
-      "name": null,
-      "position": null,
-      "team": null,
-      "is_keeper": null
+      "status": "made",
+      "sleeper_id": "6813",
+      "name": "Jonathan Taylor",
+      "position": "RB",
+      "team": "IND",
+      "is_keeper": false
     },
     {
       "pick_no": 8,
@@ -273,12 +273,12 @@
       "user_id": "1128025586577879040",
       "username": "justinmfftt",
       "is_mine": false,
-      "status": "pending",
-      "sleeper_id": null,
-      "name": null,
-      "position": null,
-      "team": null,
-      "is_keeper": null
+      "status": "made",
+      "sleeper_id": "9488",
+      "name": "Jaxon Smith-Njigba",
+      "position": "WR",
+      "team": "SEA",
+      "is_keeper": false
     },
     {
       "pick_no": 9,
