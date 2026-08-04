@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
 """Value over replacement for this league, with an optimal-drafter draft simulation.
 
-    python3 rank_vor.py                    # pool.json -> rankings.json
+    python3 rank_vor.py                    # pool.json + draft.json -> rankings.json
     python3 rank_vor.py --report           # + validation/convergence summary on stderr
-    python3 rank_vor.py --selftest         # verify the lineup solver against brute force
+    python3 rank_vor.py --no-draft         # ignore the live board, rank the whole pool
+    python3 rank_vor.py --selftest         # verify the lineup solver and the board loader
     python3 rank_vor.py --flat             # emit a bare JSON array instead of an object
 
 Scope is this league and nothing else. The only value input is `points_3yr` from
@@ -18,6 +19,34 @@ League (from README.md): 10 teams, 0.5 PPR + 0.5 TE premium, superflex. Starters
 1 QB / 2 RB / 3 WR / 1 TE / 2 W-R-T / 1 W-R-T-Q = 10. Then 15 bench and 4 rookie-only
 taxi spots = 29 draftable roster spots = 29 rounds = 290 picks. Snake with a 3rd-round
 reversal. My slot is 1.02.
+
+WHERE THE SIMULATION STARTS
+---------------------------
+By default the draft does not start empty: `draft.json` (written by
+`draft_pipeline/fetch_draft.py`) is the live board, and it is the simulation's initial
+state. Made picks are already on their teams' rosters and off the pool; the simulated
+draft plays out only the picks that are still pending, in the order that file says they
+will happen — which is where traded picks enter, since a pick's owner there is the roster
+that will actually use it, not the slot that originally held it. `rankings.json` then
+covers the undrafted players only, because a drafted player is not a decision any more.
+
+Nothing about the method changes. The fixed point still measures replacement over whole
+final rosters — made picks plus simulated ones — so replacement levels are levels for
+this league, not for the remainder of it, and they are still measured against the whole
+pool (the marginal starter at a position may well be a player already drafted). With no
+picks made the board is the static snake and the output is identical to `--no-draft`;
+`--selftest` checks exactly that.
+
+Two facts about a live board this cannot value:
+
+  * A pick can land on a player the pool does not carry — a kicker, an IDP, anyone past
+    the pool's 350-player cut. There is no projection to price him with, so he is held
+    as an `off_pool` roster entry: he fills a spot (so the team owes one fewer pick) and
+    satisfies a mandatory position (a rostered QB means the team no longer needs one),
+    but he never starts and is never worth anything. That is the right treatment for a
+    kicker and a slight understatement for a real player just past the cut.
+  * Made picks are facts, not decisions, so they are never re-valued. If a team reached,
+    the board takes that as given and prices what is left.
 
 WHY A SIMULATION IS NEEDED AT ALL
 ---------------------------------
@@ -114,6 +143,11 @@ full point total and returns a board whose top 18 are all quarterbacks, Matthew 
 38 years old ahead of Ja'Marr Chase. The wire level is the right price for an empty slot and
 for bench depth; it is the wrong yardstick for comparing players.
 
+`vor_rank`, `positional_vor_rank` and `market_rank` are numbered over the rows actually
+emitted — the players still available — so rank 1 is who to take now rather than who was
+the best player in the pool before the draft started. `vor` itself is a points quantity
+and is unaffected by who has been drafted.
+
 Two simulations are reported per player, and they answer different questions:
   * `sim_pick` is from the single deterministic draft, no noise.
   * `sim_adp` / `p_available_at_my_picks` come from --sims noisy drafts (Gumbel noise on
@@ -127,11 +161,13 @@ Python stdlib only. Deterministic: every tie breaks on player_id and the RNG is 
 from __future__ import annotations
 
 import argparse
+import dataclasses
 import itertools
 import json
 import math
 import random
 import sys
+from collections.abc import Sequence
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -196,6 +232,7 @@ class Player:
     is_rookie: bool
     points: int
     provider_adp: float | None
+    sleeper_id: str | None = None  # the only key draft.json shares with the pool
     pos_index: int = 0  # rank within position by points, 0-based
     vor_index: int = 0  # rank in the pool by current VOR, 0-based
 
@@ -225,6 +262,181 @@ def pick_label(pick_no: int, teams: int = TEAMS) -> str:
 
 def picks_for_slot(slot: int, order: list[int]) -> list[int]:
     return [i + 1 for i, s in enumerate(order) if s == slot]
+
+
+# --- the board --------------------------------------------------------------------
+
+
+@dataclass(slots=True)
+class Board:
+    """The draft's starting state: what is already gone and what is left to happen.
+
+    One type covers both cases so there is a single simulation path. `fresh_board()` is a
+    board with nothing drafted and the static snake order, which is what the script used
+    to assume everywhere; `load_board()` builds one from `draft.json`. The simulation only
+    ever plays `order`, so an untouched board plays all 290 picks and a live one plays the
+    pending tail.
+
+    Teams are indexed by draft slot (1..10, minus one), because that is what `MY_SLOT` and
+    the reversal rule are expressed in. `order` holds the slot of the team that *receives*
+    each remaining pick, which is the acquirer for a traded pick, so a trade shows up as a
+    slot appearing at a board position that is not its own column.
+    """
+
+    order: list[int]  # team slot receiving each remaining pick, in pick order
+    pick_nos: list[int]  # overall pick number of each entry in `order`
+    rosters: list[list[Player]]  # pool players already drafted, by slot - 1
+    off_pool: list[list[dict]]  # drafted players the pool does not carry, by slot - 1
+    picks_left: list[int]  # remaining picks per team, by slot - 1
+    my_slot: int
+    my_picks: list[int]  # my remaining picks, as overall pick numbers
+    live: dict | None = None  # draft.json's header and join summary, when there is one
+
+    @property
+    def taken(self) -> set[int]:
+        return {p.player_id for roster in self.rosters for p in roster}
+
+    @property
+    def picks_made(self) -> int:
+        return sum(len(r) for r in self.rosters) + sum(len(o) for o in self.off_pool)
+
+    def available(self, players: list[Player]) -> list[Player]:
+        taken = self.taken
+        return [p for p in players if p.player_id not in taken]
+
+    def owed_size(self, slot: int) -> int:
+        """How many players this team ends the draft with, made and pending together."""
+        i = slot - 1
+        return len(self.rosters[i]) + len(self.off_pool[i]) + self.picks_left[i]
+
+
+def fresh_board(my_slot: int = MY_SLOT) -> Board:
+    """An untouched board: the static snake, empty rosters, all 290 picks pending."""
+    order = draft_order()
+    return Board(
+        order=order,
+        pick_nos=list(range(1, len(order) + 1)),
+        rosters=[[] for _ in range(TEAMS)],
+        off_pool=[[] for _ in range(TEAMS)],
+        picks_left=[ROUNDS] * TEAMS,
+        my_slot=my_slot,
+        my_picks=picks_for_slot(my_slot, order),
+    )
+
+
+def load_board(
+    raw: dict, players: list[Player], source: str = "draft.json"
+) -> tuple[Board, list[str]]:
+    """Turn `draft.json` into a Board. Returns the board and any complaints about it.
+
+    The join is on `sleeper_id`, the one key the two pipelines share — `match_sleeper.py`
+    writes it into every pool player and every made pick in `draft.json` carries it. A
+    made pick with no match in the pool is not an error: kickers, IDP and anyone past the
+    pool's rank cut are draftable and unrankable at the same time, so they become
+    `off_pool` entries (see the module docstring).
+
+    Geometry disagreements with the league constants are reported rather than raised. This
+    file is written from Sleeper's own answer about the draft, so if it says 12 teams then
+    either the wrong draft was fetched or the constants at the top of this script are
+    stale; both are worth seeing in `validation.problems` next to the numbers they broke.
+    """
+    problems: list[str] = []
+    fmt = raw.get("format") or {}
+    for label, got, want in (
+        ("teams", fmt.get("teams"), TEAMS),
+        ("rounds", fmt.get("rounds"), ROUNDS),
+        ("pick_count", raw.get("pick_count"), TOTAL_PICKS),
+    ):
+        if got is not None and got != want:
+            problems.append(f"{source} says {label}={got}, this script assumes {want}")
+
+    slot_of_roster = {
+        s["roster_id"]: s["draft_slot"] for s in raw.get("slots", []) if s.get("roster_id")
+    }
+    my_slot = (raw.get("me") or {}).get("draft_slot") or MY_SLOT
+    if my_slot != MY_SLOT:
+        problems.append(f"{source} says my draft slot is {my_slot}, README says {MY_SLOT}")
+
+    by_sleeper: dict[str, Player] = {}
+    for p in players:
+        if p.sleeper_id:
+            by_sleeper.setdefault(p.sleeper_id, p)
+
+    rosters: list[list[Player]] = [[] for _ in range(TEAMS)]
+    off_pool: list[list[dict]] = [[] for _ in range(TEAMS)]
+    picks_left = [0] * TEAMS
+    order: list[int] = []
+    pick_nos: list[int] = []
+    seen: set[int] = set()
+    made = 0
+
+    for pick in sorted(raw.get("picks", []), key=lambda p: p["pick_no"]):
+        # The acquirer picks, not the column. With no trades these are the same team.
+        slot = slot_of_roster.get(pick.get("roster_id")) or pick.get("draft_slot")
+        if not slot or not 1 <= slot <= TEAMS:
+            problems.append(f"pick {pick.get('pick_no')} has no usable owner in {source}")
+            continue
+        i = slot - 1
+        if pick.get("status") != "made":
+            order.append(slot)
+            pick_nos.append(pick["pick_no"])
+            picks_left[i] += 1
+            continue
+        made += 1
+        player = by_sleeper.get(pick.get("sleeper_id") or "")
+        if player is None:
+            off_pool[i].append(
+                {
+                    "pick": pick_label(pick["pick_no"]),
+                    "slot": slot,
+                    "name": pick.get("name"),
+                    "position": pick.get("position"),
+                    "team": pick.get("team"),
+                    "sleeper_id": pick.get("sleeper_id"),
+                }
+            )
+        elif player.player_id in seen:
+            problems.append(f"{player.name} appears twice in {source}'s made picks")
+        else:
+            seen.add(player.player_id)
+            rosters[i].append(player)
+
+    board = Board(
+        order=order,
+        pick_nos=pick_nos,
+        rosters=rosters,
+        off_pool=off_pool,
+        picks_left=picks_left,
+        my_slot=my_slot,
+        my_picks=[n for n, s in zip(pick_nos, order) if s == my_slot],
+        live={
+            "source_file": source,
+            "draft_id": raw.get("draft_id"),
+            "league_name": raw.get("league_name"),
+            "status": raw.get("status"),
+            "fetched_at": raw.get("fetched_at"),
+            "last_picked_at": raw.get("last_picked_at"),
+            "me": raw.get("me"),
+            "slots": raw.get("slots"),  # dropped from the output; only team names are kept
+            "on_the_clock": raw.get("on_the_clock"),
+            "next_pick_of_mine": raw.get("my_next_pick"),
+            "traded_picks": len(raw.get("traded_picks") or []),
+            "picks_made": made,
+            "picks_pending": len(order),
+            "matched_to_pool": sum(len(r) for r in rosters),
+            "off_pool_picks": [o for team in off_pool for o in team],
+        },
+    )
+    if raw.get("picks_made") is not None and raw["picks_made"] != made:
+        problems.append(f"{source} header says {raw['picks_made']} picks made, picks say {made}")
+    if made and not by_sleeper:
+        # Otherwise this fails silently in the worst possible way: every made pick looks
+        # unrankable, so drafted players stay on the emitted board as if available.
+        problems.append(
+            f"no pool player carries a sleeper_id, so no pick in {source} can be joined "
+            "- run pool_pipeline/match_sleeper.py"
+        )
+    return board, problems
 
 
 # --- pool -------------------------------------------------------------------------
@@ -260,6 +472,7 @@ def load_pool(path: Path) -> tuple[list[Player], dict]:
                 is_rookie=bool(rec.get("is_rookie")),
                 points=points,
                 provider_adp=rec.get("adp"),
+                sleeper_id=rec.get("sleeper_id"),
             )
         )
 
@@ -275,6 +488,9 @@ def load_pool(path: Path) -> tuple[list[Player], dict]:
         "source_of_pool": raw.get("source_file"),
         "pool_size": len(players),
         "by_position": {pos: len(v) for pos, v in per_pos.items()},
+        # The join key to draft.json. A pool player without one can never be recognised
+        # as drafted, so a shortfall here is a silent way for the live board to go wrong.
+        "with_sleeper_id": sum(1 for p in players if p.sleeper_id),
         "dropped_non_offense": dropped["non_offense"],
         "dropped_zero_projection": sorted(dropped["zero_projection"]),
     }
@@ -515,14 +731,19 @@ def survival(better_available: int, gap: int) -> float:
 
 
 class Draft:
-    """One simulated draft. `noise` > 0 perturbs the other teams' scores only."""
+    """One simulated draft from a Board's starting state.
+
+    `noise` > 0 perturbs the other teams' scores only. Everything the board supplies is
+    copied, never mutated, so the same Board seeds every iteration of the fixed point and
+    all `--sims` noisy redraws.
+    """
 
     def __init__(
         self,
         players: list[Player],
         rep: dict[str, float],
         vor: dict[int, float],
-        order: list[int],
+        board: Board,
         wire: dict[str, float] | None = None,
         noise: float = 0.0,
         rng: random.Random | None = None,
@@ -539,7 +760,10 @@ class Draft:
         self.depth_value = {
             p.player_id: max(p.points - self.wire[p.position], 0.0) for p in players
         }
-        self.order = order
+        self.board = board
+        self.order = board.order
+        self.pick_nos = board.pick_nos
+        self.my_slot = board.my_slot
         self.noise = noise
         self.rng = rng
         self.market_vor = market_vor or {}
@@ -549,8 +773,12 @@ class Draft:
         # follow, for me as much as for them. Predicting opponents correctly is the whole
         # point: it is what lets my picks exploit a TE the market is sleeping on.
         w = self.market_weight
+        # The market mapping is built over the players still available, so an already
+        # drafted player has no entry and falls back to his own VOR. He is off the board
+        # and can never be a candidate; he only needs a place in the sort below.
         perceived = {
-            p.player_id: (1 - w) * vor[p.player_id] + w * self.market_vor[p.player_id]
+            p.player_id: (1 - w) * vor[p.player_id]
+            + w * self.market_vor.get(p.player_id, vor[p.player_id])
             if w
             else vor[p.player_id]
             for p in players
@@ -562,19 +790,24 @@ class Draft:
         self.vor_sorted = sorted(players, key=lambda p: (-perceived[p.player_id], p.player_id))
         for i, p in enumerate(self.vor_sorted):
             p.vor_index = i
+        # Already-drafted players stay in the sorted structures (their rank is still a fact
+        # about the pool) but carry no availability bit, so `better_available` counts only
+        # players who can actually be taken ahead of a candidate.
+        self.taken: set[int] = set(board.taken)
         self.avail_bits = Fenwick(len(players))
         for p in players:
-            self.avail_bits.add(p.vor_index, 1)
+            if p.player_id not in self.taken:
+                self.avail_bits.add(p.vor_index, 1)
         self.pos_lists = {
             pos: sorted(v, key=lambda p: (-p.points, p.player_id))
             for pos, v in by_position(players).items()
         }
         self.heads = {pos: 0 for pos in POSITIONS}
-        self.taken: set[int] = set()
-        self.rosters: list[list[Player]] = [[] for _ in range(TEAMS)]
+        self.rosters: list[list[Player]] = [list(r) for r in board.rosters]
+        self.off_pool = board.off_pool  # read-only here; nothing is ever added
         self.pick_of: dict[int, int] = {}
         self.next_pick = self._next_pick_table()
-        self.picks_left = [ROUNDS] * TEAMS
+        self.picks_left = list(board.picks_left)
 
     def _next_pick_table(self) -> list[int | None]:
         """For each pick index, the slot's following pick index (None if it is their last)."""
@@ -596,7 +829,11 @@ class Draft:
         self.heads[pos] = i
 
     def candidates(
-        self, roster: list[Player], per_pos: int = 1, picks_left: int | None = None
+        self,
+        roster: list[Player],
+        per_pos: int = 1,
+        picks_left: int | None = None,
+        off: Sequence[dict] = (),
     ) -> list[Player]:
         """Best available at each position, honouring taxi and roster-legality limits.
 
@@ -606,16 +843,23 @@ class Draft:
         spots, candidates narrow to the positions still owed. This is the honest way to stop
         a team punting a position — the earlier attempt distorted the value of an empty slot
         instead, which broke the board.
+
+        `off` is the team's already-drafted players the pool cannot value. They count here
+        and only here: they occupy a roster spot and they answer a mandatory position, so a
+        team that spent a live pick on an unranked quarterback is not made to draft another.
         """
         eligible = POSITIONS
         if picks_left is not None:
             have = {pos: 0 for pos in POSITIONS}
             for p in roster:
                 have[p.position] += 1
+            for o in off:
+                if o.get("position") in have:
+                    have[o["position"]] += 1
             owed = {pos: max(0, DEDICATED_SLOTS[pos] - have[pos]) for pos in POSITIONS}
             if picks_left <= sum(owed.values()):
                 eligible = tuple(pos for pos in POSITIONS if owed[pos]) or POSITIONS
-        taxi = len(roster) >= sum(STARTING_SLOTS.values()) + BENCH_SLOTS
+        taxi = len(roster) + len(off) >= sum(STARTING_SLOTS.values()) + BENCH_SLOTS
 
         # Both restrictions can be simultaneously unsatisfiable — a team owed a QB in the
         # taxi rounds when none of the 9 rookie QBs are left, which used to assert out as
@@ -648,7 +892,14 @@ class Draft:
     def marginal(self, roster: list[Player], p: Player, base: float) -> float:
         return team_value(roster + [p], self.slot_rep, self.depth_value) - base
 
-    def lookahead(self, roster: list[Player], taking: Player, gap: int, left: int) -> float:
+    def lookahead(
+        self,
+        roster: list[Player],
+        taking: Player,
+        gap: int,
+        left: int,
+        off: Sequence[dict] = (),
+    ) -> float:
         """E[value of the best player still available at this team's next pick].
 
         Order statistic over the plausible next-pick candidates: the best surviving one is
@@ -661,7 +912,9 @@ class Draft:
         future_roster = roster + [taking]
         base = team_value(future_roster, self.slot_rep, self.depth_value)
         scored: list[tuple[float, float]] = []
-        for cand in self.candidates(future_roster, per_pos=LOOKAHEAD_PER_POS, picks_left=left):
+        for cand in self.candidates(
+            future_roster, per_pos=LOOKAHEAD_PER_POS, picks_left=left, off=off
+        ):
             if cand.player_id == taking.player_id:
                 continue
             gain = self.marginal(future_roster, cand, base)
@@ -678,6 +931,7 @@ class Draft:
 
     def choose(self, pick_index: int, slot: int) -> Player:
         roster = self.rosters[slot - 1]
+        off = self.off_pool[slot - 1]
         base = team_value(roster, self.slot_rep, self.depth_value)
         nxt = self.next_pick[pick_index]
         gap = None if nxt is None else nxt - pick_index - 1
@@ -685,19 +939,19 @@ class Draft:
         # Blended at the decision, not inside the valuation, so their roster logic stays
         # intact — they still fill needs, they just rank players closer to consensus. At
         # market_weight 1.0 they are pure best-available-by-ADP drafters.
-        w = self.market_weight if slot != MY_SLOT else 0.0
+        w = self.market_weight if slot != self.my_slot else 0.0
         left = self.picks_left[slot - 1]
         scored: list[tuple[float, Player]] = []
-        for cand in self.candidates(roster, per_pos=1, picks_left=left):
+        for cand in self.candidates(roster, per_pos=1, picks_left=left, off=off):
             score = self.marginal(roster, cand, base)
             if gap is not None:
-                score += self.lookahead(roster, cand, gap, left - 1)
+                score += self.lookahead(roster, cand, gap, left - 1, off)
             if w:
                 score = (1 - w) * score + w * self.market_vor[cand.player_id]
             scored.append((score, cand))
         assert scored, "pool exhausted"
 
-        if self.noise and self.rng is not None and slot != MY_SLOT:
+        if self.noise and self.rng is not None and slot != self.my_slot:
             # Gumbel noise -> the other nine teams follow a softmax over their own scores
             # instead of a strict argmax, which is what turns 0/1 availability under
             # deterministic play into a usable probability band. Scaled to the spread
@@ -713,13 +967,14 @@ class Draft:
         return max(scored, key=lambda t: (t[0], -t[1].player_id))[1]
 
     def run(self) -> None:
+        """Play out the pending picks. `pick_of` is in real overall pick numbers."""
         for i, slot in enumerate(self.order):
             pick = self.choose(i, slot)
             self.taken.add(pick.player_id)
             self.avail_bits.add(pick.vor_index, -1)
             self.rosters[slot - 1].append(pick)
             self.picks_left[slot - 1] -= 1
-            self.pick_of[pick.player_id] = i + 1
+            self.pick_of[pick.player_id] = self.pick_nos[i]
 
 
 def compute_vor(players: list[Player], rep: dict[str, float]) -> dict[int, float]:
@@ -727,7 +982,11 @@ def compute_vor(players: list[Player], rep: dict[str, float]) -> dict[int, float
 
 
 def market_value(players: list[Player], vor: dict[int, float]) -> dict[int, float]:
-    """Quantile-map the market's ADP ordering onto the VOR scale.
+    """Quantile-map the market's ADP ordering onto the VOR scale, over what is available.
+
+    Called with the undrafted players only, so both the ordering and the scale it is poured
+    into describe the board the opposing teams are actually looking at. On an untouched
+    board that is the whole pool, which is what it used to be unconditionally.
 
     The source ADP cannot be used as a value directly — it is a pick number, and per README
     it is a *12-team, no-TE-premium* superflex ADP, so neither its scale nor its scoring
@@ -755,7 +1014,7 @@ def market_value(players: list[Player], vor: dict[int, float]) -> dict[int, floa
 
 def converge(
     players: list[Player],
-    order: list[int],
+    board: Board,
     max_iters: int,
     report: bool,
     market_weight: float = 0.0,
@@ -777,8 +1036,14 @@ def converge(
     Two levels come out of each draft and both are iterated: the VOR baseline selected by
     --baseline, and the wire level that prices an empty starting slot. They are separate
     quantities and must not be collapsed into one (see `slot_replacement`).
+
+    Every draft here starts from `board`, so on a live board the fixed point is over the
+    rosters this league will actually finish with. The measurement is still league-wide and
+    still against the whole pool: replacement is a property of the league's 100 starting
+    slots, and the player who defines it may already be on somebody's roster.
     """
     pos = by_position(players)
+    available = board.available(players)
     rep = seed_replacement(players)
     stream = dict(rep)  # no draft to read a wire off yet
     trace = [{"iteration": 0, "source": "slot_assignment", "replacement": dict(rep)}]
@@ -790,9 +1055,9 @@ def converge(
 
     for it in range(1, max_iters + 1):
         vor = compute_vor(players, rep)
-        mkt = market_value(players, vor) if market_weight else None
+        mkt = market_value(available, vor) if market_weight else None
         draft = Draft(
-            players, rep, vor, order, wire=stream,
+            players, rep, vor, board, wire=stream,
             market_vor=mkt, market_weight=market_weight,
         )
         draft.run()
@@ -844,9 +1109,9 @@ def converge(
     # Final deterministic draft at the settled levels, so sim_pick and the reported
     # replacement levels describe one and the same draft.
     vor = compute_vor(players, rep)
-    mkt = market_value(players, vor) if market_weight else None
+    mkt = market_value(available, vor) if market_weight else None
     draft = Draft(
-        players, rep, vor, order, wire=stream,
+        players, rep, vor, board, wire=stream,
         market_vor=mkt, market_weight=market_weight,
     )
     draft.run()
@@ -873,7 +1138,7 @@ def converge(
 def monte_carlo(
     players: list[Player],
     rep: dict[str, float],
-    order: list[int],
+    board: Board,
     stream: dict[str, float],
     sims: int,
     noise: float,
@@ -882,13 +1147,13 @@ def monte_carlo(
 ) -> tuple[dict[int, list[int]], dict[int, int]]:
     """Noisy redraws -> pick distribution per player. Returns picks seen and draft counts."""
     vor = compute_vor(players, rep)
-    mkt = market_value(players, vor) if market_weight else None
+    mkt = market_value(board.available(players), vor) if market_weight else None
     picks: dict[int, list[int]] = {p.player_id: [] for p in players}
     drafted: dict[int, int] = {p.player_id: 0 for p in players}
     for s in range(sims):
         rng = random.Random(seed + s)
         d = Draft(
-            players, rep, vor, order, wire=stream, noise=noise, rng=rng,
+            players, rep, vor, board, wire=stream, noise=noise, rng=rng,
             market_vor=mkt, market_weight=market_weight,
         )
         d.run()
@@ -909,15 +1174,25 @@ def build_rankings(
     picks: dict[int, list[int]],
     drafted: dict[int, int],
     sims: int,
-    my_picks: list[int],
+    board: Board,
 ) -> list[dict]:
+    """One row per *undrafted* player: the board is a list of decisions still to make.
+
+    Drafted players are dropped rather than flagged — they cannot be picked, and leaving
+    them in would put a name at rank 1 that is not available. Their points still shape the
+    replacement levels every row is measured against, which happens in `converge`. All
+    three rank columns are renumbered over what is emitted, so they read as positions on
+    the remaining board rather than as gapped survivors of the preseason one.
+    """
+    my_picks = board.my_picks
     vor = compute_vor(players, rep)
-    ranked = sorted(players, key=lambda p: (-vor[p.player_id], p.player_id))
+    available = board.available(players)
+    ranked = sorted(available, key=lambda p: (-vor[p.player_id], p.player_id))
     market_rank = {
         p.player_id: i
         for i, p in enumerate(
             sorted(
-                players,
+                available,
                 key=lambda p: (
                     p.provider_adp if p.provider_adp is not None else math.inf,
                     p.player_id,
@@ -987,15 +1262,115 @@ def build_rankings(
     return rows
 
 
+def _team_names(board: Board) -> dict[int, str | None]:
+    return {
+        s["draft_slot"]: (s.get("team_name") or s.get("username"))
+        for s in ((board.live or {}).get("slots") or [])
+    }
+
+
+def draft_block(board: Board) -> dict | None:
+    """How the output describes the board it started from. None when there was no live one."""
+    if not board.live:
+        return None
+    names = _team_names(board)
+    block = {k: v for k, v in board.live.items() if k != "slots"}
+    block["my_remaining_picks"] = [pick_label(n) for n in board.my_picks]
+    block["note"] = (
+        "The simulation starts here: made picks are already on their teams' rosters and out "
+        "of the pool, and only the pending picks are played out, in this order — so a traded "
+        "pick is exercised by the roster that acquired it. `rankings` covers the undrafted "
+        "players only."
+    )
+    block["off_pool_note"] = (
+        "Made picks with no match in pool.json by sleeper_id: kickers, IDP and anyone past "
+        "the pool's rank cut. They fill a roster spot and satisfy a mandatory position, so "
+        "the team owes one fewer pick, but they are never started and never valued — there "
+        "is no projection to value them with."
+    )
+    block["rosters"] = []
+    for slot in range(1, TEAMS + 1):
+        made, off = board.rosters[slot - 1], board.off_pool[slot - 1]
+        counts = {pos: 0 for pos in POSITIONS}
+        for p in made:
+            counts[p.position] += 1
+        for o in off:
+            if o.get("position") in counts:
+                counts[o["position"]] += 1
+        block["rosters"].append(
+            {
+                "draft_slot": slot,
+                "team": names.get(slot),
+                "is_mine": slot == board.my_slot,
+                "picks_made": len(made) + len(off),
+                "picks_left": board.picks_left[slot - 1],
+                "positions": {pos: n for pos, n in counts.items() if n},
+                "players": [f"{p.name} ({p.position})" for p in made],
+                "off_pool": [f"{o['name']} ({o['position']})" for o in off],
+            }
+        )
+    return block
+
+
+def report_board(board: Board) -> None:
+    """The starting state, on stderr: what is gone, who holds it, what is still coming."""
+    if not board.live:
+        print(
+            f"board: no live draft; all {len(board.order)} picks simulated from the static "
+            "snake",
+            file=sys.stderr,
+        )
+        return
+    live = board.live
+    print(
+        f"board: {live['picks_made']}/{TOTAL_PICKS} picks made, {live['picks_pending']} "
+        f"pending ({live['matched_to_pool']} made picks joined to the pool, "
+        f"{len(live['off_pool_picks'])} outside it); {live['status']}, "
+        f"fetched {live['fetched_at']}",
+        file=sys.stderr,
+    )
+    if live["traded_picks"]:
+        print(
+            f"  {live['traded_picks']} traded pick(s), applied by the draft pipeline",
+            file=sys.stderr,
+        )
+    for o in live["off_pool_picks"]:
+        print(
+            f"  {o['pick']} slot {o['slot']}: {o['name']} ({o['position']}) is not in the "
+            "pool - held as a filled roster spot with no value",
+            file=sys.stderr,
+        )
+    names = _team_names(board)
+    for slot in range(1, TEAMS + 1):
+        made, off = board.rosters[slot - 1], board.off_pool[slot - 1]
+        if not made and not off:
+            continue
+        who = names.get(slot) or f"slot {slot}"
+        held = [f"{p.name} ({p.position})" for p in made]
+        held += [f"{o['name']} ({o['position']}, unvalued)" for o in off]
+        print(
+            f"  {'*' if slot == board.my_slot else ' '} slot {slot:>2} {who[:20]:<20}"
+            f" {board.picks_left[slot - 1]:>2} picks left: " + ", ".join(held),
+            file=sys.stderr,
+        )
+    clock = live.get("on_the_clock") or {}
+    mine = live.get("next_pick_of_mine") or {}
+    print(
+        f"  on the clock {clock.get('slot')} ({clock.get('username')}); my next "
+        f"{mine.get('slot')} ({mine.get('picks_away')} away), "
+        f"{len(board.my_picks)} of my picks remain",
+        file=sys.stderr,
+    )
+
+
 def validate(
     rows: list[dict],
     players: list[Player],
     rep: dict[str, float],
     counts: dict[str, int],
     draft: Draft,
-    order: list[int],
+    board: Board,
     history: list[dict],
-    my_picks: list[int],
 ) -> list[str]:
     problems: list[str] = []
 
@@ -1003,29 +1378,79 @@ def validate(
         if not ok:
             problems.append(msg)
 
+    # The static snake is the yardstick even on a live board: check it against the README
+    # first, then check that what the board says is still coming agrees with it.
     readme = ["1.02", "2.09", "3.09", "4.02", "5.09", "6.02", "28.02", "29.09"]
-    labels = [pick_label(p) for p in my_picks]
+    full = picks_for_slot(board.my_slot, draft_order())
+    labels = [pick_label(p) for p in full]
     check(labels[:6] == readme[:6], f"draft order head {labels[:6]} != README {readme[:6]}")
     check(labels[-2:] == readme[-2:], f"draft order tail {labels[-2:]} != README {readme[-2:]}")
-    check(len(my_picks) == ROUNDS, f"{len(my_picks)} picks for slot {MY_SLOT}, want {ROUNDS}")
-    check(len(order) == TOTAL_PICKS, f"{len(order)} picks total, want {TOTAL_PICKS}")
+    check(len(full) == ROUNDS, f"{len(full)} picks for slot {board.my_slot}, want {ROUNDS}")
+    check(
+        len(board.order) == len(board.pick_nos),
+        f"board has {len(board.order)} owners for {len(board.pick_nos)} pending picks",
+    )
+    accounted = board.picks_made + len(board.order)
+    check(accounted == TOTAL_PICKS, f"board accounts for {accounted} picks, want {TOTAL_PICKS}")
+    check(
+        sum(board.owed_size(s) for s in range(1, TEAMS + 1)) == TOTAL_PICKS,
+        "the picks each team owns do not sum to the board",
+    )
+
+    if board.live:
+        first = board.pick_nos[0] if board.pick_nos else TOTAL_PICKS + 1
+        check(
+            board.pick_nos == list(range(first, TOTAL_PICKS + 1)),
+            "pending picks are not the contiguous tail of the board",
+        )
+        clock = (board.live.get("on_the_clock") or {}).get("pick_no")
+        check(
+            clock is None or clock == first,
+            f"on the clock is pick {clock}, board resumes at {first}",
+        )
+        mine = (board.live.get("next_pick_of_mine") or {}).get("pick_no")
+        check(
+            mine is None or board.my_picks[:1] == [mine],
+            f"draft.json says my next pick is {mine}, board says {board.my_picks[:1]}",
+        )
+        if not board.live.get("traded_picks"):
+            want = [n for n in full if n >= first]
+            check(
+                board.my_picks == want,
+                f"my {len(board.my_picks)} remaining picks are not the snake's tail "
+                f"({len(want)} picks) even though no picks were traded",
+            )
 
     check(
         sum(counts.values()) == TEAMS * sum(STARTING_SLOTS.values()),
         f"starters sum to {sum(counts.values())}, want {TEAMS * sum(STARTING_SLOTS.values())}",
     )
-    check(len(draft.taken) == TOTAL_PICKS, f"{len(draft.taken)} unique players drafted")
-    sizes = {len(r) for r in draft.rosters}
-    check(sizes == {ROUNDS}, f"roster sizes {sizes}, want {{{ROUNDS}}}")
+    want_taken = sum(len(r) for r in board.rosters) + len(board.order)
+    check(
+        len(draft.taken) == want_taken,
+        f"{len(draft.taken)} unique pool players drafted, want {want_taken}",
+    )
+    non_taxi = sum(STARTING_SLOTS.values()) + BENCH_SLOTS
     for i, roster in enumerate(draft.rosters, start=1):
+        made = board.rosters[i - 1]
+        off = board.off_pool[i - 1]
+        # Made picks are facts: they must come through the simulation untouched, in order.
+        check(
+            roster[: len(made)] == made,
+            f"slot {i} lost or reordered one of its {len(made)} made picks",
+        )
+        want = len(made) + board.picks_left[i - 1]
+        check(len(roster) == want, f"slot {i} ends with {len(roster)} players, want {want}")
         # The real constraint is the 25 non-taxi spots; which specific picks land on taxi is
         # not fixed, and a mandatory pick may have to be a non-rookie when no rookie at a
-        # required position is left.
+        # required position is left. Only players the pool carries are counted: this asks
+        # whether the simulation's own choices fit, and `draft.json` does not say whether a
+        # selection outside the pool is a rookie, so counting those would assert something
+        # unknown. `Draft.candidates` still counts them as bodies for the taxi threshold.
         non_rookies = sum(1 for p in roster if not p.is_rookie)
         check(
-            non_rookies <= sum(STARTING_SLOTS.values()) + BENCH_SLOTS,
-            f"slot {i} holds {non_rookies} non-rookies, over the "
-            f"{sum(STARTING_SLOTS.values()) + BENCH_SLOTS} non-taxi spots",
+            non_rookies <= non_taxi,
+            f"slot {i} holds {non_rookies} non-rookies, over the {non_taxi} non-taxi spots",
         )
         starters = starting_positions(roster)
         check(
@@ -1034,11 +1459,20 @@ def validate(
         )
         for pos, need in DEDICATED_SLOTS.items():
             have = sum(1 for p in roster if p.position == pos)
+            have += sum(1 for o in off if o.get("position") == pos)
             check(have >= need, f"slot {i} has {have} {pos}, needs {need}")
 
     vors = [r["vor"] for r in rows]
     check(vors == sorted(vors, reverse=True), "rows are not sorted by VOR descending")
-    check(len(rows) == len(players), f"{len(rows)} rows for {len(players)} pool players")
+    want_rows = len(players) - len(board.taken)
+    check(
+        len(rows) == want_rows,
+        f"{len(rows)} rows for {want_rows} undrafted players in a {len(players)}-player pool",
+    )
+    check(
+        not (board.taken & {r["player_id"] for r in rows}),
+        "a player already drafted in draft.json is on the emitted board",
+    )
     # The reported level is a mean over the limit cycle, so the invariant that actually
     # holds is that it lies inside the range the cycle spanned — not that it coincides with
     # any single draft's level, which a long cycle can genuinely straddle.
@@ -1084,11 +1518,12 @@ def brute_force_surplus(roster: list[Player], slot_rep: dict[str, float]) -> flo
     return best
 
 
-def selftest(players: list[Player], trials: int = 300, seed: int = SEED) -> int:
+def lineup_selftest(players: list[Player], trials: int = 300, seed: int = SEED) -> list[str]:
     """The greedy lineup solver must match brute force on random rosters."""
     rng = random.Random(seed)
     rep = seed_replacement(players)
     slot_rep = slot_replacement(rep)
+    fails: list[str] = []
     worst = 0.0
     for _ in range(trials):
         roster = rng.sample(players, rng.randint(1, 6))
@@ -1096,19 +1531,256 @@ def selftest(players: list[Player], trials: int = 300, seed: int = SEED) -> int:
         exact = brute_force_surplus(roster, slot_rep)
         worst = max(worst, exact - greedy)
         if exact - greedy > 1e-6:
-            print(
-                "MISMATCH: "
+            fails.append(
+                "lineup solver: "
                 + ", ".join(f"{p.name}({p.position},{p.points})" for p in roster)
-                + f"  greedy={greedy:.1f} exact={exact:.1f}",
-                file=sys.stderr,
+                + f"  greedy={greedy:.1f} exact={exact:.1f}"
             )
-            return 1
+            break
     print(
-        f"selftest ok: greedy lineup solver matched brute force on {trials} random "
-        f"rosters (max shortfall {worst:.2e})",
+        f"  greedy lineup solver matched brute force on {trials} random rosters "
+        f"(max shortfall {worst:.2e})",
         file=sys.stderr,
     )
-    return 0
+    return fails
+
+
+def synthetic_draft(
+    players: list[Player],
+    made: int = 0,
+    unrankable: dict[int, str] | None = None,
+    trades: dict[int, int] | None = None,
+) -> dict:
+    """A `draft.json`-shaped board built offline, for the states the live file cannot reach.
+
+    Today's live file has no traded picks and no selection outside the pool, so the two
+    branches that handle them would go unexercised until the night they matter. Made picks
+    take the pool in points order, which is a legal board and enough to check bookkeeping.
+    `unrankable` maps a pick number to a position for a selection the pool does not carry;
+    `trades` maps a pick number to the roster id that acquired it.
+    """
+    order = draft_order()
+    slots = [
+        {
+            "draft_slot": s,
+            "roster_id": 20 + s,  # deliberately not equal to the slot, as Sleeper's are not
+            "user_id": None,
+            "username": f"team{s}",
+            "team_name": None,
+            "is_mine": s == MY_SLOT,
+        }
+        for s in range(1, TEAMS + 1)
+    ]
+    roster_of_slot = {s["draft_slot"]: s["roster_id"] for s in slots}
+    take = iter(players)
+    picks: list[dict] = []
+    for n, slot in enumerate(order, start=1):
+        owner = (trades or {}).get(n, roster_of_slot[slot])
+        pick = {
+            "pick_no": n,
+            "round": (n - 1) // TEAMS + 1,
+            "pick_in_round": (n - 1) % TEAMS + 1,
+            "draft_slot": slot,
+            "roster_id": owner,
+            "user_id": None,
+            "username": None,
+            "is_mine": owner == roster_of_slot[MY_SLOT],
+            "status": "made" if n <= made else "pending",
+            "sleeper_id": None,
+            "name": None,
+            "position": None,
+            "team": None,
+            "is_keeper": None,
+        }
+        if n <= made and (unrankable or {}).get(n):
+            pick |= {
+                "sleeper_id": f"not-in-pool-{n}",
+                "name": f"Unrankable {n}",
+                "position": unrankable[n],
+                "team": "FA",
+            }
+        elif n <= made:
+            p = next(take)
+            pick |= {
+                "sleeper_id": p.sleeper_id,
+                "name": p.name,
+                "position": p.position,
+                "team": p.team,
+            }
+        picks.append(pick)
+
+    pending = [p for p in picks if p["status"] == "pending"]
+    mine = next((p for p in pending if p["is_mine"]), None)
+
+    def summary(pick: dict | None) -> dict | None:
+        if pick is None:
+            return None
+        return {
+            "pick_no": pick["pick_no"],
+            "round": pick["round"],
+            "pick_in_round": pick["pick_in_round"],
+            "draft_slot": pick["draft_slot"],
+            "username": pick["username"],
+            "slot": pick_label(pick["pick_no"]),
+        }
+
+    return {
+        "source": "synthetic",
+        "fetched_at": "2026-08-04T00:00:00+00:00",
+        "draft_id": "synthetic",
+        "league_name": "selftest",
+        "status": "drafting",
+        "format": {"type": "snake", "teams": TEAMS, "rounds": ROUNDS, "reversal_round": 3},
+        "pick_count": TOTAL_PICKS,
+        "picks_made": made,
+        "picks_pending": TOTAL_PICKS - made,
+        "on_the_clock": summary(pending[0] if pending else None),
+        "me": {"username": "me", "draft_slot": MY_SLOT, "roster_id": roster_of_slot[MY_SLOT]},
+        "my_next_pick": summary(mine),
+        "slots": slots,
+        "traded_picks": [{"round": (n - 1) // TEAMS + 1} for n in (trades or {})],
+        "picks": picks,
+    }
+
+
+def board_selftest(players: list[Player]) -> list[str]:
+    """The live-board loader, on states the real draft.json does not currently contain."""
+    fails: list[str] = []
+
+    def check(ok: bool, msg: str) -> None:
+        if not ok:
+            fails.append(f"board: {msg}")
+
+    # An untouched live board must be the static snake, or the live path and the offline
+    # path disagree about the league before a single pick is made.
+    board, problems = load_board(synthetic_draft(players), players, "synthetic")
+    fresh = fresh_board()
+    check(not problems, f"empty synthetic board complained: {problems}")
+    check(board.order == fresh.order, "empty live board's order != the static snake")
+    check(board.pick_nos == fresh.pick_nos, "empty live board's pick numbers != 1..290")
+    check(board.my_picks == fresh.my_picks, "empty live board's picks for me != the snake's")
+    check(board.picks_left == fresh.picks_left, f"picks left {board.picks_left} != all {ROUNDS}")
+    check(not board.taken and board.picks_made == 0, "empty live board has players drafted")
+
+    # Made picks leave the pool and land on the team that made them.
+    board, problems = load_board(synthetic_draft(players, made=13), players, "synthetic")
+    check(not problems, f"13-pick board complained: {problems}")
+    check(board.picks_made == 13 and len(board.taken) == 13, "13 made picks did not come through")
+    check(board.pick_nos[:1] == [14], f"simulation resumes at {board.pick_nos[:1]}, want 14")
+    check(board.my_picks[:1] == [19], f"my next pick is {board.my_picks[:1]}, want 19 (2.09)")
+    check(
+        [p.name for p in board.rosters[MY_SLOT - 1]] == [players[1].name],
+        "pick 1.02 did not land on my roster",
+    )
+    check(board.picks_left[MY_SLOT - 1] == ROUNDS - 1, "my remaining picks did not drop by one")
+    check(sum(board.picks_left) == TOTAL_PICKS - 13, "remaining picks do not sum to the board")
+    # Picks 10 and 11 are both slot 10 — the turn at the end of round 1 into round 2.
+    check(len(board.rosters[9]) == 2, "slot 10 did not get both sides of its turn")
+
+    # A traded pick is exercised by the roster that acquired it, not by its column.
+    board, problems = load_board(
+        synthetic_draft(players, trades={5: 20 + MY_SLOT}), players, "synthetic"
+    )
+    check(board.order[4] == MY_SLOT, f"traded pick 5 is exercised by slot {board.order[4]}")
+    check(
+        board.my_picks[:3] == [2, 5, 19],
+        f"my picks start {board.my_picks[:3]}, want my own 1.02, the traded 5, then 2.09",
+    )
+    check(
+        board.picks_left[MY_SLOT - 1] == ROUNDS + 1 and board.picks_left[4] == ROUNDS - 1,
+        "a traded pick did not move between the two teams' pick counts",
+    )
+    check(board.owed_size(MY_SLOT) == ROUNDS + 1, "the acquiring team's roster size did not grow")
+
+    # A selection the pool cannot value fills a spot and answers its mandatory position.
+    board, problems = load_board(
+        synthetic_draft(players, made=1, unrankable={1: "QB"}), players, "synthetic"
+    )
+    check(not board.taken, "an unrankable pick took a pool player off the board")
+    check(len(board.off_pool[0]) == 1, "an unrankable pick was not held as a roster spot")
+    check(board.picks_left[0] == ROUNDS - 1, "an unrankable pick did not cost its team a pick")
+    rep = seed_replacement(players)
+    vor = compute_vor(players, rep)
+    draft = Draft(players, rep, vor, board)
+    owed = sum(DEDICATED_SLOTS.values()) - 1  # the QB is answered, six mandatory spots left
+    with_qb = draft.candidates([], picks_left=owed, off=board.off_pool[0])
+    without = draft.candidates([], picks_left=owed, off=[])
+    check(
+        {c.position for c in with_qb} == {"RB", "WR", "TE"},
+        "an unrankable QB did not satisfy the QB requirement",
+    )
+    check(
+        {c.position for c in without} == set(POSITIONS),
+        "the same team without him should still owe a QB",
+    )
+
+    # Resuming: every made pick survives, every pending pick is played exactly once.
+    board, _ = load_board(synthetic_draft(players, made=57), players, "synthetic")
+    draft = Draft(players, rep, compute_vor(players, rep), board)
+    draft.run()
+    check(
+        len(draft.taken) == len(board.taken) + len(board.order),
+        "the resumed draft did not take one new player per pending pick",
+    )
+    check(
+        set(draft.pick_of.values()) == set(board.pick_nos),
+        "the simulated picks are not exactly the board's pending picks",
+    )
+    check(not (set(draft.pick_of) & board.taken), "a player already drafted was drafted again")
+    for slot in range(1, TEAMS + 1):
+        made = board.rosters[slot - 1]
+        got = draft.rosters[slot - 1]
+        check(got[: len(made)] == made, f"slot {slot} lost one of its made picks")
+        check(
+            len(got) == len(made) + board.picks_left[slot - 1],
+            f"slot {slot} finished with {len(got)} players, not what it owns",
+        )
+    # A board that disagrees with this script must say so, not be quietly absorbed. Every
+    # one of these is a way a wrong draft.json could otherwise produce a plausible board.
+    def complains(raw: dict, about: str, pool: list[Player] = players) -> None:
+        _, problems = load_board(raw, pool, "synthetic")
+        check(bool(problems), f"a board with {about} was accepted without complaint")
+
+    raw = synthetic_draft(players, made=2)
+    raw["format"]["teams"] = 12
+    complains(raw, "12 teams")
+    raw = synthetic_draft(players, made=3)
+    raw["picks"][2] |= {
+        "sleeper_id": raw["picks"][0]["sleeper_id"],
+        "name": raw["picks"][0]["name"],
+    }
+    complains(raw, "the same player drafted twice")
+    raw = synthetic_draft(players, made=0)
+    raw["picks"][4] |= {"roster_id": None, "draft_slot": None}
+    complains(raw, "a pick nobody owns")
+    raw = synthetic_draft(players, made=3)
+    raw["picks_made"] = 5
+    complains(raw, "a header contradicting its own picks")
+    raw = synthetic_draft(players, made=0)
+    raw["me"]["draft_slot"] = 7
+    complains(raw, "a different draft slot for me")
+    complains(
+        synthetic_draft(players, made=6),
+        "a pool carrying no sleeper ids to join on",
+        [dataclasses.replace(p, sleeper_id=None) for p in players],
+    )
+
+    print(
+        "  live board: static snake reproduced, made picks retained, traded pick and "
+        "unvalued pick handled, 233 pending picks resumed, 6 bad boards rejected",
+        file=sys.stderr,
+    )
+    return fails
+
+
+def selftest(players: list[Player]) -> int:
+    print("selftest:", file=sys.stderr)
+    fails = lineup_selftest(players) + board_selftest(players)
+    for f in fails:
+        print(f"  FAIL {f}", file=sys.stderr)
+    verdict = f"{len(fails)} failure(s)" if fails else "all checks passed"
+    print(f"selftest: {verdict}", file=sys.stderr)
+    return 1 if fails else 0
 
 
 # --- cli --------------------------------------------------------------------------
@@ -1120,8 +1792,21 @@ def main(argv: list[str] | None = None) -> int:
     )
     ap.add_argument("input", nargs="?", default=Path("pool.json"), type=Path)
     ap.add_argument("-o", "--output", default=Path("rankings.json"), type=Path)
+    ap.add_argument(
+        "--draft",
+        type=Path,
+        default=None,
+        help="live board to start from (default: draft.json if it is there)",
+    )
+    ap.add_argument(
+        "--no-draft",
+        action="store_true",
+        help="ignore the live board: rank the whole pool from an empty draft",
+    )
     ap.add_argument("--report", action="store_true", help="validation summary on stderr")
-    ap.add_argument("--selftest", action="store_true", help="check the lineup solver, then exit")
+    ap.add_argument(
+        "--selftest", action="store_true", help="check the solver and the board loader, then exit"
+    )
     ap.add_argument("--flat", action="store_true", help="emit a bare array, no metadata")
     ap.add_argument("--sims", type=int, default=SIMS, help="noisy redraws for availability")
     ap.add_argument("--noise", type=float, default=NOISE, help="other teams' Gumbel scale")
@@ -1152,8 +1837,26 @@ def main(argv: list[str] | None = None) -> int:
     if args.selftest:
         return selftest(players)
 
-    order = draft_order()
-    my_picks = picks_for_slot(MY_SLOT, order)
+    # The live board is the default starting state; an absent draft.json is not an error,
+    # it is the preseason case. An explicitly named one that is missing is an error.
+    board_problems: list[str] = []
+    draft_path = args.draft or Path("draft.json")
+    if args.no_draft:
+        board = fresh_board()
+    elif draft_path.exists():
+        board, board_problems = load_board(
+            json.loads(draft_path.read_text()), players, str(draft_path)
+        )
+    elif args.draft is not None:
+        print(f"missing {draft_path} - run draft_pipeline/fetch_draft.py", file=sys.stderr)
+        return 1
+    else:
+        print(
+            f"no {draft_path}: ranking the whole pool from an empty board "
+            "(run draft_pipeline/fetch_draft.py for the live one)",
+            file=sys.stderr,
+        )
+        board = fresh_board()
 
     if args.report:
         print(
@@ -1163,10 +1866,11 @@ def main(argv: list[str] | None = None) -> int:
             f"{len(pool_meta['dropped_zero_projection'])} zero-projection",
             file=sys.stderr,
         )
+        report_board(board)
         print("converging replacement levels:", file=sys.stderr)
 
     rep, stream, counts, draft, history = converge(
-        players, order, args.max_iters, args.report, args.market_weight, args.baseline
+        players, board, args.max_iters, args.report, args.market_weight, args.baseline
     )
 
     if args.report:
@@ -1176,11 +1880,11 @@ def main(argv: list[str] | None = None) -> int:
             file=sys.stderr,
         )
     picks, drafted = monte_carlo(
-        players, rep, order, stream, args.sims, args.noise, args.seed, args.market_weight
+        players, rep, board, stream, args.sims, args.noise, args.seed, args.market_weight
     )
-    rows = build_rankings(players, rep, stream, draft, picks, drafted, args.sims, my_picks)
+    rows = build_rankings(players, rep, stream, draft, picks, drafted, args.sims, board)
 
-    problems = validate(rows, players, rep, counts, draft, order, history, my_picks)
+    problems = board_problems + validate(rows, players, rep, counts, draft, board, history)
 
     payload: object
     if args.flat:
@@ -1203,10 +1907,18 @@ def main(argv: list[str] | None = None) -> int:
                 "rounds": ROUNDS,
                 "total_picks": TOTAL_PICKS,
                 "draft_type": "snake with 3rd-round reversal",
-                "my_slot": MY_SLOT,
-                "my_picks": [pick_label(p) for p in my_picks],
+                "my_slot": board.my_slot,
+                "my_picks": [pick_label(p) for p in picks_for_slot(board.my_slot, draft_order())],
             },
             "pool": pool_meta,
+            "draft": draft_block(board),
+            "rankings_note": (
+                "Undrafted players only, ranked over each other. `vor` is a points quantity "
+                "and does not depend on who is gone; the rank columns are renumbered over "
+                "the rows emitted here."
+                if board.live
+                else "The whole pool, from an empty board: no live draft was read."
+            ),
             "market_model": {
                 "market_weight": MARKET_WEIGHT,
                 "who": "the other nine teams; my slot always drafts on this board",
@@ -1320,8 +2032,13 @@ def main(argv: list[str] | None = None) -> int:
 
     if args.report:
         top = rows[:12]
-        width = max(len(r["name"]) for r in top)
-        print("\ntop of the board:", file=sys.stderr)
+        if top:
+            width = max(len(r["name"]) for r in top)
+            print(
+                "\ntop of the board"
+                + (f", {len(rows)} undrafted:" if board.live else ":"),
+                file=sys.stderr,
+            )
         for r in top:
             print(
                 f"  {r['vor_rank']:>3}. {r['name']:<{width}}  {r['position']}"
@@ -1342,7 +2059,8 @@ def main(argv: list[str] | None = None) -> int:
         else:
             print("\nvalidation: all checks passed", file=sys.stderr)
 
-    print(f"wrote {args.output} ({len(rows)} players)", file=sys.stderr)
+    scope = f"{len(rows)} undrafted of {len(players)}" if board.live else f"{len(rows)} players"
+    print(f"wrote {args.output} ({scope})", file=sys.stderr)
     return 1 if problems else 0
 
 

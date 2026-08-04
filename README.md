@@ -12,7 +12,7 @@ pipeline reads and every intermediate it writes stays inside its own folder.
 ```
 pool.json                    the draft pool — 350 players, 12 fields
 draft.json                   the live board — 290 picks, made and pending
-rank_vor.py                  pool.json -> rankings.json (run separately)
+rank_vor.py                  pool.json + draft.json -> rankings.json (run separately)
 
 pool_pipeline/               provider html -> pool.json   (local, offline, 3 stages)
   pipeline.py                orchestrator: parse -> pool -> sleeper
@@ -39,7 +39,8 @@ draft. Sharing an orchestrator would mean either a pool rebuild that hits the li
 or a draft refresh that re-parses 8 MB of html, so they share no code and no working
 files — `draft_pipeline/` keeps its own small `paths.py` rather than importing one. They
 meet only at `sleeper_id`: the key `match_sleeper.py` writes into every pool player is
-the key every pick in `draft.json` carries.
+the key every pick in `draft.json` carries. `rank_vor.py` is the one thing that reads both
+and is where that join is actually performed.
 
 ## pool pipeline
 
@@ -48,7 +49,7 @@ python3 pool_pipeline/pipeline.py             # html -> projections.json -> pool
 python3 pool_pipeline/pipeline.py --report    # + every stage's validation summary on stderr
 python3 pool_pipeline/pipeline.py --only pool # single stage
 python3 pool_pipeline/fetch_sleeper.py        # refresh the Sleeper dump (manual, ~14 MB)
-python3 rank_vor.py                           # pool.json -> rankings.json (run separately)
+python3 rank_vor.py                           # pool.json + draft.json -> rankings.json
 ```
 
 Three stages, ordered: `parse_projections.py` (html -> `projections.json`, the full
@@ -64,8 +65,9 @@ from scratch, dropping the ids stage 3 adds — so a rebuild always re-joins the
 Default paths are anchored to the scripts, not the shell, so every command above works
 from the repo root or from inside `pool_pipeline/`.
 
-`rank_vor.py` (pool.json -> rankings.json) is deliberately not a pipeline stage: it takes
-a simulation seed and strategy knobs and is re-run far more often than the data is built.
+`rank_vor.py` (pool.json + draft.json -> rankings.json) is deliberately not a pipeline
+stage: it takes a simulation seed and strategy knobs and is re-run far more often than the
+data is built.
 
 ## parsing
 
@@ -259,3 +261,42 @@ top of this file, a traded pick landing with its acquirer, and the negative cont
 the last dozen selections with a position breakdown, the pool join, and integrity checks
 (`pick_no` gap-free, every slot appearing exactly `rounds` times, no player drafted twice,
 every pick owned).
+
+## rankings from the live board
+
+`rank_vor.py` reads both files. `draft.json` is the simulation's **starting state**, not a
+filter applied afterwards: made picks sit on their teams' rosters, the pending picks are the
+only ones simulated, and they are played in the order that file gives — so a traded pick is
+exercised by the roster that acquired it. `rankings.json` then covers the **undrafted
+players only**, ranked over each other.
+
+```
+python3 rank_vor.py                     # pool.json + draft.json -> rankings.json
+python3 rank_vor.py --report            # + the board it started from, per team
+python3 rank_vor.py --no-draft          # ignore draft.json: rank the whole pool
+python3 rank_vor.py --draft other.json  # a different board
+python3 rank_vor.py --selftest          # lineup solver + board loader, offline
+```
+
+The method itself is unchanged, and that is checked rather than asserted: a `draft.json`
+with nothing drafted yet reproduces `--no-draft` exactly, byte for byte. Replacement levels
+are still measured league-wide over whole final rosters and against the whole pool, so the
+marginal starter defining a level can be a player already drafted. What moves is the
+simulated *shape* of the league — after three RBs went in the first four picks, the fixed
+point settles at QB21/RB23/WR44/TE16 instead of the preseason QB19/RB23/WR45/TE17.
+
+**A pick can land on a player the pool does not carry** — a kicker, an IDP, anyone past the
+350-player cut. There is no projection to price him with, so he is held as an `off_pool`
+roster entry: he fills a spot, so his team owes one fewer pick, and he answers a mandatory
+position, so that team is not made to draft another QB. He never starts and is never worth
+anything. `--report` names every one of them.
+
+**Made picks are facts, never re-valued.** If a team reached, the board takes it as given
+and prices what is left.
+
+An absent `draft.json` is the preseason case, not an error: the script says so and ranks the
+whole pool. A board that disagrees with the league constants at the top of the script (12
+teams, a player drafted twice, a header contradicting its own picks, a pool with no
+`sleeper_id`s to join on) is reported in `validation.problems` and exits non-zero rather
+than being quietly absorbed. `--selftest` covers what the live file cannot: a traded pick, a
+selection outside the pool, resuming a partial board, and six malformed boards.
