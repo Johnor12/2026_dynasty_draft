@@ -45,6 +45,8 @@ import sys
 from html.parser import HTMLParser
 from pathlib import Path
 
+import paths
+
 # ---------------------------------------------------------------------------
 # Schema
 # ---------------------------------------------------------------------------
@@ -455,8 +457,8 @@ def report(players: list[dict], parser: RankingsParser) -> None:
 
 def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument("input", nargs="?", default="projections.html", type=Path)
-    ap.add_argument("-o", "--output", default=Path("projections.json"), type=Path)
+    ap.add_argument("input", nargs="?", default=paths.PROJECTIONS_HTML, type=Path)
+    ap.add_argument("-o", "--output", default=paths.PROJECTIONS_JSON, type=Path)
     ap.add_argument("--report", action="store_true", help="print a validation summary to stderr")
     ap.add_argument("--indent", type=int, default=2, help="JSON indent; 0 for compact")
     args = ap.parse_args(argv)
@@ -475,7 +477,7 @@ def main(argv: list[str] | None = None) -> int:
         json.dump(document, handle, indent=args.indent or None, ensure_ascii=False)
         handle.write("\n")
 
-    print(f"wrote {len(players)} players to {args.output}", file=sys.stderr)
+    print(f"wrote {len(players)} players to {paths.display(args.output)}", file=sys.stderr)
     if args.report:
         report(players, parser)
     return 0
