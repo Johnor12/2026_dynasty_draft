@@ -30,6 +30,7 @@ pipeline reads and every intermediate it writes stays inside its own folder.
 pool.json                    the draft pool — 350 players, 12 fields
 draft.json                   the live board — 290 picks, made and pending
 rank_vor.py                  pool.json + draft.json -> rankings.json (run separately)
+refresh.py                   fetch the board, then re-rank — the between-picks loop
 ranker/                      the ranker's internals, one module per concern:
   league.py                  league constants, strategy knobs, draft order
   pool.py                    pool.json -> Player objects
@@ -303,6 +304,20 @@ uv run rank_vor.py --no-draft           # ignore draft.json: rank the whole pool
 uv run rank_vor.py --draft other.json   # a different board
 uv run rank_vor.py --selftest           # lineup solver + board loader, offline
 ```
+
+During a draft the two live steps are always run together, so `refresh.py` does exactly
+that and nothing else — `fetch_draft.py`, then `rank_vor.py`, stopping on the first
+failure. It shells out to each with `uv run` rather than importing them, keeping the
+pipelines as separate as they are everywhere else, and runs them from the repo root so
+their own default paths apply.
+
+```
+uv run refresh.py                       # draft.json, then rankings.json  (~35s)
+uv run refresh.py --report              # + both steps' validation summaries on stderr
+```
+
+The pool pipeline is not a step: it is offline and rebuilt a handful of times all
+offseason, and this runs every few minutes during a draft.
 
 The method itself is unchanged, and that is checked rather than asserted: a `draft.json`
 with nothing drafted yet reproduces `--no-draft` exactly, byte for byte. Replacement levels
