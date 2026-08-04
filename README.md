@@ -30,6 +30,15 @@ pipeline reads and every intermediate it writes stays inside its own folder.
 pool.json                    the draft pool — 350 players, 12 fields
 draft.json                   the live board — 290 picks, made and pending
 rank_vor.py                  pool.json + draft.json -> rankings.json (run separately)
+ranker/                      the ranker's internals, one module per concern:
+  league.py                  league constants, strategy knobs, draft order
+  pool.py                    pool.json -> Player objects
+  board.py                   draft.json -> the simulation's starting state
+  value.py                   roster valuation and replacement levels
+  sim.py                     the draft simulation and the fixed point
+  output.py                  rankings.json rows, payload, stderr reports
+  validate.py                every-run invariants
+  selftest.py                offline checks for states the live files can't reach
 
 pool_pipeline/               provider html -> pool.json   (local, offline, 3 stages)
   pipeline.py                orchestrator: parse -> pool -> sleeper
@@ -312,7 +321,7 @@ anything. `--report` names every one of them.
 and prices what is left.
 
 An absent `draft.json` is the preseason case, not an error: the script says so and ranks the
-whole pool. A board that disagrees with the league constants at the top of the script (12
+whole pool. A board that disagrees with the league constants in `ranker/league.py` (12
 teams, a player drafted twice, a header contradicting its own picks, a pool with no
 `sleeper_id`s to join on) is reported in `validation.problems` and exits non-zero rather
 than being quietly absorbed. `--selftest` covers what the live file cannot: a traded pick, a
