@@ -1,16 +1,20 @@
 #!/usr/bin/env python3
-"""Where every file in the build lives.
+"""Where every file in the pool build lives.
 
-The pipeline is a folder of scripts with one published artifact: ``pool.json`` at
-the repo root, which is what the draft board (``rank_vor.py``) reads. Everything
-else — the 8 MB provider html, the 2.5 MB faithful parse of it, the 14 MB Sleeper
-dump — is working material and stays inside ``pipeline/data/``.
+This pipeline is a folder of scripts with one published artifact: ``pool.json`` at
+the repo root, which is what the ranker (``rank_vor.py``) reads. Everything else —
+the 8 MB provider html, the 2.5 MB faithful parse of it, the 14 MB Sleeper dump — is
+working material and stays inside ``pool_pipeline/data/``.
+
+``draft_pipeline/`` is the other pipeline in this repo and keeps its own copy of this
+file. The two share no code and no working files; they meet only at ``sleeper_id``,
+the key ``match_sleeper.py`` writes into every pool player.
 
 Paths are anchored to this file, not to the current directory, so every stage can
 be run from anywhere:
 
-    python3 pipeline/pipeline.py
-    cd pipeline && python3 build_pool.py
+    python3 pool_pipeline/pipeline.py
+    cd pool_pipeline && python3 build_pool.py
 
 Both write the same ``pool.json``. Every script still takes explicit paths on the
 command line; these are only the defaults.

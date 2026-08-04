@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Download Sleeper's full NFL player dump. **Manual step — not a pipeline stage.**
 
-    python3 pipeline/fetch_sleeper.py
+    python3 pool_pipeline/fetch_sleeper.py
 
 Sleeper publishes every player it knows about at ``/v1/players/nfl`` as one ~14 MB
 object keyed by their player id (12k entries, ~4k of them QB/RB/WR/TE). Their docs
@@ -9,7 +9,7 @@ are explicit that this is not an endpoint to call casually — "you should save 
 information on your own servers... do not call this endpoint more than once per
 day" — and the data it returns is a roster of humans that changes on the scale of
 weeks, not a projection that changes with every rebuild. So it is fetched by hand
-and cached in ``pipeline/data/``, and ``pipeline.py`` never calls it.
+and cached in ``pool_pipeline/data/``, and ``pipeline.py`` never calls it.
 
 Two files are written:
 

@@ -455,7 +455,7 @@ def main(argv: list[str] | None = None) -> int:
     if not args.players.is_file():
         message = (
             f"sleeper dump {paths.display(args.players)} not found — run "
-            "`python3 pipeline/fetch_sleeper.py` (manual, ~14 MB)"
+            "`python3 pool_pipeline/fetch_sleeper.py` (manual, ~14 MB)"
         )
         if args.skip_if_missing:
             print(f"warning: {message}; {ID_FIELD} not added", file=sys.stderr)

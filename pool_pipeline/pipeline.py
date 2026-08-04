@@ -31,11 +31,11 @@ Ranking (`rank_vor.py`) is deliberately not a stage here: it consumes pool.json,
 simulation seed and strategy knobs, and is re-run far more often than the data is rebuilt.
 
 Usage:
-    python3 pipeline/pipeline.py                     # html -> projections.json -> pool.json
-    python3 pipeline/pipeline.py --report            # + every stage's validation summary
-    python3 pipeline/pipeline.py --only pool         # single stage
-    python3 pipeline/pipeline.py --only sleeper      # re-join ids onto an existing pool.json
-    python3 pipeline/fetch_sleeper.py                # refresh the Sleeper dump (manual)
+    python3 pool_pipeline/pipeline.py                     # html -> projections.json -> pool.json
+    python3 pool_pipeline/pipeline.py --report            # + every stage's validation summary
+    python3 pool_pipeline/pipeline.py --only pool         # single stage
+    python3 pool_pipeline/pipeline.py --only sleeper      # re-join ids onto an existing pool.json
+    python3 pool_pipeline/fetch_sleeper.py                # refresh the Sleeper dump (manual)
 """
 
 from __future__ import annotations
@@ -62,7 +62,7 @@ def main(argv: list[str] | None = None) -> int:
         "--projections",
         default=paths.PROJECTIONS_JSON,
         type=Path,
-        help="stage 1 output / stage 2 input (default: pipeline/data/projections.json)",
+        help="stage 1 output / stage 2 input (default: pool_pipeline/data/projections.json)",
     )
     ap.add_argument("-o", "--output", default=paths.POOL, type=Path)
     ap.add_argument(

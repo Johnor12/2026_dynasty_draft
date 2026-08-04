@@ -6,36 +6,52 @@ My league is .5 ppr with a .5 ppr tight end premium. Our rosters are 1 QB, 2 RB,
 
 ## layout
 
-The build lives in `pipeline/` and publishes exactly one file: `pool.json` at the root.
-Everything it reads and every intermediate it writes stays inside the folder.
+Two independent pipelines, each publishing one file at the repo root. Everything a
+pipeline reads and every intermediate it writes stays inside its own folder.
 
 ```
-pool.json                    the draft pool — the only output, 350 players, 12 fields
+pool.json                    the draft pool — 350 players, 12 fields
+draft.json                   the live board — 290 picks, made and pending
 rank_vor.py                  pool.json -> rankings.json (run separately)
-pipeline/
+
+pool_pipeline/               provider html -> pool.json   (local, offline, 3 stages)
   pipeline.py                orchestrator: parse -> pool -> sleeper
   parse_projections.py       1. html -> projections.json   (faithful provider export)
   build_pool.py              2. projections.json -> pool.json  (this league's pool)
   match_sleeper.py           3. pool.json -> pool.json + sleeper_id
   fetch_sleeper.py           manual: download Sleeper's player dump (not a stage)
+  paths.py
   data/
     projections.html         raw provider save, added by hand
     projections.json         intermediate, 900 players x 8 schemes
-    sleeper_players.json     cached Sleeper dump, ~14 MB, gitignored
-    sleeper_players.meta.json  when it was fetched (committed)
+    sleeper_players.json     cached Sleeper dump, ~14 MB
+    sleeper_players.meta.json  when it was fetched
+
+draft_pipeline/              Sleeper draft API -> draft.json  (network, on demand)
+  fetch_draft.py             the whole pipeline — one stage, so no orchestrator
+  paths.py
 ```
 
-## pipeline
+**They are separate on purpose.** The pool pipeline is local, offline and deterministic,
+and is re-run when the projections change — a handful of times all offseason. The draft
+pipeline has no inputs on disk, caches nothing, and is re-run on demand during a live
+draft. Sharing an orchestrator would mean either a pool rebuild that hits the live draft
+or a draft refresh that re-parses 8 MB of html, so they share no code and no working
+files — `draft_pipeline/` keeps its own small `paths.py` rather than importing one. They
+meet only at `sleeper_id`: the key `match_sleeper.py` writes into every pool player is
+the key every pick in `draft.json` carries.
+
+## pool pipeline
 
 ```
-python3 pipeline/pipeline.py                  # html -> projections.json -> pool.json + ids
-python3 pipeline/pipeline.py --report         # + every stage's validation summary on stderr
-python3 pipeline/pipeline.py --only pool      # single stage
-python3 pipeline/fetch_sleeper.py             # refresh the Sleeper dump (manual, ~14 MB)
+python3 pool_pipeline/pipeline.py             # html -> projections.json -> pool.json + ids
+python3 pool_pipeline/pipeline.py --report    # + every stage's validation summary on stderr
+python3 pool_pipeline/pipeline.py --only pool # single stage
+python3 pool_pipeline/fetch_sleeper.py        # refresh the Sleeper dump (manual, ~14 MB)
 python3 rank_vor.py                           # pool.json -> rankings.json (run separately)
 ```
 
-Three data stages, ordered: `parse_projections.py` (html -> `projections.json`, the full
+Three stages, ordered: `parse_projections.py` (html -> `projections.json`, the full
 provider export: 900 players, 8 schemes, 4 horizons, ~2.9 MB), `build_pool.py`
 (-> `pool.json`, this league's 350-player draft pool with one value column, ~95 KB), then
 `match_sleeper.py` (adds `sleeper_id` to that file in place). All are standalone CLIs; the
@@ -46,7 +62,7 @@ dropped columns stay recoverable. Stage 3 comes last because stage 2 rewrites `p
 from scratch, dropping the ids stage 3 adds — so a rebuild always re-joins them.
 
 Default paths are anchored to the scripts, not the shell, so every command above works
-from the repo root or from inside `pipeline/`.
+from the repo root or from inside `pool_pipeline/`.
 
 `rank_vor.py` (pool.json -> rankings.json) is deliberately not a pipeline stage: it takes
 a simulation seed and strategy knobs and is re-run far more often than the data is built.
@@ -56,9 +72,9 @@ a simulation seed and strategy knobs and is re-run far more often than the data 
 `parse_projections.py` turns `data/projections.html` into `data/projections.json` — 900 players, ~2.5 MB, about 1.5s. Python stdlib only (`html.parser`), no dependencies.
 
 ```
-python3 pipeline/parse_projections.py                      # -> data/projections.json
-python3 pipeline/parse_projections.py --report             # + validation summary on stderr
-python3 pipeline/parse_projections.py in.html -o out.json
+python3 pool_pipeline/parse_projections.py                      # -> data/projections.json
+python3 pool_pipeline/parse_projections.py --report             # + validation summary on stderr
+python3 pool_pipeline/parse_projections.py in.html -o out.json
 ```
 
 No browser or JS execution is needed: the page is server-rendered and **every scoring scheme is already in the DOM** as `data-scoring-value-*` attributes on each cell. Alpine.js only toggles which one is visible. So all 8 schemes (`standard`, `half_ppr`, `ppr`, `te_premium`, each also `_superflex`) come straight out of the static markup.
@@ -79,9 +95,9 @@ Each player gets identity fields (id, name, position, team, age, bye, rookie fla
 ~100 KB — by throwing away everything a 10-team superflex dynasty draft can't use:
 
 ```
-python3 pipeline/build_pool.py                       # projections.json -> pool.json
-python3 pipeline/build_pool.py --report              # + validation summary on stderr
-python3 pipeline/build_pool.py --limit 450 -o big.json
+python3 pool_pipeline/build_pool.py                       # projections.json -> pool.json
+python3 pool_pipeline/build_pool.py --report              # + validation summary on stderr
+python3 pool_pipeline/build_pool.py --limit 450 -o big.json
 ```
 
 Three cuts, in order: **positions** (QB/RB/WR/TE only — K and IDP have no roster slot,
@@ -129,14 +145,14 @@ age and position are already in the pool, and a second disagreeing copy would ju
 the question of which to trust.
 
 ```
-python3 pipeline/fetch_sleeper.py           # manual download -> data/sleeper_players.json
-python3 pipeline/fetch_sleeper.py --force   # ignore the 24h re-download guard
-python3 pipeline/match_sleeper.py --report  # join + print every risky match and every miss
+python3 pool_pipeline/fetch_sleeper.py           # manual download -> data/sleeper_players.json
+python3 pool_pipeline/fetch_sleeper.py --force   # ignore the 24h re-download guard
+python3 pool_pipeline/match_sleeper.py --report  # join + print every risky match and every miss
 ```
 
 **The download is a separate, manual step and never runs as part of the pipeline.** It's
 ~14 MB, Sleeper's docs ask for at most one call per day, and an NFL roster doesn't change
-because local projections were rebuilt. The dump is cached in `pipeline/data/`
+because local projections were rebuilt. The dump is cached in `pool_pipeline/data/`
 (gitignored) alongside a small committed `.meta.json` recording when it was pulled;
 `match_sleeper.py` stamps that timestamp into `pool.json` and warns past 14 days. With no
 dump present the stage warns and is skipped — `pool.json` is still complete apart from
@@ -180,3 +196,66 @@ fetch timestamp, the per-tier counts and any unmatched players.
 **3D value is scaled per scheme and goes negative.** The best player in each scheme is pinned at 100, and roughly 500 of 900 players sit below zero. Values aren't meaningful as absolutes or comparable across schemes — only as a within-scheme ordering.
 
 **Two fields are undocumented in the source page.** `percent_low` / `percent_high` (from `data-percent-low`/`-high`) have no legend and no JS reference anywhere in the file. `hidden_row` flags 204 rows that carried `class="hidden-row"`; they're all QB/RB/WR/TE, so it's likely a research-depth filter, but the page never says. Both are captured as-is rather than interpreted.
+
+## draft pipeline
+
+`draft_pipeline/fetch_draft.py` writes `draft.json` — the whole board, all 290 picks, every
+time it runs. It is one stage, so the pipeline is just the script; there is no orchestrator
+to wrap a single step. The draft is
+[`1388293618208374784`](https://sleeper.com/draft/nfl/1388293618208374784), the trailing
+number of the league's draft URL.
+
+```
+python3 draft_pipeline/fetch_draft.py              # -> draft.json
+python3 draft_pipeline/fetch_draft.py --report     # + the board's validation summary
+python3 draft_pipeline/fetch_draft.py --selftest   # check the board geometry offline
+python3 draft_pipeline/fetch_draft.py --me someone # whose picks get is_mine
+```
+
+**It is on demand and deliberately uncached** — the mirror image of `fetch_sleeper.py`,
+which refuses to re-download inside 24h. The draft changes with every pick, the responses
+total a few hundred KB, and a stale board is worse than none, so every run re-asks. Four
+endpoints, because the picks alone don't say who owns what: `/draft/<id>` (teams, rounds,
+snake type, reversal round, draft order), `/draft/<id>/picks`, `/draft/<id>/traded_picks`,
+and `/league/<id>/users` for display names. Sleeper's only published limit is 1000 calls a
+minute. A failure of the first three is fatal — half a board is worse than none, and a
+missing `traded_picks` would silently misattribute picks — while the user list only supplies
+names, so it degrades to a warning.
+
+**`picks` is one array of all 290 entries, indexed by `pick_no`**, each with the same shape
+and a `status` of `made` or `pending`. Made picks are Sleeper's own record; pending ones
+carry `null` for the player and exist so the file answers *who picks next* and *when is my
+next pick*. Header fields cover the rest: `on_the_clock`, `my_next_pick` (with `picks_away`),
+`picks_made`/`picks_pending`, `slots` (the ten teams by draft slot), and the raw
+`traded_picks`.
+
+**`sleeper_id` is the join key back to `pool.json`.** Nothing here is joined to the pool —
+that's the consumer's business, and this file stays a record of what Sleeper said. Sleeper's
+own `name`/`position`/`team` come along so the file reads by eye, but they're informational;
+the pool has the projection provider's copy. `--report` checks the join and names any drafted
+player outside the pool (expect kickers and IDP late).
+
+**Pending picks are derived, and the derivation is checked against reality every run.**
+Sleeper reports a pick's slot, roster and user only once it's been made. A plain snake
+alternates — odd rounds slot 1..10, even 10..1 — and a *reversal round* repeats the previous
+round's order instead of flipping back, which inverts the parity from that round on. At
+reversal round 3 that gives forward, reverse, reverse, forward, reverse, forward, …, which
+puts slot 2 at 1.02, 2.09, 3.09, 4.02, 5.09, 6.02 … 28.02, 29.09 — the sequence above.
+Traded picks are then applied on top, keyed by round and the pick's *original* roster.
+
+For every made pick, the derived slot and owning roster are compared against the ones
+Sleeper reported; disagreements are warned about on stderr and recorded in the output's
+`board_derivation` block. That check strengthens with each pick and would catch a wrong
+reversal rule or an unapplied trade before it misattributed the pending half of the board.
+
+It can only exercise rounds that have actually been drafted, though — on pick 4 of 290
+that's one round of 29, and none of the trade logic, since a board with no traded picks
+can't test it. So **`--selftest` covers the rest offline** (28 checks, no network): the slot
+order of each supported format, this league's slot-2 sequence against the one stated at the
+top of this file, a traded pick landing with its acquirer, and the negative control that an
+*un*applied trade is caught by the live check above.
+
+`--report` prints the round-by-round slot order, that live cross-check, my full pick list,
+the last dozen selections with a position breakdown, the pool join, and integrity checks
+(`pick_no` gap-free, every slot appearing exactly `rounds` times, no player drafted twice,
+every pick owned).
