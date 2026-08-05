@@ -4,7 +4,11 @@ Everything is in 3-year points above a baseline, never raw points, so that filli
 empty slot is never confused with a real gain. A team's value is
 
     V(roster) = sum over filled starting slots of (points - that slot's replacement level)
-              + sum over bench players of  0.30 * 0.55^d * max(points - wire level, 0)
+              + sum over bench players of  0.30 * 0.55^d * max(upside - wire level, 0)
+
+where `upside` is the player's 3-year total re-projected at his years-2-3 pace
+(`upside_points`) — the bench is where upside lives, so a backloaded rookie outranks a
+flat veteran with the same 3-year sum there, while starters stay priced on the sum.
 
 where d counts the bench players that team already has at the same position. The value of
 a player to a team is V(roster + player) - V(roster). Three choices in there each cost a
@@ -146,6 +150,25 @@ def team_value(
 
 def compute_vor(players: list[Player], rep: dict[str, float]) -> dict[int, float]:
     return {p.player_id: p.points - rep[p.position] for p in players}
+
+
+def upside_points(p: Player) -> float:
+    """Bench players are priced on their years-2-3 pace, not their 3-year sum.
+
+    With a full starter squad, a bench pick's year-1 points are close to worthless — his
+    job is to grow past a starter in years 2-3. So a rookie projected 0/100/200 must
+    outrank a veteran projected 100/100/100 on the bench, even though their 3-year sums
+    tie. The provider publishes cumulative 1- and 3-year totals, so the years-2-3 pace
+    is (points - points_1yr) / 2, and re-projecting that pace over the whole 3-year
+    horizon keeps the quantity on the scale of the wire level it is differenced against:
+    a perfectly flat scorer's upside points equal his `points` exactly, so only the
+    growth shape moves the number — backloaded players up, declining veterans down.
+
+    Starters are untouched: they play all three years, so their 3-year sum is already
+    the right price. The source data guarantees points_1yr <= points (the horizons are
+    cumulative), so this is never negative.
+    """
+    return 1.5 * (p.points - p.points_1yr)
 
 
 # --- replacement levels -----------------------------------------------------------

@@ -44,6 +44,7 @@
     "bye_week": "Team bye week; null for unsigned players.",
     "is_rookie": "True for 2026 rookies (taxi-squad eligible).",
     "points_3yr": "Three-year projected fantasy points under this league's scoring: 0.5/rec with a 0.5/rec TE premium. Copied from the provider column that prices that rate exactly (TE: ppr, others: half_ppr).",
+    "points_1yr": "One-year projected points, same scoring and same source columns. The gap between this and points_3yr is the provider's implied growth: the ranker prices bench upside off the years-2-3 pace, (points_3yr - points_1yr) / 2. A genuine 0 (e.g. a stashed rookie) is kept as 0.",
     "adp": "Superflex ADP as an overall pick number in the source's 12-team draft (its round.pick value decoded: 2.03 -> 15). Past pick 540 the source's tail is noise, i.e. 'effectively undrafted' rather than a real slot."
   },
   "players": [
@@ -59,6 +60,7 @@
       "bye_week": 7,
       "is_rookie": false,
       "points_3yr": 1037,
+      "points_1yr": 379,
       "adp": 1
     },
     {
@@ -73,6 +75,7 @@
       "bye_week": 7,
       "is_rookie": false,
       "points_3yr": 1018,
+      "points_1yr": 332,
       "adp": 8
     },
     {
@@ -87,6 +90,7 @@
       "bye_week": 13,
       "is_rookie": false,
       "points_3yr": 1000,
+      "points_1yr": 340,
       "adp": 11
     },
     {
@@ -101,6 +105,7 @@
       "bye_week": 11,
       "is_rookie": false,
       "points_3yr": 983,
+      "points_1yr": 340,
       "adp": 3
     },
     {
@@ -115,6 +120,7 @@
       "bye_week": 6,
       "is_rookie": false,
       "points_3yr": 974,
+      "points_1yr": 342,
       "adp": 10
     },
     {
@@ -129,6 +135,7 @@
       "bye_week": 10,
       "is_rookie": false,
       "points_3yr": 960,
+      "points_1yr": 331,
       "adp": 25
     },
     {
@@ -143,6 +150,7 @@
       "bye_week": 5,
       "is_rookie": false,
       "points_3yr": 938,
+      "points_1yr": 309,
       "adp": 26
     },
     {
@@ -157,6 +165,7 @@
       "bye_week": 10,
       "is_rookie": false,
       "points_3yr": 926,
+      "points_1yr": 324,
       "adp": 14
     },
     {
@@ -171,6 +180,7 @@
       "bye_week": 7,
       "is_rookie": false,
       "points_3yr": 915,
+      "points_1yr": 326,
       "adp": 24
     },
     {
@@ -185,6 +195,7 @@
       "bye_week": 7,
       "is_rookie": false,
       "points_3yr": 884,
+      "points_1yr": 329,
       "adp": 31
     },
     {
@@ -199,6 +210,7 @@
       "bye_week": 11,
       "is_rookie": false,
       "points_3yr": 869,
+      "points_1yr": 296,
       "adp": 49
     },
     {
@@ -213,6 +225,7 @@
       "bye_week": 10,
       "is_rookie": false,
       "points_3yr": 863,
+      "points_1yr": 312,
       "adp": 33
     },
     {
@@ -227,6 +240,7 @@
       "bye_week": 14,
       "is_rookie": false,
       "points_3yr": 863,
+      "points_1yr": 325,
       "adp": 44
     },
     {
@@ -241,6 +255,7 @@
       "bye_week": 8,
       "is_rookie": false,
       "points_3yr": 858,
+      "points_1yr": 327,
       "adp": 36
     },
     {
@@ -255,6 +270,7 @@
       "bye_week": 14,
       "is_rookie": false,
       "points_3yr": 849,
+      "points_1yr": 253,
       "adp": 15
     },
     {
@@ -269,6 +285,7 @@
       "bye_week": 13,
       "is_rookie": false,
       "points_3yr": 848,
+      "points_1yr": 259,
       "adp": 13
     },
     {
@@ -283,6 +300,7 @@
       "bye_week": 6,
       "is_rookie": false,
       "points_3yr": 847,
+      "points_1yr": 303,
       "adp": 65
     },
     {
@@ -297,6 +315,7 @@
       "bye_week": 11,
       "is_rookie": false,
       "points_3yr": 845,
+      "points_1yr": 299,
       "adp": 89
     },
     {
@@ -311,6 +330,7 @@
       "bye_week": 6,
       "is_rookie": false,
       "points_3yr": 840,
+      "points_1yr": 325,
       "adp": 84
     },
     {
@@ -325,6 +345,7 @@
       "bye_week": 8,
       "is_rookie": false,
       "points_3yr": 830,
+      "points_1yr": 319,
       "adp": 23
     },
     {
@@ -339,6 +360,7 @@
       "bye_week": 10,
       "is_rookie": false,
       "points_3yr": 822,
+      "points_1yr": 291,
       "adp": 64
     },
     {
@@ -353,6 +375,7 @@
       "bye_week": 6,
       "is_rookie": false,
       "points_3yr": 821,
+      "points_1yr": 273,
       "adp": 93
     },
     {
@@ -367,6 +390,7 @@
       "bye_week": 6,
       "is_rookie": false,
       "points_3yr": 812,
+      "points_1yr": 277,
       "adp": 4
     },
     {
@@ -381,6 +405,7 @@
       "bye_week": 13,
       "is_rookie": true,
       "points_3yr": 812,
+      "points_1yr": 198,
       "adp": 39
     },
     {
@@ -395,6 +420,7 @@
       "bye_week": 11,
       "is_rookie": false,
       "points_3yr": 810,
+      "points_1yr": 261,
       "adp": 80
     },
     {
@@ -409,6 +435,7 @@
       "bye_week": 8,
       "is_rookie": false,
       "points_3yr": 808,
+      "points_1yr": 278,
       "adp": 76
     },
     {
@@ -423,6 +450,7 @@
       "bye_week": 8,
       "is_rookie": false,
       "points_3yr": 800,
+      "points_1yr": 297,
       "adp": 78
     },
     {
@@ -437,6 +465,7 @@
       "bye_week": 9,
       "is_rookie": false,
       "points_3yr": 788,
+      "points_1yr": 262,
       "adp": 72
     },
     {
@@ -451,6 +480,7 @@
       "bye_week": 11,
       "is_rookie": false,
       "points_3yr": 766,
+      "points_1yr": 262,
       "adp": 7
     },
     {
@@ -465,6 +495,7 @@
       "bye_week": 11,
       "is_rookie": false,
       "points_3yr": 765,
+      "points_1yr": 311,
       "adp": 2
     },
     {
@@ -479,6 +510,7 @@
       "bye_week": 5,
       "is_rookie": false,
       "points_3yr": 759,
+      "points_1yr": 247,
       "adp": 88
     },
     {
@@ -493,6 +525,7 @@
       "bye_week": 11,
       "is_rookie": true,
       "points_3yr": 751,
+      "points_1yr": 30,
       "adp": 104
     },
     {
@@ -507,6 +540,7 @@
       "bye_week": 6,
       "is_rookie": false,
       "points_3yr": 739,
+      "points_1yr": 316,
       "adp": 5
     },
     {
@@ -521,6 +555,7 @@
       "bye_week": 11,
       "is_rookie": false,
       "points_3yr": 737,
+      "points_1yr": 293,
       "adp": 6
     },
     {
@@ -535,6 +570,7 @@
       "bye_week": 6,
       "is_rookie": false,
       "points_3yr": 737,
+      "points_1yr": 240,
       "adp": 16
     },
     {
@@ -549,6 +585,7 @@
       "bye_week": 14,
       "is_rookie": false,
       "points_3yr": 728,
+      "points_1yr": 249,
       "adp": 19
     },
     {
@@ -563,6 +600,7 @@
       "bye_week": 6,
       "is_rookie": false,
       "points_3yr": 718,
+      "points_1yr": 259,
       "adp": 9
     },
     {
@@ -577,6 +615,7 @@
       "bye_week": 13,
       "is_rookie": false,
       "points_3yr": 710,
+      "points_1yr": 277,
       "adp": 94
     },
     {
@@ -591,6 +630,7 @@
       "bye_week": 8,
       "is_rookie": false,
       "points_3yr": 696,
+      "points_1yr": 194,
       "adp": 12
     },
     {
@@ -605,6 +645,7 @@
       "bye_week": 11,
       "is_rookie": false,
       "points_3yr": 687,
+      "points_1yr": 114,
       "adp": 144
     },
     {
@@ -619,6 +660,7 @@
       "bye_week": 13,
       "is_rookie": false,
       "points_3yr": 686,
+      "points_1yr": 277,
       "adp": 27
     },
     {
@@ -633,6 +675,7 @@
       "bye_week": 11,
       "is_rookie": false,
       "points_3yr": 679,
+      "points_1yr": 228,
       "adp": 22
     },
     {
@@ -647,6 +690,7 @@
       "bye_week": 10,
       "is_rookie": false,
       "points_3yr": 676,
+      "points_1yr": 241,
       "adp": 29
     },
     {
@@ -661,6 +705,7 @@
       "bye_week": 8,
       "is_rookie": false,
       "points_3yr": 673,
+      "points_1yr": 229,
       "adp": 34
     },
     {
@@ -675,6 +720,7 @@
       "bye_week": 14,
       "is_rookie": true,
       "points_3yr": 671,
+      "points_1yr": 218,
       "adp": 18
     },
     {
@@ -689,6 +735,7 @@
       "bye_week": 6,
       "is_rookie": false,
       "points_3yr": 648,
+      "points_1yr": 240,
       "adp": 20
     },
     {
@@ -703,6 +750,7 @@
       "bye_week": 7,
       "is_rookie": false,
       "points_3yr": 647,
+      "points_1yr": 236,
       "adp": 21
     },
     {
@@ -717,6 +765,7 @@
       "bye_week": 13,
       "is_rookie": false,
       "points_3yr": 644,
+      "points_1yr": 262,
       "adp": 17
     },
     {
@@ -731,6 +780,7 @@
       "bye_week": 11,
       "is_rookie": false,
       "points_3yr": 629,
+      "points_1yr": 108,
       "adp": 162
     },
     {
@@ -745,6 +795,7 @@
       "bye_week": 11,
       "is_rookie": false,
       "points_3yr": 608,
+      "points_1yr": 127,
       "adp": 149
     },
     {
@@ -759,6 +810,7 @@
       "bye_week": 5,
       "is_rookie": false,
       "points_3yr": 605,
+      "points_1yr": 185,
       "adp": 28
     },
     {
@@ -773,6 +825,7 @@
       "bye_week": 14,
       "is_rookie": false,
       "points_3yr": 599,
+      "points_1yr": 219,
       "adp": 32
     },
     {
@@ -787,6 +840,7 @@
       "bye_week": 13,
       "is_rookie": false,
       "points_3yr": 592,
+      "points_1yr": 229,
       "adp": 38
     },
     {
@@ -801,6 +855,7 @@
       "bye_week": 7,
       "is_rookie": false,
       "points_3yr": 573,
+      "points_1yr": 274,
       "adp": 30
     },
     {
@@ -815,6 +870,7 @@
       "bye_week": 11,
       "is_rookie": false,
       "points_3yr": 564,
+      "points_1yr": 200,
       "adp": 58
     },
     {
@@ -829,6 +885,7 @@
       "bye_week": 6,
       "is_rookie": false,
       "points_3yr": 554,
+      "points_1yr": 205,
       "adp": 61
     },
     {
@@ -843,6 +900,7 @@
       "bye_week": 11,
       "is_rookie": false,
       "points_3yr": 554,
+      "points_1yr": 197,
       "adp": 46
     },
     {
@@ -857,6 +915,7 @@
       "bye_week": 6,
       "is_rookie": false,
       "points_3yr": 554,
+      "points_1yr": 33,
       "adp": 151
     },
     {
@@ -871,6 +930,7 @@
       "bye_week": 13,
       "is_rookie": false,
       "points_3yr": 547,
+      "points_1yr": 208,
       "adp": 66
     },
     {
@@ -885,6 +945,7 @@
       "bye_week": 14,
       "is_rookie": false,
       "points_3yr": 545,
+      "points_1yr": 204,
       "adp": 159
     },
     {
@@ -899,6 +960,7 @@
       "bye_week": 8,
       "is_rookie": false,
       "points_3yr": 539,
+      "points_1yr": 207,
       "adp": 35
     },
     {
@@ -913,6 +975,7 @@
       "bye_week": 6,
       "is_rookie": false,
       "points_3yr": 537,
+      "points_1yr": 179,
       "adp": 69
     },
     {
@@ -927,6 +990,7 @@
       "bye_week": 5,
       "is_rookie": false,
       "points_3yr": 535,
+      "points_1yr": 240,
       "adp": 47
     },
     {
@@ -941,6 +1005,7 @@
       "bye_week": 10,
       "is_rookie": false,
       "points_3yr": 535,
+      "points_1yr": 184,
       "adp": 37
     },
     {
@@ -955,6 +1020,7 @@
       "bye_week": 7,
       "is_rookie": false,
       "points_3yr": 535,
+      "points_1yr": 182,
       "adp": 45
     },
     {
@@ -969,6 +1035,7 @@
       "bye_week": 11,
       "is_rookie": false,
       "points_3yr": 532,
+      "points_1yr": 231,
       "adp": 60
     },
     {
@@ -983,6 +1050,7 @@
       "bye_week": 10,
       "is_rookie": false,
       "points_3yr": 531,
+      "points_1yr": 193,
       "adp": 79
     },
     {
@@ -997,6 +1065,7 @@
       "bye_week": 10,
       "is_rookie": true,
       "points_3yr": 527,
+      "points_1yr": 142,
       "adp": 67
     },
     {
@@ -1011,6 +1080,7 @@
       "bye_week": 11,
       "is_rookie": false,
       "points_3yr": 524,
+      "points_1yr": 180,
       "adp": 42
     },
     {
@@ -1025,6 +1095,7 @@
       "bye_week": 5,
       "is_rookie": false,
       "points_3yr": 523,
+      "points_1yr": 236,
       "adp": 52
     },
     {
@@ -1039,6 +1110,7 @@
       "bye_week": 8,
       "is_rookie": true,
       "points_3yr": 523,
+      "points_1yr": 161,
       "adp": 57
     },
     {
@@ -1053,6 +1125,7 @@
       "bye_week": 13,
       "is_rookie": false,
       "points_3yr": 523,
+      "points_1yr": 197,
       "adp": 40
     },
     {
@@ -1067,6 +1140,7 @@
       "bye_week": 10,
       "is_rookie": false,
       "points_3yr": 519,
+      "points_1yr": 199,
       "adp": 74
     },
     {
@@ -1081,6 +1155,7 @@
       "bye_week": 8,
       "is_rookie": false,
       "points_3yr": 517,
+      "points_1yr": 293,
       "adp": 43
     },
     {
@@ -1095,6 +1170,7 @@
       "bye_week": 10,
       "is_rookie": false,
       "points_3yr": 507,
+      "points_1yr": 248,
       "adp": 56
     },
     {
@@ -1109,6 +1185,7 @@
       "bye_week": 9,
       "is_rookie": true,
       "points_3yr": 507,
+      "points_1yr": 162,
       "adp": 50
     },
     {
@@ -1123,6 +1200,7 @@
       "bye_week": 11,
       "is_rookie": false,
       "points_3yr": 503,
+      "points_1yr": 194,
       "adp": 98
     },
     {
@@ -1137,6 +1215,7 @@
       "bye_week": 11,
       "is_rookie": false,
       "points_3yr": 499,
+      "points_1yr": 186,
       "adp": 77
     },
     {
@@ -1151,6 +1230,7 @@
       "bye_week": 13,
       "is_rookie": false,
       "points_3yr": 496,
+      "points_1yr": 222,
       "adp": 48
     },
     {
@@ -1165,6 +1245,7 @@
       "bye_week": 10,
       "is_rookie": false,
       "points_3yr": 496,
+      "points_1yr": 183,
       "adp": 54
     },
     {
@@ -1179,6 +1260,7 @@
       "bye_week": 10,
       "is_rookie": false,
       "points_3yr": 491,
+      "points_1yr": 173,
       "adp": 55
     },
     {
@@ -1193,6 +1275,7 @@
       "bye_week": 11,
       "is_rookie": false,
       "points_3yr": 486,
+      "points_1yr": 244,
       "adp": 71
     },
     {
@@ -1207,6 +1290,7 @@
       "bye_week": 11,
       "is_rookie": false,
       "points_3yr": 484,
+      "points_1yr": 186,
       "adp": 53
     },
     {
@@ -1221,6 +1305,7 @@
       "bye_week": 6,
       "is_rookie": false,
       "points_3yr": 478,
+      "points_1yr": 196,
       "adp": 68
     },
     {
@@ -1235,6 +1320,7 @@
       "bye_week": 7,
       "is_rookie": false,
       "points_3yr": 473,
+      "points_1yr": 187,
       "adp": 107
     },
     {
@@ -1249,6 +1335,7 @@
       "bye_week": 11,
       "is_rookie": false,
       "points_3yr": 469,
+      "points_1yr": 193,
       "adp": 106
     },
     {
@@ -1263,6 +1350,7 @@
       "bye_week": 8,
       "is_rookie": false,
       "points_3yr": 468,
+      "points_1yr": 183,
       "adp": 119
     },
     {
@@ -1277,6 +1365,7 @@
       "bye_week": 13,
       "is_rookie": true,
       "points_3yr": 454,
+      "points_1yr": 150,
       "adp": 87
     },
     {
@@ -1291,6 +1380,7 @@
       "bye_week": 7,
       "is_rookie": false,
       "points_3yr": 451,
+      "points_1yr": 174,
       "adp": 90
     },
     {
@@ -1305,6 +1395,7 @@
       "bye_week": 9,
       "is_rookie": false,
       "points_3yr": 449,
+      "points_1yr": 173,
       "adp": 103
     },
     {
@@ -1319,6 +1410,7 @@
       "bye_week": 14,
       "is_rookie": false,
       "points_3yr": 449,
+      "points_1yr": 142,
       "adp": 92
     },
     {
@@ -1333,6 +1425,7 @@
       "bye_week": 9,
       "is_rookie": true,
       "points_3yr": 448,
+      "points_1yr": 14,
       "adp": 245
     },
     {
@@ -1347,6 +1440,7 @@
       "bye_week": 10,
       "is_rookie": false,
       "points_3yr": 447,
+      "points_1yr": 167,
       "adp": 123
     },
     {
@@ -1361,6 +1455,7 @@
       "bye_week": 14,
       "is_rookie": false,
       "points_3yr": 446,
+      "points_1yr": 165,
       "adp": 108
     },
     {
@@ -1375,6 +1470,7 @@
       "bye_week": 8,
       "is_rookie": false,
       "points_3yr": 446,
+      "points_1yr": 173,
       "adp": 114
     },
     {
@@ -1389,6 +1485,7 @@
       "bye_week": 6,
       "is_rookie": false,
       "points_3yr": 444,
+      "points_1yr": 237,
       "adp": 41
     },
     {
@@ -1403,6 +1500,7 @@
       "bye_week": 11,
       "is_rookie": true,
       "points_3yr": 444,
+      "points_1yr": 144,
       "adp": 85
     },
     {
@@ -1417,6 +1515,7 @@
       "bye_week": 7,
       "is_rookie": false,
       "points_3yr": 444,
+      "points_1yr": 157,
       "adp": 62
     },
     {
@@ -1431,6 +1530,7 @@
       "bye_week": 6,
       "is_rookie": false,
       "points_3yr": 444,
+      "points_1yr": 163,
       "adp": 97
     },
     {
@@ -1445,6 +1545,7 @@
       "bye_week": 13,
       "is_rookie": false,
       "points_3yr": 444,
+      "points_1yr": 166,
       "adp": 91
     },
     {
@@ -1459,6 +1560,7 @@
       "bye_week": 7,
       "is_rookie": false,
       "points_3yr": 442,
+      "points_1yr": 159,
       "adp": 101
     },
     {
@@ -1473,6 +1575,7 @@
       "bye_week": 10,
       "is_rookie": false,
       "points_3yr": 437,
+      "points_1yr": 188,
       "adp": 51
     },
     {
@@ -1487,6 +1590,7 @@
       "bye_week": 11,
       "is_rookie": true,
       "points_3yr": 431,
+      "points_1yr": 161,
       "adp": 81
     },
     {
@@ -1501,6 +1605,7 @@
       "bye_week": 14,
       "is_rookie": false,
       "points_3yr": 430,
+      "points_1yr": 163,
       "adp": 59
     },
     {
@@ -1515,6 +1620,7 @@
       "bye_week": 13,
       "is_rookie": true,
       "points_3yr": 429,
+      "points_1yr": 28,
       "adp": 263
     },
     {
@@ -1529,6 +1635,7 @@
       "bye_week": 7,
       "is_rookie": false,
       "points_3yr": 427,
+      "points_1yr": 159,
       "adp": 127
     },
     {
@@ -1543,6 +1650,7 @@
       "bye_week": 9,
       "is_rookie": false,
       "points_3yr": 426,
+      "points_1yr": 161,
       "adp": 118
     },
     {
@@ -1557,6 +1665,7 @@
       "bye_week": 11,
       "is_rookie": false,
       "points_3yr": 422,
+      "points_1yr": 217,
       "adp": 63
     },
     {
@@ -1571,6 +1680,7 @@
       "bye_week": 10,
       "is_rookie": true,
       "points_3yr": 422,
+      "points_1yr": 77,
       "adp": 130
     },
     {
@@ -1585,6 +1695,7 @@
       "bye_week": 7,
       "is_rookie": false,
       "points_3yr": 421,
+      "points_1yr": 175,
       "adp": 111
     },
     {
@@ -1599,6 +1710,7 @@
       "bye_week": 5,
       "is_rookie": false,
       "points_3yr": 419,
+      "points_1yr": 153,
       "adp": 128
     },
     {
@@ -1613,6 +1725,7 @@
       "bye_week": 8,
       "is_rookie": false,
       "points_3yr": 419,
+      "points_1yr": 141,
       "adp": 116
     },
     {
@@ -1627,6 +1740,7 @@
       "bye_week": 7,
       "is_rookie": false,
       "points_3yr": 411,
+      "points_1yr": 133,
       "adp": 86
     },
     {
@@ -1641,6 +1755,7 @@
       "bye_week": 13,
       "is_rookie": false,
       "points_3yr": 410,
+      "points_1yr": 0,
       "adp": 181
     },
     {
@@ -1655,6 +1770,7 @@
       "bye_week": 10,
       "is_rookie": false,
       "points_3yr": 409,
+      "points_1yr": 149,
       "adp": 140
     },
     {
@@ -1669,6 +1785,7 @@
       "bye_week": 7,
       "is_rookie": false,
       "points_3yr": 407,
+      "points_1yr": 137,
       "adp": 146
     },
     {
@@ -1683,6 +1800,7 @@
       "bye_week": 13,
       "is_rookie": true,
       "points_3yr": 404,
+      "points_1yr": 121,
       "adp": 95
     },
     {
@@ -1697,6 +1815,7 @@
       "bye_week": 8,
       "is_rookie": false,
       "points_3yr": 403,
+      "points_1yr": 0,
       "adp": 102
     },
     {
@@ -1711,6 +1830,7 @@
       "bye_week": 13,
       "is_rookie": false,
       "points_3yr": 403,
+      "points_1yr": 230,
       "adp": 185
     },
     {
@@ -1725,6 +1845,7 @@
       "bye_week": 11,
       "is_rookie": false,
       "points_3yr": 402,
+      "points_1yr": 134,
       "adp": 124
     },
     {
@@ -1739,6 +1860,7 @@
       "bye_week": 11,
       "is_rookie": false,
       "points_3yr": 402,
+      "points_1yr": 165,
       "adp": 135
     },
     {
@@ -1753,6 +1875,7 @@
       "bye_week": 9,
       "is_rookie": false,
       "points_3yr": 399,
+      "points_1yr": 137,
       "adp": 99
     },
     {
@@ -1767,6 +1890,7 @@
       "bye_week": 11,
       "is_rookie": false,
       "points_3yr": 395,
+      "points_1yr": 148,
       "adp": 132
     },
     {
@@ -1781,6 +1905,7 @@
       "bye_week": 13,
       "is_rookie": false,
       "points_3yr": 394,
+      "points_1yr": 253,
       "adp": 83
     },
     {
@@ -1795,6 +1920,7 @@
       "bye_week": 8,
       "is_rookie": false,
       "points_3yr": 394,
+      "points_1yr": 152,
       "adp": 126
     },
     {
@@ -1809,6 +1935,7 @@
       "bye_week": 8,
       "is_rookie": false,
       "points_3yr": 394,
+      "points_1yr": 152,
       "adp": 141
     },
     {
@@ -1823,6 +1950,7 @@
       "bye_week": 8,
       "is_rookie": false,
       "points_3yr": 392,
+      "points_1yr": 209,
       "adp": 73
     },
     {
@@ -1837,6 +1965,7 @@
       "bye_week": 5,
       "is_rookie": false,
       "points_3yr": 390,
+      "points_1yr": 184,
       "adp": 169
     },
     {
@@ -1851,6 +1980,7 @@
       "bye_week": 14,
       "is_rookie": true,
       "points_3yr": 390,
+      "points_1yr": 55,
       "adp": 237
     },
     {
@@ -1865,6 +1995,7 @@
       "bye_week": 11,
       "is_rookie": false,
       "points_3yr": 388,
+      "points_1yr": 133,
       "adp": 170
     },
     {
@@ -1879,6 +2010,7 @@
       "bye_week": 11,
       "is_rookie": false,
       "points_3yr": 388,
+      "points_1yr": 105,
       "adp": 259
     },
     {
@@ -1893,6 +2025,7 @@
       "bye_week": 8,
       "is_rookie": true,
       "points_3yr": 385,
+      "points_1yr": 107,
       "adp": 287
     },
     {
@@ -1907,6 +2040,7 @@
       "bye_week": 7,
       "is_rookie": false,
       "points_3yr": 384,
+      "points_1yr": 158,
       "adp": 122
     },
     {
@@ -1921,6 +2055,7 @@
       "bye_week": 10,
       "is_rookie": false,
       "points_3yr": 384,
+      "points_1yr": 162,
       "adp": 160
     },
     {
@@ -1935,6 +2070,7 @@
       "bye_week": 7,
       "is_rookie": false,
       "points_3yr": 381,
+      "points_1yr": 159,
       "adp": 110
     },
     {
@@ -1949,6 +2085,7 @@
       "bye_week": 13,
       "is_rookie": false,
       "points_3yr": 376,
+      "points_1yr": 162,
       "adp": 153
     },
     {
@@ -1963,6 +2100,7 @@
       "bye_week": 11,
       "is_rookie": true,
       "points_3yr": 375,
+      "points_1yr": 119,
       "adp": 113
     },
     {
@@ -1977,6 +2115,7 @@
       "bye_week": 14,
       "is_rookie": false,
       "points_3yr": 374,
+      "points_1yr": 223,
       "adp": 70
     },
     {
@@ -1991,6 +2130,7 @@
       "bye_week": 7,
       "is_rookie": true,
       "points_3yr": 373,
+      "points_1yr": 97,
       "adp": 199
     },
     {
@@ -2005,6 +2145,7 @@
       "bye_week": 7,
       "is_rookie": false,
       "points_3yr": 373,
+      "points_1yr": 95,
       "adp": 165
     },
     {
@@ -2019,6 +2160,7 @@
       "bye_week": 11,
       "is_rookie": false,
       "points_3yr": 371,
+      "points_1yr": 153,
       "adp": 175
     },
     {
@@ -2033,6 +2175,7 @@
       "bye_week": 8,
       "is_rookie": false,
       "points_3yr": 370,
+      "points_1yr": 207,
       "adp": 75
     },
     {
@@ -2047,6 +2190,7 @@
       "bye_week": 10,
       "is_rookie": false,
       "points_3yr": 367,
+      "points_1yr": 128,
       "adp": 150
     },
     {
@@ -2061,6 +2205,7 @@
       "bye_week": 11,
       "is_rookie": false,
       "points_3yr": 366,
+      "points_1yr": 73,
       "adp": 222
     },
     {
@@ -2075,6 +2220,7 @@
       "bye_week": 7,
       "is_rookie": false,
       "points_3yr": 365,
+      "points_1yr": 143,
       "adp": 179
     },
     {
@@ -2089,6 +2235,7 @@
       "bye_week": 11,
       "is_rookie": false,
       "points_3yr": 363,
+      "points_1yr": 0,
       "adp": 226
     },
     {
@@ -2103,6 +2250,7 @@
       "bye_week": 9,
       "is_rookie": true,
       "points_3yr": 362,
+      "points_1yr": 110,
       "adp": 139
     },
     {
@@ -2117,6 +2265,7 @@
       "bye_week": null,
       "is_rookie": false,
       "points_3yr": 362,
+      "points_1yr": 149,
       "adp": 200
     },
     {
@@ -2131,6 +2280,7 @@
       "bye_week": 5,
       "is_rookie": false,
       "points_3yr": 361,
+      "points_1yr": 122,
       "adp": 137
     },
     {
@@ -2145,6 +2295,7 @@
       "bye_week": 11,
       "is_rookie": false,
       "points_3yr": 361,
+      "points_1yr": 118,
       "adp": 163
     },
     {
@@ -2159,6 +2310,7 @@
       "bye_week": 8,
       "is_rookie": false,
       "points_3yr": 361,
+      "points_1yr": 148,
       "adp": 174
     },
     {
@@ -2173,6 +2325,7 @@
       "bye_week": 13,
       "is_rookie": false,
       "points_3yr": 360,
+      "points_1yr": 151,
       "adp": 138
     },
     {
@@ -2187,6 +2340,7 @@
       "bye_week": 11,
       "is_rookie": true,
       "points_3yr": 359,
+      "points_1yr": 14,
       "adp": 321
     },
     {
@@ -2201,6 +2355,7 @@
       "bye_week": 11,
       "is_rookie": false,
       "points_3yr": 357,
+      "points_1yr": 128,
       "adp": 145
     },
     {
@@ -2215,6 +2370,7 @@
       "bye_week": 9,
       "is_rookie": false,
       "points_3yr": 356,
+      "points_1yr": 128,
       "adp": 166
     },
     {
@@ -2229,6 +2385,7 @@
       "bye_week": 11,
       "is_rookie": false,
       "points_3yr": 356,
+      "points_1yr": 110,
       "adp": 188
     },
     {
@@ -2243,6 +2400,7 @@
       "bye_week": 10,
       "is_rookie": false,
       "points_3yr": 355,
+      "points_1yr": 205,
       "adp": 100
     },
     {
@@ -2257,6 +2415,7 @@
       "bye_week": 8,
       "is_rookie": false,
       "points_3yr": 353,
+      "points_1yr": 101,
       "adp": 203
     },
     {
@@ -2271,6 +2430,7 @@
       "bye_week": 5,
       "is_rookie": true,
       "points_3yr": 350,
+      "points_1yr": 0,
       "adp": 164
     },
     {
@@ -2285,6 +2445,7 @@
       "bye_week": 7,
       "is_rookie": false,
       "points_3yr": 349,
+      "points_1yr": 77,
       "adp": 112
     },
     {
@@ -2299,6 +2460,7 @@
       "bye_week": 10,
       "is_rookie": true,
       "points_3yr": 349,
+      "points_1yr": 60,
       "adp": 215
     },
     {
@@ -2313,6 +2475,7 @@
       "bye_week": 10,
       "is_rookie": false,
       "points_3yr": 348,
+      "points_1yr": 142,
       "adp": 82
     },
     {
@@ -2327,6 +2490,7 @@
       "bye_week": 9,
       "is_rookie": false,
       "points_3yr": 348,
+      "points_1yr": 130,
       "adp": 204
     },
     {
@@ -2341,6 +2505,7 @@
       "bye_week": 5,
       "is_rookie": true,
       "points_3yr": 344,
+      "points_1yr": 43,
       "adp": 4862
     },
     {
@@ -2355,6 +2520,7 @@
       "bye_week": 6,
       "is_rookie": false,
       "points_3yr": 344,
+      "points_1yr": 109,
       "adp": 158
     },
     {
@@ -2369,6 +2535,7 @@
       "bye_week": 10,
       "is_rookie": false,
       "points_3yr": 343,
+      "points_1yr": 71,
       "adp": 172
     },
     {
@@ -2383,6 +2550,7 @@
       "bye_week": 10,
       "is_rookie": false,
       "points_3yr": 341,
+      "points_1yr": 135,
       "adp": 208
     },
     {
@@ -2397,6 +2565,7 @@
       "bye_week": null,
       "is_rookie": false,
       "points_3yr": 340,
+      "points_1yr": 41,
       "adp": 196
     },
     {
@@ -2411,6 +2580,7 @@
       "bye_week": 6,
       "is_rookie": true,
       "points_3yr": 339,
+      "points_1yr": 61,
       "adp": 341
     },
     {
@@ -2425,6 +2595,7 @@
       "bye_week": 13,
       "is_rookie": false,
       "points_3yr": 338,
+      "points_1yr": 84,
       "adp": 227
     },
     {
@@ -2439,6 +2610,7 @@
       "bye_week": 8,
       "is_rookie": false,
       "points_3yr": 338,
+      "points_1yr": 143,
       "adp": 194
     },
     {
@@ -2453,6 +2625,7 @@
       "bye_week": 11,
       "is_rookie": false,
       "points_3yr": 337,
+      "points_1yr": 69,
       "adp": 115
     },
     {
@@ -2467,6 +2640,7 @@
       "bye_week": 13,
       "is_rookie": false,
       "points_3yr": 336,
+      "points_1yr": 92,
       "adp": 230
     },
     {
@@ -2481,6 +2655,7 @@
       "bye_week": 6,
       "is_rookie": true,
       "points_3yr": 336,
+      "points_1yr": 51,
       "adp": 134
     },
     {
@@ -2495,6 +2670,7 @@
       "bye_week": 7,
       "is_rookie": false,
       "points_3yr": 336,
+      "points_1yr": 96,
       "adp": 186
     },
     {
@@ -2509,6 +2685,7 @@
       "bye_week": 9,
       "is_rookie": false,
       "points_3yr": 334,
+      "points_1yr": 61,
       "adp": 193
     },
     {
@@ -2523,6 +2700,7 @@
       "bye_week": 6,
       "is_rookie": false,
       "points_3yr": 334,
+      "points_1yr": 147,
       "adp": 161
     },
     {
@@ -2537,6 +2715,7 @@
       "bye_week": 13,
       "is_rookie": false,
       "points_3yr": 333,
+      "points_1yr": 124,
       "adp": 233
     },
     {
@@ -2551,6 +2730,7 @@
       "bye_week": null,
       "is_rookie": false,
       "points_3yr": 333,
+      "points_1yr": 95,
       "adp": 155
     },
     {
@@ -2565,6 +2745,7 @@
       "bye_week": 11,
       "is_rookie": false,
       "points_3yr": 332,
+      "points_1yr": 97,
       "adp": 178
     },
     {
@@ -2579,6 +2760,7 @@
       "bye_week": 8,
       "is_rookie": false,
       "points_3yr": 331,
+      "points_1yr": 58,
       "adp": 173
     },
     {
@@ -2593,6 +2775,7 @@
       "bye_week": 13,
       "is_rookie": true,
       "points_3yr": 330,
+      "points_1yr": 69,
       "adp": 157
     },
     {
@@ -2607,6 +2790,7 @@
       "bye_week": 7,
       "is_rookie": true,
       "points_3yr": 330,
+      "points_1yr": 49,
       "adp": 278
     },
     {
@@ -2621,6 +2805,7 @@
       "bye_week": 8,
       "is_rookie": true,
       "points_3yr": 326,
+      "points_1yr": 48,
       "adp": 303
     },
     {
@@ -2635,6 +2820,7 @@
       "bye_week": 7,
       "is_rookie": true,
       "points_3yr": 325,
+      "points_1yr": 37,
       "adp": 242
     },
     {
@@ -2649,6 +2835,7 @@
       "bye_week": 11,
       "is_rookie": true,
       "points_3yr": 324,
+      "points_1yr": 91,
       "adp": 187
     },
     {
@@ -2663,6 +2850,7 @@
       "bye_week": 11,
       "is_rookie": false,
       "points_3yr": 322,
+      "points_1yr": 64,
       "adp": 219
     },
     {
@@ -2677,6 +2865,7 @@
       "bye_week": 10,
       "is_rookie": false,
       "points_3yr": 321,
+      "points_1yr": 82,
       "adp": 265
     },
     {
@@ -2691,6 +2880,7 @@
       "bye_week": 13,
       "is_rookie": true,
       "points_3yr": 320,
+      "points_1yr": 68,
       "adp": 231
     },
     {
@@ -2705,6 +2895,7 @@
       "bye_week": 10,
       "is_rookie": true,
       "points_3yr": 320,
+      "points_1yr": 57,
       "adp": 4864
     },
     {
@@ -2719,6 +2910,7 @@
       "bye_week": 9,
       "is_rookie": false,
       "points_3yr": 315,
+      "points_1yr": 177,
       "adp": 117
     },
     {
@@ -2733,6 +2925,7 @@
       "bye_week": 5,
       "is_rookie": false,
       "points_3yr": 315,
+      "points_1yr": 162,
       "adp": 120
     },
     {
@@ -2747,6 +2940,7 @@
       "bye_week": 13,
       "is_rookie": false,
       "points_3yr": 315,
+      "points_1yr": 115,
       "adp": 195
     },
     {
@@ -2761,6 +2955,7 @@
       "bye_week": 9,
       "is_rookie": false,
       "points_3yr": 314,
+      "points_1yr": 167,
       "adp": 167
     },
     {
@@ -2775,6 +2970,7 @@
       "bye_week": 11,
       "is_rookie": false,
       "points_3yr": 313,
+      "points_1yr": 135,
       "adp": 125
     },
     {
@@ -2789,6 +2985,7 @@
       "bye_week": 7,
       "is_rookie": false,
       "points_3yr": 311,
+      "points_1yr": 170,
       "adp": 96
     },
     {
@@ -2803,6 +3000,7 @@
       "bye_week": 6,
       "is_rookie": false,
       "points_3yr": 309,
+      "points_1yr": 144,
       "adp": 168
     },
     {
@@ -2817,6 +3015,7 @@
       "bye_week": 13,
       "is_rookie": false,
       "points_3yr": 309,
+      "points_1yr": 109,
       "adp": 224
     },
     {
@@ -2831,6 +3030,7 @@
       "bye_week": 11,
       "is_rookie": false,
       "points_3yr": 308,
+      "points_1yr": 173,
       "adp": 133
     },
     {
@@ -2845,6 +3045,7 @@
       "bye_week": 6,
       "is_rookie": false,
       "points_3yr": 305,
+      "points_1yr": 79,
       "adp": 189
     },
     {
@@ -2859,6 +3060,7 @@
       "bye_week": 10,
       "is_rookie": false,
       "points_3yr": 302,
+      "points_1yr": 78,
       "adp": 258
     },
     {
@@ -2873,6 +3075,7 @@
       "bye_week": 7,
       "is_rookie": false,
       "points_3yr": 300,
+      "points_1yr": 80,
       "adp": 220
     },
     {
@@ -2887,6 +3090,7 @@
       "bye_week": 8,
       "is_rookie": true,
       "points_3yr": 298,
+      "points_1yr": 51,
       "adp": 205
     },
     {
@@ -2901,6 +3105,7 @@
       "bye_week": 11,
       "is_rookie": false,
       "points_3yr": 297,
+      "points_1yr": 39,
       "adp": 291
     },
     {
@@ -2915,6 +3120,7 @@
       "bye_week": 8,
       "is_rookie": false,
       "points_3yr": 296,
+      "points_1yr": 194,
       "adp": 109
     },
     {
@@ -2929,6 +3135,7 @@
       "bye_week": 11,
       "is_rookie": false,
       "points_3yr": 296,
+      "points_1yr": 33,
       "adp": 279
     },
     {
@@ -2943,6 +3150,7 @@
       "bye_week": 8,
       "is_rookie": false,
       "points_3yr": 296,
+      "points_1yr": 86,
       "adp": 236
     },
     {
@@ -2957,6 +3165,7 @@
       "bye_week": 13,
       "is_rookie": false,
       "points_3yr": 295,
+      "points_1yr": 100,
       "adp": 267
     },
     {
@@ -2971,6 +3180,7 @@
       "bye_week": 10,
       "is_rookie": false,
       "points_3yr": 294,
+      "points_1yr": 161,
       "adp": 143
     },
     {
@@ -2985,6 +3195,7 @@
       "bye_week": 10,
       "is_rookie": false,
       "points_3yr": 294,
+      "points_1yr": 58,
       "adp": 266
     },
     {
@@ -2999,6 +3210,7 @@
       "bye_week": 8,
       "is_rookie": false,
       "points_3yr": 290,
+      "points_1yr": 111,
       "adp": 142
     },
     {
@@ -3013,6 +3225,7 @@
       "bye_week": 10,
       "is_rookie": false,
       "points_3yr": 290,
+      "points_1yr": 107,
       "adp": 249
     },
     {
@@ -3027,6 +3240,7 @@
       "bye_week": 10,
       "is_rookie": false,
       "points_3yr": 289,
+      "points_1yr": 141,
       "adp": 105
     },
     {
@@ -3041,6 +3255,7 @@
       "bye_week": 5,
       "is_rookie": false,
       "points_3yr": 289,
+      "points_1yr": 44,
       "adp": 285
     },
     {
@@ -3055,6 +3270,7 @@
       "bye_week": 11,
       "is_rookie": false,
       "points_3yr": 289,
+      "points_1yr": 47,
       "adp": 211
     },
     {
@@ -3069,6 +3285,7 @@
       "bye_week": 14,
       "is_rookie": false,
       "points_3yr": 288,
+      "points_1yr": 93,
       "adp": 256
     },
     {
@@ -3083,6 +3300,7 @@
       "bye_week": 6,
       "is_rookie": false,
       "points_3yr": 286,
+      "points_1yr": 75,
       "adp": 234
     },
     {
@@ -3097,6 +3315,7 @@
       "bye_week": 7,
       "is_rookie": false,
       "points_3yr": 285,
+      "points_1yr": 128,
       "adp": 148
     },
     {
@@ -3111,6 +3330,7 @@
       "bye_week": 10,
       "is_rookie": false,
       "points_3yr": 285,
+      "points_1yr": 131,
       "adp": 147
     },
     {
@@ -3125,6 +3345,7 @@
       "bye_week": 6,
       "is_rookie": true,
       "points_3yr": 285,
+      "points_1yr": 27,
       "adp": 268
     },
     {
@@ -3139,6 +3360,7 @@
       "bye_week": 13,
       "is_rookie": false,
       "points_3yr": 284,
+      "points_1yr": 66,
       "adp": 182
     },
     {
@@ -3153,6 +3375,7 @@
       "bye_week": 8,
       "is_rookie": false,
       "points_3yr": 284,
+      "points_1yr": 70,
       "adp": 210
     },
     {
@@ -3167,6 +3390,7 @@
       "bye_week": 8,
       "is_rookie": true,
       "points_3yr": 282,
+      "points_1yr": 50,
       "adp": 281
     },
     {
@@ -3181,6 +3405,7 @@
       "bye_week": 9,
       "is_rookie": false,
       "points_3yr": 281,
+      "points_1yr": 162,
       "adp": 129
     },
     {
@@ -3195,6 +3420,7 @@
       "bye_week": 9,
       "is_rookie": false,
       "points_3yr": 281,
+      "points_1yr": 46,
       "adp": 184
     },
     {
@@ -3209,6 +3435,7 @@
       "bye_week": 11,
       "is_rookie": false,
       "points_3yr": 278,
+      "points_1yr": 94,
       "adp": 217
     },
     {
@@ -3223,6 +3450,7 @@
       "bye_week": 11,
       "is_rookie": true,
       "points_3yr": 278,
+      "points_1yr": 57,
       "adp": 251
     },
     {
@@ -3237,6 +3465,7 @@
       "bye_week": 11,
       "is_rookie": false,
       "points_3yr": 278,
+      "points_1yr": 105,
       "adp": 232
     },
     {
@@ -3251,6 +3480,7 @@
       "bye_week": 8,
       "is_rookie": false,
       "points_3yr": 277,
+      "points_1yr": 98,
       "adp": 176
     },
     {
@@ -3265,6 +3495,7 @@
       "bye_week": 5,
       "is_rookie": true,
       "points_3yr": 277,
+      "points_1yr": 16,
       "adp": 343
     },
     {
@@ -3279,6 +3510,7 @@
       "bye_week": 5,
       "is_rookie": false,
       "points_3yr": 276,
+      "points_1yr": 68,
       "adp": 255
     },
     {
@@ -3293,6 +3525,7 @@
       "bye_week": 5,
       "is_rookie": false,
       "points_3yr": 275,
+      "points_1yr": 140,
       "adp": 154
     },
     {
@@ -3307,6 +3540,7 @@
       "bye_week": 10,
       "is_rookie": true,
       "points_3yr": 274,
+      "points_1yr": 46,
       "adp": 318
     },
     {
@@ -3321,6 +3555,7 @@
       "bye_week": 13,
       "is_rookie": true,
       "points_3yr": 274,
+      "points_1yr": 25,
       "adp": 347
     },
     {
@@ -3335,6 +3570,7 @@
       "bye_week": 6,
       "is_rookie": false,
       "points_3yr": 273,
+      "points_1yr": 108,
       "adp": 277
     },
     {
@@ -3349,6 +3585,7 @@
       "bye_week": 7,
       "is_rookie": false,
       "points_3yr": 273,
+      "points_1yr": 52,
       "adp": 5365
     },
     {
@@ -3363,6 +3600,7 @@
       "bye_week": 6,
       "is_rookie": false,
       "points_3yr": 271,
+      "points_1yr": 73,
       "adp": 6444
     },
     {
@@ -3377,6 +3615,7 @@
       "bye_week": 7,
       "is_rookie": false,
       "points_3yr": 271,
+      "points_1yr": 50,
       "adp": 946
     },
     {
@@ -3391,6 +3630,7 @@
       "bye_week": null,
       "is_rookie": false,
       "points_3yr": 270,
+      "points_1yr": 121,
       "adp": 290
     },
     {
@@ -3405,6 +3645,7 @@
       "bye_week": 11,
       "is_rookie": false,
       "points_3yr": 269,
+      "points_1yr": 46,
       "adp": 5935
     },
     {
@@ -3419,6 +3660,7 @@
       "bye_week": 11,
       "is_rookie": false,
       "points_3yr": 268,
+      "points_1yr": 54,
       "adp": 243
     },
     {
@@ -3433,6 +3675,7 @@
       "bye_week": 9,
       "is_rookie": false,
       "points_3yr": 267,
+      "points_1yr": 126,
       "adp": 190
     },
     {
@@ -3447,6 +3690,7 @@
       "bye_week": 13,
       "is_rookie": false,
       "points_3yr": 266,
+      "points_1yr": 53,
       "adp": 235
     },
     {
@@ -3461,6 +3705,7 @@
       "bye_week": 8,
       "is_rookie": false,
       "points_3yr": 264,
+      "points_1yr": 61,
       "adp": 949
     },
     {
@@ -3475,6 +3720,7 @@
       "bye_week": 10,
       "is_rookie": false,
       "points_3yr": 263,
+      "points_1yr": 87,
       "adp": 171
     },
     {
@@ -3489,6 +3735,7 @@
       "bye_week": 11,
       "is_rookie": true,
       "points_3yr": 262,
+      "points_1yr": 14,
       "adp": 333
     },
     {
@@ -3503,6 +3750,7 @@
       "bye_week": 11,
       "is_rookie": true,
       "points_3yr": 261,
+      "points_1yr": 51,
       "adp": 314
     },
     {
@@ -3517,6 +3765,7 @@
       "bye_week": 8,
       "is_rookie": true,
       "points_3yr": 261,
+      "points_1yr": 34,
       "adp": 332
     },
     {
@@ -3531,6 +3780,7 @@
       "bye_week": 11,
       "is_rookie": true,
       "points_3yr": 259,
+      "points_1yr": 20,
       "adp": 304
     },
     {
@@ -3545,6 +3795,7 @@
       "bye_week": 10,
       "is_rookie": false,
       "points_3yr": 258,
+      "points_1yr": 52,
       "adp": 198
     },
     {
@@ -3559,6 +3810,7 @@
       "bye_week": 7,
       "is_rookie": true,
       "points_3yr": 258,
+      "points_1yr": 18,
       "adp": 319
     },
     {
@@ -3573,6 +3825,7 @@
       "bye_week": 14,
       "is_rookie": true,
       "points_3yr": 257,
+      "points_1yr": 33,
       "adp": 353
     },
     {
@@ -3587,6 +3840,7 @@
       "bye_week": 13,
       "is_rookie": false,
       "points_3yr": 257,
+      "points_1yr": 31,
       "adp": 269
     },
     {
@@ -3601,6 +3855,7 @@
       "bye_week": 6,
       "is_rookie": false,
       "points_3yr": 256,
+      "points_1yr": 110,
       "adp": 925
     },
     {
@@ -3615,6 +3870,7 @@
       "bye_week": 13,
       "is_rookie": false,
       "points_3yr": 255,
+      "points_1yr": 68,
       "adp": 136
     },
     {
@@ -3629,6 +3885,7 @@
       "bye_week": 7,
       "is_rookie": true,
       "points_3yr": 255,
+      "points_1yr": 46,
       "adp": 326
     },
     {
@@ -3643,6 +3900,7 @@
       "bye_week": 7,
       "is_rookie": false,
       "points_3yr": 254,
+      "points_1yr": 141,
       "adp": 177
     },
     {
@@ -3657,6 +3915,7 @@
       "bye_week": null,
       "is_rookie": false,
       "points_3yr": 253,
+      "points_1yr": 84,
       "adp": 3458
     },
     {
@@ -3671,6 +3930,7 @@
       "bye_week": 6,
       "is_rookie": false,
       "points_3yr": 253,
+      "points_1yr": 33,
       "adp": 5394
     },
     {
@@ -3685,6 +3945,7 @@
       "bye_week": 13,
       "is_rookie": true,
       "points_3yr": 253,
+      "points_1yr": 18,
       "adp": 299
     },
     {
@@ -3699,6 +3960,7 @@
       "bye_week": 8,
       "is_rookie": true,
       "points_3yr": 251,
+      "points_1yr": 48,
       "adp": 300
     },
     {
@@ -3713,6 +3975,7 @@
       "bye_week": 8,
       "is_rookie": true,
       "points_3yr": 251,
+      "points_1yr": 19,
       "adp": 4813
     },
     {
@@ -3727,6 +3990,7 @@
       "bye_week": 10,
       "is_rookie": false,
       "points_3yr": 249,
+      "points_1yr": 36,
       "adp": 246
     },
     {
@@ -3741,6 +4005,7 @@
       "bye_week": 7,
       "is_rookie": false,
       "points_3yr": 249,
+      "points_1yr": 27,
       "adp": 5359
     },
     {
@@ -3755,6 +4020,7 @@
       "bye_week": 6,
       "is_rookie": false,
       "points_3yr": 248,
+      "points_1yr": 64,
       "adp": 955
     },
     {
@@ -3769,6 +4035,7 @@
       "bye_week": 6,
       "is_rookie": true,
       "points_3yr": 247,
+      "points_1yr": 31,
       "adp": 4838
     },
     {
@@ -3783,6 +4050,7 @@
       "bye_week": 10,
       "is_rookie": true,
       "points_3yr": 246,
+      "points_1yr": 70,
       "adp": 131
     },
     {
@@ -3797,6 +4065,7 @@
       "bye_week": 9,
       "is_rookie": true,
       "points_3yr": 246,
+      "points_1yr": 58,
       "adp": 152
     },
     {
@@ -3811,6 +4080,7 @@
       "bye_week": 8,
       "is_rookie": false,
       "points_3yr": 246,
+      "points_1yr": 54,
       "adp": 262
     },
     {
@@ -3825,6 +4095,7 @@
       "bye_week": 9,
       "is_rookie": false,
       "points_3yr": 245,
+      "points_1yr": 97,
       "adp": 288
     },
     {
@@ -3839,6 +4110,7 @@
       "bye_week": 7,
       "is_rookie": false,
       "points_3yr": 244,
+      "points_1yr": 104,
       "adp": 209
     },
     {
@@ -3853,6 +4125,7 @@
       "bye_week": 6,
       "is_rookie": false,
       "points_3yr": 243,
+      "points_1yr": 129,
       "adp": 206
     },
     {
@@ -3867,6 +4140,7 @@
       "bye_week": 11,
       "is_rookie": false,
       "points_3yr": 243,
+      "points_1yr": 48,
       "adp": 5399
     },
     {
@@ -3881,6 +4155,7 @@
       "bye_week": 13,
       "is_rookie": false,
       "points_3yr": 242,
+      "points_1yr": 63,
       "adp": 275
     },
     {
@@ -3895,6 +4170,7 @@
       "bye_week": 9,
       "is_rookie": false,
       "points_3yr": 241,
+      "points_1yr": 115,
       "adp": 260
     },
     {
@@ -3909,6 +4185,7 @@
       "bye_week": 6,
       "is_rookie": false,
       "points_3yr": 241,
+      "points_1yr": 61,
       "adp": 1285
     },
     {
@@ -3923,6 +4200,7 @@
       "bye_week": 11,
       "is_rookie": false,
       "points_3yr": 241,
+      "points_1yr": 97,
       "adp": 289
     },
     {
@@ -3937,6 +4215,7 @@
       "bye_week": 7,
       "is_rookie": true,
       "points_3yr": 240,
+      "points_1yr": 34,
       "adp": 308
     },
     {
@@ -3951,6 +4230,7 @@
       "bye_week": 11,
       "is_rookie": false,
       "points_3yr": 240,
+      "points_1yr": 21,
       "adp": 5335
     },
     {
@@ -3965,6 +4245,7 @@
       "bye_week": 5,
       "is_rookie": true,
       "points_3yr": 239,
+      "points_1yr": 67,
       "adp": 183
     },
     {
@@ -3979,6 +4260,7 @@
       "bye_week": 7,
       "is_rookie": false,
       "points_3yr": 238,
+      "points_1yr": 89,
       "adp": 216
     },
     {
@@ -3993,6 +4275,7 @@
       "bye_week": 8,
       "is_rookie": false,
       "points_3yr": 238,
+      "points_1yr": 92,
       "adp": 252
     },
     {
@@ -4007,6 +4290,7 @@
       "bye_week": 8,
       "is_rookie": false,
       "points_3yr": 237,
+      "points_1yr": 59,
       "adp": 2396
     },
     {
@@ -4021,6 +4305,7 @@
       "bye_week": 10,
       "is_rookie": false,
       "points_3yr": 236,
+      "points_1yr": 65,
       "adp": 274
     },
     {
@@ -4035,6 +4320,7 @@
       "bye_week": 7,
       "is_rookie": false,
       "points_3yr": 236,
+      "points_1yr": 72,
       "adp": 1237
     },
     {
@@ -4049,6 +4335,7 @@
       "bye_week": 11,
       "is_rookie": true,
       "points_3yr": 235,
+      "points_1yr": 27,
       "adp": 4849
     },
     {
@@ -4063,6 +4350,7 @@
       "bye_week": 8,
       "is_rookie": false,
       "points_3yr": 234,
+      "points_1yr": 25,
       "adp": 5369
     },
     {
@@ -4077,6 +4365,7 @@
       "bye_week": 14,
       "is_rookie": false,
       "points_3yr": 233,
+      "points_1yr": 97,
       "adp": 121
     },
     {
@@ -4091,6 +4380,7 @@
       "bye_week": 5,
       "is_rookie": false,
       "points_3yr": 233,
+      "points_1yr": 84,
       "adp": 282
     },
     {
@@ -4105,6 +4395,7 @@
       "bye_week": 6,
       "is_rookie": false,
       "points_3yr": 232,
+      "points_1yr": 42,
       "adp": 228
     },
     {
@@ -4119,6 +4410,7 @@
       "bye_week": 10,
       "is_rookie": true,
       "points_3yr": 230,
+      "points_1yr": 38,
       "adp": 328
     },
     {
@@ -4133,6 +4425,7 @@
       "bye_week": 8,
       "is_rookie": false,
       "points_3yr": 230,
+      "points_1yr": 96,
       "adp": 2215
     },
     {
@@ -4147,6 +4440,7 @@
       "bye_week": 13,
       "is_rookie": false,
       "points_3yr": 227,
+      "points_1yr": 47,
       "adp": 1327
     },
     {
@@ -4161,6 +4455,7 @@
       "bye_week": 13,
       "is_rookie": true,
       "points_3yr": 226,
+      "points_1yr": 65,
       "adp": 192
     },
     {
@@ -4175,6 +4470,7 @@
       "bye_week": 7,
       "is_rookie": true,
       "points_3yr": 225,
+      "points_1yr": 74,
       "adp": 223
     },
     {
@@ -4189,6 +4485,7 @@
       "bye_week": 5,
       "is_rookie": false,
       "points_3yr": 225,
+      "points_1yr": 67,
       "adp": 253
     },
     {
@@ -4203,6 +4500,7 @@
       "bye_week": 14,
       "is_rookie": false,
       "points_3yr": 224,
+      "points_1yr": 63,
       "adp": 156
     },
     {
@@ -4217,6 +4515,7 @@
       "bye_week": 13,
       "is_rookie": false,
       "points_3yr": 223,
+      "points_1yr": 23,
       "adp": 5385
     },
     {
@@ -4231,6 +4530,7 @@
       "bye_week": 6,
       "is_rookie": true,
       "points_3yr": 221,
+      "points_1yr": 22,
       "adp": 301
     },
     {
@@ -4245,6 +4545,7 @@
       "bye_week": 7,
       "is_rookie": false,
       "points_3yr": 220,
+      "points_1yr": 50,
       "adp": 207
     },
     {
@@ -4259,6 +4560,7 @@
       "bye_week": 6,
       "is_rookie": true,
       "points_3yr": 220,
+      "points_1yr": 0,
       "adp": 4863
     },
     {
@@ -4273,6 +4575,7 @@
       "bye_week": 7,
       "is_rookie": false,
       "points_3yr": 219,
+      "points_1yr": 81,
       "adp": 948
     },
     {
@@ -4287,6 +4590,7 @@
       "bye_week": 5,
       "is_rookie": false,
       "points_3yr": 218,
+      "points_1yr": 43,
       "adp": 5390
     },
     {
@@ -4301,6 +4605,7 @@
       "bye_week": 6,
       "is_rookie": false,
       "points_3yr": 216,
+      "points_1yr": 50,
       "adp": 240
     },
     {
@@ -4315,6 +4620,7 @@
       "bye_week": 11,
       "is_rookie": false,
       "points_3yr": 216,
+      "points_1yr": 53,
       "adp": 213
     },
     {
@@ -4329,6 +4635,7 @@
       "bye_week": 9,
       "is_rookie": false,
       "points_3yr": 214,
+      "points_1yr": 45,
       "adp": 877
     },
     {
@@ -4343,6 +4650,7 @@
       "bye_week": 11,
       "is_rookie": false,
       "points_3yr": 212,
+      "points_1yr": 75,
       "adp": 284
     },
     {
@@ -4357,6 +4665,7 @@
       "bye_week": 9,
       "is_rookie": false,
       "points_3yr": 211,
+      "points_1yr": 35,
       "adp": 197
     },
     {
@@ -4371,6 +4680,7 @@
       "bye_week": 10,
       "is_rookie": true,
       "points_3yr": 211,
+      "points_1yr": 14,
       "adp": 4784
     },
     {
@@ -4385,6 +4695,7 @@
       "bye_week": 8,
       "is_rookie": false,
       "points_3yr": 210,
+      "points_1yr": 95,
       "adp": 221
     },
     {
@@ -4399,6 +4710,7 @@
       "bye_week": 6,
       "is_rookie": true,
       "points_3yr": 208,
+      "points_1yr": 29,
       "adp": 4850
     },
     {
@@ -4413,6 +4725,7 @@
       "bye_week": 8,
       "is_rookie": false,
       "points_3yr": 208,
+      "points_1yr": 35,
       "adp": 6450
     },
     {
@@ -4427,6 +4740,7 @@
       "bye_week": 6,
       "is_rookie": false,
       "points_3yr": 206,
+      "points_1yr": 111,
       "adp": 201
     },
     {
@@ -4441,6 +4755,7 @@
       "bye_week": 13,
       "is_rookie": true,
       "points_3yr": 206,
+      "points_1yr": 38,
       "adp": 286
     },
     {
@@ -4455,6 +4770,7 @@
       "bye_week": 8,
       "is_rookie": false,
       "points_3yr": 206,
+      "points_1yr": 34,
       "adp": 225
     },
     {
@@ -4469,6 +4785,7 @@
       "bye_week": 9,
       "is_rookie": true,
       "points_3yr": 206,
+      "points_1yr": 17,
       "adp": 4833
     },
     {
@@ -4483,6 +4800,7 @@
       "bye_week": 10,
       "is_rookie": false,
       "points_3yr": 203,
+      "points_1yr": 65,
       "adp": 229
     },
     {
@@ -4497,6 +4815,7 @@
       "bye_week": 14,
       "is_rookie": false,
       "points_3yr": 202,
+      "points_1yr": 77,
       "adp": 239
     },
     {
@@ -4511,6 +4830,7 @@
       "bye_week": 7,
       "is_rookie": false,
       "points_3yr": 200,
+      "points_1yr": 58,
       "adp": 264
     },
     {
@@ -4525,6 +4845,7 @@
       "bye_week": 14,
       "is_rookie": false,
       "points_3yr": 200,
+      "points_1yr": 80,
       "adp": 482
     },
     {
@@ -4539,6 +4860,7 @@
       "bye_week": 9,
       "is_rookie": false,
       "points_3yr": 199,
+      "points_1yr": 47,
       "adp": 5933
     },
     {
@@ -4553,6 +4875,7 @@
       "bye_week": 8,
       "is_rookie": false,
       "points_3yr": 198,
+      "points_1yr": 43,
       "adp": 250
     },
     {
@@ -4567,6 +4890,7 @@
       "bye_week": 11,
       "is_rookie": false,
       "points_3yr": 195,
+      "points_1yr": 55,
       "adp": 3828
     },
     {
@@ -4581,6 +4905,7 @@
       "bye_week": 10,
       "is_rookie": false,
       "points_3yr": 193,
+      "points_1yr": 30,
       "adp": 5956
     },
     {
@@ -4595,6 +4920,7 @@
       "bye_week": 5,
       "is_rookie": false,
       "points_3yr": 193,
+      "points_1yr": 54,
       "adp": 5405
     },
     {
@@ -4609,6 +4935,7 @@
       "bye_week": 10,
       "is_rookie": true,
       "points_3yr": 192,
+      "points_1yr": 11,
       "adp": 322
     },
     {
@@ -4623,6 +4950,7 @@
       "bye_week": 5,
       "is_rookie": true,
       "points_3yr": 191,
+      "points_1yr": 0,
       "adp": 244
     },
     {
@@ -4637,6 +4965,7 @@
       "bye_week": 7,
       "is_rookie": false,
       "points_3yr": 191,
+      "points_1yr": 0,
       "adp": 271
     },
     {
@@ -4651,6 +4980,7 @@
       "bye_week": 11,
       "is_rookie": false,
       "points_3yr": 188,
+      "points_1yr": 108,
       "adp": 191
     },
     {
@@ -4665,6 +4995,7 @@
       "bye_week": 6,
       "is_rookie": true,
       "points_3yr": 188,
+      "points_1yr": 42,
       "adp": 272
     },
     {
@@ -4679,6 +5010,7 @@
       "bye_week": 8,
       "is_rookie": false,
       "points_3yr": 188,
+      "points_1yr": 45,
       "adp": 283
     },
     {
@@ -4693,6 +5025,7 @@
       "bye_week": 7,
       "is_rookie": false,
       "points_3yr": 188,
+      "points_1yr": 52,
       "adp": 5924
     },
     {
@@ -4707,6 +5040,7 @@
       "bye_week": 13,
       "is_rookie": false,
       "points_3yr": 188,
+      "points_1yr": 35,
       "adp": 5934
     },
     {
@@ -4721,6 +5055,7 @@
       "bye_week": 8,
       "is_rookie": false,
       "points_3yr": 187,
+      "points_1yr": 45,
       "adp": 2231
     },
     {
@@ -4735,6 +5070,7 @@
       "bye_week": 13,
       "is_rookie": true,
       "points_3yr": 186,
+      "points_1yr": 29,
       "adp": 345
     },
     {
@@ -4749,6 +5085,7 @@
       "bye_week": 8,
       "is_rookie": true,
       "points_3yr": 183,
+      "points_1yr": 11,
       "adp": 4811
     },
     {
@@ -4763,6 +5100,7 @@
       "bye_week": 6,
       "is_rookie": false,
       "points_3yr": 183,
+      "points_1yr": 22,
       "adp": 6351
     },
     {
@@ -4777,6 +5115,7 @@
       "bye_week": 11,
       "is_rookie": false,
       "points_3yr": 180,
+      "points_1yr": 13,
       "adp": 5398
     },
     {
@@ -4791,6 +5130,7 @@
       "bye_week": 11,
       "is_rookie": true,
       "points_3yr": 180,
+      "points_1yr": 7,
       "adp": 358
     },
     {
@@ -4805,6 +5145,7 @@
       "bye_week": 11,
       "is_rookie": false,
       "points_3yr": 176,
+      "points_1yr": 81,
       "adp": 5954
     },
     {
@@ -4819,6 +5160,7 @@
       "bye_week": null,
       "is_rookie": false,
       "points_3yr": 175,
+      "points_1yr": 92,
       "adp": 4119
     },
     {
@@ -4833,6 +5175,7 @@
       "bye_week": 7,
       "is_rookie": false,
       "points_3yr": 173,
+      "points_1yr": 67,
       "adp": 2373
     },
     {
@@ -4847,6 +5190,7 @@
       "bye_week": 8,
       "is_rookie": false,
       "points_3yr": 173,
+      "points_1yr": 46,
       "adp": 202
     },
     {
@@ -4861,6 +5205,7 @@
       "bye_week": 7,
       "is_rookie": false,
       "points_3yr": 172,
+      "points_1yr": 41,
       "adp": 241
     },
     {
@@ -4875,6 +5220,7 @@
       "bye_week": 7,
       "is_rookie": false,
       "points_3yr": 172,
+      "points_1yr": 56,
       "adp": 1267
     },
     {
@@ -4889,6 +5235,7 @@
       "bye_week": 11,
       "is_rookie": true,
       "points_3yr": 172,
+      "points_1yr": 11,
       "adp": 4631
     },
     {
@@ -4903,6 +5250,7 @@
       "bye_week": 8,
       "is_rookie": false,
       "points_3yr": 172,
+      "points_1yr": 44,
       "adp": 3820
     },
     {
@@ -4917,6 +5265,7 @@
       "bye_week": 5,
       "is_rookie": false,
       "points_3yr": 170,
+      "points_1yr": 34,
       "adp": 293
     },
     {
@@ -4931,6 +5280,7 @@
       "bye_week": 11,
       "is_rookie": false,
       "points_3yr": 170,
+      "points_1yr": 38,
       "adp": 458
     },
     {
@@ -4945,6 +5295,7 @@
       "bye_week": 13,
       "is_rookie": true,
       "points_3yr": 170,
+      "points_1yr": 21,
       "adp": 350
     }
   ],

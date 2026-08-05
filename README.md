@@ -27,7 +27,7 @@ Two independent pipelines, each publishing one file at the repo root. Everything
 pipeline reads and every intermediate it writes stays inside its own folder.
 
 ```
-pool.json                    the draft pool — 350 players, 12 fields
+pool.json                    the draft pool — 350 players, 13 fields
 draft.json                   the live board — 290 picks, made and pending
 rank_vor.py                  pool.json + draft.json -> rankings.json (run separately)
 refresh.py                   fetch the board, then re-rank — the between-picks loop
@@ -121,7 +121,7 @@ Each player gets identity fields (id, name, position, team, age, bye, rookie fla
 
 ## the pool
 
-`build_pool.py` turns the 2.9 MB export into `pool.json` — 350 players, 12 fields each,
+`build_pool.py` turns the 2.9 MB export into `pool.json` — 350 players, 13 fields each,
 ~100 KB — by throwing away everything a 10-team superflex dynasty draft can't use:
 
 ```
@@ -134,7 +134,7 @@ Three cuts, in order: **positions** (QB/RB/WR/TE only — K and IDP have no rost
 446 players gone), **usability** (10 more carry a 0 or missing 3-year projection, which
 isn't a rankable quantity), then the **rank limit** (top 350 of the remaining 444 — 290
 picks plus a 60-player buffer; the cut lands at 170 points). Then 9 schemes × 4 horizons
-collapse to one value column and 8 ADP columns to one.
+collapse to two point columns (3-year and 1-year) and 8 ADP columns to one.
 
 - **`points_3yr` is this league's scoring, copied not computed.** TEs from `ppr` (1.0/rec),
   everyone else from `half_ppr` (0.5/rec) — the published 1QB columns that already price
@@ -142,6 +142,12 @@ collapse to one value column and 8 ADP columns to one.
   on raw points, but the source columns are pre-rounded integers, so evaluating it drifts
   ±1 on 32 of the 350 cells for nothing. 1QB family because points can't depend on roster
   format and that family is the consistent one (see the drift quirk below).
+- **`points_1yr` is the same copy at the 1-year horizon.** The gap against `points_3yr`
+  is the provider's implied growth: the ranker prices bench depth on the years-2-3 pace,
+  `1.5 × (points_3yr − points_1yr)` (`upside_points` in `ranker/value.py`), so a
+  backloaded rookie outranks a flat veteran with the same 3-year sum on the bench, while
+  starters stay priced on the 3-year sum. A genuine 0 (a projected redshirt year) is
+  kept as 0.
 - **3D value is not carried at all.** It's a provider-scaled ordinal (best player pinned
   at 100, ~half the league negative) that bakes in someone else's roster assumptions and
   isn't in points, so it can't be differenced against a replacement level — which is all

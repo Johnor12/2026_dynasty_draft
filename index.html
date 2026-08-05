@@ -163,7 +163,7 @@
 
   /* table */
   .table-wrap { overflow-x: auto; border: 1px solid var(--border); border-radius: 12px; background: var(--surface); }
-  table { border-collapse: collapse; width: 100%; min-width: 880px; }
+  table { border-collapse: collapse; width: 100%; min-width: 980px; }
   thead th {
     position: sticky; top: 0; background: var(--surface); z-index: 1;
     text-align: left; font-size: 11.5px; font-weight: 600; color: var(--muted);
@@ -177,6 +177,7 @@
   td .pname { font-weight: 550; }
   td .team { color: var(--muted); font-size: 12px; margin-left: 6px; }
   td.dim { color: var(--muted); }
+  .growth { color: var(--muted); font-variant-numeric: tabular-nums; }
 
   .meter-cell { display: inline-flex; align-items: center; gap: 8px; }
   .meter { width: 64px; height: 8px; border-radius: 4px; background: var(--meter-track); overflow: hidden; }
@@ -190,7 +191,7 @@
   }
 
   /* roster */
-  .roster-meta { color: var(--ink-2); font-size: 13px; margin: 0 0 12px; }
+  .roster-meta { color: var(--muted); font-size: 12.5px; margin: 0 0 12px; }
   .roster-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px; }
   .pos-col h3 { font-size: 12px; font-weight: 650; color: var(--ink-2); margin: 0 0 8px;
                 display: flex; align-items: baseline; gap: 8px; }
@@ -202,6 +203,7 @@
   .roster-row .rname { min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .roster-row.made .rname { font-weight: 600; }
   .roster-row .pts { margin-left: auto; color: var(--muted); font-variant-numeric: tabular-nums; font-size: 12px; flex: none; }
+  .roster-row .growth { font-size: 11.5px; flex: none; }
 
   details.note { margin-top: 10px; color: var(--ink-2); font-size: 12.5px; }
   details.note summary { cursor: pointer; color: var(--muted); }
@@ -250,7 +252,8 @@
     <section id="next-picks">
       <h2>My next picks — the model's board</h2>
       <p class="hint">Bar length is the pick score: value to my roster now + expected value of the best player
-         still available at my following pick. The highlighted row is what the model takes.</p>
+         still available at my following pick. The highlighted row is what the model takes; at my first
+         pick that choice is confirmed by full-draft rollouts (each rival's edge ± its standard error).</p>
       <div class="legend">
         <span class="key"><span class="swatch" style="background:var(--bar-now)"></span>Value now</span>
         <span class="key"><span class="swatch" style="background:var(--bar-next)"></span>Next-pick EV</span>
@@ -281,6 +284,8 @@
               <th>Pos</th>
               <th class="num">Age</th>
               <th class="num">3yr pts</th>
+              <th class="num" title="3-year total at his years-2-3 pace — what bench depth is priced on">Upside</th>
+              <th class="num" title="Provider-implied growth: average of years 2-3 minus year 1, points per season">Growth /yr</th>
               <th class="num">VOR</th>
               <th>Sim pick</th>
               <th id="availHead">Avail @ next</th>
@@ -319,6 +324,10 @@ function h(tag, attrs, ...children) {
   return el;
 }
 const fmt = n => n == null ? "—" : Number(n).toLocaleString("en-US", { maximumFractionDigits: 1 });
+const signed = n => n == null ? "—" : (n > 0 ? "+" : "") + Math.round(n);
+/* upside − 3yr pts works out to exactly the per-season implied growth:
+   1.5(P − Y1) − P = (P − 3·Y1)/2 = avg(years 2-3) − year 1 */
+const growth = r => r.upside_points == null ? null : r.upside_points - r.points_3yr;
 
 /* ---------- theme toggle: auto → light → dark ---------- */
 document.getElementById("themeToggle").addEventListener("click", () => {
@@ -488,18 +497,26 @@ async function pollLive(d) {
   }
 }
 
-function renderNextPicks(d) {
+function renderNextPicks(d, byName) {
   const grid = document.getElementById("picksGrid");
   document.getElementById("picksNote").textContent = d.my_next_picks.note;
+  const css = name => getComputedStyle(document.documentElement).getPropertyValue(name);
   grid.replaceChildren(...d.my_next_picks.picks.map(pick => {
     const maxScore = Math.max(...pick.candidates.map(c => c.score));
     const rows = pick.candidates.map(c => {
       const isTake = pick.take.startsWith(c.name);
+      const stats = byName.get(c.name);
       const wNow = c.value_now / maxScore * 100, wNext = c.next_pick_ev / maxScore * 100;
       const tipRows = ev => showTip([
-        [getComputedStyle(document.documentElement).getPropertyValue("--bar-now"), fmt(c.value_now), "Value now"],
-        [getComputedStyle(document.documentElement).getPropertyValue("--bar-next"), fmt(c.next_pick_ev), "Next-pick EV"],
+        [css("--bar-now"), fmt(c.value_now), "Value now"],
+        [css("--bar-next"), fmt(c.next_pick_ev), "Next-pick EV"],
+        ...(stats ? [
+          [css("--baseline"), fmt(stats.points_3yr), "3yr pts"],
+          [css("--baseline"), `${fmt(stats.upside_points)} (${signed(growth(stats))}/yr)`, "Upside"],
+        ] : []),
       ], ev.clientX ?? ev.target.getBoundingClientRect().right, ev.clientY ?? ev.target.getBoundingClientRect().top);
+      const edge = c.rollout_edge != null && !isTake
+        ? ` · edge ${signed(c.rollout_edge)}±${Math.round(c.rollout_se)}` : "";
       const bar = h("div", { class: "bar", tabindex: "0", role: "img",
           "aria-label": `${c.name}: value now ${fmt(c.value_now)}, next-pick EV ${fmt(c.next_pick_ev)}, score ${fmt(c.score)}`,
           onpointermove: tipRows, onpointerleave: hideTip, onfocus: tipRows, onblur: hideTip },
@@ -510,7 +527,7 @@ function renderNextPicks(d) {
           h("div", { class: "name" }, c.name, " ",
             h("span", { class: `chip pos ${c.position}` }, c.position),
             isTake ? [" ", h("span", { class: "chip take-tag" }, "TAKE")] : null),
-          h("div", { class: "comp" }, `now ${fmt(c.value_now)} + next ${fmt(c.next_pick_ev)}`)),
+          h("div", { class: "comp" }, `now ${fmt(c.value_now)} + next ${fmt(c.next_pick_ev)}${edge}`)),
         bar,
         h("div", { class: "score" }, fmt(c.score)));
     });
@@ -545,12 +562,17 @@ function renderRoster(d, byName) {
         h("span", { class: "count" }, `${players.length} rostered`)),
       ...players.map(p => {
         const stats = byName.get(p.name);
+        const g = stats ? growth(stats) : null;
         return h("div", { class: "roster-row" + (p.made ? " made" : "") },
           h("span", { class: "slot" }, p.made ? "✓ own" : p.slot),
           h("span", { class: "rname" }, p.name,
             p.rookie ? [" ", h("span", { class: "chip rookie" }, "R")] : null),
           h("span", { class: "pts", title: "3-year projected points" },
-            stats ? fmt(stats.points_3yr) : ""));
+            stats ? fmt(stats.points_3yr) : ""),
+          g != null && Math.abs(g) >= 25
+            ? h("span", { class: "growth", title: "Implied growth: avg years 2-3 minus year 1, pts/season" },
+                signed(g))
+            : null);
       }));
   });
   document.getElementById("rosterGrid").replaceChildren(...cols);
@@ -560,8 +582,11 @@ function renderBoard(d, state) {
   const nextPick = d.draft.next_pick_of_mine?.slot;
   const myPickOrder = d.league.my_picks;
   document.getElementById("availHead").textContent = nextPick ? `Avail @ ${nextPick}` : "Avail";
+  const rep = d.replacement.levels;
   document.getElementById("boardHint").textContent =
-    `${d.count} undrafted players, ranked by VOR (3-year points over the marginal starter). ` +
+    `${d.count} undrafted players, ranked by VOR (3-year points over the marginal starter — ` +
+    ["QB", "RB", "WR", "TE"].map(p => `${p} ${Math.round(rep[p])}`).join(" · ") + "). " +
+    `Upside is the 3-year total at years-2-3 pace; bench depth is priced on it. ` +
     `Availability is from ${d.monte_carlo.sims} simulated drafts.`;
   document.getElementById("boardNote").textContent =
     d.rankings_note + " " + d.market_model.adp_note;
@@ -583,6 +608,8 @@ function renderBoard(d, state) {
       h("td", {}, h("span", { class: `chip pos ${r.position}` }, `${r.position}${r.positional_vor_rank}`)),
       h("td", { class: "num" }, fmt(r.age)),
       h("td", { class: "num" }, fmt(r.points_3yr)),
+      h("td", { class: "num" }, fmt(r.upside_points)),
+      h("td", { class: "num" + (Math.abs(growth(r)) < 25 ? " dim" : "") }, signed(growth(r))),
       h("td", { class: "num" }, fmt(r.vor)),
       h("td", { class: r.sim_pick_label ? "" : "dim" }, sim),
       h("td", {}, p == null ? "—" : h("span", { class: "meter-cell" },
@@ -629,8 +656,7 @@ function renderFilters(d, state, rerender) {
     { month: "short", day: "numeric", hour: "numeric", minute: "2-digit" });
   document.getElementById("subline").replaceChildren(
     `${d.draft.league_name} · ${d.scoring_scheme}`,
-    h("span", { class: "dot" }, "·"), `board as of ${asOf}`,
-    h("span", { class: "dot" }, "·"), `refresh with refresh.py, then reload`);
+    h("span", { class: "dot" }, "·"), `board as of ${asOf}`);
 
   const byName = new Map(d.rankings.map(r => [r.name, r]));
   const state = { pos: "ALL", rookies: false, all: false };
@@ -639,13 +665,14 @@ function renderFilters(d, state, rerender) {
   renderKpis(d);
   pollLive(d);
   setInterval(() => pollLive(d), 30000);
-  renderNextPicks(d);
+  renderNextPicks(d, byName);
   renderRoster(d, byName);
   rerenderBoard();
   document.getElementById("showMore").addEventListener("click", () => { state.all = !state.all; rerenderBoard(); });
 
   document.getElementById("footer").textContent =
     `Generated from ${d.generated_from} · value input: ${d.value_input} · ` +
+    `bench priced on upside (years-2-3 pace) · ` +
     `market weight ${d.market_model.market_weight} · ${d.monte_carlo.sims} sims, noise ${d.monte_carlo.noise}`;
   document.getElementById("app").hidden = false;
 })();

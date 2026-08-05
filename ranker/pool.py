@@ -1,7 +1,9 @@
 """The draft pool: pool.json rows as Player objects.
 
-The only value input is `points_3yr` — three-year points at 0.5/rec with a 0.5 TE
-premium, which is this league's scoring. Draftsharks' 3D value is ignored entirely and
+The value inputs are `points_3yr` — three-year points at 0.5/rec with a 0.5 TE
+premium, which is this league's scoring — and `points_1yr`, whose gap against it is
+the provider's implied growth (bench upside pricing, see value.upside_points).
+Draftsharks' 3D value is ignored entirely and
 is not even carried into the pool: it is a provider-scaled ordinal that already bakes in
 someone else's roster assumptions, and it is not in points, so it cannot be differenced
 against a replacement level. Kickers and IDP are already dropped upstream because the
@@ -27,6 +29,7 @@ class Player:
     bye_week: int | None
     is_rookie: bool
     points: int
+    points_1yr: int
     provider_adp: float | None
     sleeper_id: str | None = None  # the only key draft.json shares with the pool
     vor_index: int = 0  # rank in the pool by current perceived VOR, 0-based
@@ -61,6 +64,9 @@ def load_pool(path: Path) -> tuple[list[Player], dict]:
                 bye_week=rec.get("bye_week"),
                 is_rookie=bool(rec.get("is_rookie")),
                 points=points,
+                # Direct key access: a pool.json without it predates the upside pricing
+                # and must be rebuilt, not silently valued as if every player were flat.
+                points_1yr=rec["points_1yr"],
                 provider_adp=rec.get("adp"),
                 sleeper_id=rec.get("sleeper_id"),
             )

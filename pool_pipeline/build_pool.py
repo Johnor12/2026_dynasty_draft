@@ -10,7 +10,8 @@ consumes and drops everything else:
                  ->  a usable 3-year point total
                  ->  the top 350 of those    (290 picks + a 60-player buffer)
 
-    9 schemes x 4 horizons  ->  one column: 3-year points in this league's scoring
+    9 schemes x 4 horizons  ->  two columns: 3-year and 1-year points in this
+                                league's scoring
     8 ADP columns           ->  one column: superflex ADP, as an overall pick number
 
 **Scoring.** The league is 0.5/rec with a 0.5/rec tight end premium (so 1.0/rec for
@@ -30,7 +31,9 @@ evaluating it drifts +-1 on 45 of 454 offensive 3-year cells for no gain. The 1Q
 family is used because point totals cannot depend on roster settings and that family
 is the internally consistent one; ``--report`` re-checks both identities.
 
-Points are the only value column kept. 3D value is deliberately not carried over: it
+Points are the only value columns kept — the 3-year total the ranker sorts on, and the
+1-year total whose gap against it is the provider's implied growth (the ranker prices
+bench upside off the years-2-3 pace). 3D value is deliberately not carried over: it
 is a provider-scaled ordinal (best player pinned at 100, ~half the league negative)
 that already bakes in someone else's roster assumptions, is not in points, and so
 cannot be differenced against a replacement level — which is all ``rank_vor.py`` does
@@ -129,6 +132,12 @@ FIELD_DEFINITIONS = {
         "with a 0.5/rec TE premium. Copied from the provider column that prices "
         "that rate exactly (TE: ppr, others: half_ppr)."
     ),
+    "points_1yr": (
+        "One-year projected points, same scoring and same source columns. The gap "
+        f"between this and {POINTS_FIELD} is the provider's implied growth: the "
+        "ranker prices bench upside off the years-2-3 pace, (points_3yr - "
+        "points_1yr) / 2. A genuine 0 (e.g. a stashed rookie) is kept as 0."
+    ),
     "adp": (
         "Superflex ADP as an overall pick number in the source's 12-team draft "
         f"(its round.pick value decoded: 2.03 -> 15). Past pick "
@@ -147,9 +156,9 @@ def points_column(position: str) -> str:
     return POINTS_COLUMNS.get(position, POINTS_COLUMN_DEFAULT)
 
 
-def points_of(record: dict) -> int | None:
-    """This league's 3-year point total: a copy of the column that prices the rate."""
-    return record["projections"][HORIZON].get(points_column(record["position"]))
+def points_of(record: dict, horizon: str = HORIZON) -> int | None:
+    """This league's point total at a horizon: a copy of the column that prices the rate."""
+    return record["projections"][horizon].get(points_column(record["position"]))
 
 
 def decode_adp(value: float, teams: int = TEAMS_PER_ROUND) -> int:
@@ -240,6 +249,9 @@ def build_rows(kept: list[dict]) -> list[dict]:
                 "bye_week": None if team in NO_TEAM or bye == PLACEHOLDER_BYE else bye,
                 "is_rookie": bool(record.get("is_rookie")),
                 POINTS_FIELD: points_of(record),
+                # 0 when the 1yr cell is missing: the source uses 0 for "no season", and
+                # a player kept by the 3yr filter with no 1yr number is projected to sit.
+                "points_1yr": points_of(record, "1yr") or 0,
                 "adp": adp_of(record),
             }
         )
@@ -370,6 +382,15 @@ def report(source: dict, kept: list[dict], rows: list[dict], stats: dict) -> Non
         if row[POINTS_FIELD] == flat(r)[points_column(r["position"])]
     )
     print(f"  emitted == source column: {copied}/{len(rows)} — exact", file=out)
+    one_ok = sum(
+        1 for row, r in zip(rows, kept) if row["points_1yr"] == (points_of(r, "1yr") or 0)
+    )
+    bounded = sum(1 for row in rows if row["points_1yr"] <= row[POINTS_FIELD])
+    print(
+        f"  points_1yr: emitted == source column for {one_ok}/{len(rows)}; "
+        f"<= {POINTS_FIELD} for {bounded}/{len(rows)}",
+        file=out,
+    )
 
     # -- adp ---------------------------------------------------------------
     print(

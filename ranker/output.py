@@ -32,7 +32,7 @@ from .league import (
 )
 from .pool import Player, by_position
 from .sim import Draft
-from .value import compute_vor, slot_replacement
+from .value import compute_vor, slot_replacement, upside_points
 
 
 def build_rankings(
@@ -117,6 +117,11 @@ def build_rankings(
                 "bye_week": p.bye_week,
                 "is_rookie": p.is_rookie,
                 "points_3yr": p.points,
+                "points_1yr": p.points_1yr,
+                # The bench-pricing quantity: his 3-year total at his years-2-3 pace.
+                # Equal to points_3yr for a flat scorer; the gap is the provider's
+                # implied growth. See value.upside_points.
+                "upside_points": round(upside_points(p), 1),
                 "replacement_points": round(rep[p.position], 1),
                 "vor": round(vor[p.player_id], 1),
                 "vor_vs_wire": round(p.points - wire[p.position], 1),
@@ -435,7 +440,12 @@ def build_payload(
             "depth_note": (
                 "Bench value decays with how many players that team already has at the "
                 "same position, not with a running bench index — a fifth QB cannot start "
-                "in a two-QB-slot league however large his VOR looks."
+                "in a two-QB-slot league however large his VOR looks. It is priced on "
+                "`upside_points` — the player's 3-year total at his years-2-3 pace — "
+                "rather than his 3-year sum: with a full starter squad a bench pick's "
+                "year-1 points are nearly worthless, so a backloaded rookie outranks a "
+                "flat veteran with the same 3-year total. Starters are still priced on "
+                "points_3yr."
             ),
             "lookahead": "value now + E[best value still available at my next pick]",
             "survival_sigma": SURVIVAL_SIGMA,
