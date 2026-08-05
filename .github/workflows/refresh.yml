@@ -17,7 +17,11 @@ jobs:
   refresh:
     runs-on: ubuntu-latest
     steps:
+      # ref: main resolves at job start (not dispatch time), so a queued run
+      # sees commits pushed by the run ahead of it in the concurrency group
       - uses: actions/checkout@v4
+        with:
+          ref: main
       - uses: astral-sh/setup-uv@v5
       - name: Run refresh
         run: uv run refresh.py --report
