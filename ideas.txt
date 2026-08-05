@@ -1,0 +1,6 @@
+it seems like current team value is just the sum of all player's expected points. a more accurate measure would be 
+sum of scorable points based on available starter spots + some sort of system for simulating replacement players.
+that would let us get rid of the arbitrary "must fill spots" draft constraint
+
+some sort of heuristic for upside (maybe a sentiment calculated from draftsharks comments + 1 vs 3 year implied growth)
+would be a better metric for bench picks; we mostly want to optimize for upside there.
