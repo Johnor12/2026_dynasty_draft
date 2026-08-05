@@ -19,8 +19,9 @@ The output's headline `vor` is 3-year points minus the converged marginal-starte
 "how many points over three years does this player add versus the best guy any team could
 have had at his position without spending a starting-caliber pick". The `my_next_picks`
 block is the direct answer to "who should I draft next" — unlike `vor`, it sees my roster
-and the odds a player survives to my following pick. Rank columns are renumbered over the
-undrafted players actually emitted.
+and the odds a player survives to my following pick, and its first pick is scored by
+playing every candidate out to the end of the draft (ranker/sim.py `rollout`). Rank
+columns are renumbered over the undrafted players actually emitted.
 
 A caveat the data imposes, not the model: QB replacement lands around QB20-21 = ~820
 points, which compresses elite QB value hard (Josh Allen is ~+225). That follows from the
@@ -39,11 +40,11 @@ import sys
 from pathlib import Path
 
 from ranker.board import fresh_board, load_board
-from ranker.league import MARKET_WEIGHT, NOISE, SEED, SIMS
+from ranker.league import MARKET_WEIGHT, NOISE, ROLLOUT_SIMS, SEED, SIMS
 from ranker.output import build_payload, build_rankings, report_board, report_summary
 from ranker.pool import load_pool
 from ranker.selftest import selftest
-from ranker.sim import converge, monte_carlo
+from ranker.sim import apply_rollout, converge, monte_carlo, rollout
 from ranker.validate import validate
 
 
@@ -124,6 +125,19 @@ def main(argv: list[str] | None = None) -> int:
         players, board, args.report, args.market_weight
     )
 
+    candidates = [c for _, _, c in draft.my_decisions.get(board.my_picks[0], [])] if board.my_picks else []
+    if args.report and candidates:
+        print(
+            f"rollout: {ROLLOUT_SIMS} full-draft playouts x {len(candidates)} candidates "
+            f"at my next pick",
+            file=sys.stderr,
+        )
+    rolled = rollout(
+        players, rep, board, stream, candidates,
+        ROLLOUT_SIMS, args.noise, args.seed, args.market_weight,
+    )
+    draft = apply_rollout(draft, rolled, players, rep, board, stream, args.market_weight)
+
     if args.report:
         print(
             f"monte carlo: {args.sims} noisy drafts (noise={args.noise}, "
@@ -138,12 +152,12 @@ def main(argv: list[str] | None = None) -> int:
     problems = board_problems + validate(rows, players, rep, counts, draft, board, history)
     payload = build_payload(
         players, pool_meta, board, rep, stream, counts, draft, history, rows, problems,
-        args.sims, args.noise, args.seed, args.market_weight,
+        args.sims, args.noise, args.seed, args.market_weight, rolled,
     )
     args.output.write_text(json.dumps(payload, indent=2, ensure_ascii=False) + "\n")
 
     if args.report:
-        report_summary(rows, rep, counts, draft, board)
+        report_summary(rows, rep, counts, draft, board, rolled)
     if problems:
         print(f"\n{len(problems)} VALIDATION PROBLEM(S):", file=sys.stderr)
         for p in problems:

@@ -138,35 +138,53 @@ def build_rankings(
     return rows
 
 
-def my_next_picks(draft: Draft, board: Board, limit: int = 3) -> list[dict]:
+def my_next_picks(
+    draft: Draft, board: Board, rollout: dict | None = None, limit: int = 3
+) -> list[dict]:
     """The model's own decision at each of my next picks, from the deterministic draft.
 
     This is the question the whole script exists to answer, so it is surfaced rather than
     left implicit in `sim_pick`. The candidates carry the two parts of the decision score:
     what the player adds to my roster now, and the expected value of the best player still
     there at my following pick if I take him.
+
+    My first pending pick additionally carries the full-horizon rollout (sim.rollout):
+    `rollout_ev` is the mean final value of my whole roster if I take the candidate and
+    the rest of the draft plays out, `rollout_edge` is his paired advantage over the base
+    policy's choice, `rollout_se` its standard error. The `take` for that pick is the
+    rollout's — it can overrule the two-pick score, but only when the edge is clearly
+    above the playout noise.
     """
     out: list[dict] = []
     for pick_no in board.my_picks[:limit]:
         detail = draft.my_decisions.get(pick_no)
         if not detail:
             continue
+        rolled = rollout if rollout and rollout["pick_no"] == pick_no else None
         take = detail[0][2]
+        if rolled:
+            take = next(c for _, _, c in detail if c.player_id == rolled["take_id"])
+        candidates = []
+        for now, later, c in detail:
+            row = {
+                "name": c.name,
+                "position": c.position,
+                "value_now": round(now, 1),
+                "next_pick_ev": round(later, 1),
+                "score": round(now + later, 1),
+            }
+            if rolled:
+                s = rolled["stats"][c.player_id]
+                row["rollout_ev"] = round(s["ev"], 1)
+                row["rollout_edge"] = round(s["edge"], 1)
+                row["rollout_se"] = round(s["se"], 1)
+            candidates.append(row)
         out.append(
             {
                 "pick": pick_label(pick_no),
                 "overall": pick_no,
                 "take": f"{take.name} ({take.position})",
-                "candidates": [
-                    {
-                        "name": c.name,
-                        "position": c.position,
-                        "value_now": round(now, 1),
-                        "next_pick_ev": round(later, 1),
-                        "score": round(now + later, 1),
-                    }
-                    for now, later, c in detail
-                ],
+                "candidates": candidates,
             }
         )
     return out
@@ -275,6 +293,7 @@ def build_payload(
     noise: float,
     seed: int,
     market_weight: float,
+    rollout: dict | None = None,
 ) -> dict:
     pos = by_position(players)
     return {
@@ -316,9 +335,17 @@ def build_payload(
                 "to my roster (lineup surplus + bench depth); next_pick_ev is E[value of the "
                 "best player still there at my following pick] if I take him now. The pick "
                 "maximizes their sum, so it can disagree with vor_rank — it sees my roster "
-                "and who will keep, which vor does not."
+                "and who will keep, which vor does not. My first pending pick is additionally "
+                "scored over the whole remaining draft (rollout_ev/rollout_edge/rollout_se): "
+                "each candidate is forced there and the rest of the draft is played out, my "
+                "future picks by the two-pick policy, the other teams noisy. Its take stands "
+                "when a candidate's full-horizon edge over the two-pick choice clears twice "
+                "its standard error, and when it overrules, the deterministic draft is "
+                "re-played with that pick forced — so sim_pick, example_draft and the later "
+                "picks here all describe the recommended path."
             ),
-            "picks": my_next_picks(draft, board),
+            "rollout_sims": rollout["sims"] if rollout else None,
+            "picks": my_next_picks(draft, board, rollout),
         },
         "rankings_note": (
             "Undrafted players only, ranked over each other. `vor` is a points quantity "
@@ -414,7 +441,8 @@ def build_payload(
             "survival_sigma": SURVIVAL_SIGMA,
             "note": (
                 "Two-pick rollout with an independence approximation across candidates; "
-                "a strong greedy, not equilibrium play."
+                "a strong greedy, not equilibrium play. My next pick's candidates get a "
+                "full-horizon check on top — see my_next_picks."
             ),
         },
         "monte_carlo": {
@@ -493,6 +521,7 @@ def report_summary(
     counts: dict[str, int],
     draft: Draft,
     board: Board,
+    rollout: dict | None = None,
 ) -> None:
     """Top of the board, the recommendation, and the levels, on stderr."""
     top = rows[:12]
@@ -510,7 +539,7 @@ def report_summary(
             f"  provider adp {r['provider_adp'] or float('nan'):>5}",
             file=sys.stderr,
         )
-    recs = my_next_picks(draft, board)
+    recs = my_next_picks(draft, board, rollout)
     if recs:
         print("\nmy next picks (value now + E[left at my following pick]):", file=sys.stderr)
         for rec in recs:
@@ -519,6 +548,13 @@ def report_summary(
                 for c in rec["candidates"]
             )
             print(f"  {rec['pick']}: take {rec['take']}  |  {cands}", file=sys.stderr)
+        first = recs[0]
+        if "rollout_ev" in first["candidates"][0]:
+            cands = ", ".join(
+                f"{c['name']} edge {c['rollout_edge']:+.0f}±{c['rollout_se']:.0f}"
+                for c in first["candidates"]
+            )
+            print(f"  {first['pick']} full-horizon rollout: {cands}", file=sys.stderr)
     print(
         "\nreplacement: " + ", ".join(f"{k}{counts[k] + 1} = {rep[k]:.0f}" for k in POSITIONS),
         file=sys.stderr,

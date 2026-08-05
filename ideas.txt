@@ -3,4 +3,7 @@ sum of scorable points based on available starter spots + some sort of system fo
 that would let us get rid of the arbitrary "must fill spots" draft constraint
 
 some sort of heuristic for upside (maybe a sentiment calculated from draftsharks comments + 1 vs 3 year implied growth)
-would be a better metric for bench picks; we mostly want to optimize for upside there.
+would be a better metric for bench picks; we mostly want to optimize for upside there. I think the stronger statement
+is that we want to optimize for strongest starting lineup in each year. so, assuming a full starter squad year 1,
+a rookie who will score 0/100/200 in year 3 is worth more than a vet who will score 100/100/100, because the rookie
+might have a delta over your starters in year 3. the closest we can get to that is a 1 year vs 2/3 year comparison.

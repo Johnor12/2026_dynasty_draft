@@ -313,7 +313,7 @@ pipelines as separate as they are everywhere else, and runs them from the repo r
 their own default paths apply.
 
 ```
-uv run refresh.py                       # draft.json, then rankings.json  (~35s)
+uv run refresh.py                       # draft.json, then rankings.json  (~90s)
 uv run refresh.py --report              # + both steps' validation summaries on stderr
 ```
 

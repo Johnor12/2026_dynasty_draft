@@ -53,6 +53,7 @@ NOISE = 0.35  # Gumbel scale, as a fraction of the spread between a pick's candi
 MAX_ITERS = 24  # cap on fixed-point iterations before a cycle must have closed
 MARKET_WEIGHT = 0.8  # how far the other nine teams are pulled toward the source ADP
 SIMS = 200
+ROLLOUT_SIMS = 100  # full-draft playouts per candidate at my next pick (sim.rollout)
 SEED = 20260804
 
 
