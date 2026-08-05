@@ -1,13 +1,13 @@
 {
   "source": "https://api.sleeper.app/v1/draft/1388293618208374784",
-  "fetched_at": "2026-08-05T14:13:10+00:00",
+  "fetched_at": "2026-08-05T14:24:40+00:00",
   "draft_id": "1388293618208374784",
   "league_id": "1388293617071714304",
   "league_name": "Dudes",
   "season": "2026",
   "status": "drafting",
   "started_at": "2026-08-04T13:02:55+00:00",
-  "last_picked_at": "2026-08-05T14:02:26+00:00",
+  "last_picked_at": "2026-08-05T14:20:47+00:00",
   "format": {
     "type": "snake",
     "teams": 10,
@@ -16,16 +16,16 @@
     "scoring_type": "dynasty_2qb"
   },
   "pick_count": 290,
-  "picks_made": 20,
-  "picks_pending": 270,
+  "picks_made": 22,
+  "picks_pending": 268,
   "on_the_clock": {
-    "pick_no": 21,
+    "pick_no": 23,
     "round": 3,
-    "pick_in_round": 1,
-    "draft_slot": 10,
-    "user_id": "751220778036551680",
-    "username": "nedjh2",
-    "slot": "3.01"
+    "pick_in_round": 3,
+    "draft_slot": 8,
+    "user_id": "1128025586577879040",
+    "username": "justinmfftt",
+    "slot": "3.03"
   },
   "me": {
     "username": "johnor",
@@ -41,15 +41,16 @@
     "user_id": "1127785716420898816",
     "username": "johnor",
     "slot": "3.09",
-    "picks_away": 8
+    "picks_away": 6
   },
   "board_derivation": {
     "method": "snake, order reverses at round 3; traded picks applied",
-    "checked_against_made_picks": 20,
-    "slot_and_roster_agree": 20,
+    "checked_against_made_picks": 22,
+    "slot_and_roster_agree": 22,
     "rounds_exercised": [
       1,
-      2
+      2,
+      3
     ],
     "mismatches": []
   },
@@ -482,12 +483,12 @@
       "user_id": "751220778036551680",
       "username": "nedjh2",
       "is_mine": false,
-      "status": "pending",
-      "sleeper_id": null,
-      "name": null,
-      "position": null,
-      "team": null,
-      "is_keeper": null
+      "status": "made",
+      "sleeper_id": "6770",
+      "name": "Joe Burrow",
+      "position": "QB",
+      "team": "CIN",
+      "is_keeper": false
     },
     {
       "pick_no": 22,
@@ -498,12 +499,12 @@
       "user_id": "207916077173182464",
       "username": "dccb31",
       "is_mine": false,
-      "status": "pending",
-      "sleeper_id": null,
-      "name": null,
-      "position": null,
-      "team": null,
-      "is_keeper": null
+      "status": "made",
+      "sleeper_id": "6797",
+      "name": "Justin Herbert",
+      "position": "QB",
+      "team": "LAC",
+      "is_keeper": false
     },
     {
       "pick_no": 23,
