@@ -331,6 +331,10 @@ browser's fetch rules, and the page says so).
 
 It is also hosted: `.github/workflows/deploy-pages.yml` publishes `index.html` and
 `rankings.json` to GitHub Pages on every push to `main` that touches either file.
+`.github/workflows/refresh.yml` runs the same `refresh.py` loop in Actions on a manual
+dispatch and commits the resulting `draft.json` and `rankings.json`. Its push uses the
+default `GITHUB_TOKEN`, which does not trigger other workflows, so when it pushed a
+commit it dispatches the Pages deploy itself.
 
 The method itself is unchanged, and that is checked rather than asserted: a `draft.json`
 with nothing drafted yet reproduces `--no-draft` exactly, byte for byte. Replacement levels

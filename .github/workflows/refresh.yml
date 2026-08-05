@@ -1,0 +1,33 @@
+name: Refresh rankings
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  actions: write
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v5
+      - name: Run refresh
+        run: uv run refresh.py --report
+      - name: Commit changes
+        id: commit
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add draft.json rankings.json
+          git diff --cached --quiet && echo "no changes" && exit 0
+          git commit -m "refresh rankings"
+          git push
+          echo "pushed=true" >> "$GITHUB_OUTPUT"
+      # a GITHUB_TOKEN push doesn't trigger the Pages workflow, so dispatch it ourselves
+      - name: Trigger Pages deploy
+        if: steps.commit.outputs.pushed == 'true'
+        run: gh workflow run deploy-pages.yml
+        env:
+          GH_TOKEN: ${{ github.token }}
