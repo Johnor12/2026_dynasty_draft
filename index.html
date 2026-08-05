@@ -510,6 +510,7 @@ function renderNextPicks(d, byName) {
       const tipRows = ev => showTip([
         [css("--bar-now"), fmt(c.value_now), "Value now"],
         [css("--bar-next"), fmt(c.next_pick_ev), "Next-pick EV"],
+        ...(c.rollout_ev != null ? [[css("--baseline"), fmt(c.rollout_ev), "Rollout EV (final roster)"]] : []),
         ...(stats ? [
           [css("--baseline"), fmt(stats.points_3yr), "3yr pts"],
           [css("--baseline"), `${fmt(stats.upside_points)} (${signed(growth(stats))}/yr)`, "Upside"],

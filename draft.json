@@ -1,13 +1,13 @@
 {
   "source": "https://api.sleeper.app/v1/draft/1388293618208374784",
-  "fetched_at": "2026-08-05T14:24:40+00:00",
+  "fetched_at": "2026-08-05T14:33:34+00:00",
   "draft_id": "1388293618208374784",
   "league_id": "1388293617071714304",
   "league_name": "Dudes",
   "season": "2026",
   "status": "drafting",
   "started_at": "2026-08-04T13:02:55+00:00",
-  "last_picked_at": "2026-08-05T14:20:47+00:00",
+  "last_picked_at": "2026-08-05T14:31:36+00:00",
   "format": {
     "type": "snake",
     "teams": 10,
@@ -16,16 +16,16 @@
     "scoring_type": "dynasty_2qb"
   },
   "pick_count": 290,
-  "picks_made": 22,
-  "picks_pending": 268,
+  "picks_made": 23,
+  "picks_pending": 267,
   "on_the_clock": {
-    "pick_no": 23,
+    "pick_no": 24,
     "round": 3,
-    "pick_in_round": 3,
-    "draft_slot": 8,
-    "user_id": "1128025586577879040",
-    "username": "justinmfftt",
-    "slot": "3.03"
+    "pick_in_round": 4,
+    "draft_slot": 7,
+    "user_id": "1128381875430596608",
+    "username": "UGrizz14",
+    "slot": "3.04"
   },
   "me": {
     "username": "johnor",
@@ -41,12 +41,12 @@
     "user_id": "1127785716420898816",
     "username": "johnor",
     "slot": "3.09",
-    "picks_away": 6
+    "picks_away": 5
   },
   "board_derivation": {
     "method": "snake, order reverses at round 3; traded picks applied",
-    "checked_against_made_picks": 22,
-    "slot_and_roster_agree": 22,
+    "checked_against_made_picks": 23,
+    "slot_and_roster_agree": 23,
     "rounds_exercised": [
       1,
       2,
@@ -515,12 +515,12 @@
       "user_id": "1128025586577879040",
       "username": "justinmfftt",
       "is_mine": false,
-      "status": "pending",
-      "sleeper_id": null,
-      "name": null,
-      "position": null,
-      "team": null,
-      "is_keeper": null
+      "status": "made",
+      "sleeper_id": "12507",
+      "name": "Omarion Hampton",
+      "position": "RB",
+      "team": "LAC",
+      "is_keeper": false
     },
     {
       "pick_no": 24,
