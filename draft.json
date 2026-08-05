@@ -1,13 +1,13 @@
 {
   "source": "https://api.sleeper.app/v1/draft/1388293618208374784",
-  "fetched_at": "2026-08-04T21:59:09+00:00",
+  "fetched_at": "2026-08-04T22:26:05+00:00",
   "draft_id": "1388293618208374784",
   "league_id": "1388293617071714304",
   "league_name": "Dudes",
   "season": "2026",
   "status": "drafting",
   "started_at": "2026-08-04T13:02:55+00:00",
-  "last_picked_at": "2026-08-04T21:29:33+00:00",
+  "last_picked_at": "2026-08-04T22:19:28+00:00",
   "format": {
     "type": "snake",
     "teams": 10,
@@ -16,16 +16,16 @@
     "scoring_type": "dynasty_2qb"
   },
   "pick_count": 290,
-  "picks_made": 9,
-  "picks_pending": 281,
+  "picks_made": 11,
+  "picks_pending": 279,
   "on_the_clock": {
-    "pick_no": 10,
-    "round": 1,
-    "pick_in_round": 10,
-    "draft_slot": 10,
-    "user_id": "751220778036551680",
-    "username": "nedjh2",
-    "slot": "1.10"
+    "pick_no": 12,
+    "round": 2,
+    "pick_in_round": 2,
+    "draft_slot": 9,
+    "user_id": "207916077173182464",
+    "username": "dccb31",
+    "slot": "2.02"
   },
   "me": {
     "username": "johnor",
@@ -41,14 +41,15 @@
     "user_id": "1127785716420898816",
     "username": "johnor",
     "slot": "2.09",
-    "picks_away": 9
+    "picks_away": 7
   },
   "board_derivation": {
     "method": "snake, order reverses at round 3; traded picks applied",
-    "checked_against_made_picks": 9,
-    "slot_and_roster_agree": 9,
+    "checked_against_made_picks": 11,
+    "slot_and_roster_agree": 11,
     "rounds_exercised": [
-      1
+      1,
+      2
     ],
     "mismatches": []
   },
@@ -305,12 +306,12 @@
       "user_id": "751220778036551680",
       "username": "nedjh2",
       "is_mine": false,
-      "status": "pending",
-      "sleeper_id": null,
-      "name": null,
-      "position": null,
-      "team": null,
-      "is_keeper": null
+      "status": "made",
+      "sleeper_id": "11564",
+      "name": "Drake Maye",
+      "position": "QB",
+      "team": "NE",
+      "is_keeper": false
     },
     {
       "pick_no": 11,
@@ -321,12 +322,12 @@
       "user_id": "751220778036551680",
       "username": "nedjh2",
       "is_mine": false,
-      "status": "pending",
-      "sleeper_id": null,
-      "name": null,
-      "position": null,
-      "team": null,
-      "is_keeper": null
+      "status": "made",
+      "sleeper_id": "7547",
+      "name": "Amon-Ra St. Brown",
+      "position": "WR",
+      "team": "DET",
+      "is_keeper": false
     },
     {
       "pick_no": 12,

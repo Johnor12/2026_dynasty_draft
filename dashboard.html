@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Dynasty draft board</title>
+<style>
+  :root {
+    color-scheme: light;
+    --page: #f9f9f7;
+    --surface: #fcfcfb;
+    --ink: #0b0b0b;
+    --ink-2: #52514e;
+    --muted: #898781;
+    --grid: #e1e0d9;
+    --baseline: #c3c2b7;
+    --border: rgba(11,11,11,0.10);
+    --bar-now: #2a78d6;   /* seq blue 450 */
+    --bar-next: #86b6ef;  /* seq blue 250 */
+    --meter-fill: #2a78d6;
+    --meter-track: #cde2fb;
+    --pos-QB: #2a78d6;
+    --pos-RB: #eb6834;
+    --pos-WR: #1baf7a;
+    --pos-TE: #eda100;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:where(:not([data-theme="light"])) {
+      color-scheme: dark;
+      --page: #0d0d0d;
+      --surface: #1a1a19;
+      --ink: #ffffff;
+      --ink-2: #c3c2b7;
+      --muted: #898781;
+      --grid: #2c2c2a;
+      --baseline: #383835;
+      --border: rgba(255,255,255,0.10);
+      --bar-now: #3987e5;   /* seq blue 400 */
+      --bar-next: #184f95;  /* seq blue 600 */
+      --meter-fill: #3987e5;
+      --meter-track: #0d366b;
+      --pos-QB: #3987e5;
+      --pos-RB: #d95926;
+      --pos-WR: #199e70;
+      --pos-TE: #c98500;
+    }
+  }
+  :root[data-theme="dark"] {
+    color-scheme: dark;
+    --page: #0d0d0d;
+    --surface: #1a1a19;
+    --ink: #ffffff;
+    --ink-2: #c3c2b7;
+    --muted: #898781;
+    --grid: #2c2c2a;
+    --baseline: #383835;
+    --border: rgba(255,255,255,0.10);
+    --bar-now: #3987e5;
+    --bar-next: #184f95;
+    --meter-fill: #3987e5;
+    --meter-track: #0d366b;
+    --pos-QB: #3987e5;
+    --pos-RB: #d95926;
+    --pos-WR: #199e70;
+    --pos-TE: #c98500;
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--page);
+    color: var(--ink);
+    font: 14px/1.45 system-ui, -apple-system, "Segoe UI", sans-serif;
+  }
+  main { max-width: 1140px; margin: 0 auto; padding: 24px 20px 64px; }
+
+  header.top { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; margin-bottom: 4px; }
+  header.top h1 { font-size: 22px; font-weight: 650; margin: 0; }
+  .sub { color: var(--ink-2); font-size: 13px; margin: 0 0 20px; }
+  .sub .dot { color: var(--muted); margin: 0 6px; }
+  #themeToggle {
+    margin-left: auto; border: 1px solid var(--border); background: var(--surface);
+    color: var(--ink-2); border-radius: 8px; padding: 4px 10px; font: inherit; font-size: 12px; cursor: pointer;
+  }
+
+  section { margin-top: 32px; }
+  section > h2 { font-size: 15px; font-weight: 650; margin: 0 0 4px; }
+  section > .hint { color: var(--muted); font-size: 12.5px; margin: 0 0 12px; }
+
+  .card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 12px; padding: 16px;
+  }
+
+  /* KPI row */
+  .kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; }
+  .kpi .label { font-size: 12px; color: var(--ink-2); }
+  .kpi .value { font-size: 22px; font-weight: 600; margin-top: 2px; }
+  .kpi .meta  { font-size: 12px; color: var(--muted); margin-top: 2px; }
+
+  /* legend */
+  .legend { display: flex; gap: 16px; align-items: center; margin: 0 0 10px; font-size: 12.5px; color: var(--ink-2); }
+  .legend .key { display: inline-flex; align-items: center; gap: 6px; }
+  .legend .swatch { width: 12px; height: 12px; border-radius: 3px; display: inline-block; }
+
+  /* next-pick cards */
+  .picks-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 12px; }
+  .pick-card h3 { margin: 0; font-size: 13px; font-weight: 600; color: var(--ink-2); }
+  .pick-card h3 .pick-no { color: var(--ink); font-size: 15px; }
+  .pick-card .take-line { font-size: 13px; margin: 2px 0 14px; color: var(--ink-2); }
+  .pick-card .take-line strong { color: var(--ink); }
+
+  .cand { display: grid; grid-template-columns: minmax(140px, 165px) 1fr 48px; gap: 10px;
+          align-items: center; padding: 7px 8px; border-radius: 8px; }
+  .cand.take { background: color-mix(in srgb, var(--bar-now) 9%, transparent);
+               box-shadow: inset 3px 0 0 var(--bar-now); }
+  .cand .who { min-width: 0; }
+  .cand .name { font-weight: 550; font-size: 13px; }
+  .cand .comp { font-size: 11.5px; color: var(--muted); font-variant-numeric: tabular-nums; }
+  .cand .score { text-align: right; font-weight: 600; font-variant-numeric: tabular-nums; }
+
+  .bar { display: flex; height: 14px; align-items: stretch; outline: none; }
+  .bar:focus-visible { box-shadow: 0 0 0 2px var(--page), 0 0 0 4px var(--bar-now); border-radius: 4px; }
+  .bar .seg-now { background: var(--bar-now); }
+  .bar .seg-next { background: var(--bar-next); margin-left: 2px; border-radius: 0 4px 4px 0; }
+  .bar .seg { transition: filter .1s; }
+  .bar:hover .seg, .bar:focus-visible .seg { filter: brightness(1.12); }
+
+  .chip {
+    display: inline-block; font-size: 10.5px; font-weight: 650; letter-spacing: .02em;
+    padding: 1px 6px; border-radius: 999px; vertical-align: 1px;
+  }
+  .chip.pos { color: var(--ink); }
+  .chip.pos.QB { background: color-mix(in srgb, var(--pos-QB) 18%, var(--surface)); }
+  .chip.pos.RB { background: color-mix(in srgb, var(--pos-RB) 18%, var(--surface)); }
+  .chip.pos.WR { background: color-mix(in srgb, var(--pos-WR) 18%, var(--surface)); }
+  .chip.pos.TE { background: color-mix(in srgb, var(--pos-TE) 18%, var(--surface)); }
+  .chip.rookie { border: 1px solid var(--baseline); color: var(--ink-2); }
+  .chip.take-tag { background: var(--bar-now); color: #fff; }
+
+  /* filter row */
+  .filters { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; margin: 0 0 12px; }
+  .filters .fbtn {
+    border: 1px solid var(--border); background: var(--surface); color: var(--ink-2);
+    border-radius: 999px; padding: 4px 12px; font: inherit; font-size: 12.5px; cursor: pointer;
+  }
+  .filters .fbtn[aria-pressed="true"] { background: var(--ink); color: var(--page); border-color: var(--ink); }
+
+  /* table */
+  .table-wrap { overflow-x: auto; border: 1px solid var(--border); border-radius: 12px; background: var(--surface); }
+  table { border-collapse: collapse; width: 100%; min-width: 880px; }
+  thead th {
+    position: sticky; top: 0; background: var(--surface); z-index: 1;
+    text-align: left; font-size: 11.5px; font-weight: 600; color: var(--muted);
+    padding: 10px 10px 8px; border-bottom: 1px solid var(--grid); white-space: nowrap;
+  }
+  tbody td { padding: 7px 10px; border-bottom: 1px solid var(--grid); white-space: nowrap; }
+  tbody tr:last-child td { border-bottom: none; }
+  tbody tr:hover td { background: color-mix(in srgb, var(--ink) 3%, transparent); }
+  td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
+  td.rank { color: var(--muted); font-variant-numeric: tabular-nums; }
+  td .pname { font-weight: 550; }
+  td .team { color: var(--muted); font-size: 12px; margin-left: 6px; }
+  td.dim { color: var(--muted); }
+
+  .meter-cell { display: inline-flex; align-items: center; gap: 8px; }
+  .meter { width: 64px; height: 8px; border-radius: 4px; background: var(--meter-track); overflow: hidden; }
+  .meter > i { display: block; height: 100%; background: var(--meter-fill); border-radius: 4px 0 0 4px; }
+  .meter-cell .pct { font-variant-numeric: tabular-nums; font-size: 12.5px; width: 34px; text-align: right; }
+
+  .show-more { margin-top: 12px; }
+  .show-more button {
+    border: 1px solid var(--border); background: var(--surface); color: var(--ink-2);
+    border-radius: 8px; padding: 6px 14px; font: inherit; font-size: 13px; cursor: pointer;
+  }
+
+  /* roster */
+  .roster-meta { color: var(--ink-2); font-size: 13px; margin: 0 0 12px; }
+  .roster-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px; }
+  .pos-col h3 { font-size: 12px; font-weight: 650; color: var(--ink-2); margin: 0 0 8px;
+                display: flex; align-items: baseline; gap: 8px; }
+  .pos-col h3 .count { color: var(--muted); font-weight: 500; }
+  .roster-row { display: flex; align-items: baseline; gap: 8px; padding: 4px 0; font-size: 13px;
+                border-bottom: 1px solid var(--grid); }
+  .roster-row:last-child { border-bottom: none; }
+  .roster-row .slot { color: var(--muted); font-variant-numeric: tabular-nums; font-size: 11.5px; width: 44px; flex: none; }
+  .roster-row .rname { min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .roster-row.made .rname { font-weight: 600; }
+  .roster-row .pts { margin-left: auto; color: var(--muted); font-variant-numeric: tabular-nums; font-size: 12px; flex: none; }
+
+  details.note { margin-top: 10px; color: var(--ink-2); font-size: 12.5px; }
+  details.note summary { cursor: pointer; color: var(--muted); }
+  details.note p { margin: 8px 0 0; max-width: 76ch; }
+
+  /* tooltip */
+  #tip {
+    position: fixed; pointer-events: none; z-index: 10; display: none;
+    background: var(--surface); border: 1px solid var(--border); border-radius: 8px;
+    padding: 8px 10px; font-size: 12.5px; box-shadow: 0 4px 14px rgba(0,0,0,.18);
+  }
+  #tip .row { display: flex; align-items: center; gap: 7px; }
+  #tip .row + .row { margin-top: 3px; }
+  #tip .k { width: 14px; height: 3px; border-radius: 2px; flex: none; }
+  #tip .v { font-weight: 650; font-variant-numeric: tabular-nums; }
+  #tip .l { color: var(--ink-2); }
+
+  #error { display: none; margin-top: 24px; }
+  #error code { background: color-mix(in srgb, var(--ink) 7%, transparent); padding: 2px 6px; border-radius: 5px; }
+
+  footer { margin-top: 40px; color: var(--muted); font-size: 12px; }
+</style>
+</head>
+<body>
+<main>
+  <header class="top">
+    <h1>Dynasty draft board</h1>
+    <button id="themeToggle" title="Toggle light/dark">◐ theme</button>
+  </header>
+  <p class="sub" id="subline">Loading rankings.json…</p>
+
+  <div class="card" id="error">
+    <strong>Couldn't load <code>rankings.json</code>.</strong>
+    <p>This page fetches the file from the same directory, which the browser blocks when opened
+    directly from disk. Serve the repo root and open the forwarded port instead:</p>
+    <p><code>python3 -m http.server 8123</code> &nbsp;→&nbsp; open <code>/dashboard.html</code> on the forwarded port.</p>
+  </div>
+
+  <div id="app" hidden>
+
+    <section id="kpis-section">
+      <div class="kpis" id="kpis"></div>
+    </section>
+
+    <section id="next-picks">
+      <h2>My next picks — the model's board</h2>
+      <p class="hint">Bar length is the pick score: value to my roster now + expected value of the best player
+         still available at my following pick. The highlighted row is what the model takes.</p>
+      <div class="legend">
+        <span class="key"><span class="swatch" style="background:var(--bar-now)"></span>Value now</span>
+        <span class="key"><span class="swatch" style="background:var(--bar-next)"></span>Next-pick EV</span>
+      </div>
+      <div class="picks-grid" id="picksGrid"></div>
+      <details class="note"><summary>How these are chosen</summary><p id="picksNote"></p></details>
+    </section>
+
+    <section id="roster">
+      <h2 id="rosterTitle">My projected team</h2>
+      <p class="roster-meta" id="rosterMeta"></p>
+      <div class="card">
+        <div class="roster-grid" id="rosterGrid"></div>
+      </div>
+      <details class="note"><summary>How to read this</summary><p id="rosterNote"></p></details>
+    </section>
+
+    <section id="board">
+      <h2>Best available</h2>
+      <p class="hint" id="boardHint"></p>
+      <div class="filters" id="filters"></div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th class="num">#</th>
+              <th>Player</th>
+              <th>Pos</th>
+              <th class="num">Age</th>
+              <th class="num">3yr pts</th>
+              <th class="num">VOR</th>
+              <th>Sim pick</th>
+              <th id="availHead">Avail @ next</th>
+              <th>Likely thru</th>
+              <th class="num" title="market_rank − vor_rank; positive = market ranks him later than this board">Mkt Δ</th>
+            </tr>
+          </thead>
+          <tbody id="boardBody"></tbody>
+        </table>
+      </div>
+      <div class="show-more"><button id="showMore"></button></div>
+      <details class="note"><summary>Notes on these columns</summary><p id="boardNote"></p></details>
+    </section>
+
+    <footer id="footer"></footer>
+  </div>
+</main>
+
+<div id="tip" role="tooltip"></div>
+
+<script>
+"use strict";
+
+/* ---------- tiny DOM helper: all data goes in via textContent ---------- */
+function h(tag, attrs, ...children) {
+  const el = document.createElement(tag);
+  for (const [k, v] of Object.entries(attrs || {})) {
+    if (k === "class") el.className = v;
+    else if (k.startsWith("on")) el.addEventListener(k.slice(2), v);
+    else el.setAttribute(k, v);
+  }
+  for (const c of children.flat()) {
+    if (c == null) continue;
+    el.append(c.nodeType ? c : document.createTextNode(c));
+  }
+  return el;
+}
+const fmt = n => n == null ? "—" : Number(n).toLocaleString("en-US", { maximumFractionDigits: 1 });
+
+/* ---------- theme toggle: auto → light → dark ---------- */
+document.getElementById("themeToggle").addEventListener("click", () => {
+  const r = document.documentElement;
+  const cur = r.getAttribute("data-theme");
+  const next = cur === null ? "light" : cur === "light" ? "dark" : null;
+  next ? r.setAttribute("data-theme", next) : r.removeAttribute("data-theme");
+});
+
+/* ---------- tooltip ---------- */
+const tip = document.getElementById("tip");
+function showTip(rows, x, y) {
+  tip.replaceChildren(...rows.map(([color, value, label]) =>
+    h("div", { class: "row" },
+      h("span", { class: "k", style: `background:${color}` }),
+      h("span", { class: "v" }, value), h("span", { class: "l" }, label))));
+  tip.style.display = "block";
+  const pad = 14, w = tip.offsetWidth, hgt = tip.offsetHeight;
+  tip.style.left = Math.min(x + pad, innerWidth - w - 8) + "px";
+  tip.style.top = (y - hgt - pad < 8 ? y + pad : y - hgt - pad) + "px";
+}
+const hideTip = () => { tip.style.display = "none"; };
+
+/* ---------- availability at a given one of my picks ----------
+   p_available_at_my_picks only stores picks where p is strictly between ~0 and ~1:
+   picks before the first key are ~1 (he's still there), after the last ~0 (gone).
+   An empty dict means the transition is sharp — latest_my_pick_likely_available
+   says where it happens (e.g. McCaffrey: {} with latest 4.02 = there thru 4.02). */
+function pAvailAt(row, pickLabel, myPickOrder) {
+  if (row.p_drafted === 0) return 1;
+  const p = row.p_available_at_my_picks || {};
+  if (pickLabel in p) return p[pickLabel];
+  const idx = myPickOrder.indexOf(pickLabel);
+  const keyIdx = Object.keys(p).map(k => myPickOrder.indexOf(k));
+  if (keyIdx.length === 0) {
+    const latest = row.latest_my_pick_likely_available;
+    return latest != null && idx <= myPickOrder.indexOf(latest) ? 1 : 0;
+  }
+  if (idx < Math.min(...keyIdx)) return 1;
+  if (idx > Math.max(...keyIdx)) return 0;
+  return null; // between stored keys — shouldn't occur, don't guess
+}
+
+/* ---------- renderers ---------- */
+function renderKpis(d) {
+  const otc = d.draft.on_the_clock, mine = d.draft.next_pick_of_mine;
+  const take = d.my_next_picks.picks[0];
+  const kpis = [
+    ["On the clock", otc ? otc.slot : "—", otc ? otc.username : ""],
+    ["My next pick", mine ? mine.slot : "—", mine ? `${mine.picks_away} picks away` : "draft complete"],
+    ["Model's take there", take ? take.take.replace(/ \((QB|RB|WR|TE)\)$/, "") : "—",
+      take ? take.take.match(/\((\w+)\)$/)?.[1] ?? "" : ""],
+    ["Draft progress", `${d.draft.picks_made} / ${d.league.total_picks}`, `${d.draft.picks_pending} picks left`],
+  ];
+  document.getElementById("kpis").replaceChildren(...kpis.map(([label, value, meta]) =>
+    h("div", { class: "card kpi" },
+      h("div", { class: "label" }, label),
+      h("div", { class: "value" }, value),
+      h("div", { class: "meta" }, meta))));
+}
+
+function renderNextPicks(d) {
+  const grid = document.getElementById("picksGrid");
+  document.getElementById("picksNote").textContent = d.my_next_picks.note;
+  grid.replaceChildren(...d.my_next_picks.picks.map(pick => {
+    const maxScore = Math.max(...pick.candidates.map(c => c.score));
+    const rows = pick.candidates.map(c => {
+      const isTake = pick.take.startsWith(c.name);
+      const wNow = c.value_now / maxScore * 100, wNext = c.next_pick_ev / maxScore * 100;
+      const tipRows = ev => showTip([
+        [getComputedStyle(document.documentElement).getPropertyValue("--bar-now"), fmt(c.value_now), "Value now"],
+        [getComputedStyle(document.documentElement).getPropertyValue("--bar-next"), fmt(c.next_pick_ev), "Next-pick EV"],
+      ], ev.clientX ?? ev.target.getBoundingClientRect().right, ev.clientY ?? ev.target.getBoundingClientRect().top);
+      const bar = h("div", { class: "bar", tabindex: "0", role: "img",
+          "aria-label": `${c.name}: value now ${fmt(c.value_now)}, next-pick EV ${fmt(c.next_pick_ev)}, score ${fmt(c.score)}`,
+          onpointermove: tipRows, onpointerleave: hideTip, onfocus: tipRows, onblur: hideTip },
+        h("span", { class: "seg seg-now", style: `width:${wNow}%` }),
+        h("span", { class: "seg seg-next", style: `width:${wNext}%` }));
+      return h("div", { class: "cand" + (isTake ? " take" : "") },
+        h("div", { class: "who" },
+          h("div", { class: "name" }, c.name, " ",
+            h("span", { class: `chip pos ${c.position}` }, c.position),
+            isTake ? [" ", h("span", { class: "chip take-tag" }, "TAKE")] : null),
+          h("div", { class: "comp" }, `now ${fmt(c.value_now)} + next ${fmt(c.next_pick_ev)}`)),
+        bar,
+        h("div", { class: "score" }, fmt(c.score)));
+    });
+    return h("div", { class: "card pick-card" },
+      h("h3", {}, h("span", { class: "pick-no" }, `Pick ${pick.pick}`), ` · overall ${pick.overall}`),
+      h("div", { class: "take-line" }, "Model takes ", h("strong", {}, pick.take)),
+      ...rows);
+  }));
+}
+
+function renderRoster(d, byName) {
+  const mine = d.example_draft.rosters.find(r => r.is_mine);
+  if (!mine) return;
+  document.getElementById("rosterTitle").textContent = `My projected team — ${mine.team}`;
+  document.getElementById("rosterNote").textContent = d.example_draft.note;
+
+  const slots = d.league.starting_slots;
+  const starts = Object.entries(slots).map(([k, v]) => `${v}${k}`).join(" · ");
+  document.getElementById("rosterMeta").textContent =
+    `${mine.players} players · ${mine.rookies} rookies (${d.league.taxi_slots} taxi slots) · starts ${starts}`;
+
+  // pick strings: "made Ja'Marr Chase (WR)" | "8.02 Kenyon Sadiq (TE, R)"
+  const parsed = mine.picks.map(s => {
+    const m = s.match(/^(\S+) (.+) \((QB|RB|WR|TE)(, R)?\)$/);
+    return m && { slot: m[1], name: m[2], pos: m[3], rookie: !!m[4], made: m[1] === "made" };
+  }).filter(Boolean);
+
+  const cols = ["QB", "RB", "WR", "TE"].map(pos => {
+    const players = parsed.filter(p => p.pos === pos);
+    return h("div", { class: "pos-col" },
+      h("h3", {}, h("span", { class: `chip pos ${pos}` }, pos),
+        h("span", { class: "count" }, `${players.length} rostered`)),
+      ...players.map(p => {
+        const stats = byName.get(p.name);
+        return h("div", { class: "roster-row" + (p.made ? " made" : "") },
+          h("span", { class: "slot" }, p.made ? "✓ own" : p.slot),
+          h("span", { class: "rname" }, p.name,
+            p.rookie ? [" ", h("span", { class: "chip rookie" }, "R")] : null),
+          h("span", { class: "pts", title: "3-year projected points" },
+            stats ? fmt(stats.points_3yr) : ""));
+      }));
+  });
+  document.getElementById("rosterGrid").replaceChildren(...cols);
+}
+
+function renderBoard(d, state) {
+  const nextPick = d.draft.next_pick_of_mine?.slot;
+  const myPickOrder = d.league.my_picks;
+  document.getElementById("availHead").textContent = nextPick ? `Avail @ ${nextPick}` : "Avail";
+  document.getElementById("boardHint").textContent =
+    `${d.count} undrafted players, ranked by VOR (3-year points over the marginal starter). ` +
+    `Availability is from ${d.monte_carlo.sims} simulated drafts.`;
+  document.getElementById("boardNote").textContent =
+    d.rankings_note + " " + d.market_model.adp_note;
+
+  let rows = d.rankings;
+  if (state.pos !== "ALL") rows = rows.filter(r => r.position === state.pos);
+  if (state.rookies) rows = rows.filter(r => r.is_rookie);
+  const shown = state.all ? rows : rows.slice(0, 50);
+
+  document.getElementById("boardBody").replaceChildren(...shown.map(r => {
+    const p = nextPick ? pAvailAt(r, nextPick, myPickOrder) : null;
+    const sim = r.sim_pick_label
+      ? `${r.sim_pick_label} (adp ${fmt(r.sim_adp)}±${fmt(r.sim_adp_sd)})` : "undrafted";
+    return h("tr", {},
+      h("td", { class: "num rank" }, String(r.vor_rank)),
+      h("td", {}, h("span", { class: "pname" }, r.name),
+        r.is_rookie ? [" ", h("span", { class: "chip rookie" }, "R")] : null,
+        h("span", { class: "team" }, r.team || "")),
+      h("td", {}, h("span", { class: `chip pos ${r.position}` }, `${r.position}${r.positional_vor_rank}`)),
+      h("td", { class: "num" }, fmt(r.age)),
+      h("td", { class: "num" }, fmt(r.points_3yr)),
+      h("td", { class: "num" }, fmt(r.vor)),
+      h("td", { class: r.sim_pick_label ? "" : "dim" }, sim),
+      h("td", {}, p == null ? "—" : h("span", { class: "meter-cell" },
+        h("span", { class: "meter" }, h("i", { style: `width:${Math.round(p * 100)}%` })),
+        h("span", { class: "pct" }, Math.round(p * 100) + "%"))),
+      h("td", { class: r.latest_my_pick_likely_available ? "" : "dim" },
+        r.latest_my_pick_likely_available || "gone"),
+      h("td", { class: "num" }, r.adp_rank_delta == null ? "—" :
+        (r.adp_rank_delta > 0 ? "+" : "") + r.adp_rank_delta));
+  }));
+
+  const btn = document.getElementById("showMore");
+  btn.textContent = state.all ? "Show top 50" : `Show all ${rows.length}`;
+  btn.style.display = rows.length > 50 ? "" : "none";
+}
+
+function renderFilters(d, state, rerender) {
+  const wrap = document.getElementById("filters");
+  const posBtn = pos => h("button", {
+    class: "fbtn", "aria-pressed": String(state.pos === pos),
+    onclick: () => { state.pos = pos; rerender(); },
+  }, pos === "ALL" ? "All" : pos);
+  const rookieBtn = h("button", {
+    class: "fbtn", "aria-pressed": String(state.rookies),
+    onclick: () => { state.rookies = !state.rookies; rerender(); },
+  }, "Rookies only");
+  wrap.replaceChildren(...["ALL", "QB", "RB", "WR", "TE"].map(posBtn), rookieBtn);
+}
+
+/* ---------- boot ---------- */
+(async () => {
+  let d;
+  try {
+    const res = await fetch("rankings.json", { cache: "no-store" });
+    if (!res.ok) throw new Error(res.status);
+    d = await res.json();
+  } catch (e) {
+    document.getElementById("subline").textContent = "";
+    document.getElementById("error").style.display = "block";
+    return;
+  }
+
+  const asOf = new Date(d.draft.fetched_at).toLocaleString("en-US",
+    { month: "short", day: "numeric", hour: "numeric", minute: "2-digit" });
+  document.getElementById("subline").replaceChildren(
+    `${d.draft.league_name} · ${d.scoring_scheme}`,
+    h("span", { class: "dot" }, "·"), `board as of ${asOf}`,
+    h("span", { class: "dot" }, "·"), `refresh with refresh.py, then reload`);
+
+  const byName = new Map(d.rankings.map(r => [r.name, r]));
+  const state = { pos: "ALL", rookies: false, all: false };
+  const rerenderBoard = () => { renderFilters(d, state, rerenderBoard); renderBoard(d, state); };
+
+  renderKpis(d);
+  renderNextPicks(d);
+  renderRoster(d, byName);
+  rerenderBoard();
+  document.getElementById("showMore").addEventListener("click", () => { state.all = !state.all; rerenderBoard(); });
+
+  document.getElementById("footer").textContent =
+    `Generated from ${d.generated_from} · value input: ${d.value_input} · ` +
+    `market weight ${d.market_model.market_weight} · ${d.monte_carlo.sims} sims, noise ${d.monte_carlo.noise}`;
+  document.getElementById("app").hidden = false;
+})();
+</script>
+</body>
+</html>
