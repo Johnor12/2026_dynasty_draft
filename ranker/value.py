@@ -4,13 +4,17 @@ Everything is in 3-year points above a baseline, never raw points, so that filli
 empty slot is never confused with a real gain. A team's value is
 
     V(roster) = sum over filled starting slots of (points - that slot's replacement level)
-              + sum over bench players of  0.30 * 0.55^d * max(upside - wire level, 0)
+              + sum over bench players of  0.55^d * (   0.30 * max(upside - wire, 0)
+                                                     + ins[pos] * max(points - wire, 0) )
 
-where `upside` is the player's 3-year total re-projected at his years-2-3 pace
-(`upside_points`) — the bench is where upside lives, so a backloaded rookie outranks a
-flat veteran with the same 3-year sum there, while starters stay priced on the sum.
+The bench term prices a backup's two jobs, both against the wire. Growth: `upside` is his
+3-year total re-projected at his years-2-3 pace (`upside_points`), so a backloaded rookie
+outranks a flat veteran with the same 3-year sum. Insurance: his full 3-year sum — year 1
+included — weighted by `INSURANCE_BASE`, his position's expected share of starter games
+missed (byes + injuries), which is what a startable veteran backup is for. The two jobs
+cover different weeks, so they add rather than compete.
 
-where d counts the bench players that team already has at the same position. The value of
+d counts the bench players that team already has at the same position. The value of
 a player to a team is V(roster + player) - V(roster). Three choices in there each cost a
 degenerate draft to learn, and are explained at their definitions:
 
@@ -32,7 +36,6 @@ from __future__ import annotations
 import math
 
 from .league import (
-    DEPTH_BASE,
     POSITION_DEPTH_DECAY,
     POSITIONS,
     SLOT_CHAIN,
@@ -121,15 +124,16 @@ def team_value(
 
     Starters are priced against the marginal-starter baseline (via `slot_rep`) because that
     is what you would otherwise have in the slot. Bench players are priced against the
-    *wire* — `depth_value` is max(points - wire level, 0) — because a backup's job is to
-    beat what you would otherwise have to sign, and then discounted by how likely he ever
-    plays.
+    *wire* — `depth_value` is the growth + insurance value built in `Draft.__init__`, both
+    terms measured over the wire level — because a backup's job is to beat what you would
+    otherwise have to sign, and then discounted by how likely he ever plays.
 
     The discount is by depth at the player's own position, not by a running bench index: a
     team's fifth QB cannot start in a league with two QB-capable slots, however large his
     value looks. Using a raw bench index let one team draft ten QBs.
 
-    `depth_value` is floored at zero, and that floor is essential rather than cosmetic. An
+    Each `depth_value` term is floored at zero, and that floor is essential rather than
+    cosmetic. An
     earlier version used unfloored VOR to keep deep picks ordered, which quietly inverted
     the incentive: when a candidate's value is negative, a *smaller* depth weight makes the
     marginal impact closer to zero and therefore better, so stacking a position until its
@@ -143,7 +147,7 @@ def team_value(
     seen = dict(started)
     for p in bench:
         depth = seen[p.position] - started[p.position]
-        surplus += DEPTH_BASE * POSITION_DEPTH_DECAY**depth * depth_value[p.player_id]
+        surplus += POSITION_DEPTH_DECAY**depth * depth_value[p.player_id]
         seen[p.position] += 1
     return surplus
 

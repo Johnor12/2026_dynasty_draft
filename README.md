@@ -143,11 +143,13 @@ collapse to two point columns (3-year and 1-year) and 8 ADP columns to one.
   ±1 on 32 of the 350 cells for nothing. 1QB family because points can't depend on roster
   format and that family is the consistent one (see the drift quirk below).
 - **`points_1yr` is the same copy at the 1-year horizon.** The gap against `points_3yr`
-  is the provider's implied growth: the ranker prices bench depth on the years-2-3 pace,
-  `1.5 × (points_3yr − points_1yr)` (`upside_points` in `ranker/value.py`), so a
-  backloaded rookie outranks a flat veteran with the same 3-year sum on the bench, while
-  starters stay priced on the 3-year sum. A genuine 0 (a projected redshirt year) is
-  kept as 0.
+  is the provider's implied growth: the growth half of bench pricing uses the years-2-3
+  pace, `1.5 × (points_3yr − points_1yr)` (`upside_points` in `ranker/value.py`), so a
+  backloaded rookie outranks a flat veteran with the same 3-year sum there. The other
+  half — insurance, `INSURANCE_BASE` in `ranker/league.py` — uses the full 3-year sum
+  weighted by the position's expected starter games missed, which is what keeps a
+  startable veteran backup from being worth nothing. Starters stay priced on the 3-year
+  sum. A genuine 0 (a projected redshirt year) is kept as 0.
 - **3D value is not carried at all.** It's a provider-scaled ordinal (best player pinned
   at 100, ~half the league negative) that bakes in someone else's roster assumptions and
   isn't in points, so it can't be differenced against a replacement level — which is all

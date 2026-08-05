@@ -16,6 +16,7 @@ from .board import Board
 from .league import (
     BENCH_SLOTS,
     DEPTH_BASE,
+    INSURANCE_BASE,
     POINTS_FIELD,
     POSITION_DEPTH_DECAY,
     POSITIONS,
@@ -434,18 +435,23 @@ def build_payload(
             "convergence": history,
         },
         "strategy": {
-            "objective": "starting-lineup points above replacement + decayed bench VOR",
+            "objective": (
+                "starting-lineup points above replacement + decayed bench value "
+                "(growth + insurance)"
+            ),
             "depth_base": DEPTH_BASE,
             "position_depth_decay": POSITION_DEPTH_DECAY,
+            "insurance_base": INSURANCE_BASE,
             "depth_note": (
                 "Bench value decays with how many players that team already has at the "
                 "same position, not with a running bench index — a fifth QB cannot start "
-                "in a two-QB-slot league however large his VOR looks. It is priced on "
-                "`upside_points` — the player's 3-year total at his years-2-3 pace — "
-                "rather than his 3-year sum: with a full starter squad a bench pick's "
-                "year-1 points are nearly worthless, so a backloaded rookie outranks a "
-                "flat veteran with the same 3-year total. Starters are still priced on "
-                "points_3yr."
+                "in a two-QB-slot league however large his VOR looks. Each body is priced "
+                "on two jobs over the wire: growth — `upside_points`, his 3-year total at "
+                "his years-2-3 pace, weighted depth_base — and insurance — his full 3-year "
+                "sum including year 1, weighted by insurance_base, his position's expected "
+                "share of starter games missed to byes and injury. So a backloaded rookie "
+                "and a startable veteran are both worth bench picks for different reasons. "
+                "Starters are still priced on points_3yr."
             ),
             "lookahead": "value now + E[best value still available at my next pick]",
             "survival_sigma": SURVIVAL_SIGMA,

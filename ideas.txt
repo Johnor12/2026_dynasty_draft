@@ -1,9 +1,29 @@
-it seems like current team value is just the sum of all player's expected points. a more accurate measure would be 
-sum of scorable points based on available starter spots + some sort of system for simulating replacement players.
-that would let us get rid of the arbitrary "must fill spots" draft constraint
+my gut feeling is that this simulation is resulting in too shallow of a bench, especially for my first year.
+for example, my projected RB room is:
 
-some sort of heuristic for upside (maybe a sentiment calculated from draftsharks comments + 1 vs 3 year implied growth)
-would be a better metric for bench picks; we mostly want to optimize for upside there. I think the stronger statement
-is that we want to optimize for strongest starting lineup in each year. so, assuming a full starter squad year 1,
-a rookie who will score 0/100/200 in year 3 is worth more than a vet who will score 100/100/100, because the rookie
-might have a delta over your starters in year 3. the closest we can get to that is a 1 year vs 2/3 year comparison.
+2.09
+De'Von Achane
+648
+-36
+6.02
+Josh Jacobs
+486
+-123
+15.09
+Braelon Allen
+284
++43
+18.02
+Brian Robinson Jr.
+278
+23.09
+Kaleb Johnson
+211
++53
+28.02
+Will Shipley
+193
++52
+
+if achane or jacobs goes down (or even just during bye weeks), 
+I effectively have no starting running back for my second slot (braelon allen is projected at 66 points for this year)

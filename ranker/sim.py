@@ -40,6 +40,8 @@ from collections.abc import Sequence
 from .board import Board
 from .league import (
     DEDICATED_SLOTS,
+    DEPTH_BASE,
+    INSURANCE_BASE,
     LOOKAHEAD_PER_POS,
     MAX_ITERS,
     NON_TAXI_SLOTS,
@@ -128,13 +130,16 @@ class Draft:
         self.rep = rep
         self.slot_rep = slot_replacement(rep)
         self.vor = vor
-        # Bench depth is measured against the wire, floored at zero, and priced on the
-        # player's years-2-3 pace rather than his 3-year sum (value.upside_points) — the
-        # bench is where upside lives. Before any draft exists to read a wire off, fall
-        # back to the VOR baseline.
+        # A bench body has two jobs, each measured against the wire and floored at zero
+        # (see value.team_value for why the floor is load-bearing): growth — his years-2-3
+        # pace (value.upside_points), weighted DEPTH_BASE — and insurance — his full 3-year
+        # sum including year 1, weighted by his position's expected starter games missed.
+        # Before any draft exists to read a wire off, fall back to the VOR baseline.
         self.wire = rep if wire is None else wire
         self.depth_value = {
-            p.player_id: max(upside_points(p) - self.wire[p.position], 0.0) for p in players
+            p.player_id: DEPTH_BASE * max(upside_points(p) - self.wire[p.position], 0.0)
+            + INSURANCE_BASE[p.position] * max(p.points - self.wire[p.position], 0.0)
+            for p in players
         }
         self.board = board
         self.order = board.order

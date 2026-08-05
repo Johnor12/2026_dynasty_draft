@@ -45,8 +45,13 @@ SLOT_ELIGIBLE = {
 
 # --- strategy knobs ---------------------------------------------------------------
 
-DEPTH_BASE = 0.30  # a position's first backup is worth this fraction of his VOR
+DEPTH_BASE = 0.30  # growth: a first backup keeps this fraction of his upside over the wire
 POSITION_DEPTH_DECAY = 0.55  # ...and each further body at the same position much less
+# Insurance: expected share of a season the first backup at a position inherits from the
+# starters ahead of him — their byes plus games missed to injury. RB highest (two dedicated
+# starters, worst attrition), QB lowest (one starter, durable). Judgment-call constants on
+# league-wide averages, not per-player durability.
+INSURANCE_BASE = {"QB": 0.08, "RB": 0.20, "WR": 0.12, "TE": 0.10}
 SURVIVAL_SIGMA = 3.5  # softness of "will he last until my next pick"
 LOOKAHEAD_PER_POS = 2  # candidates per position considered for the next pick
 NOISE = 0.35  # Gumbel scale, as a fraction of the spread between a pick's candidates

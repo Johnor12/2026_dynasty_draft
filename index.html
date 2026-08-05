@@ -284,7 +284,7 @@
               <th>Pos</th>
               <th class="num">Age</th>
               <th class="num">3yr pts</th>
-              <th class="num" title="3-year total at his years-2-3 pace — what bench depth is priced on">Upside</th>
+              <th class="num" title="3-year total at his years-2-3 pace — the growth half of bench pricing">Upside</th>
               <th class="num" title="Provider-implied growth: average of years 2-3 minus year 1, points per season">Growth /yr</th>
               <th class="num">VOR</th>
               <th>Sim pick</th>
@@ -586,7 +586,7 @@ function renderBoard(d, state) {
   document.getElementById("boardHint").textContent =
     `${d.count} undrafted players, ranked by VOR (3-year points over the marginal starter — ` +
     ["QB", "RB", "WR", "TE"].map(p => `${p} ${Math.round(rep[p])}`).join(" · ") + "). " +
-    `Upside is the 3-year total at years-2-3 pace; bench depth is priced on it. ` +
+    `Upside is the 3-year total at years-2-3 pace — the growth half of bench pricing (the other half is insurance on the full 3-year sum). ` +
     `Availability is from ${d.monte_carlo.sims} simulated drafts.`;
   document.getElementById("boardNote").textContent =
     d.rankings_note + " " + d.market_model.adp_note;
@@ -672,7 +672,7 @@ function renderFilters(d, state, rerender) {
 
   document.getElementById("footer").textContent =
     `Generated from ${d.generated_from} · value input: ${d.value_input} · ` +
-    `bench priced on upside (years-2-3 pace) · ` +
+    `bench priced on upside growth + positional insurance · ` +
     `market weight ${d.market_model.market_weight} · ${d.monte_carlo.sims} sims, noise ${d.monte_carlo.noise}`;
   document.getElementById("app").hidden = false;
 })();
