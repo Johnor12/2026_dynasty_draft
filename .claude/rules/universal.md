@@ -26,3 +26,8 @@ But don't be a pushover about the instructions themselves:
 ## Comments
 Simple and succinct. Explain why, not what. Skip comments that restate the code. 
 Avoid writing comments for every negative case.
+
+## Leave changes unstaged
+When you finish working, leave your changes unstaged — don't `git add` them.
+If a command stages as a side effect (e.g. `git mv`), unstage with
+`git restore --staged` before finishing.

@@ -4,7 +4,7 @@ on:
   push:
     branches: [main]
     paths:
-      - dashboard.html
+      - index.html
       - rankings.json
   workflow_dispatch:
 
@@ -28,7 +28,7 @@ jobs:
       - name: Assemble site
         run: |
           mkdir site
-          cp dashboard.html site/index.html
+          cp index.html site/
           cp rankings.json site/
       - uses: actions/upload-pages-artifact@v3
         with:

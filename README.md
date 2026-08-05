@@ -31,7 +31,7 @@ pool.json                    the draft pool — 350 players, 12 fields
 draft.json                   the live board — 290 picks, made and pending
 rank_vor.py                  pool.json + draft.json -> rankings.json (run separately)
 refresh.py                   fetch the board, then re-rank — the between-picks loop
-dashboard.html               static viewer for rankings.json (serve the repo root, no build)
+index.html                   static dashboard for rankings.json (serve the repo root, no build)
 ranker/                      the ranker's internals, one module per concern:
   league.py                  league constants, strategy knobs, draft order
   pool.py                    pool.json -> Player objects
@@ -320,17 +320,17 @@ uv run refresh.py --report              # + both steps' validation summaries on 
 The pool pipeline is not a step: it is offline and rebuilt a handful of times all
 offseason, and this runs every few minutes during a draft.
 
-`dashboard.html` is a read-only view of `rankings.json` — the model's picks for my next
+`index.html` is a read-only dashboard view of `rankings.json` — the model's picks for my next
 turns, the projected final roster, and the best-available board with availability odds.
 One static file, no build step and no dependencies; it fetches `rankings.json` from the
-same directory on page load, so the loop is `refresh.py`, then reload the browser. Serve
-the repo root with `python3 -m http.server 8123` and open `/dashboard.html` on the
-forwarded port (a direct `file://` open is blocked by the browser's fetch rules, and the
-page says so).
+same directory on page load, so the loop is `refresh.py`, then reload the browser. In the
+Codespace the devcontainer already serves the repo root on port 8000 at startup
+(`.devcontainer/devcontainer.json`); elsewhere, serve it with `python3 -m http.server 8123`
+and open the forwarded port (a direct `file://` open is blocked by the
+browser's fetch rules, and the page says so).
 
-It is also hosted: `.github/workflows/deploy-pages.yml` publishes `dashboard.html` (as
-`index.html`) and `rankings.json` to GitHub Pages on every push to `main` that touches
-either file.
+It is also hosted: `.github/workflows/deploy-pages.yml` publishes `index.html` and
+`rankings.json` to GitHub Pages on every push to `main` that touches either file.
 
 The method itself is unchanged, and that is checked rather than asserted: a `draft.json`
 with nothing drafted yet reproduces `--no-draft` exactly, byte for byte. Replacement levels
