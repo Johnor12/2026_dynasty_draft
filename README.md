@@ -323,7 +323,11 @@ offseason, and this runs every few minutes during a draft.
 `index.html` is a read-only dashboard view of `rankings.json` — the model's picks for my next
 turns, the projected final roster, and the best-available board with availability odds.
 One static file, no build step and no dependencies; it fetches `rankings.json` from the
-same directory on page load, so the loop is `refresh.py`, then reload the browser. In the
+same directory on page load, so the loop is `refresh.py`, then reload the browser. It also
+polls the Sleeper draft endpoints directly (the same public API the draft pipeline reads,
+every 30s) for a live KPI card — picks made, who's on the clock, my next pick, last
+selection — and compares the live pick count and status against the snapshot the board was
+built from, highlighting the refresh button when the board has fallen behind. In the
 Codespace the devcontainer already serves the repo root on port 8000 at startup
 (`.devcontainer/devcontainer.json`); elsewhere, serve it with `python3 -m http.server 8123`
 and open the forwarded port (a direct `file://` open is blocked by the
