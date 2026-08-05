@@ -78,10 +78,12 @@
   header.top h1 { font-size: 22px; font-weight: 650; margin: 0; }
   .sub { color: var(--ink-2); font-size: 13px; margin: 0 0 20px; }
   .sub .dot { color: var(--muted); margin: 0 6px; }
-  #themeToggle {
-    margin-left: auto; border: 1px solid var(--border); background: var(--surface);
+  #themeToggle, #refreshBtn {
+    border: 1px solid var(--border); background: var(--surface);
     color: var(--ink-2); border-radius: 8px; padding: 4px 10px; font: inherit; font-size: 12px; cursor: pointer;
   }
+  #refreshBtn { margin-left: auto; }
+  #refreshBtn:disabled { cursor: default; opacity: .7; }
 
   section { margin-top: 32px; }
   section > h2 { font-size: 15px; font-weight: 650; margin: 0 0 4px; }
@@ -214,6 +216,7 @@
 <main>
   <header class="top">
     <h1>Dynasty draft board</h1>
+    <button id="refreshBtn" title="Run the refresh-rankings GitHub Action">↻ refresh data</button>
     <button id="themeToggle" title="Toggle light/dark">◐ theme</button>
   </header>
   <p class="sub" id="subline">Loading rankings.json…</p>
@@ -310,6 +313,40 @@ document.getElementById("themeToggle").addEventListener("click", () => {
   const cur = r.getAttribute("data-theme");
   const next = cur === null ? "light" : cur === "light" ? "dark" : null;
   next ? r.setAttribute("data-theme", next) : r.removeAttribute("data-theme");
+});
+
+/* ---------- refresh: dispatch the GitHub Action ----------
+   Static page, so this calls the GitHub API directly. Needs a fine-grained PAT
+   with Actions read/write on this repo; asked for once, kept in localStorage. */
+document.getElementById("refreshBtn").addEventListener("click", async ev => {
+  const btn = ev.currentTarget;
+  let token = localStorage.getItem("gh_token");
+  if (!token) {
+    token = prompt("GitHub token with Actions write access to Johnor12/2026_dynasty_draft:");
+    if (!token) return;
+    localStorage.setItem("gh_token", token.trim());
+    token = token.trim();
+  }
+  btn.disabled = true;
+  btn.textContent = "↻ starting…";
+  const reset = (label, ms) => setTimeout(() => { btn.disabled = false; btn.textContent = label; }, ms);
+  try {
+    const res = await fetch(
+      "https://api.github.com/repos/Johnor12/2026_dynasty_draft/actions/workflows/refresh.yml/dispatches",
+      { method: "POST",
+        headers: { Authorization: `Bearer ${token}`, Accept: "application/vnd.github+json" },
+        body: JSON.stringify({ ref: "main" }) });
+    if (res.status === 401 || res.status === 403) {
+      localStorage.removeItem("gh_token"); // bad/expired token — re-prompt next click
+      throw new Error(`token rejected (${res.status})`);
+    }
+    if (res.status !== 204) throw new Error(`HTTP ${res.status}`);
+    btn.textContent = "✓ refresh started — reload in ~1 min";
+    reset("↻ refresh data", 60000);
+  } catch (e) {
+    btn.textContent = `✗ ${e.message}`;
+    reset("↻ refresh data", 5000);
+  }
 });
 
 /* ---------- tooltip ---------- */
