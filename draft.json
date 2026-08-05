@@ -1,13 +1,13 @@
 {
   "source": "https://api.sleeper.app/v1/draft/1388293618208374784",
-  "fetched_at": "2026-08-04T22:26:05+00:00",
+  "fetched_at": "2026-08-05T11:27:33+00:00",
   "draft_id": "1388293618208374784",
   "league_id": "1388293617071714304",
   "league_name": "Dudes",
   "season": "2026",
   "status": "drafting",
   "started_at": "2026-08-04T13:02:55+00:00",
-  "last_picked_at": "2026-08-04T22:19:28+00:00",
+  "last_picked_at": "2026-08-05T08:09:09+00:00",
   "format": {
     "type": "snake",
     "teams": 10,
@@ -16,16 +16,16 @@
     "scoring_type": "dynasty_2qb"
   },
   "pick_count": 290,
-  "picks_made": 11,
-  "picks_pending": 279,
+  "picks_made": 15,
+  "picks_pending": 275,
   "on_the_clock": {
-    "pick_no": 12,
+    "pick_no": 16,
     "round": 2,
-    "pick_in_round": 2,
-    "draft_slot": 9,
-    "user_id": "207916077173182464",
-    "username": "dccb31",
-    "slot": "2.02"
+    "pick_in_round": 6,
+    "draft_slot": 5,
+    "user_id": "870397485556875264",
+    "username": "dirtydole",
+    "slot": "2.06"
   },
   "me": {
     "username": "johnor",
@@ -41,12 +41,12 @@
     "user_id": "1127785716420898816",
     "username": "johnor",
     "slot": "2.09",
-    "picks_away": 7
+    "picks_away": 3
   },
   "board_derivation": {
     "method": "snake, order reverses at round 3; traded picks applied",
-    "checked_against_made_picks": 11,
-    "slot_and_roster_agree": 11,
+    "checked_against_made_picks": 15,
+    "slot_and_roster_agree": 15,
     "rounds_exercised": [
       1,
       2
@@ -338,12 +338,12 @@
       "user_id": "207916077173182464",
       "username": "dccb31",
       "is_mine": false,
-      "status": "pending",
-      "sleeper_id": null,
-      "name": null,
-      "position": null,
-      "team": null,
-      "is_keeper": null
+      "status": "made",
+      "sleeper_id": "11560",
+      "name": "Caleb Williams",
+      "position": "QB",
+      "team": "CHI",
+      "is_keeper": false
     },
     {
       "pick_no": 13,
@@ -354,12 +354,12 @@
       "user_id": "1128025586577879040",
       "username": "justinmfftt",
       "is_mine": false,
-      "status": "pending",
-      "sleeper_id": null,
-      "name": null,
-      "position": null,
-      "team": null,
-      "is_keeper": null
+      "status": "made",
+      "sleeper_id": "8130",
+      "name": "Trey McBride",
+      "position": "TE",
+      "team": "ARI",
+      "is_keeper": false
     },
     {
       "pick_no": 14,
@@ -370,12 +370,12 @@
       "user_id": "1128381875430596608",
       "username": "UGrizz14",
       "is_mine": false,
-      "status": "pending",
-      "sleeper_id": null,
-      "name": null,
-      "position": null,
-      "team": null,
-      "is_keeper": null
+      "status": "made",
+      "sleeper_id": "6794",
+      "name": "Justin Jefferson",
+      "position": "WR",
+      "team": "MIN",
+      "is_keeper": false
     },
     {
       "pick_no": 15,
@@ -386,12 +386,12 @@
       "user_id": "1114302275305979904",
       "username": "samlemonskoff",
       "is_mine": false,
-      "status": "pending",
-      "sleeper_id": null,
-      "name": null,
-      "position": null,
-      "team": null,
-      "is_keeper": null
+      "status": "made",
+      "sleeper_id": "11566",
+      "name": "Jayden Daniels",
+      "position": "QB",
+      "team": "WAS",
+      "is_keeper": false
     },
     {
       "pick_no": 16,
