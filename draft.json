@@ -1,13 +1,13 @@
 {
   "source": "https://api.sleeper.app/v1/draft/1388293618208374784",
-  "fetched_at": "2026-08-05T13:59:21+00:00",
+  "fetched_at": "2026-08-05T14:13:10+00:00",
   "draft_id": "1388293618208374784",
   "league_id": "1388293617071714304",
   "league_name": "Dudes",
   "season": "2026",
   "status": "drafting",
   "started_at": "2026-08-04T13:02:55+00:00",
-  "last_picked_at": "2026-08-05T13:51:30+00:00",
+  "last_picked_at": "2026-08-05T14:02:26+00:00",
   "format": {
     "type": "snake",
     "teams": 10,
@@ -16,16 +16,16 @@
     "scoring_type": "dynasty_2qb"
   },
   "pick_count": 290,
-  "picks_made": 18,
-  "picks_pending": 272,
+  "picks_made": 20,
+  "picks_pending": 270,
   "on_the_clock": {
-    "pick_no": 19,
-    "round": 2,
-    "pick_in_round": 9,
-    "draft_slot": 2,
-    "user_id": "1127785716420898816",
-    "username": "johnor",
-    "slot": "2.09"
+    "pick_no": 21,
+    "round": 3,
+    "pick_in_round": 1,
+    "draft_slot": 10,
+    "user_id": "751220778036551680",
+    "username": "nedjh2",
+    "slot": "3.01"
   },
   "me": {
     "username": "johnor",
@@ -34,19 +34,19 @@
     "roster_id": 2
   },
   "my_next_pick": {
-    "pick_no": 19,
-    "round": 2,
+    "pick_no": 29,
+    "round": 3,
     "pick_in_round": 9,
     "draft_slot": 2,
     "user_id": "1127785716420898816",
     "username": "johnor",
-    "slot": "2.09",
-    "picks_away": 0
+    "slot": "3.09",
+    "picks_away": 8
   },
   "board_derivation": {
     "method": "snake, order reverses at round 3; traded picks applied",
-    "checked_against_made_picks": 18,
-    "slot_and_roster_agree": 18,
+    "checked_against_made_picks": 20,
+    "slot_and_roster_agree": 20,
     "rounds_exercised": [
       1,
       2
@@ -450,12 +450,12 @@
       "user_id": "1127785716420898816",
       "username": "johnor",
       "is_mine": true,
-      "status": "pending",
-      "sleeper_id": null,
-      "name": null,
-      "position": null,
-      "team": null,
-      "is_keeper": null
+      "status": "made",
+      "sleeper_id": "13287",
+      "name": "Jeremiyah Love",
+      "position": "RB",
+      "team": "ARI",
+      "is_keeper": false
     },
     {
       "pick_no": 20,
@@ -466,12 +466,12 @@
       "user_id": "1388546393752240128",
       "username": "AndNic31",
       "is_mine": false,
-      "status": "pending",
-      "sleeper_id": null,
-      "name": null,
-      "position": null,
-      "team": null,
-      "is_keeper": null
+      "status": "made",
+      "sleeper_id": "9226",
+      "name": "De'Von Achane",
+      "position": "RB",
+      "team": "MIA",
+      "is_keeper": false
     },
     {
       "pick_no": 21,
