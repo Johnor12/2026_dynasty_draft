@@ -1,13 +1,13 @@
 {
   "source": "https://api.sleeper.app/v1/draft/1388293618208374784",
-  "fetched_at": "2026-08-05T17:30:25+00:00",
+  "fetched_at": "2026-08-05T17:35:09+00:00",
   "draft_id": "1388293618208374784",
   "league_id": "1388293617071714304",
   "league_name": "Dudes",
   "season": "2026",
   "status": "drafting",
   "started_at": "2026-08-04T13:02:55+00:00",
-  "last_picked_at": "2026-08-05T17:30:20+00:00",
+  "last_picked_at": "2026-08-05T17:34:42+00:00",
   "format": {
     "type": "snake",
     "teams": 10,
@@ -16,16 +16,16 @@
     "scoring_type": "dynasty_2qb"
   },
   "pick_count": 290,
-  "picks_made": 28,
-  "picks_pending": 262,
+  "picks_made": 31,
+  "picks_pending": 259,
   "on_the_clock": {
-    "pick_no": 29,
-    "round": 3,
-    "pick_in_round": 9,
+    "pick_no": 32,
+    "round": 4,
+    "pick_in_round": 2,
     "draft_slot": 2,
     "user_id": "1127785716420898816",
     "username": "johnor",
-    "slot": "3.09"
+    "slot": "4.02"
   },
   "me": {
     "username": "johnor",
@@ -34,23 +34,24 @@
     "roster_id": 2
   },
   "my_next_pick": {
-    "pick_no": 29,
-    "round": 3,
-    "pick_in_round": 9,
+    "pick_no": 32,
+    "round": 4,
+    "pick_in_round": 2,
     "draft_slot": 2,
     "user_id": "1127785716420898816",
     "username": "johnor",
-    "slot": "3.09",
+    "slot": "4.02",
     "picks_away": 0
   },
   "board_derivation": {
     "method": "snake, order reverses at round 3; traded picks applied",
-    "checked_against_made_picks": 28,
-    "slot_and_roster_agree": 28,
+    "checked_against_made_picks": 31,
+    "slot_and_roster_agree": 31,
     "rounds_exercised": [
       1,
       2,
-      3
+      3,
+      4
     ],
     "mismatches": []
   },
@@ -611,12 +612,12 @@
       "user_id": "1127785716420898816",
       "username": "johnor",
       "is_mine": true,
-      "status": "pending",
-      "sleeper_id": null,
-      "name": null,
-      "position": null,
-      "team": null,
-      "is_keeper": null
+      "status": "made",
+      "sleeper_id": "7569",
+      "name": "Nico Collins",
+      "position": "WR",
+      "team": "HOU",
+      "is_keeper": false
     },
     {
       "pick_no": 30,
@@ -627,12 +628,12 @@
       "user_id": "1388546393752240128",
       "username": "AndNic31",
       "is_mine": false,
-      "status": "pending",
-      "sleeper_id": null,
-      "name": null,
-      "position": null,
-      "team": null,
-      "is_keeper": null
+      "status": "made",
+      "sleeper_id": "12526",
+      "name": "Tetairoa McMillan",
+      "position": "WR",
+      "team": "CAR",
+      "is_keeper": false
     },
     {
       "pick_no": 31,
@@ -643,12 +644,12 @@
       "user_id": "1388546393752240128",
       "username": "AndNic31",
       "is_mine": false,
-      "status": "pending",
-      "sleeper_id": null,
-      "name": null,
-      "position": null,
-      "team": null,
-      "is_keeper": null
+      "status": "made",
+      "sleeper_id": "12508",
+      "name": "Jaxson Dart",
+      "position": "QB",
+      "team": "NYG",
+      "is_keeper": false
     },
     {
       "pick_no": 32,
