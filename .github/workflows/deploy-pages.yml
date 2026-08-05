@@ -13,9 +13,11 @@ permissions:
   pages: write
   id-token: write
 
+# shared with refresh.yml so the two never run at once; queue: max keeps
+# every run queued instead of replacing the pending one
 concurrency:
-  group: pages
-  cancel-in-progress: true
+  group: rankings-pipeline
+  queue: max
 
 jobs:
   deploy:

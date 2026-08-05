@@ -334,7 +334,9 @@ It is also hosted: `.github/workflows/deploy-pages.yml` publishes `index.html` a
 `.github/workflows/refresh.yml` runs the same `refresh.py` loop in Actions on a manual
 dispatch and commits the resulting `draft.json` and `rankings.json`. Its push uses the
 default `GITHUB_TOKEN`, which does not trigger other workflows, so when it pushed a
-commit it dispatches the Pages deploy itself. The dashboard's "↻ refresh data" button
+commit it dispatches the Pages deploy itself. Both workflows share one concurrency group
+(`rankings-pipeline`, with `queue: max`), so a refresh and a deploy never run at the same
+time — later runs queue behind instead of cancelling. The dashboard's "↻ refresh data" button
 dispatches that workflow from the page via the GitHub API; it asks once for a
 fine-grained PAT (Actions read/write on this repo) and keeps it in localStorage.
 

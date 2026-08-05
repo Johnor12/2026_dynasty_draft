@@ -7,6 +7,12 @@ permissions:
   contents: write
   actions: write
 
+# shared with deploy-pages.yml so the two never run at once; queue: max keeps
+# every run queued instead of replacing the pending one
+concurrency:
+  group: rankings-pipeline
+  queue: max
+
 jobs:
   refresh:
     runs-on: ubuntu-latest
