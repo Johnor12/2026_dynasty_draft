@@ -328,6 +328,10 @@ the repo root with `python3 -m http.server 8123` and open `/dashboard.html` on t
 forwarded port (a direct `file://` open is blocked by the browser's fetch rules, and the
 page says so).
 
+It is also hosted: `.github/workflows/deploy-pages.yml` publishes `dashboard.html` (as
+`index.html`) and `rankings.json` to GitHub Pages on every push to `main` that touches
+either file.
+
 The method itself is unchanged, and that is checked rather than asserted: a `draft.json`
 with nothing drafted yet reproduces `--no-draft` exactly, byte for byte. Replacement levels
 are still measured league-wide over whole final rosters and against the whole pool, so the
