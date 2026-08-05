@@ -53,9 +53,15 @@ POSITION_DEPTH_DECAY = 0.55  # ...and each further body at the same position muc
 # league-wide averages, not per-player durability.
 INSURANCE_BASE = {"QB": 0.08, "RB": 0.20, "WR": 0.12, "TE": 0.10}
 SURVIVAL_SIGMA = 3.5  # softness of "will he last until my next pick"
-LOOKAHEAD_PER_POS = 2  # candidates per position considered for the next pick
+# Candidates per position *per horizon ordering* considered for the next pick — the
+# lists take the top of both the year-1 and the years-2-3 ordering, so this yields up
+# to four distinct players per position.
+LOOKAHEAD_PER_POS = 2
 NOISE = 0.35  # Gumbel scale, as a fraction of the spread between a pick's candidates
-MAX_ITERS = 24  # cap on fixed-point iterations before a cycle must have closed
+# Cap on fixed-point iterations before a cycle must have closed. Per-horizon levels
+# doubled the state (8 starter counts + 8 wire levels), so exact recurrence takes
+# longer than the 24 the single-horizon state needed.
+MAX_ITERS = 80
 MARKET_WEIGHT = 0.8  # how far the other nine teams are pulled toward the source ADP
 SIMS = 200
 ROLLOUT_SIMS = 100  # full-draft playouts per candidate at my next pick (sim.rollout)

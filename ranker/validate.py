@@ -21,16 +21,16 @@ from .league import (
     pick_label,
     picks_for_slot,
 )
-from .pool import Player, by_position
+from .pool import Player
 from .sim import Draft
-from .value import starting_positions
+from .value import HORIZONS, horizon_points, pos_by_horizon, starting_positions
 
 
 def validate(
     rows: list[dict],
     players: list[Player],
-    rep: dict[str, float],
-    counts: dict[str, int],
+    rep: dict[str, dict[str, float]],
+    counts: dict[str, dict[str, int]],
     draft: Draft,
     board: Board,
     history: dict,
@@ -84,10 +84,12 @@ def validate(
                 f"({len(want)} picks) even though no picks were traded",
             )
 
-    check(
-        sum(counts.values()) == TEAMS * sum(STARTING_SLOTS.values()),
-        f"starters sum to {sum(counts.values())}, want {TEAMS * sum(STARTING_SLOTS.values())}",
-    )
+    for h in HORIZONS:
+        check(
+            sum(counts[h].values()) == TEAMS * sum(STARTING_SLOTS.values()),
+            f"{h} starters sum to {sum(counts[h].values())}, "
+            f"want {TEAMS * sum(STARTING_SLOTS.values())}",
+        )
     want_taken = sum(len(r) for r in board.rosters) + len(board.order)
     check(
         len(draft.taken) == want_taken,
@@ -114,7 +116,9 @@ def validate(
             non_rookies <= NON_TAXI_SLOTS,
             f"slot {i} holds {non_rookies} non-rookies, over the {NON_TAXI_SLOTS} non-taxi spots",
         )
-        starters = starting_positions(roster)
+        # Whether 10 slots can be filled depends only on the roster's positions, not on
+        # which horizon orders the pecking, so one horizon suffices here.
+        starters = starting_positions(roster, "yr1")
         check(
             len(starters) == sum(STARTING_SLOTS.values()),
             f"slot {i} cannot field a full lineup ({len(starters)}/10)",
@@ -138,17 +142,20 @@ def validate(
     # The reported level is a mean over the limit cycle, so the invariant that actually
     # holds is that it lies inside the range the cycle spanned — not that it coincides with
     # any single draft's level, which a long cycle can genuinely straddle.
-    pos = by_position(players)
-    for k in POSITIONS:
-        lo, hi = history["cycle_replacement_range"][k]
-        check(
-            lo - 1e-6 <= rep[k] <= hi + 1e-6,
-            f"{k} replacement {rep[k]:.1f} outside its cycle range [{lo}, {hi}]",
-        )
-        check(
-            pos[k][-1].points <= rep[k] <= pos[k][0].points,
-            f"{k} replacement {rep[k]:.1f} outside the {k} pool range",
-        )
+    pos_h = pos_by_horizon(players)
+    for h in HORIZONS:
+        for k in POSITIONS:
+            lo, hi = history["cycle_replacement_range"][h][k]
+            check(
+                lo - 1e-6 <= rep[h][k] <= hi + 1e-6,
+                f"{h} {k} replacement {rep[h][k]:.1f} outside its cycle range [{lo}, {hi}]",
+            )
+            check(
+                horizon_points(pos_h[h][k][-1], h)
+                <= rep[h][k]
+                <= horizon_points(pos_h[h][k][0], h),
+                f"{h} {k} replacement {rep[h][k]:.1f} outside the {k} pool range",
+            )
     check(
         history["iterations_run"] < MAX_ITERS,
         f"no limit cycle found within {MAX_ITERS} iterations",

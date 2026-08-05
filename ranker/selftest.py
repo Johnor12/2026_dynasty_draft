@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import dataclasses
 import itertools
+import math
 import random
 import sys
 
@@ -28,16 +29,32 @@ from .league import (
 )
 from .pool import Player
 from .sim import Draft
-from .value import compute_vor, lineup_surplus, seed_replacement, slot_replacement
+from .value import (
+    HORIZONS,
+    compute_vor,
+    horizon_points,
+    lineup_surplus,
+    seed_replacement,
+    slot_replacement,
+    sorted_by_horizon,
+)
 
 
-def brute_force_surplus(roster: list[Player], slot_rep: dict[str, float]) -> float:
-    """Exhaustive best assignment of a small roster to slots."""
+def brute_force_surplus(
+    roster: list[Player], slot_rep: dict[str, float], stream: dict[str, float], h: str
+) -> float:
+    """Exhaustive best assignment of a small roster to slots, in one horizon.
+
+    Same objective as the greedy: filled slots earn (points - slot_rep), slots left
+    open earn (stream - slot_rep). Benching everyone is a legal assignment, so the
+    maximum can be negative on a bad roster against a picked-clean board.
+    """
     slots = [s for s, n in STARTING_SLOTS.items() for _ in range(n)]
-    best = 0.0
+    empty = sum(stream[s] - slot_rep[s] for s in slots)
+    best = -math.inf
     for combo in itertools.product(range(len(slots) + 1), repeat=len(roster)):
         used: set[int] = set()
-        total = 0.0
+        total = empty
         ok = True
         for p, s in zip(roster, combo):
             if s == len(slots):  # benched
@@ -46,14 +63,19 @@ def brute_force_surplus(roster: list[Player], slot_rep: dict[str, float]) -> flo
                 ok = False
                 break
             used.add(s)
-            total += p.points - slot_rep[slots[s]]
+            total += horizon_points(p, h) - stream[slots[s]]
         if ok:
             best = max(best, total)
     return best
 
 
 def lineup_selftest(players: list[Player], trials: int = 300, seed: int = SEED) -> list[str]:
-    """The greedy lineup solver must match brute force on random rosters."""
+    """The greedy lineup solver must match brute force on random rosters, per horizon.
+
+    Two stream scenarios per roster: a fresh board (stream = the slot levels, so an open
+    slot costs nothing) and a picked-clean one (stream at 60% of the levels, so open
+    slots go negative and below-replacement starters still beat streaming).
+    """
     rng = random.Random(seed)
     rep = seed_replacement(players)
     slot_rep = slot_replacement(rep)
@@ -61,19 +83,30 @@ def lineup_selftest(players: list[Player], trials: int = 300, seed: int = SEED) 
     worst = 0.0
     for _ in range(trials):
         roster = rng.sample(players, rng.randint(1, 6))
-        greedy, _, _ = lineup_surplus(roster, slot_rep)
-        exact = brute_force_surplus(roster, slot_rep)
-        worst = max(worst, exact - greedy)
-        if exact - greedy > 1e-6:
-            fails.append(
-                "lineup solver: "
-                + ", ".join(f"{p.name}({p.position},{p.points})" for p in roster)
-                + f"  greedy={greedy:.1f} exact={exact:.1f}"
-            )
+        roster_sorted = sorted_by_horizon(roster)
+        for h in HORIZONS:
+            scenarios = (dict(slot_rep[h]), {s: 0.6 * v for s, v in slot_rep[h].items()})
+            for stream in scenarios:
+                greedy, _, _ = lineup_surplus(roster_sorted[h], slot_rep[h], stream, h)
+                exact = brute_force_surplus(roster, slot_rep[h], stream, h)
+                worst = max(worst, exact - greedy)
+                if exact - greedy > 1e-6:
+                    fails.append(
+                        f"lineup solver ({h}, stream {stream['QB']:.0f}): "
+                        + ", ".join(
+                            f"{p.name}({p.position},{horizon_points(p, h):.0f})"
+                            for p in roster
+                        )
+                        + f"  greedy={greedy:.1f} exact={exact:.1f}"
+                    )
+                    break
+            if fails:
+                break
+        if fails:
             break
     print(
         f"  greedy lineup solver matched brute force on {trials} random rosters "
-        f"(max shortfall {worst:.2e})",
+        f"x {len(HORIZONS)} horizons x 2 stream scenarios (max shortfall {worst:.2e})",
         file=sys.stderr,
     )
     return fails

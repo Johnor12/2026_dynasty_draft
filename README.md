@@ -142,14 +142,16 @@ collapse to two point columns (3-year and 1-year) and 8 ADP columns to one.
   on raw points, but the source columns are pre-rounded integers, so evaluating it drifts
   ±1 on 32 of the 350 cells for nothing. 1QB family because points can't depend on roster
   format and that family is the consistent one (see the drift quirk below).
-- **`points_1yr` is the same copy at the 1-year horizon.** The gap against `points_3yr`
-  is the provider's implied growth: the growth half of bench pricing uses the years-2-3
-  pace, `1.5 × (points_3yr − points_1yr)` (`upside_points` in `ranker/value.py`), so a
-  backloaded rookie outranks a flat veteran with the same 3-year sum there. The other
-  half — insurance, `INSURANCE_BASE` in `ranker/league.py` — uses the full 3-year sum
-  weighted by the position's expected starter games missed, which is what keeps a
-  startable veteran backup from being worth nothing. Starters stay priced on the 3-year
-  sum. A genuine 0 (a projected redshirt year) is kept as 0.
+- **`points_1yr` is the same copy at the 1-year horizon.** It splits every player into
+  the ranker's two value horizons: year 1, and years 2-3 (`points_3yr − points_1yr`).
+  Lineups are fielded per season, so the starting lineup is solved per horizon against
+  that horizon's own replacement levels — a 69-point injury year cannot ride into a
+  starting slot on the strength of its years-2-3 rebound. Bench pricing splits the same
+  way: year-1 bench value is insurance only (`INSURANCE_BASE` in `ranker/league.py`,
+  the position's expected share of starter games missed — a player who cannot play this
+  season cannot cover it), years 2-3 add growth (`DEPTH_BASE`) to that insurance, so a
+  backloaded rookie still outranks a flat veteran with the same 3-year sum on the bench.
+  A genuine 0 (a projected redshirt year) is kept as 0.
 - **3D value is not carried at all.** It's a provider-scaled ordinal (best player pinned
   at 100, ~half the league negative) that bakes in someone else's roster assumptions and
   isn't in points, so it can't be differenced against a replacement level — which is all
@@ -321,9 +323,14 @@ pipelines as separate as they are everywhere else, and runs them from the repo r
 their own default paths apply.
 
 ```
-uv run refresh.py                       # draft.json, then rankings.json  (~90s)
+uv run refresh.py                       # draft.json, then rankings.json  (~9 min on 2 cores)
 uv run refresh.py --report              # + both steps' validation summaries on stderr
 ```
+
+The ranker's Monte Carlo and rollout stages fan out over a process pool (stdlib
+`multiprocessing`), so wall time scales with cores — the 2-core Codespace is the slow
+case. To trade fidelity for speed between picks, the levers are `--sims` and
+`ROLLOUT_SIMS`/`SIMS` in `ranker/league.py`.
 
 The pool pipeline is not a step: it is offline and rebuilt a handful of times all
 offseason, and this runs every few minutes during a draft.
@@ -354,10 +361,11 @@ fine-grained PAT (Actions read/write on this repo) and keeps it in localStorage.
 
 The method itself is unchanged, and that is checked rather than asserted: a `draft.json`
 with nothing drafted yet reproduces `--no-draft` exactly, byte for byte. Replacement levels
-are still measured league-wide over whole final rosters and against the whole pool, so the
-marginal starter defining a level can be a player already drafted. What moves is the
-simulated *shape* of the league — after three RBs went in the first four picks, the fixed
-point settles at QB21/RB23/WR44/TE16 instead of the preseason QB19/RB23/WR45/TE17.
+are still measured league-wide over whole final rosters and against the whole pool — per
+horizon, since year-1 and years-2-3 lineups are priced separately — so the marginal starter
+defining a level can be a player already drafted. What moves is the simulated *shape* of
+the league: after a run on a position, the fixed point settles on different starter counts
+than the preseason board's.
 
 **A pick can land on a player the pool does not carry** — a kicker, an IDP, anyone past the
 350-player cut. There is no projection to price him with, so he is held as an `off_pool`

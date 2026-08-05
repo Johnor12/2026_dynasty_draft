@@ -31,3 +31,8 @@ Avoid writing comments for every negative case.
 When you finish working, leave your changes unstaged — don't `git add` them.
 If a command stages as a side effect (e.g. `git mv`), unstage with
 `git restore --staged` before finishing.
+
+## Prefer optimization over compromising quality when presented with technical limitations
+For example, if a Python script is running slowly, prefer re-writing key paths in Rust or increasing
+CPU and memory over compromising the script's output. Obviously code-level (still Python) optimizations which don't
+compromise output quality are still the gold standard..

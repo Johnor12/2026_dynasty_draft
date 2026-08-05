@@ -33,6 +33,8 @@ board at my pick — see `market_value` for why it is rank-mapped and what it is
 from __future__ import annotations
 
 import math
+import multiprocessing
+import os
 import random
 import sys
 from collections.abc import Sequence
@@ -46,19 +48,24 @@ from .league import (
     MAX_ITERS,
     NON_TAXI_SLOTS,
     POSITIONS,
+    SLOT_ELIGIBLE,
     STARTING_SLOTS,
     SURVIVAL_SIGMA,
     TEAMS,
 )
 from .pool import Player, by_position
 from .value import (
+    HORIZONS,
     compute_vor,
     apportion,
+    horizon_points,
+    pos_by_horizon,
+    insert_sorted,
     replacement_from_draft,
     seed_replacement,
     slot_replacement,
+    sorted_by_horizon,
     team_value,
-    upside_points,
     wire_replacement,
 )
 
@@ -115,10 +122,10 @@ class Draft:
     def __init__(
         self,
         players: list[Player],
-        rep: dict[str, float],
+        rep: dict[str, dict[str, float]],
         vor: dict[int, float],
         board: Board,
-        wire: dict[str, float] | None = None,
+        wire: dict[str, dict[str, float]] | None = None,
         noise: float = 0.0,
         rng: random.Random | None = None,
         market_vor: dict[int, float] | None = None,
@@ -130,16 +137,24 @@ class Draft:
         self.rep = rep
         self.slot_rep = slot_replacement(rep)
         self.vor = vor
-        # A bench body has two jobs, each measured against the wire and floored at zero
-        # (see value.team_value for why the floor is load-bearing): growth — his years-2-3
-        # pace (value.upside_points), weighted DEPTH_BASE — and insurance — his full 3-year
-        # sum including year 1, weighted by his position's expected starter games missed.
+        # A bench body's jobs, per horizon, each measured against that horizon's wire and
+        # floored at zero (see value.team_value for why the floor is load-bearing). Year 1
+        # is insurance only — a player who cannot play this season cannot cover starter
+        # games missed this season. Years 2-3 add growth (DEPTH_BASE, the chance he grows
+        # past a starter) to the same insurance weight, both on the years-2-3 excess.
         # Before any draft exists to read a wire off, fall back to the VOR baseline.
         self.wire = rep if wire is None else wire
         self.depth_value = {
-            p.player_id: DEPTH_BASE * max(upside_points(p) - self.wire[p.position], 0.0)
-            + INSURANCE_BASE[p.position] * max(p.points - self.wire[p.position], 0.0)
-            for p in players
+            "yr1": {
+                p.player_id: INSURANCE_BASE[p.position]
+                * max(horizon_points(p, "yr1") - self.wire["yr1"][p.position], 0.0)
+                for p in players
+            },
+            "yr23": {
+                p.player_id: (DEPTH_BASE + INSURANCE_BASE[p.position])
+                * max(horizon_points(p, "yr23") - self.wire["yr23"][p.position], 0.0)
+                for p in players
+            },
         }
         self.board = board
         self.order = board.order
@@ -165,9 +180,11 @@ class Draft:
             for p in players
         }
         self.perceived = perceived
-        # pool sorted by perceived value desc drives the survival model; per-position lists
-        # sorted by points drive candidate generation (within a position, more points is
-        # always at least as valuable, so only the head of each list can be the best pick).
+        # pool sorted by perceived value desc drives the survival model; per-position,
+        # per-horizon lists sorted by that horizon's points drive candidate generation
+        # (team value is monotone in each horizon component, so within a position only a
+        # player on the yr1/yr23 Pareto frontier can be the best pick — the heads of the
+        # two orderings are its extremes; interior frontier players are approximated away).
         self.vor_sorted = sorted(players, key=lambda p: (-perceived[p.player_id], p.player_id))
         for i, p in enumerate(self.vor_sorted):
             p.vor_index = i
@@ -179,14 +196,12 @@ class Draft:
         for p in players:
             if p.player_id not in self.taken:
                 self.avail_bits.add(p.vor_index, 1)
-        self.pos_lists = {
-            pos: sorted(v, key=lambda p: (-p.points, p.player_id))
-            for pos, v in by_position(players).items()
-        }
-        self.heads = {pos: 0 for pos in POSITIONS}
+        self.pos_lists = pos_by_horizon(players)
+        self.heads = {h: {pos: 0 for pos in POSITIONS} for h in HORIZONS}
         self.rosters: list[list[Player]] = [list(r) for r in board.rosters]
         self.off_pool = board.off_pool  # read-only here; nothing is ever added
         self.pick_of: dict[int, int] = {}
+        self.streams = self.stream_levels()  # refreshed at every pick in `choose`
         # My picks' scored candidates as (value_now, next_pick_ev, player), best first.
         # Recorded on deterministic runs only — this is what "who should I draft next"
         # reads off the final draft.
@@ -211,12 +226,12 @@ class Draft:
 
     # -- availability helpers
 
-    def _advance(self, pos: str) -> None:
-        lst = self.pos_lists[pos]
-        i = self.heads[pos]
+    def _advance(self, h: str, pos: str) -> None:
+        lst = self.pos_lists[h][pos]
+        i = self.heads[h][pos]
         while i < len(lst) and lst[i].player_id in self.taken:
             i += 1
-        self.heads[pos] = i
+        self.heads[h][pos] = i
 
     def candidates(
         self,
@@ -225,7 +240,15 @@ class Draft:
         picks_left: int | None = None,
         off: Sequence[dict] = (),
     ) -> list[Player]:
-        """Best available at each position, honouring taxi and roster-legality limits.
+        """Best available at each position *by each horizon*, honouring taxi and
+        roster-legality limits.
+
+        With per-horizon pricing there is no single within-position ordering: the best
+        year-1 body (a flat veteran) and the best years-2-3 body (a backloaded rookie, an
+        injury-recovery veteran) can be different players, and either can be the right
+        pick depending on what the roster is missing. So each position offers the head of
+        both horizon lists, deduplicated — without this, a startable veteran sitting below
+        a backloaded player on one list could never be drafted while that player remained.
 
         A lineup needs 1 QB, 2 RB, 3 WR and 1 TE from positions that nothing else can
         cover, so a manager cannot spend every pick on the best name available and end up
@@ -265,18 +288,22 @@ class Draft:
         # on the bench and cut elsewhere), then the positional requirement.
         for positions, rookies_only in ((eligible, vets_capped), (eligible, False), (POSITIONS, False)):
             out: list[Player] = []
+            seen_ids: set[int] = set()
             for pos in positions:
-                self._advance(pos)
-                found = 0
-                for p in self.pos_lists[pos][self.heads[pos] :]:
-                    if p.player_id in self.taken:
-                        continue
-                    if rookies_only and not p.is_rookie:
-                        continue
-                    out.append(p)
-                    found += 1
-                    if found == per_pos:
-                        break
+                for h in HORIZONS:
+                    self._advance(h, pos)
+                    found = 0
+                    for p in self.pos_lists[h][pos][self.heads[h][pos] :]:
+                        if p.player_id in self.taken:
+                            continue
+                        if rookies_only and not p.is_rookie:
+                            continue
+                        if p.player_id not in seen_ids:
+                            seen_ids.add(p.player_id)
+                            out.append(p)
+                        found += 1
+                        if found == per_pos:
+                            break
             if out:
                 return out
         return []
@@ -286,33 +313,104 @@ class Draft:
 
     # -- valuation
 
-    def marginal(self, roster: list[Player], p: Player, base: float) -> float:
-        return team_value(roster + [p], self.slot_rep, self.depth_value) - base
+    def stream_levels(self) -> dict[str, dict[str, float]]:
+        """What each starting slot yields unfilled, per horizon, on the current board.
+
+        The best available body a slot accepts, capped at the slot's replacement level:
+        skipping a slot early costs nothing (a starter-grade body will still be there —
+        the documented empty-slot counterfactual), but once the last bodies above a
+        horizon's level are drafted the stream falls with the board, so an unfilled
+        year-1 slot is charged what filling it late would actually yield. At the end of
+        the draft this is the wire. Recomputed at every pick (`choose`) and after a
+        finished draft (`rollout`), because it is a fact about availability, not levels.
+        """
+        out: dict[str, dict[str, float]] = {}
+        for h in HORIZONS:
+            best: dict[str, float] = {}
+            for pos in POSITIONS:
+                self._advance(h, pos)
+                lst, i = self.pos_lists[h][pos], self.heads[h][pos]
+                best[pos] = horizon_points(lst[i], h) if i < len(lst) else 0.0
+            out[h] = {
+                slot: min(lv, max(best[pos] for pos in SLOT_ELIGIBLE[slot]))
+                for slot, lv in self.slot_rep[h].items()
+            }
+        return out
+
+    def expected_streams(self, gap: int) -> dict[str, dict[str, float]]:
+        """Stream levels as they are expected to stand `gap` picks from now.
+
+        `stream_levels` reads the board as it is; a lookahead that reuses it assumes the
+        board holds still, which hides exactly the moment that matters — the last
+        startable body at a position leaving between this team's picks. So the lookahead
+        prices next-pick rosters against the expected best-available at each position
+        after `gap` picks, from the same survival model the candidates use: the best
+        available survives, or the next one is the best, and so on down the list. Players
+        the current pick might itself remove are still counted as available — in the
+        branch where one is drafted here he fills the very slot being streamed, so the
+        optimism is confined to flex slots, whose stream another position usually sets
+        anyway.
+        """
+        if gap <= 0:
+            return self.streams
+        out: dict[str, dict[str, float]] = {}
+        for h in HORIZONS:
+            best: dict[str, float] = {}
+            for pos in POSITIONS:
+                self._advance(h, pos)
+                expected = 0.0
+                mass = 1.0
+                for p in self.pos_lists[h][pos][self.heads[h][pos] :]:
+                    if p.player_id in self.taken:
+                        continue
+                    surv = survival(self.better_available(p), gap)
+                    expected += mass * surv * horizon_points(p, h)
+                    mass *= 1.0 - surv
+                    if mass < 1e-4:
+                        break
+                best[pos] = expected
+            out[h] = {
+                slot: min(lv, max(best[pos] for pos in SLOT_ELIGIBLE[slot]))
+                for slot, lv in self.slot_rep[h].items()
+            }
+        return out
 
     def lookahead(
         self,
         roster: list[Player],
+        roster_sorted: dict[str, list[Player]],
         taking: Player,
+        streams_next: dict[str, dict[str, float]],
         gap: int,
         left: int,
         off: Sequence[dict] = (),
     ) -> float:
         """E[value of the best player still available at this team's next pick].
 
-        Order statistic over the plausible next-pick candidates: the best surviving one is
+        Everything here is valued at `streams_next` — the stream levels expected to hold
+        `gap` picks from now (`expected_streams`) — so a roster that leaves a slot
+        unfilled while the last startable bodies drain away is charged for it at the
+        moment the decision is being made, not one pick too late. Order statistic over
+        the plausible next-pick candidates: the best surviving one is
         candidate i if i survives and everyone better does not. Candidates are treated as
         independent, which slightly understates the chance that a whole position gets
         cleared out between picks.
         """
         future_roster = roster + [taking]
-        base = team_value(future_roster, self.slot_rep, self.depth_value)
+        future_sorted = {
+            h: insert_sorted(roster_sorted[h], taking, h) for h in HORIZONS
+        }
+        base = team_value(future_sorted, self.slot_rep, self.depth_value, streams_next)
         scored: list[tuple[float, float]] = []
         for cand in self.candidates(
             future_roster, per_pos=LOOKAHEAD_PER_POS, picks_left=left, off=off
         ):
             if cand.player_id == taking.player_id:
                 continue
-            gain = self.marginal(future_roster, cand, base)
+            gain = (
+                team_value(future_sorted, self.slot_rep, self.depth_value, streams_next, cand)
+                - base
+            )
             scored.append((gain, survival(self.better_available(cand), gap)))
         scored.sort(key=lambda t: -t[0])
         expected = 0.0
@@ -327,9 +425,13 @@ class Draft:
     def choose(self, pick_index: int, slot: int) -> Player:
         roster = self.rosters[slot - 1]
         off = self.off_pool[slot - 1]
-        base = team_value(roster, self.slot_rep, self.depth_value)
+        # Availability moved since the last pick, so the price of an unfilled slot did too.
+        self.streams = self.stream_levels()
+        roster_sorted = sorted_by_horizon(roster)
+        base = team_value(roster_sorted, self.slot_rep, self.depth_value, self.streams)
         nxt = self.next_pick[pick_index]
         gap = None if nxt is None else nxt - pick_index - 1
+        streams_next = None if gap is None else self.expected_streams(gap)
         # I draft on my own board; the other nine are pulled toward the market's ordering.
         # Blended at the decision, not inside the valuation, so their roster logic stays
         # intact — they still fill needs, they just rank players closer to consensus. At
@@ -339,8 +441,15 @@ class Draft:
         scored: list[tuple[float, Player]] = []
         detail: list[tuple[float, float, Player]] = []
         for cand in self.candidates(roster, per_pos=1, picks_left=left, off=off):
-            now = self.marginal(roster, cand, base)
-            later = 0.0 if gap is None else self.lookahead(roster, cand, gap, left - 1, off)
+            now = (
+                team_value(roster_sorted, self.slot_rep, self.depth_value, self.streams, cand)
+                - base
+            )
+            later = (
+                0.0
+                if gap is None
+                else self.lookahead(roster, roster_sorted, cand, streams_next, gap, left - 1, off)
+            )
             score = now + later
             if w:
                 score = (1 - w) * score + w * self.market_vor[cand.player_id]
@@ -419,8 +528,18 @@ def converge(
     board: Board,
     report: bool,
     market_weight: float = 0.0,
-) -> tuple[dict[str, float], dict[str, float], dict[str, int], Draft, dict]:
+) -> tuple[
+    dict[str, dict[str, float]],
+    dict[str, dict[str, float]],
+    dict[str, dict[str, int]],
+    Draft,
+    dict,
+]:
     """Fixed point: replacement -> valuation -> draft -> starter counts -> replacement.
+
+    All levels and counts are per horizon (value.HORIZONS): each iteration's draft is
+    measured twice — once on year-1 points, once on years-2-3 points — and both sets of
+    levels feed the next iteration's valuation.
 
     The map is piecewise-constant: starter counts are integers, so the replacement level
     jumps between adjacent players in the pool (RB21 and RB22 are 18 points apart) instead
@@ -445,14 +564,21 @@ def converge(
     slots, and the player who defines it may already be on somebody's roster.
     """
     pos = by_position(players)
+    pos_h = pos_by_horizon(players)
     available = board.available(players)
     rep = seed_replacement(players)
-    stream = dict(rep)  # no draft to read a wire off yet
-    trace = [{"iteration": 0, "source": "slot_assignment", "replacement": dict(rep)}]
+    stream = {h: dict(rep[h]) for h in HORIZONS}  # no draft to read a wire off yet
+    trace = [
+        {
+            "iteration": 0,
+            "source": "slot_assignment",
+            "replacement": {h: dict(rep[h]) for h in HORIZONS},
+        }
+    ]
     seen: dict[tuple[float, ...], int] = {}
-    observations: list[dict[str, float]] = []
-    wire_observations: list[dict[str, float]] = []
-    counts_by_iter: list[dict[str, int]] = []
+    observations: list[dict[str, dict[str, float]]] = []
+    wire_observations: list[dict[str, dict[str, float]]] = []
+    counts_by_iter: list[dict[str, dict[str, int]]] = []
     cycle_start: int | None = None
 
     for it in range(1, MAX_ITERS + 1):
@@ -463,26 +589,31 @@ def converge(
             market_vor=mkt, market_weight=market_weight,
         )
         draft.run()
-        starter_rep, counts = replacement_from_draft(draft.rosters, pos)
+        starter_rep, counts = replacement_from_draft(draft.rosters, pos_h)
         wire = wire_replacement(draft.taken, pos)
         observations.append(starter_rep)
         wire_observations.append(wire)
         counts_by_iter.append(counts)
-        key = tuple(counts[k] for k in POSITIONS) + tuple(wire[k] for k in POSITIONS)
+        key = tuple(counts[h][k] for h in HORIZONS for k in POSITIONS) + tuple(
+            wire[h][k] for h in HORIZONS for k in POSITIONS
+        )
         trace.append(
             {
                 "iteration": it,
                 "source": "draft_simulation",
-                "starters_by_position": dict(counts),
-                "observed_replacement": {k: round(v, 1) for k, v in starter_rep.items()},
+                "starters_by_position": {h: dict(counts[h]) for h in HORIZONS},
+                "observed_replacement": {
+                    h: {k: round(v, 1) for k, v in starter_rep[h].items()} for h in HORIZONS
+                },
             }
         )
         if report:
-            print(
-                f"  iter {it}: starters={counts} observed rep="
-                + ", ".join(f"{k} {starter_rep[k]:.0f}" for k in POSITIONS),
-                file=sys.stderr,
-            )
+            for h in HORIZONS:
+                print(
+                    f"  iter {it} {h}: starters={counts[h]} observed rep="
+                    + ", ".join(f"{k} {starter_rep[h][k]:.0f}" for k in POSITIONS),
+                    file=sys.stderr,
+                )
         if key in seen:
             cycle_start = seen[key]
             break
@@ -494,12 +625,20 @@ def converge(
     cycle = observations[cycle_start - 1 : -1] or observations[cycle_start - 1 :]
     wire_cycle = wire_observations[cycle_start - 1 : -1] or wire_observations[cycle_start - 1 :]
     cycle_counts = counts_by_iter[cycle_start - 1 : len(observations) - 1] or counts_by_iter[-1:]
-    rep = {k: sum(o[k] for o in cycle) / len(cycle) for k in POSITIONS}
-    stream = {k: sum(o[k] for o in wire_cycle) / len(wire_cycle) for k in POSITIONS}
-    counts = apportion(
-        {k: sum(c[k] for c in cycle_counts) / len(cycle_counts) for k in POSITIONS},
-        TEAMS * sum(STARTING_SLOTS.values()),
-    )
+    rep = {
+        h: {k: sum(o[h][k] for o in cycle) / len(cycle) for k in POSITIONS} for h in HORIZONS
+    }
+    stream = {
+        h: {k: sum(o[h][k] for o in wire_cycle) / len(wire_cycle) for k in POSITIONS}
+        for h in HORIZONS
+    }
+    counts = {
+        h: apportion(
+            {k: sum(c[h][k] for c in cycle_counts) / len(cycle_counts) for k in POSITIONS},
+            TEAMS * sum(STARTING_SLOTS.values()),
+        )
+        for h in HORIZONS
+    }
     if report:
         print(
             f"  cycle of length {len(cycle)} closed at iteration {cycle_start}; "
@@ -516,7 +655,7 @@ def converge(
         market_vor=mkt, market_weight=market_weight,
     )
     draft.run()
-    _, final_counts = replacement_from_draft(draft.rosters, pos)
+    _, final_counts = replacement_from_draft(draft.rosters, pos_h)
     history = {
         "market_weight": market_weight,
         "method": "undamped iteration to a limit cycle, averaged over the cycle",
@@ -527,19 +666,77 @@ def converge(
         # Spread of the cycle the levels were averaged over. A wide band means the league
         # shape genuinely wobbles between neighbouring configurations rather than settling.
         "cycle_replacement_range": {
-            k: [round(min(o[k] for o in cycle), 1), round(max(o[k] for o in cycle), 1)]
-            for k in POSITIONS
+            h: {
+                k: [
+                    round(min(o[h][k] for o in cycle), 1),
+                    round(max(o[h][k] for o in cycle), 1),
+                ]
+                for k in POSITIONS
+            }
+            for h in HORIZONS
         },
         "trace": trace,
     }
     return rep, stream, counts, draft, history
 
 
+# The noisy redraws and the rollout playouts are hundreds of independent, seeded draft
+# simulations, so they fan out over a process pool (stdlib multiprocessing). Workers get
+# the shared inputs once via the initializer; each task is identified by its seed index,
+# so results are deterministic regardless of scheduling. The playout worker looks its
+# forced candidate up by id in its *own* copy of the pool — Draft stamps `vor_index`
+# onto the pool's Player objects, so a separately-pickled Player would carry a stale one.
+_WORKER: dict = {}
+
+
+def _init_worker(players, rep, board, stream, noise, seed, mkt, market_weight, vor, i_my) -> None:
+    _WORKER.update(
+        players=players, rep=rep, board=board, stream=stream, noise=noise, seed=seed,
+        mkt=mkt, market_weight=market_weight, vor=vor, i_my=i_my,
+        by_id={p.player_id: p for p in players},
+    )
+
+
+def _worker_pool_size() -> int:
+    return max(1, len(os.sched_getaffinity(0)))
+
+
+def _mc_draft(s: int) -> dict[int, int]:
+    w = _WORKER
+    d = Draft(
+        w["players"], w["rep"], w["vor"], w["board"], wire=w["stream"], noise=w["noise"],
+        rng=random.Random(w["seed"] + s),
+        market_vor=w["mkt"], market_weight=w["market_weight"],
+    )
+    d.run()
+    return d.pick_of
+
+
+def _rollout_playout(task: tuple[int, int]) -> float:
+    cand_id, s = task
+    w = _WORKER
+    d = Draft(
+        w["players"], w["rep"], w["vor"], w["board"], wire=w["stream"], noise=w["noise"],
+        rng=random.Random(f"rollout-{w['seed']}-{s}"),
+        market_vor=w["mkt"], market_weight=w["market_weight"],
+        forced={w["i_my"]: w["by_id"][cand_id]}, noise_from=w["i_my"] + 1,
+    )
+    d.run()
+    # End-of-draft streams are the wire: a final roster's unfilled year-1 slots are
+    # charged what signing off the leftover pool would actually yield.
+    return team_value(
+        sorted_by_horizon(d.rosters[w["board"].my_slot - 1]),
+        d.slot_rep,
+        d.depth_value,
+        d.stream_levels(),
+    )
+
+
 def monte_carlo(
     players: list[Player],
-    rep: dict[str, float],
+    rep: dict[str, dict[str, float]],
     board: Board,
-    stream: dict[str, float],
+    stream: dict[str, dict[str, float]],
     sims: int,
     noise: float,
     seed: int,
@@ -550,24 +747,23 @@ def monte_carlo(
     mkt = market_value(board.available(players), vor) if market_weight else None
     picks: dict[int, list[int]] = {p.player_id: [] for p in players}
     drafted: dict[int, int] = {p.player_id: 0 for p in players}
-    for s in range(sims):
-        rng = random.Random(seed + s)
-        d = Draft(
-            players, rep, vor, board, wire=stream, noise=noise, rng=rng,
-            market_vor=mkt, market_weight=market_weight,
-        )
-        d.run()
-        for pid, pick in d.pick_of.items():
-            picks[pid].append(pick)
-            drafted[pid] += 1
+    with multiprocessing.Pool(
+        _worker_pool_size(),
+        initializer=_init_worker,
+        initargs=(players, rep, board, stream, noise, seed, mkt, market_weight, vor, None),
+    ) as pool:
+        for pick_of in pool.map(_mc_draft, range(sims)):
+            for pid, pick in pick_of.items():
+                picks[pid].append(pick)
+                drafted[pid] += 1
     return picks, drafted
 
 
 def rollout(
     players: list[Player],
-    rep: dict[str, float],
+    rep: dict[str, dict[str, float]],
     board: Board,
-    stream: dict[str, float],
+    stream: dict[str, dict[str, float]],
     candidates: list[Player],
     sims: int,
     noise: float,
@@ -599,19 +795,16 @@ def rollout(
     i_my = board.pick_nos.index(pick_no)
     vor = compute_vor(players, rep)
     mkt = market_value(board.available(players), vor) if market_weight else None
-    values: dict[int, list[float]] = {}
-    for cand in candidates:
-        vals = []
-        for s in range(sims):
-            d = Draft(
-                players, rep, vor, board, wire=stream, noise=noise,
-                rng=random.Random(f"rollout-{seed}-{s}"),
-                market_vor=mkt, market_weight=market_weight,
-                forced={i_my: cand}, noise_from=i_my + 1,
-            )
-            d.run()
-            vals.append(team_value(d.rosters[board.my_slot - 1], d.slot_rep, d.depth_value))
-        values[cand.player_id] = vals
+    tasks = [(cand.player_id, s) for cand in candidates for s in range(sims)]
+    with multiprocessing.Pool(
+        _worker_pool_size(),
+        initializer=_init_worker,
+        initargs=(players, rep, board, stream, noise, seed, mkt, market_weight, vor, i_my),
+    ) as pool:
+        flat = pool.map(_rollout_playout, tasks)
+    values = {
+        cand.player_id: flat[i * sims : (i + 1) * sims] for i, cand in enumerate(candidates)
+    }
 
     base = candidates[0]  # my_decisions is sorted by the base policy's score, best first
     stats: dict[int, dict[str, float]] = {}
@@ -636,9 +829,9 @@ def apply_rollout(
     draft: Draft,
     rolled: dict | None,
     players: list[Player],
-    rep: dict[str, float],
+    rep: dict[str, dict[str, float]],
     board: Board,
-    stream: dict[str, float],
+    stream: dict[str, dict[str, float]],
     market_weight: float,
 ) -> Draft:
     """Re-play the deterministic draft with the rollout's pick forced, when it overrules.

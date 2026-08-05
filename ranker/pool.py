@@ -13,7 +13,7 @@ roster has no slot for them.
 from __future__ import annotations
 
 import json
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from pathlib import Path
 
 from .league import POINTS_FIELD, POSITIONS
@@ -33,6 +33,14 @@ class Player:
     provider_adp: float | None
     sleeper_id: str | None = None  # the only key draft.json shares with the pool
     vor_index: int = 0  # rank in the pool by current perceived VOR, 0-based
+    # The two value horizons, precomputed because the lineup solver reads them millions
+    # of times per run (value.HORIZONS; yr23 = points - points_1yr, never negative).
+    points_yr1: float = field(init=False, default=0.0)
+    points_yr23: float = field(init=False, default=0.0)
+
+    def __post_init__(self) -> None:
+        self.points_yr1 = float(self.points_1yr)
+        self.points_yr23 = float(self.points - self.points_1yr)
 
 
 def load_pool(path: Path) -> tuple[list[Player], dict]:

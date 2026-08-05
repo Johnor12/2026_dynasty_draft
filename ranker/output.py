@@ -1,7 +1,8 @@
 """rankings.json and the stderr reports.
 
-`vor` is the headline number and the sort key: 3-year points minus the converged
-replacement level for that position. `my_next_picks` is the direct answer to "who should
+`vor` is the headline number and the sort key: the sum over the two horizons of that
+horizon's points minus its converged replacement level (`vor_yr1` + `vor_yr23`).
+`my_next_picks` is the direct answer to "who should
 I draft next": the model's own choice at each of my next picks, which sees my roster and
 the odds a candidate survives to my following pick — so it can disagree with `vor_rank`,
 and when it does, it is the better answer.
@@ -31,15 +32,27 @@ from .league import (
     pick_label,
     picks_for_slot,
 )
-from .pool import Player, by_position
+from .pool import Player
 from .sim import Draft
-from .value import compute_vor, slot_replacement, upside_points
+from .value import (
+    HORIZONS,
+    compute_vor,
+    horizon_points,
+    pos_by_horizon,
+    slot_replacement,
+    upside_points,
+)
+
+
+def _sum_levels(levels: dict[str, dict[str, float]]) -> dict[str, float]:
+    """Collapse per-horizon levels to their 3-year sum, for the headline columns."""
+    return {k: sum(levels[h][k] for h in HORIZONS) for k in POSITIONS}
 
 
 def build_rankings(
     players: list[Player],
-    rep: dict[str, float],
-    wire: dict[str, float],
+    rep: dict[str, dict[str, float]],
+    wire: dict[str, dict[str, float]],
     draft: Draft,
     picks: dict[int, list[int]],
     drafted: dict[int, int],
@@ -63,6 +76,7 @@ def build_rankings(
     """
     my_picks = board.my_picks
     vor = compute_vor(players, rep)
+    rep_sum, wire_sum = _sum_levels(rep), _sum_levels(wire)
     available = board.available(players)
     ranked = sorted(available, key=lambda p: (-vor[p.player_id], p.player_id))
     market_rank = {
@@ -119,13 +133,17 @@ def build_rankings(
                 "is_rookie": p.is_rookie,
                 "points_3yr": p.points,
                 "points_1yr": p.points_1yr,
-                # The bench-pricing quantity: his 3-year total at his years-2-3 pace.
+                # Diagnostic of growth shape: his 3-year total at his years-2-3 pace.
                 # Equal to points_3yr for a flat scorer; the gap is the provider's
                 # implied growth. See value.upside_points.
                 "upside_points": round(upside_points(p), 1),
-                "replacement_points": round(rep[p.position], 1),
+                # Sum of the per-horizon levels, so vor = points_3yr - replacement_points
+                # stays verifiable from this row; the split is in vor_yr1 / vor_yr23.
+                "replacement_points": round(rep_sum[p.position], 1),
                 "vor": round(vor[p.player_id], 1),
-                "vor_vs_wire": round(p.points - wire[p.position], 1),
+                "vor_yr1": round(horizon_points(p, "yr1") - rep["yr1"][p.position], 1),
+                "vor_yr23": round(horizon_points(p, "yr23") - rep["yr23"][p.position], 1),
+                "vor_vs_wire": round(p.points - wire_sum[p.position], 1),
                 "sim_pick": sim_pick,
                 "sim_pick_label": pick_label(sim_pick) if sim_pick else None,
                 "sim_adp": round(mean, 1) if mean is not None else None,
@@ -288,9 +306,9 @@ def build_payload(
     players: list[Player],
     pool_meta: dict,
     board: Board,
-    rep: dict[str, float],
-    stream: dict[str, float],
-    counts: dict[str, int],
+    rep: dict[str, dict[str, float]],
+    stream: dict[str, dict[str, float]],
+    counts: dict[str, dict[str, int]],
     draft: Draft,
     history: dict,
     rows: list[dict],
@@ -301,15 +319,19 @@ def build_payload(
     market_weight: float,
     rollout: dict | None = None,
 ) -> dict:
-    pos = by_position(players)
+    pos_h = pos_by_horizon(players)
     return {
         "generated_from": pool_meta["source_file"],
         "scoring_scheme": SCHEME,
-        "value_input": f"pool.json {POINTS_FIELD} ({SCHEME})",
+        "value_input": f"pool.json {POINTS_FIELD} + points_1yr ({SCHEME})",
         "value_note": (
-            "3-year projected points in this league's scheme. Draftsharks' 3D value is "
-            "deliberately unused: it is a provider-scaled ordinal, not points, so it "
-            "cannot be differenced against a replacement level."
+            "Projected points in this league's scheme, split into two horizons — year 1 "
+            "(points_1yr) and years 2-3 (points_3yr - points_1yr) — because lineups are "
+            "fielded per season: the starting lineup is solved per horizon against that "
+            "horizon's replacement levels, so an injury-wrecked year 1 cannot hide inside "
+            "a healthy 3-year sum. Draftsharks' 3D value is deliberately unused: it is a "
+            "provider-scaled ordinal, not points, so it cannot be differenced against a "
+            "replacement level."
         ),
         "league": {
             "teams": TEAMS,
@@ -401,28 +423,44 @@ def build_payload(
         },
         "replacement": {
             "definition": (
-                "Points of the (S+1)-th best player at a position, where S is how many "
-                "players at that position hold a starting slot across all 10 teams in "
-                "the simulated draft. This is the marginal starter, i.e. the worst "
-                "player still good enough to start somewhere in this league."
+                "Per horizon (yr1 = year 1, yr23 = years 2-3): that horizon's points of "
+                "the (S+1)-th best player at a position by those points, where S is how "
+                "many players at that position hold a starting slot across all 10 teams "
+                "in the simulated draft when lineups are set on that horizon. This is the "
+                "marginal starter of that period. `levels` is the horizon sum, so "
+                "vor = points_3yr - levels[pos]; the split is in levels_by_horizon."
             ),
-            "levels": {k: round(v, 1) for k, v in rep.items()},
+            "levels": {k: round(v, 1) for k, v in _sum_levels(rep).items()},
+            "levels_by_horizon": {
+                h: {k: round(v, 1) for k, v in rep[h].items()} for h in HORIZONS
+            },
             "starters_by_position": counts,
             "marginal_starter": {
-                k: {
-                    "rank": f"{k}{counts[k] + 1}",
-                    "player": pos[k][min(counts[k], len(pos[k]) - 1)].name,
+                h: {
+                    k: {
+                        "rank": f"{k}{counts[h][k] + 1}",
+                        "player": pos_h[h][k][min(counts[h][k], len(pos_h[h][k]) - 1)].name,
+                    }
+                    for k in POSITIONS
                 }
-                for k in POSITIONS
+                for h in HORIZONS
             },
-            "wire_levels": {k: round(v, 1) for k, v in stream.items()},
+            "wire_levels": {k: round(v, 1) for k, v in _sum_levels(stream).items()},
+            "wire_levels_by_horizon": {
+                h: {k: round(v, 1) for k, v in stream[h].items()} for h in HORIZONS
+            },
             "wire_note": (
                 "The best player at each position left undrafted — the post-draft free "
-                "agent baseline. It is what `vor_vs_wire` measures against, and inside the "
-                "simulation it prices bench depth. Far below the marginal-starter level "
-                "because 290 of the pool's 350 players get rostered."
+                "agent baseline, per horizon (the best year-1 add and the best years-2-3 "
+                "stash can differ). It is what `vor_vs_wire` measures against (as the "
+                "horizon sum), and inside the simulation it prices bench depth. Far below "
+                "the marginal-starter level because 290 of the pool's 350 players get "
+                "rostered."
             ),
-            "slot_levels": {k: round(v, 1) for k, v in slot_replacement(rep).items()},
+            "slot_levels": {
+                h: {k: round(v, 1) for k, v in lv.items()}
+                for h, lv in slot_replacement(rep).items()
+            },
             "slot_levels_note": (
                 "What an empty starting slot is priced at inside the simulation: the "
                 "marginal-starter level of the best position the slot accepts, so a flex "
@@ -436,8 +474,8 @@ def build_payload(
         },
         "strategy": {
             "objective": (
-                "starting-lineup points above replacement + decayed bench value "
-                "(growth + insurance)"
+                "sum over horizons (year 1, years 2-3) of starting-lineup points above "
+                "that horizon's replacement + decayed bench value (growth + insurance)"
             ),
             "depth_base": DEPTH_BASE,
             "position_depth_decay": POSITION_DEPTH_DECAY,
@@ -445,13 +483,14 @@ def build_payload(
             "depth_note": (
                 "Bench value decays with how many players that team already has at the "
                 "same position, not with a running bench index — a fifth QB cannot start "
-                "in a two-QB-slot league however large his VOR looks. Each body is priced "
-                "on two jobs over the wire: growth — `upside_points`, his 3-year total at "
-                "his years-2-3 pace, weighted depth_base — and insurance — his full 3-year "
-                "sum including year 1, weighted by insurance_base, his position's expected "
-                "share of starter games missed to byes and injury. So a backloaded rookie "
-                "and a startable veteran are both worth bench picks for different reasons. "
-                "Starters are still priced on points_3yr."
+                "in a two-QB-slot league however large his VOR looks. Each body benched "
+                "in a horizon is priced on that horizon's excess over its wire: in year 1 "
+                "insurance only — insurance_base, his position's expected share of starter "
+                "games missed to byes and injury; a player who cannot play this season "
+                "cannot cover it — and in years 2-3 growth (depth_base, the chance he "
+                "grows past a starter) plus the same insurance. So a backloaded rookie "
+                "and a startable veteran are both worth bench picks for different reasons, "
+                "each in the horizon where he actually produces."
             ),
             "lookahead": "value now + E[best value still available at my next pick]",
             "survival_sigma": SURVIVAL_SIGMA,
@@ -533,8 +572,8 @@ def report_board(board: Board) -> None:
 
 def report_summary(
     rows: list[dict],
-    rep: dict[str, float],
-    counts: dict[str, int],
+    rep: dict[str, dict[str, float]],
+    counts: dict[str, dict[str, int]],
     draft: Draft,
     board: Board,
     rollout: dict | None = None,
@@ -571,7 +610,9 @@ def report_summary(
                 for c in first["candidates"]
             )
             print(f"  {first['pick']} full-horizon rollout: {cands}", file=sys.stderr)
-    print(
-        "\nreplacement: " + ", ".join(f"{k}{counts[k] + 1} = {rep[k]:.0f}" for k in POSITIONS),
-        file=sys.stderr,
-    )
+    for h in HORIZONS:
+        print(
+            f"\nreplacement {h}: "
+            + ", ".join(f"{k}{counts[h][k] + 1} = {rep[h][k]:.0f}" for k in POSITIONS),
+            file=sys.stderr,
+        )

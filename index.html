@@ -585,9 +585,9 @@ function renderBoard(d, state) {
   document.getElementById("availHead").textContent = nextPick ? `Avail @ ${nextPick}` : "Avail";
   const rep = d.replacement.levels;
   document.getElementById("boardHint").textContent =
-    `${d.count} undrafted players, ranked by VOR (3-year points over the marginal starter — ` +
+    `${d.count} undrafted players, ranked by VOR (points over the marginal starter, priced per horizon: year 1 + years 2-3 — summed levels ` +
     ["QB", "RB", "WR", "TE"].map(p => `${p} ${Math.round(rep[p])}`).join(" · ") + "). " +
-    `Upside is the 3-year total at years-2-3 pace — the growth half of bench pricing (the other half is insurance on the full 3-year sum). ` +
+    `Upside is the 3-year total at years-2-3 pace — a diagnostic of growth shape; bench pricing is year-1 insurance plus years-2-3 growth + insurance, each over that horizon's wire. ` +
     `Availability is from ${d.monte_carlo.sims} simulated drafts.`;
   document.getElementById("boardNote").textContent =
     d.rankings_note + " " + d.market_model.adp_note;
