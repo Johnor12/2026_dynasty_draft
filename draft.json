@@ -1,13 +1,13 @@
 {
   "source": "https://api.sleeper.app/v1/draft/1388293618208374784",
-  "fetched_at": "2026-08-05T17:11:02+00:00",
+  "fetched_at": "2026-08-05T17:30:25+00:00",
   "draft_id": "1388293618208374784",
   "league_id": "1388293617071714304",
   "league_name": "Dudes",
   "season": "2026",
   "status": "drafting",
   "started_at": "2026-08-04T13:02:55+00:00",
-  "last_picked_at": "2026-08-05T17:06:23+00:00",
+  "last_picked_at": "2026-08-05T17:30:20+00:00",
   "format": {
     "type": "snake",
     "teams": 10,
@@ -16,16 +16,16 @@
     "scoring_type": "dynasty_2qb"
   },
   "pick_count": 290,
-  "picks_made": 25,
-  "picks_pending": 265,
+  "picks_made": 28,
+  "picks_pending": 262,
   "on_the_clock": {
-    "pick_no": 26,
+    "pick_no": 29,
     "round": 3,
-    "pick_in_round": 6,
-    "draft_slot": 5,
-    "user_id": "870397485556875264",
-    "username": "dirtydole",
-    "slot": "3.06"
+    "pick_in_round": 9,
+    "draft_slot": 2,
+    "user_id": "1127785716420898816",
+    "username": "johnor",
+    "slot": "3.09"
   },
   "me": {
     "username": "johnor",
@@ -41,12 +41,12 @@
     "user_id": "1127785716420898816",
     "username": "johnor",
     "slot": "3.09",
-    "picks_away": 3
+    "picks_away": 0
   },
   "board_derivation": {
     "method": "snake, order reverses at round 3; traded picks applied",
-    "checked_against_made_picks": 25,
-    "slot_and_roster_agree": 25,
+    "checked_against_made_picks": 28,
+    "slot_and_roster_agree": 28,
     "rounds_exercised": [
       1,
       2,
@@ -563,12 +563,12 @@
       "user_id": "870397485556875264",
       "username": "dirtydole",
       "is_mine": false,
-      "status": "pending",
-      "sleeper_id": null,
-      "name": null,
-      "position": null,
-      "team": null,
-      "is_keeper": null
+      "status": "made",
+      "sleeper_id": "12517",
+      "name": "Colston Loveland",
+      "position": "TE",
+      "team": "CHI",
+      "is_keeper": false
     },
     {
       "pick_no": 27,
@@ -579,12 +579,12 @@
       "user_id": "735592932748435456",
       "username": "bwood637",
       "is_mine": false,
-      "status": "pending",
-      "sleeper_id": null,
-      "name": null,
-      "position": null,
-      "team": null,
-      "is_keeper": null
+      "status": "made",
+      "sleeper_id": "4046",
+      "name": "Patrick Mahomes",
+      "position": "QB",
+      "team": "KC",
+      "is_keeper": false
     },
     {
       "pick_no": 28,
@@ -595,12 +595,12 @@
       "user_id": "865368720548196352",
       "username": "jedmxk",
       "is_mine": false,
-      "status": "pending",
-      "sleeper_id": null,
-      "name": null,
-      "position": null,
-      "team": null,
-      "is_keeper": null
+      "status": "made",
+      "sleeper_id": "4034",
+      "name": "Christian McCaffrey",
+      "position": "RB",
+      "team": "SF",
+      "is_keeper": false
     },
     {
       "pick_no": 29,
