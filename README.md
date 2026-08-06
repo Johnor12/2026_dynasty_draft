@@ -364,10 +364,15 @@ uv run refresh.py --report              # + every step's validation summary on s
 My slot alone uses the projection-based VOR and roster optimizer. Each opponent instead
 orders players by the provider board most associated with its completed picks. It never
 uses projected points, replacement levels, my team-value function, or VOR. The
-investigator's `mean_log2_loss` calibrates how tightly its Monte Carlo picks follow that
-source; `--noise 1` uses the fitted adherence and `--noise 0` forces strict provider
-order. Players missing from a provider's board are appended in DraftSharks ADP order so
-the 290-pick simulation always has a complete external board without falling back to VOR.
+source rank is softly boosted for positions where the team has not filled its dedicated
+starters (1 QB, 2 RB, 3 WR, 1 TE): an entirely empty group gets a 3x rank boost, which
+fades linearly to no boost when it is full. This can move a nearby RB ahead of a WR when
+the team has three WRs and no RBs, but a large enough source-rank gap still wins. The
+investigator's `mean_log2_loss` calibrates random variation around that adjusted order;
+`--noise 1` uses the fitted randomness and `--noise 0` makes the adjusted choice
+deterministic. Players missing from a provider's board are appended in DraftSharks ADP
+order so the 290-pick simulation always has a complete external board without falling
+back to VOR.
 
 The ranker's next-pick-option, Monte Carlo, rollout and candidate-survival stages fan out
 over a process pool (stdlib `multiprocessing`), so wall time scales with cores. The option

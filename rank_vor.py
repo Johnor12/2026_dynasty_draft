@@ -18,7 +18,8 @@ simulation (ranker/sim.py), roster value and the replacement measurement live in
 ranker/value.py, and `draft.json` — the live board — is the simulation's starting state,
 not a filter (ranker/board.py). Only my slot uses that VOR valuation. Every opponent uses
 the external provider board most associated with its prior picks, loaded from the
-data-source investigator; its observed adherence controls Monte Carlo choice noise.
+data-source investigator; unfilled dedicated starters softly adjust that order, and its
+observed adherence controls Monte Carlo choice noise.
 
 The output's headline `vor` sums the horizons: (year-1 points minus the year-1
 marginal-starter level) + (years-2-3 points minus that level) — "how many points over
@@ -96,7 +97,7 @@ def main(argv: list[str] | None = None) -> int:
         "--noise",
         type=float,
         default=NOISE,
-        help="multiplier around opponents' fitted source adherence (0 = strict source order)",
+        help="opponent pick randomness (0 = deterministic balance-adjusted source order)",
     )
     ap.add_argument("--seed", type=int, default=SEED)
     args = ap.parse_args(argv)

@@ -57,8 +57,11 @@ SURVIVAL_SIGMA = 3.5  # softness of "will he last until my next pick"
 # lists take the top of both the year-1 and the years-2-3 ordering, so this yields up
 # to four distinct players per position.
 LOOKAHEAD_PER_POS = 2
+# An entirely unfilled dedicated starter group receives a 3x source-rank boost;
+# the boost fades linearly as that position's dedicated starters are filled.
+OPPONENT_BALANCE_STRENGTH = 2.0
 # Multiplier around each opponent's fitted source adherence: 1 reproduces the observed
-# mean log-rank loss, while 0 forces strict provider order.
+# mean log-rank loss before roster-balance adjustments, while 0 removes random variation.
 NOISE = 1.0
 # Cap on fixed-point iterations before a cycle must have closed. Per-horizon levels
 # doubled the state (8 starter counts + 8 wire levels), so exact recurrence takes

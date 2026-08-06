@@ -468,15 +468,16 @@ def build_payload(
                 "Each opponent orders legal available players by the provider board most "
                 "associated with its completed picks in data_source_matches.json. Opponent "
                 "valuation never reads projections, replacement levels, team value, or VOR. "
-                "The deterministic draft takes the source's top legal player; Monte Carlo "
-                "draws around that order using the manager's observed source adherence."
+                "A position's source rank receives a soft boost in proportion to its "
+                "unfilled dedicated starters; the deterministic draft takes the best "
+                "adjusted rank, and Monte Carlo draws around that preference."
             ),
             "adherence": (
                 "The investigator's mean_log2_loss is converted to a power distribution "
-                "over source rank among legal available players. At --noise 1, its expected "
-                "log2 choice rank matches that manager's observed loss; 0 forces strict "
-                "source order. fit_score and confidence identify association strength, "
-                "while mean_log2_loss determines adherence."
+                "over source rank among legal available players, before the roster-balance "
+                "adjustment. --noise 1 uses that fitted randomness; 0 removes randomness "
+                "but retains the balance adjustment. fit_score and confidence identify "
+                "association strength, while mean_log2_loss determines adherence."
             ),
             "coverage": (
                 "A provider's normalized players come first. Any pool player it does not "
@@ -586,12 +587,14 @@ def build_payload(
             "noise": noise,
             "seed": seed,
             "note": (
-                "Source-adherence Gumbel draws on the other 9 teams only, to turn 0/1 "
-                "availability under deterministic source order into a usable probability "
-                "band. At noise=1 each manager's distribution is calibrated to its observed "
-                "mean log-rank loss; noise=0 is strict source order. sim_pick is from the "
-                "noiseless draft; sim_adp, p_drafted and p_available_at_my_picks are from "
-                "these redraws and measure the other nine teams' demand only — my own "
+                "Balance-adjusted source-rank Gumbel draws on the other 9 teams only, to "
+                "turn 0/1 availability under the deterministic preference into a usable "
+                "probability band. At noise=1 the source-rank component is calibrated to "
+                "each manager's observed mean log-rank loss before the balance adjustment; "
+                "noise=0 removes random variation but retains that adjustment. sim_pick is "
+                "from the noiseless draft; sim_adp, p_drafted and "
+                "p_available_at_my_picks are from these redraws and measure the other nine "
+                "teams' demand only — my own "
                 "simulated picks are the VOR policy under evaluation, not opponent demand. "
                 "p_available_at_my_picks is a Kaplan-Meier estimate (an opponent take is "
                 "the event, my own take censors the redraw); "

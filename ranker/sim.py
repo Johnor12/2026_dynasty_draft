@@ -28,9 +28,10 @@ the base policy.
 
 My slot is the only VOR optimizer. Each of the other nine teams evaluates players from
 the provider board that best matches its completed picks, as inferred by the data-source
-investigator. Its observed source adherence controls pick noise. Opponent choices never
-use projections, replacement levels, roster value, or VOR; Monte Carlo simulations use
-those distinct source policies to estimate who reaches my picks.
+investigator. A soft dedicated-starter balance preference adjusts that order, and observed
+source adherence controls pick noise. Opponent choices never use projections, replacement
+levels, roster value, or VOR; Monte Carlo simulations use those distinct source policies
+to estimate who reaches my picks.
 """
 
 from __future__ import annotations
@@ -50,6 +51,7 @@ from .league import (
     LOOKAHEAD_PER_POS,
     MAX_ITERS,
     NON_TAXI_SLOTS,
+    OPPONENT_BALANCE_STRENGTH,
     POSITIONS,
     SLOT_ELIGIBLE,
     STARTING_SLOTS,
@@ -341,6 +343,22 @@ class Draft:
                 return candidates
         return []
 
+    def opponent_balance_boosts(self, slot: int) -> dict[str, float]:
+        """Source-rank boosts for this roster's unfilled dedicated starters."""
+        have = {position: 0 for position in POSITIONS}
+        for player in self.rosters[slot - 1]:
+            have[player.position] += 1
+        for row in self.off_pool[slot - 1]:
+            if row.get("position") in have:
+                have[row["position"]] += 1
+        return {
+            position: 1.0
+            + OPPONENT_BALANCE_STRENGTH
+            * max(required - have[position], 0)
+            / required
+            for position, required in DEDICATED_SLOTS.items()
+        }
+
     def better_available(self, p: Player) -> int:
         return self.avail_bits.prefix(p.availability_index)
 
@@ -513,26 +531,32 @@ class Draft:
         return max(scored, key=lambda t: (t[0], -t[1].player_id))[1]
 
     def choose_opponent(self, pick_index: int, slot: int) -> Player:
-        """Choose from a manager's source board, without consulting my valuation."""
+        """Choose from a balance-adjusted source board, without consulting my valuation."""
         candidates = self.opponent_candidates(slot)
         assert candidates, "pool exhausted"
+        boosts = self.opponent_balance_boosts(slot)
+        ranked = [
+            (rank / boosts[player.position], rank, player)
+            for rank, player in enumerate(candidates, start=1)
+        ]
         if not self.noise or self.rng is None or pick_index < self.noise_from:
-            return candidates[0]
+            return min(ranked, key=lambda row: (row[0], row[1], row[2].player_id))[2]
 
         # The investigator measures log2(rank among available) for each real pick.
-        # rank_power makes a Gumbel-max draw over local source ranks reproduce that
-        # manager's mean loss when noise=1. `--noise` is a multiplier around the observed
-        # adherence: 0 is strict source order, 1 is the fitted behavior.
+        # rank_power calibrates source adherence; the balance-adjusted rank then gives a
+        # nearby player at an unfilled starter position better odds without guaranteeing
+        # the pick. `--noise` scales random variation around that preference.
         power = self.opponents[slot].rank_power
         return max(
             (
-                -power * math.log(rank)
+                -power * math.log(preference_rank)
                 - self.noise * math.log(-math.log(self.rng.random())),
+                -source_rank,
                 -player.player_id,
                 player,
             )
-            for rank, player in enumerate(candidates, start=1)
-        )[2]
+            for preference_rank, source_rank, player in ranked
+        )[3]
 
     def run(
         self,

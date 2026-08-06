@@ -71,7 +71,7 @@ def synthetic_opponents(
 
 
 def opponent_selftest(players: list[Player]) -> list[str]:
-    """Opponent source order must diverge from and remain independent of my VOR board."""
+    """Opponent source order stays VOR-independent and bends toward roster balance."""
     fails: list[str] = []
     board = fresh_board()
     rep = seed_replacement(players)
@@ -88,14 +88,48 @@ def opponent_selftest(players: list[Player]) -> list[str]:
     if my_take == external[0]:
         fails.append("my VOR optimizer followed the opponent source board")
 
+    # A filled WR group versus an empty RB group gives the best RB a soft 3x rank boost:
+    # close source values bend toward RB, while a large enough source gap still wins.
+    wrs = [p for p in players if p.position == "WR"]
+    rb = next(p for p in players if p.position == "RB")
+    board = fresh_board()
+    board.rosters[0] = wrs[:3]
+    board.picks_left[0] -= 3
+
+    def complete(prefix: list[Player]) -> list[Player]:
+        ids = {p.player_id for p in prefix}
+        return prefix + [p for p in players if p.player_id not in ids]
+
+    close_order = complete([wrs[3], rb])
+    close = Draft(
+        players,
+        rep,
+        vor,
+        board,
+        opponents=synthetic_opponents(players, board, close_order),
+    )
+    if close.choose_opponent(0, 1) != rb:
+        fails.append("opponent did not prefer a close RB with RB starters unfilled")
+
+    value_order = complete([wrs[3], wrs[4], wrs[5], rb])
+    value = Draft(
+        players,
+        rep,
+        vor,
+        board,
+        opponents=synthetic_opponents(players, board, value_order),
+    )
+    if value.choose_opponent(0, 1) != wrs[3]:
+        fails.append("opponent balance preference overrode too large a source-rank gap")
+
     for loss in (0.3, 1.5, 2.7):
         power = rank_power(loss, len(players))
         if abs(expected_log2_rank(power, len(players)) - loss) > 1e-6:
             fails.append(f"source-adherence calibration missed mean log2 loss {loss}")
 
     print(
-        "  opponent strategies: provider order diverges from my VOR order and fitted "
-        "rank noise reproduces observed adherence",
+        "  opponent strategies: provider order stays VOR-independent, starter needs "
+        "softly adjust it, and fitted rank noise reproduces source adherence",
         file=sys.stderr,
     )
     return fails
