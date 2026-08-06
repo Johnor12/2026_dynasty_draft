@@ -23,16 +23,18 @@ styles the scripts document work unchanged.
 
 ## layout
 
-Two independent pipelines, each publishing one file at the repo root. Everything a
-pipeline reads and every intermediate it writes stays inside its own folder.
+Two independent input pipelines publish the pool and live board. A third, optional
+investigation process consumes those artifacts alongside external ranking snapshots.
+Everything a process owns stays inside its folder; each publishes one file at the root.
 
 ```
 pool.json                    the draft pool — 350 players, 13 fields
 draft.json                   the live board — 290 picks, made and pending
+data_source_matches.json     closest ranking provider for each drafter, with evidence
 rank_vor.py                  pool.json + draft.json -> rankings.json (run separately)
-refresh.py                   fetch the board, then re-rank — the between-picks loop
+refresh.py                   fetch, re-rank, and re-evaluate sources between picks
 index.html                   static dashboard for rankings.json (serve the repo root, no build)
-serve.py                     local dashboard server at http://127.0.0.1:8123
+serve.py                     local server for both static dashboards on port 8123
 ranker/                      the ranker's internals, one module per concern:
   league.py                  league constants, strategy knobs, draft order
   pool.py                    pool.json -> Player objects
@@ -59,6 +61,14 @@ pool_pipeline/               provider html -> pool.json   (local, offline, 3 sta
 draft_pipeline/              Sleeper draft API -> draft.json  (network, on demand)
   fetch_draft.py             the whole pipeline — one stage, so no orchestrator
   paths.py
+
+data_source_investigator/    provider boards + draft.json -> data_source_matches.json
+  index.html                 team/source heatmap and pick-level evidence viewer
+  pipeline.py                orchestrator: fetch -> build -> investigate
+  fetch_rankings.py          public rankings -> raw snapshots
+  build_rankings.py          snapshots + manual CSVs + pool.json -> normalized rankings
+  investigate.py             score each pick against the available provider board
+  data/                      raw/manual inputs and normalized rankings
 ```
 
 **They are separate on purpose.** The pool pipeline is local, offline and deterministic,
@@ -70,6 +80,24 @@ files — `draft_pipeline/` keeps its own small `paths.py` rather than importing
 meet only at `sleeper_id`: the key `match_sleeper.py` writes into every pool player is
 the key every pick in `draft.json` carries. `rank_vor.py` is the one thing that reads both
 and is where that join is actually performed.
+
+## data-source investigator
+
+```
+uv run data_source_investigator/pipeline.py --report
+uv run data_source_investigator/pipeline.py --only investigate  # reuse ranking snapshots
+uv run data_source_investigator/investigate.py --selftest
+uv run serve.py  # open http://127.0.0.1:8123/data_source_investigator/
+```
+
+The process snapshots FantasyCalc, KeepTradeCut, Dynasty Nerds, and FantasyPros, then
+adds the DraftSharks superflex ADP already carried by `pool.json`. It measures a choice
+against only the provider-ranked players available when that pick was made. The published
+report retains every provider score and pick-level evidence; the inferred source is the
+closest supplied board, not proof that the drafter used it. Formats differ slightly and
+are recorded with each source. Paid or export-only boards can be added as canonical CSV
+files under `data_source_investigator/data/manual/`; see the process README for the CSV
+contract and the caveats around changing rankings during a live draft.
 
 ## pool pipeline
 
@@ -317,15 +345,15 @@ uv run rank_vor.py --draft other.json   # a different board
 uv run rank_vor.py --selftest           # lineup solver + board loader, offline
 ```
 
-During a draft the two live steps are always run together, so `refresh.py` does exactly
-that and nothing else — `fetch_draft.py`, then `rank_vor.py`, stopping on the first
-failure. It shells out to each with `uv run` rather than importing them, keeping the
-pipelines as separate as they are everywhere else, and runs them from the repo root so
-their own default paths apply.
+During a draft the three live steps are always run together: `refresh.py` runs
+`fetch_draft.py`, then `rank_vor.py`, then reapplies the investigator's existing source
+rankings to the new board with `investigate.py`, stopping on the first failure. It does
+not fetch or rebuild provider rankings. Each step runs through `uv run` from the repo
+root, so its own default paths apply.
 
 ```
-uv run refresh.py                       # draft.json, then rankings.json
-uv run refresh.py --report              # + both steps' validation summaries on stderr
+uv run refresh.py                       # draft.json, rankings.json, source matches
+uv run refresh.py --report              # + every step's validation summary on stderr
 ```
 
 The ranker's next-pick-option, Monte Carlo, rollout and candidate-survival stages fan out

@@ -1,13 +1,13 @@
 {
   "source": "https://api.sleeper.app/v1/draft/1388293618208374784",
-  "fetched_at": "2026-08-06T16:07:28+00:00",
+  "fetched_at": "2026-08-06T20:09:49+00:00",
   "draft_id": "1388293618208374784",
   "league_id": "1388293617071714304",
   "league_name": "Dudes",
   "season": "2026",
   "status": "drafting",
   "started_at": "2026-08-04T13:02:55+00:00",
-  "last_picked_at": "2026-08-06T15:30:18+00:00",
+  "last_picked_at": "2026-08-06T19:57:37+00:00",
   "format": {
     "type": "snake",
     "teams": 10,
@@ -16,16 +16,16 @@
     "scoring_type": "dynasty_2qb"
   },
   "pick_count": 290,
-  "picks_made": 50,
-  "picks_pending": 240,
+  "picks_made": 54,
+  "picks_pending": 236,
   "on_the_clock": {
-    "pick_no": 51,
+    "pick_no": 55,
     "round": 6,
-    "pick_in_round": 1,
-    "draft_slot": 1,
-    "user_id": "1388546393752240128",
-    "username": "AndNic31",
-    "slot": "6.01"
+    "pick_in_round": 5,
+    "draft_slot": 5,
+    "user_id": "870397485556875264",
+    "username": "dirtydole",
+    "slot": "6.05"
   },
   "me": {
     "username": "johnor",
@@ -41,18 +41,19 @@
     "user_id": "1127785716420898816",
     "username": "johnor",
     "slot": "6.08",
-    "picks_away": 7
+    "picks_away": 3
   },
   "board_derivation": {
     "method": "snake, order reverses at round 3; traded picks applied",
-    "checked_against_made_picks": 50,
-    "slot_and_roster_agree": 50,
+    "checked_against_made_picks": 54,
+    "slot_and_roster_agree": 54,
     "rounds_exercised": [
       1,
       2,
       3,
       4,
-      5
+      5,
+      6
     ],
     "mismatches": []
   },
@@ -187,6 +188,34 @@
       "roster_id": 2,
       "owner_id": 9,
       "previous_owner_id": 1
+    },
+    {
+      "round": 6,
+      "season": "2026",
+      "roster_id": 4,
+      "owner_id": 6,
+      "previous_owner_id": 4
+    },
+    {
+      "round": 7,
+      "season": "2026",
+      "roster_id": 4,
+      "owner_id": 6,
+      "previous_owner_id": 4
+    },
+    {
+      "round": 6,
+      "season": "2026",
+      "roster_id": 6,
+      "owner_id": 4,
+      "previous_owner_id": 6
+    },
+    {
+      "round": 7,
+      "season": "2026",
+      "roster_id": 6,
+      "owner_id": 4,
+      "previous_owner_id": 6
     },
     {
       "round": 5,
@@ -1032,16 +1061,16 @@
       "round": 6,
       "pick_in_round": 1,
       "draft_slot": 1,
-      "roster_id": 6,
-      "user_id": "1388546393752240128",
-      "username": "AndNic31",
+      "roster_id": 4,
+      "user_id": "207916077173182464",
+      "username": "dccb31",
       "is_mine": false,
-      "status": "pending",
-      "sleeper_id": null,
-      "name": null,
-      "position": null,
-      "team": null,
-      "is_keeper": null
+      "status": "made",
+      "sleeper_id": "12512",
+      "name": "Quinshon Judkins",
+      "position": "RB",
+      "team": "CLE",
+      "is_keeper": false
     },
     {
       "pick_no": 52,
@@ -1052,12 +1081,12 @@
       "user_id": "870397485556875264",
       "username": "dirtydole",
       "is_mine": false,
-      "status": "pending",
-      "sleeper_id": null,
-      "name": null,
-      "position": null,
-      "team": null,
-      "is_keeper": null
+      "status": "made",
+      "sleeper_id": "8155",
+      "name": "Breece Hall",
+      "position": "RB",
+      "team": "NYJ",
+      "is_keeper": false
     },
     {
       "pick_no": 53,
@@ -1068,12 +1097,12 @@
       "user_id": "865368720548196352",
       "username": "jedmxk",
       "is_mine": false,
-      "status": "pending",
-      "sleeper_id": null,
-      "name": null,
-      "position": null,
-      "team": null,
-      "is_keeper": null
+      "status": "made",
+      "sleeper_id": "7526",
+      "name": "Jaylen Waddle",
+      "position": "WR",
+      "team": "DEN",
+      "is_keeper": false
     },
     {
       "pick_no": 54,
@@ -1084,12 +1113,12 @@
       "user_id": "735592932748435456",
       "username": "bwood637",
       "is_mine": false,
-      "status": "pending",
-      "sleeper_id": null,
-      "name": null,
-      "position": null,
-      "team": null,
-      "is_keeper": null
+      "status": "made",
+      "sleeper_id": "3294",
+      "name": "Dak Prescott",
+      "position": "QB",
+      "team": "DAL",
+      "is_keeper": false
     },
     {
       "pick_no": 55,
@@ -1160,9 +1189,9 @@
       "round": 6,
       "pick_in_round": 9,
       "draft_slot": 9,
-      "roster_id": 4,
-      "user_id": "207916077173182464",
-      "username": "dccb31",
+      "roster_id": 6,
+      "user_id": "1388546393752240128",
+      "username": "AndNic31",
       "is_mine": false,
       "status": "pending",
       "sleeper_id": null,
@@ -1208,9 +1237,9 @@
       "round": 7,
       "pick_in_round": 2,
       "draft_slot": 9,
-      "roster_id": 4,
-      "user_id": "207916077173182464",
-      "username": "dccb31",
+      "roster_id": 6,
+      "user_id": "1388546393752240128",
+      "username": "AndNic31",
       "is_mine": false,
       "status": "pending",
       "sleeper_id": null,
@@ -1336,9 +1365,9 @@
       "round": 7,
       "pick_in_round": 10,
       "draft_slot": 1,
-      "roster_id": 6,
-      "user_id": "1388546393752240128",
-      "username": "AndNic31",
+      "roster_id": 4,
+      "user_id": "207916077173182464",
+      "username": "dccb31",
       "is_mine": false,
       "status": "pending",
       "sleeper_id": null,

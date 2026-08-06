@@ -1,25 +1,27 @@
 #!/usr/bin/env python3
-"""Pull the live board and re-rank against it — the loop to run between picks.
+"""Pull the live board, re-rank, and re-evaluate source matches between picks.
 
-Two steps, both of which already stand alone; this only fixes the order and stops on
+Three steps, all of which already stand alone; this only fixes the order and stops on
 the first failure:
 
     1. draft_pipeline/fetch_draft.py   Sleeper's draft API -> draft.json
     2. rank_vor.py                     pool.json + draft.json -> rankings.json
+    3. data_source_investigator/investigate.py
+                                        existing source rankings + draft.json
+                                        -> data_source_matches.json
 
-The pool pipeline is deliberately not a step. It is local, offline and re-run a handful
-of times all offseason when the projections change; this runs every few minutes during a
-draft and must not re-parse 8 MB of html to do it.
+The pool pipeline and the investigator's source fetch/build stages are deliberately not
+steps. They are re-run only when their underlying rankings change; this loop applies the
+existing snapshots to the current draft without hitting any ranking provider.
 
-Each step is a separate ``uv run``, not an import, because the two pipelines share no
-code — ``draft_pipeline/`` is reached the same way the README says to reach it. Both run
-with the repo root as their working directory, so their own default paths apply and this
-works from anywhere (``rank_vor.py`` resolves ``pool.json`` and ``draft.json`` from the
-shell's cwd, not from the script).
+Each step is a separate ``uv run``, not an import. All run with the repo root as their
+working directory, so their own default paths apply and this works from anywhere
+(``rank_vor.py`` resolves ``pool.json`` and ``draft.json`` from the shell's cwd, not from
+the script).
 
 Usage:
-    uv run refresh.py            # draft.json, then rankings.json
-    uv run refresh.py --report   # + both steps' validation summaries on stderr
+    uv run refresh.py            # draft.json, rankings.json, data_source_matches.json
+    uv run refresh.py --report   # + every step's validation summary on stderr
 """
 
 from __future__ import annotations
@@ -37,12 +39,13 @@ def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser(
         description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
     )
-    ap.add_argument("--report", action="store_true", help="pass --report to both steps")
+    ap.add_argument("--report", action="store_true", help="pass --report to every step")
     args = ap.parse_args(argv)
 
     report = ["--report"] if args.report else []
     steps = [
         ("draft", ["draft_pipeline/fetch_draft.py", *report]),
+        ("investigate", ["data_source_investigator/investigate.py", *report]),
         ("rank", ["rank_vor.py", *report]),
     ]
 
@@ -55,7 +58,10 @@ def main(argv: list[str] | None = None) -> int:
             return code
         print(f"--- {name} ok in {time.monotonic() - started:.1f}s", file=sys.stderr)
 
-    print("\nrefresh complete -> rankings.json", file=sys.stderr)
+    print(
+        "\nrefresh complete -> rankings.json + data_source_matches.json",
+        file=sys.stderr,
+    )
     return 0
 
 

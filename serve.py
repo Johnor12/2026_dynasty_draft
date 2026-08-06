@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Serve the dashboard locally at http://127.0.0.1:8123.
+"""Serve both dashboards locally at http://127.0.0.1:8123.
 
 Usage:
     uv run serve.py
@@ -16,7 +16,10 @@ ADDRESS = ("127.0.0.1", 8123)
 def main() -> None:
     handler = partial(SimpleHTTPRequestHandler, directory=ROOT)
     with ThreadingHTTPServer(ADDRESS, handler) as server:
-        print(f"Serving index.html and rankings.json at http://{ADDRESS[0]}:{ADDRESS[1]}")
+        print(
+            f"Serving the draft board at http://{ADDRESS[0]}:{ADDRESS[1]}/ "
+            f"and source investigator at /data_source_investigator/"
+        )
         try:
             server.serve_forever()
         except KeyboardInterrupt:
