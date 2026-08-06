@@ -1,13 +1,13 @@
 {
   "source": "https://api.sleeper.app/v1/draft/1388293618208374784",
-  "fetched_at": "2026-08-06T22:19:18+00:00",
+  "fetched_at": "2026-08-06T23:15:46+00:00",
   "draft_id": "1388293618208374784",
   "league_id": "1388293617071714304",
   "league_name": "Dudes",
   "season": "2026",
   "status": "drafting",
   "started_at": "2026-08-04T13:02:55+00:00",
-  "last_picked_at": "2026-08-06T22:14:28+00:00",
+  "last_picked_at": "2026-08-06T22:50:43+00:00",
   "format": {
     "type": "snake",
     "teams": 10,
@@ -16,16 +16,16 @@
     "scoring_type": "dynasty_2qb"
   },
   "pick_count": 290,
-  "picks_made": 57,
-  "picks_pending": 233,
+  "picks_made": 62,
+  "picks_pending": 228,
   "on_the_clock": {
-    "pick_no": 58,
-    "round": 6,
-    "pick_in_round": 8,
+    "pick_no": 63,
+    "round": 7,
+    "pick_in_round": 3,
     "draft_slot": 8,
-    "user_id": "1127785716420898816",
-    "username": "johnor",
-    "slot": "6.08"
+    "user_id": "870397485556875264",
+    "username": "dirtydole",
+    "slot": "7.03"
   },
   "me": {
     "username": "johnor",
@@ -34,26 +34,27 @@
     "roster_id": 2
   },
   "my_next_pick": {
-    "pick_no": 58,
-    "round": 6,
-    "pick_in_round": 8,
-    "draft_slot": 8,
+    "pick_no": 69,
+    "round": 7,
+    "pick_in_round": 9,
+    "draft_slot": 2,
     "user_id": "1127785716420898816",
     "username": "johnor",
-    "slot": "6.08",
-    "picks_away": 0
+    "slot": "7.09",
+    "picks_away": 6
   },
   "board_derivation": {
     "method": "snake, order reverses at round 3; traded picks applied",
-    "checked_against_made_picks": 57,
-    "slot_and_roster_agree": 57,
+    "checked_against_made_picks": 62,
+    "slot_and_roster_agree": 62,
     "rounds_exercised": [
       1,
       2,
       3,
       4,
       5,
-      6
+      6,
+      7
     ],
     "mismatches": []
   },
@@ -1177,12 +1178,12 @@
       "user_id": "1127785716420898816",
       "username": "johnor",
       "is_mine": true,
-      "status": "pending",
-      "sleeper_id": null,
-      "name": null,
-      "position": null,
-      "team": null,
-      "is_keeper": null
+      "status": "made",
+      "sleeper_id": "9997",
+      "name": "Zay Flowers",
+      "position": "WR",
+      "team": "BAL",
+      "is_keeper": false
     },
     {
       "pick_no": 59,
@@ -1193,12 +1194,12 @@
       "user_id": "1388546393752240128",
       "username": "AndNic31",
       "is_mine": false,
-      "status": "pending",
-      "sleeper_id": null,
-      "name": null,
-      "position": null,
-      "team": null,
-      "is_keeper": null
+      "status": "made",
+      "sleeper_id": "13294",
+      "name": "Makai Lemon",
+      "position": "WR",
+      "team": "PHI",
+      "is_keeper": false
     },
     {
       "pick_no": 60,
@@ -1209,12 +1210,12 @@
       "user_id": "751220778036551680",
       "username": "nedjh2",
       "is_mine": false,
-      "status": "pending",
-      "sleeper_id": null,
-      "name": null,
-      "position": null,
-      "team": null,
-      "is_keeper": null
+      "status": "made",
+      "sleeper_id": "8150",
+      "name": "Kyren Williams",
+      "position": "RB",
+      "team": "LAR",
+      "is_keeper": false
     },
     {
       "pick_no": 61,
@@ -1225,12 +1226,12 @@
       "user_id": "751220778036551680",
       "username": "nedjh2",
       "is_mine": false,
-      "status": "pending",
-      "sleeper_id": null,
-      "name": null,
-      "position": null,
-      "team": null,
-      "is_keeper": null
+      "status": "made",
+      "sleeper_id": "7553",
+      "name": "Kyle Pitts",
+      "position": "TE",
+      "team": "ATL",
+      "is_keeper": false
     },
     {
       "pick_no": 62,
@@ -1241,12 +1242,12 @@
       "user_id": "1388546393752240128",
       "username": "AndNic31",
       "is_mine": false,
-      "status": "pending",
-      "sleeper_id": null,
-      "name": null,
-      "position": null,
-      "team": null,
-      "is_keeper": null
+      "status": "made",
+      "sleeper_id": "12522",
+      "name": "Cam Ward",
+      "position": "QB",
+      "team": "TEN",
+      "is_keeper": false
     },
     {
       "pick_no": 63,
