@@ -218,6 +218,7 @@ def my_next_picks(
         candidates = []
         for now, later, c in detail:
             row = {
+                "player_id": c.player_id,
                 "name": c.name,
                 "position": c.position,
                 "value_now": round(now, 1),
@@ -241,6 +242,7 @@ def my_next_picks(
             {
                 "pick": pick_label(pick_no),
                 "overall": pick_no,
+                "take_id": take.player_id,
                 "take": f"{take.name} ({take.position})",
                 "candidates": candidates,
             }
@@ -301,10 +303,10 @@ def draft_block(board: Board) -> dict | None:
 def example_rosters(draft: Draft, board: Board) -> list[dict]:
     """Every team's final roster from the deterministic draft, for eyeballing smells.
 
-    Rosters read in pick order: the live board's made picks first (labelled 'made' — the
-    board does not keep their pick numbers), then the simulated picks with the pick they
-    were taken at. Rookies are flagged because the 4 taxi spots mean every team must end
-    the draft with at least 4 of them.
+    Rosters read in pick order: the live board's made picks first (the board does not keep
+    their pick numbers), then the simulated picks with the pick they were taken at. Each
+    entry carries the projection fields the dashboard needs; rankings only contains
+    undrafted players, so looking rostered players up there leaves every live pick blank.
     """
     names = _team_names(board)
     out: list[dict] = []
@@ -316,12 +318,45 @@ def example_rosters(draft: Draft, board: Board) -> list[dict]:
         for o in off:
             if o.get("position") in counts:
                 counts[o["position"]] += 1
-        picks = []
+        picks: list[dict] = []
         for p in roster:
             pick_no = draft.pick_of.get(p.player_id)
-            label = pick_label(pick_no) if pick_no else "made"
-            picks.append(f"{label} {p.name} ({p.position}{', R' if p.is_rookie else ''})")
-        picks += [f"{o['pick']} {o['name']} ({o['position']}, off-pool)" for o in off]
+            future_per_year = (p.points - p.points_1yr) / 2
+            picks.append(
+                {
+                    "pick": pick_label(pick_no) if pick_no else None,
+                    "is_made": pick_no is None,
+                    "player_id": p.player_id,
+                    "name": p.name,
+                    "position": p.position,
+                    "nfl_team": p.team,
+                    "age": p.age,
+                    "is_rookie": p.is_rookie,
+                    "points_1yr": p.points_1yr,
+                    "points_3yr": p.points,
+                    "future_points_per_year": round(future_per_year, 1),
+                    "growth_per_year": round(future_per_year - p.points_1yr, 1),
+                    "off_pool": False,
+                }
+            )
+        picks += [
+            {
+                "pick": o["pick"],
+                "is_made": True,
+                "player_id": None,
+                "name": o["name"],
+                "position": o["position"],
+                "nfl_team": None,
+                "age": None,
+                "is_rookie": None,
+                "points_1yr": None,
+                "points_3yr": None,
+                "future_points_per_year": None,
+                "growth_per_year": None,
+                "off_pool": True,
+            }
+            for o in off
+        ]
         out.append(
             {
                 "draft_slot": slot,

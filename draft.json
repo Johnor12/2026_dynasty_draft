@@ -1,13 +1,13 @@
 {
   "source": "https://api.sleeper.app/v1/draft/1388293618208374784",
-  "fetched_at": "2026-08-06T01:10:33+00:00",
+  "fetched_at": "2026-08-06T02:10:22+00:00",
   "draft_id": "1388293618208374784",
   "league_id": "1388293617071714304",
   "league_name": "Dudes",
   "season": "2026",
-  "status": "drafting",
+  "status": "paused",
   "started_at": "2026-08-04T13:02:55+00:00",
-  "last_picked_at": "2026-08-06T01:07:42+00:00",
+  "last_picked_at": "2026-08-06T01:47:13+00:00",
   "format": {
     "type": "snake",
     "teams": 10,
@@ -16,16 +16,16 @@
     "scoring_type": "dynasty_2qb"
   },
   "pick_count": 290,
-  "picks_made": 38,
-  "picks_pending": 252,
+  "picks_made": 41,
+  "picks_pending": 249,
   "on_the_clock": {
-    "pick_no": 39,
-    "round": 4,
-    "pick_in_round": 9,
+    "pick_no": 42,
+    "round": 5,
+    "pick_in_round": 2,
     "draft_slot": 9,
     "user_id": "207916077173182464",
     "username": "dccb31",
-    "slot": "4.09"
+    "slot": "5.02"
   },
   "me": {
     "username": "johnor",
@@ -41,17 +41,18 @@
     "user_id": "1127785716420898816",
     "username": "johnor",
     "slot": "5.03",
-    "picks_away": 4
+    "picks_away": 1
   },
   "board_derivation": {
     "method": "snake, order reverses at round 3; traded picks applied",
-    "checked_against_made_picks": 38,
-    "slot_and_roster_agree": 38,
+    "checked_against_made_picks": 41,
+    "slot_and_roster_agree": 41,
     "rounds_exercised": [
       1,
       2,
       3,
-      4
+      4,
+      5
     ],
     "mismatches": []
   },
@@ -815,12 +816,12 @@
       "user_id": "207916077173182464",
       "username": "dccb31",
       "is_mine": false,
-      "status": "pending",
-      "sleeper_id": null,
-      "name": null,
-      "position": null,
-      "team": null,
-      "is_keeper": null
+      "status": "made",
+      "sleeper_id": "11635",
+      "name": "Ladd McConkey",
+      "position": "WR",
+      "team": "LAC",
+      "is_keeper": false
     },
     {
       "pick_no": 40,
@@ -831,12 +832,12 @@
       "user_id": "751220778036551680",
       "username": "nedjh2",
       "is_mine": false,
-      "status": "pending",
-      "sleeper_id": null,
-      "name": null,
-      "position": null,
-      "team": null,
-      "is_keeper": null
+      "status": "made",
+      "sleeper_id": "9224",
+      "name": "Chase Brown",
+      "position": "RB",
+      "team": "CIN",
+      "is_keeper": false
     },
     {
       "pick_no": 41,
@@ -847,12 +848,12 @@
       "user_id": "751220778036551680",
       "username": "nedjh2",
       "is_mine": false,
-      "status": "pending",
-      "sleeper_id": null,
-      "name": null,
-      "position": null,
-      "team": null,
-      "is_keeper": null
+      "status": "made",
+      "sleeper_id": "12519",
+      "name": "Luther Burden",
+      "position": "WR",
+      "team": "CHI",
+      "is_keeper": false
     },
     {
       "pick_no": 42,

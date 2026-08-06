@@ -336,15 +336,33 @@ is the slow case. To trade fidelity for speed between picks, the levers are `--s
 The pool pipeline is not a step: it is offline and rebuilt a handful of times all
 offseason, and this runs every few minutes during a draft.
 
-`index.html` is a read-only dashboard view of `rankings.json` — the model's picks for my next
-turns, the projected final roster, and the best-available board with availability odds.
-One static file, no build step and no dependencies; it fetches `rankings.json` from the
-same directory on page load, so the loop is `refresh.py`, then reload the browser. It also
-polls the Sleeper draft endpoints directly (the same public API the draft pipeline reads,
-every 30s) for a live KPI card — picks made, who's on the clock, my next pick, last
-selection — and compares the live pick count and status against the snapshot the board was
-built from, highlighting the refresh button when the board has fallen behind. In the
-Codespace the devcontainer already serves the repo root on port 8000 at startup
+`index.html` is a read-only dashboard view of `rankings.json`, ordered around the decisions
+at the table: comparison tables for my next three picks, my projected final team, best
+available, then the other nine projected teams. Player comparisons show the raw Year 1
+projection, the Years 2–3 annual pace, their difference as the implied trend, and the
+model's roster-aware scores. The first pick also surfaces the candidate-specific
+`p_available_if_i_pass` redraws and full-draft rollout; best available uses the broader
+Kaplan–Meier availability estimate and deliberately omits the redundant deterministic
+pick / likely-through columns.
+
+The projected-team entries in `example_draft.rosters[].picks` are structured records,
+not display strings. Each includes pick status, player identity, age/team/rookie metadata,
+`points_1yr`, `points_3yr`, `future_points_per_year`, and `growth_per_year`; this is
+necessary because the headline `rankings` rows contain undrafted players only, while a
+complete roster also contains live picks already removed from that list. The dashboard
+uses those records to solve each team's optimal Year 1 and Years 2–3 starting lineup and
+compare annual starter points. These are deterministic final-roster projections, not an
+average over possible final teams.
+
+The dashboard remains one static file with no build step or dependencies; it fetches
+`rankings.json` from the same directory on page load, so the loop is `refresh.py`, then
+reload the browser. It also polls the Sleeper draft endpoints directly (the same public
+API the draft pipeline reads, every 30s) for a compact live strip — picks made, current
+draft spot, my next held pick, and the last selection — and compares the live pick count
+and status against the snapshot the board was built from, highlighting the refresh button
+when the board has fallen behind. My-pick calculations use `draft.my_remaining_picks`, not
+the original slot sequence in `league.my_picks`, because this draft contains traded picks.
+In the Codespace the devcontainer already serves the repo root on port 8000 at startup
 (`.devcontainer/devcontainer.json`); elsewhere, serve it with `python3 -m http.server 8123`
 and open the forwarded port (a direct `file://` open is blocked by the
 browser's fetch rules, and the page says so).
@@ -356,7 +374,7 @@ dispatch and commits the resulting `draft.json` and `rankings.json`. Its push us
 default `GITHUB_TOKEN`, which does not trigger other workflows, so when it pushed a
 commit it dispatches the Pages deploy itself. Both workflows share one concurrency group
 (`rankings-pipeline`, with `queue: max`), so a refresh and a deploy never run at the same
-time — later runs queue behind instead of cancelling. The dashboard's "↻ refresh data" button
+time — later runs queue behind instead of cancelling. The dashboard's "↻ Refresh board" button
 dispatches that workflow from the page via the GitHub API; it asks once for a
 fine-grained PAT (Actions read/write on this repo) and keeps it in localStorage.
 
