@@ -5,14 +5,16 @@ Three steps, all of which already stand alone; this only fixes the order and sto
 the first failure:
 
     1. draft_pipeline/fetch_draft.py   Sleeper's draft API -> draft.json
-    2. rank_vor.py                     pool.json + draft.json -> rankings.json
-    3. data_source_investigator/investigate.py
+    2. data_source_investigator/investigate.py
                                         existing source rankings + draft.json
                                         -> data_source_matches.json
+    3. rank_vor.py                     pool + draft + source matches/rankings
+                                        -> rankings.json
 
 The pool pipeline and the investigator's source fetch/build stages are deliberately not
 steps. They are re-run only when their underlying rankings change; this loop applies the
-existing snapshots to the current draft without hitting any ranking provider.
+existing snapshots to the current draft without hitting any ranking provider. Source
+investigation precedes ranking because each simulated opponent consumes its latest match.
 
 Each step is a separate ``uv run``, not an import. All run with the repo root as their
 working directory, so their own default paths apply and this works from anywhere

@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 """Value over replacement for this league, with an optimal-drafter draft simulation.
 
-    uv run rank_vor.py                     # pool.json + draft.json -> rankings.json
+    uv run rank_vor.py                     # pool + draft + source artifacts -> rankings.json
     uv run rank_vor.py --report            # + board, convergence and recommendation on stderr
     uv run rank_vor.py --no-draft          # ignore the live board, rank the whole pool
-    uv run rank_vor.py --selftest          # verify the lineup solver and the board loader
+    uv run rank_vor.py --selftest          # verify solver, opponents, and board loader
 
 Scope is this league and nothing else; the league constants and strategy knobs live in
 ranker/league.py. The value inputs are `points_3yr` and `points_1yr` from `pool.json` —
@@ -16,7 +16,9 @@ how many players start at each position is an *outcome* of how the league drafts
 per-horizon replacement levels are found as a fixed point of an optimal-drafter draft
 simulation (ranker/sim.py), roster value and the replacement measurement live in
 ranker/value.py, and `draft.json` — the live board — is the simulation's starting state,
-not a filter (ranker/board.py).
+not a filter (ranker/board.py). Only my slot uses that VOR valuation. Every opponent uses
+the external provider board most associated with its prior picks, loaded from the
+data-source investigator; its observed adherence controls Monte Carlo choice noise.
 
 The output's headline `vor` sums the horizons: (year-1 points minus the year-1
 marginal-starter level) + (years-2-3 points minus that level) — "how many points over
@@ -45,7 +47,8 @@ import sys
 from pathlib import Path
 
 from ranker.board import fresh_board, load_board
-from ranker.league import MARKET_WEIGHT, NOISE, ROLLOUT_SIMS, SEED, SIMS
+from ranker.league import NOISE, ROLLOUT_SIMS, SEED, SIMS
+from ranker.opponents import load_opponent_strategies
 from ranker.output import build_payload, build_rankings, report_board, report_summary
 from ranker.pool import load_pool
 from ranker.selftest import selftest
@@ -59,6 +62,10 @@ from ranker.sim import (
     rollout,
 )
 from ranker.validate import validate
+
+REPO_ROOT = Path(__file__).resolve().parent
+SOURCE_MATCHES = REPO_ROOT / "data_source_matches.json"
+SOURCE_RANKINGS = REPO_ROOT / "data_source_investigator/data/rankings.json"
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -80,16 +87,16 @@ def main(argv: list[str] | None = None) -> int:
     )
     ap.add_argument("--report", action="store_true", help="validation summary on stderr")
     ap.add_argument(
-        "--selftest", action="store_true", help="check the solver and the board loader, then exit"
+        "--selftest",
+        action="store_true",
+        help="check the solver, opponent separation, and board loader, then exit",
     )
     ap.add_argument("--sims", type=int, default=SIMS, help="noisy redraws for availability")
-    ap.add_argument("--noise", type=float, default=NOISE, help="other teams' Gumbel scale")
     ap.add_argument(
-        "--market-weight",
+        "--noise",
         type=float,
-        default=MARKET_WEIGHT,
-        help="how far the other nine teams follow the source ADP instead of their own "
-        "board: 0 = all drafters fully optimal, 1 = pure best-available-by-ADP",
+        default=NOISE,
+        help="multiplier around opponents' fitted source adherence (0 = strict source order)",
     )
     ap.add_argument("--seed", type=int, default=SEED)
     args = ap.parse_args(argv)
@@ -102,26 +109,42 @@ def main(argv: list[str] | None = None) -> int:
     if args.selftest:
         return selftest(players)
 
-    # The live board is the default starting state; an absent draft.json is not an error,
-    # it is the preseason case. An explicitly named one that is missing is an error.
+    # Even --no-draft needs draft.json's roster-to-slot map: the investigator associates
+    # providers with roster ids, while the simulation assigns strategies by draft slot.
     board_problems: list[str] = []
     draft_path = args.draft or Path("draft.json")
+    draft_raw = None
+    if draft_path.exists():
+        try:
+            draft_raw = json.loads(draft_path.read_text())
+        except (OSError, json.JSONDecodeError) as exc:
+            print(f"cannot read {draft_path}: {exc}", file=sys.stderr)
+            return 1
     if args.no_draft:
         board = fresh_board()
-    elif draft_path.exists():
-        board, board_problems = load_board(
-            json.loads(draft_path.read_text()), players, str(draft_path)
-        )
+    elif draft_raw is not None:
+        board, board_problems = load_board(draft_raw, players, str(draft_path))
     elif args.draft is not None:
         print(f"missing {draft_path} - run draft_pipeline/fetch_draft.py", file=sys.stderr)
         return 1
     else:
+        print(f"missing {draft_path} - opponent source association requires it", file=sys.stderr)
+        return 1
+
+    if draft_raw is None:
+        print(f"missing {draft_path} - opponent source association requires it", file=sys.stderr)
+        return 1
+    try:
+        opponents = load_opponent_strategies(
+            players, board, draft_raw, SOURCE_MATCHES, SOURCE_RANKINGS
+        )
+    except (OSError, KeyError, TypeError, ValueError, json.JSONDecodeError) as exc:
         print(
-            f"no {draft_path}: ranking the whole pool from an empty board "
-            "(run draft_pipeline/fetch_draft.py for the live one)",
+            f"cannot build opponent strategies: {exc} - run "
+            "data_source_investigator/investigate.py",
             file=sys.stderr,
         )
-        board = fresh_board()
+        return 1
 
     if args.report:
         print(
@@ -132,10 +155,19 @@ def main(argv: list[str] | None = None) -> int:
             file=sys.stderr,
         )
         report_board(board)
+        print("opponent source strategies:", file=sys.stderr)
+        for slot in sorted(opponents):
+            strategy = opponents[slot]
+            print(
+                f"  slot {slot:>2} {strategy.username or 'unknown':<20} "
+                f"{strategy.source_name:<25} fit {strategy.fit_score:>4.1f}, "
+                f"loss {strategy.mean_log2_loss:.3f}",
+                file=sys.stderr,
+            )
         print("converging replacement levels:", file=sys.stderr)
 
     rep, stream, counts, draft, history = converge(
-        players, board, args.report, args.market_weight
+        players, board, args.report, opponents
     )
 
     candidates = (
@@ -151,10 +183,10 @@ def main(argv: list[str] | None = None) -> int:
         )
     options = option_redraw(
         players, rep, board, stream, candidates,
-        args.sims, args.noise, args.seed, args.market_weight,
+        args.sims, args.noise, args.seed, opponents,
     )
     draft = apply_option_redraw(
-        draft, options, players, rep, board, stream, args.market_weight
+        draft, options, players, rep, board, stream, opponents
     )
     candidates = (
         [c for _, _, c in draft.my_decisions.get(board.my_picks[0], [])]
@@ -169,18 +201,18 @@ def main(argv: list[str] | None = None) -> int:
         )
     rolled = rollout(
         players, rep, board, stream, candidates,
-        ROLLOUT_SIMS, args.noise, args.seed, args.market_weight,
+        ROLLOUT_SIMS, args.noise, args.seed, opponents,
     )
-    draft = apply_rollout(draft, rolled, players, rep, board, stream, args.market_weight)
+    draft = apply_rollout(draft, rolled, players, rep, board, stream, opponents)
 
     if args.report:
         print(
-            f"monte carlo: {args.sims} noisy drafts (noise={args.noise}, "
-            f"market_weight={args.market_weight})",
+            f"monte carlo: {args.sims} source-strategy drafts "
+            f"(adherence noise multiplier={args.noise})",
             file=sys.stderr,
         )
     picks, drafted = monte_carlo(
-        players, rep, board, stream, args.sims, args.noise, args.seed, args.market_weight
+        players, rep, board, stream, args.sims, args.noise, args.seed, opponents
     )
     if args.report and candidates:
         print(
@@ -190,14 +222,14 @@ def main(argv: list[str] | None = None) -> int:
         )
     survival = candidate_survival(
         players, rep, board, stream, candidates,
-        args.sims, args.noise, args.seed, args.market_weight,
+        args.sims, args.noise, args.seed, opponents,
     )
     rows = build_rankings(players, rep, stream, draft, picks, drafted, args.sims, board)
 
     problems = board_problems + validate(rows, players, rep, counts, draft, board, history)
     payload = build_payload(
         players, pool_meta, board, rep, stream, counts, draft, history, rows, problems,
-        args.sims, args.noise, args.seed, args.market_weight, options, rolled, survival,
+        args.sims, args.noise, args.seed, opponents, options, rolled, survival,
     )
     args.output.write_text(json.dumps(payload, indent=2, ensure_ascii=False) + "\n")
 

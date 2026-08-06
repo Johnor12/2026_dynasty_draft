@@ -130,6 +130,12 @@ def validate(
 
     vors = [r["vor"] for r in rows]
     check(vors == sorted(vors, reverse=True), "rows are not sorted by VOR descending")
+    source_ids = {strategy.source_id for strategy in draft.opponents.values()}
+    check(len(source_ids) >= 2, f"opponents use only {len(source_ids)} distinct source board(s)")
+    check(
+        any(row["opponent_rank_delta"] != 0 for row in rows),
+        "opponent consensus order does not diverge from my VOR order",
+    )
     want_rows = len(players) - len(board.taken)
     check(
         len(rows) == want_rows,

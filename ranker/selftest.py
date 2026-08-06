@@ -1,8 +1,9 @@
 """Offline checks for the states the live files cannot currently reach.
 
-Two suites: the greedy lineup solver against brute force, and the board loader against
-synthetic draft.json boards — a traded pick, a selection outside the pool, a resumed
-partial board, and six malformed boards that must be rejected.
+Three suites: the greedy lineup solver against brute force, source-based opponent
+behavior, and the board loader against synthetic draft.json boards — a traded pick, a
+selection outside the pool, a resumed partial board, and six malformed boards that must
+be rejected.
 """
 
 from __future__ import annotations
@@ -27,6 +28,7 @@ from .league import (
     draft_order,
     pick_label,
 )
+from .opponents import OpponentStrategy, expected_log2_rank, rank_power
 from .pool import Player
 from .sim import Draft
 from .value import (
@@ -38,6 +40,65 @@ from .value import (
     slot_replacement,
     sorted_by_horizon,
 )
+
+
+def synthetic_opponents(
+    players: list[Player], board, first_order: list[Player] | None = None
+) -> dict[int, OpponentStrategy]:
+    """Complete external boards for simulation tests; no VOR value is stored in them."""
+    default = first_order or players
+    order = tuple(p.player_id for p in default)
+    ranks = {player_id: rank for rank, player_id in enumerate(order, start=1)}
+    return {
+        slot: OpponentStrategy(
+            slot=slot,
+            roster_id=slot,
+            username=f"team{slot}",
+            source_id=f"test_source_{slot}",
+            source_name=f"Test source {slot}",
+            source_format="selftest",
+            fit_score=100.0,
+            confidence="strong",
+            mean_log2_loss=0.5,
+            rank_power=rank_power(0.5, len(players)),
+            primary_players=len(players),
+            ranks=ranks,
+            order=order,
+        )
+        for slot in range(1, TEAMS + 1)
+        if slot != board.my_slot
+    }
+
+
+def opponent_selftest(players: list[Player]) -> list[str]:
+    """Opponent source order must diverge from and remain independent of my VOR board."""
+    fails: list[str] = []
+    board = fresh_board()
+    rep = seed_replacement(players)
+    vor = compute_vor(players, rep)
+    # Put the lowest-VOR player first on every external board. An opponent must take him;
+    # my optimizer must not, demonstrating that candidate generation is separated too.
+    external = sorted(players, key=lambda p: (vor[p.player_id], p.player_id))
+    opponents = synthetic_opponents(players, board, external)
+    draft = Draft(players, rep, vor, board, opponents=opponents)
+    opponent_take = draft.choose_opponent(0, 1)
+    my_take = draft.choose(1, board.my_slot)
+    if opponent_take != external[0]:
+        fails.append("opponent ignored the top player on its inferred source board")
+    if my_take == external[0]:
+        fails.append("my VOR optimizer followed the opponent source board")
+
+    for loss in (0.3, 1.5, 2.7):
+        power = rank_power(loss, len(players))
+        if abs(expected_log2_rank(power, len(players)) - loss) > 1e-6:
+            fails.append(f"source-adherence calibration missed mean log2 loss {loss}")
+
+    print(
+        "  opponent strategies: provider order diverges from my VOR order and fitted "
+        "rank noise reproduces observed adherence",
+        file=sys.stderr,
+    )
+    return fails
 
 
 def brute_force_surplus(
@@ -268,7 +329,7 @@ def board_selftest(players: list[Player]) -> list[str]:
     check(board.picks_left[0] == ROUNDS - 1, "an unrankable pick did not cost its team a pick")
     rep = seed_replacement(players)
     vor = compute_vor(players, rep)
-    draft = Draft(players, rep, vor, board)
+    draft = Draft(players, rep, vor, board, opponents=synthetic_opponents(players, board))
     owed = sum(DEDICATED_SLOTS.values()) - 1  # the QB is answered, six mandatory spots left
     with_qb = draft.candidates([], picks_left=owed, off=board.off_pool[0])
     without = draft.candidates([], picks_left=owed, off=[])
@@ -283,13 +344,14 @@ def board_selftest(players: list[Player]) -> list[str]:
 
     # Resuming: every made pick survives, every pending pick is played exactly once.
     board, _ = load_board(synthetic_draft(players, made=57), players, "synthetic")
-    partial = Draft(players, rep, compute_vor(players, rep), board)
+    opponents = synthetic_opponents(players, board)
+    partial = Draft(players, rep, compute_vor(players, rep), board, opponents=opponents)
     partial.run(stop_before=5)
     check(
         set(partial.pick_of.values()) == set(board.pick_nos[:5]),
         "a short redraw did not stop immediately before its requested pick index",
     )
-    draft = Draft(players, rep, compute_vor(players, rep), board)
+    draft = Draft(players, rep, compute_vor(players, rep), board, opponents=opponents)
     draft.run()
     check(
         len(draft.taken) == len(board.taken) + len(board.order),
@@ -349,7 +411,7 @@ def board_selftest(players: list[Player]) -> list[str]:
 
 def selftest(players: list[Player]) -> int:
     print("selftest:", file=sys.stderr)
-    fails = lineup_selftest(players) + board_selftest(players)
+    fails = lineup_selftest(players) + opponent_selftest(players) + board_selftest(players)
     for f in fails:
         print(f"  FAIL {f}", file=sys.stderr)
     verdict = f"{len(fails)} failure(s)" if fails else "all checks passed"

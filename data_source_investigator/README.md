@@ -25,6 +25,11 @@ The label is an inference, not proof: rankings are correlated, roster constructi
 personal preferences cause intentional deviations, and a current ranking snapshot may
 have changed since an earlier draft pick.
 
+The ranker consumes the closest source as each opponent's player order and
+`mean_log2_loss` as that manager's adherence estimate. It checks that the report's draft
+id and ranking-snapshot timestamp match its other inputs, so `refresh.py` always runs this
+investigation after fetching the draft and before simulating the remaining picks.
+
 `index.html` visualizes that report in two connected views: a league-wide team/source
 fit heatmap and a selected team's pick/source availability matrix. Selecting any matrix
 cell shows the provider's overall rank, the player's rank among those still available,

@@ -32,7 +32,7 @@ class Player:
     points_1yr: int
     provider_adp: float | None
     sleeper_id: str | None = None  # the only key draft.json shares with the pool
-    vor_index: int = 0  # rank in the pool by current perceived VOR, 0-based
+    availability_index: int = 0  # rank on the opponents' consensus board, 0-based
     # The two value horizons, precomputed because the lineup solver reads them millions
     # of times per run (value.HORIZONS; yr23 = points - points_1yr, never negative).
     points_yr1: float = field(init=False, default=0.0)

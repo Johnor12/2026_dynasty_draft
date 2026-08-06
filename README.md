@@ -23,15 +23,16 @@ styles the scripts document work unchanged.
 
 ## layout
 
-Two independent input pipelines publish the pool and live board. A third, optional
-investigation process consumes those artifacts alongside external ranking snapshots.
-Everything a process owns stays inside its folder; each publishes one file at the root.
+Two independent input pipelines publish the pool and live board. A third investigation
+process consumes those artifacts alongside external ranking snapshots and publishes the
+opponent strategies used by the ranker. Everything a process owns stays inside its folder;
+each publishes one file at the root.
 
 ```
 pool.json                    the draft pool — 350 players, 13 fields
 draft.json                   the live board — 290 picks, made and pending
 data_source_matches.json     closest ranking provider for each drafter, with evidence
-rank_vor.py                  pool.json + draft.json -> rankings.json (run separately)
+rank_vor.py                  pool + draft + opponent sources -> rankings.json
 refresh.py                   fetch, re-rank, and re-evaluate sources between picks
 index.html                   static dashboard for rankings.json (serve the repo root, no build)
 serve.py                     local server for both static dashboards on port 8123
@@ -39,6 +40,7 @@ ranker/                      the ranker's internals, one module per concern:
   league.py                  league constants, strategy knobs, draft order
   pool.py                    pool.json -> Player objects
   board.py                   draft.json -> the simulation's starting state
+  opponents.py               source matches + provider boards -> opponent strategies
   value.py                   roster valuation and replacement levels
   sim.py                     the draft simulation and the fixed point
   output.py                  rankings.json rows, payload, stderr reports
@@ -77,9 +79,9 @@ pipeline has no inputs on disk, caches nothing, and is re-run on demand during a
 draft. Sharing an orchestrator would mean either a pool rebuild that hits the live draft
 or a draft refresh that re-parses 8 MB of html, so they share no code and no working
 files — `draft_pipeline/` keeps its own small `paths.py` rather than importing one. They
-meet only at `sleeper_id`: the key `match_sleeper.py` writes into every pool player is
-the key every pick in `draft.json` carries. `rank_vor.py` is the one thing that reads both
-and is where that join is actually performed.
+meet at `sleeper_id`: the key `match_sleeper.py` writes into every pool player is the key
+every pick and normalized provider player carries. `rank_vor.py` joins the live board to
+the pool and the investigator's roster ids to draft slots.
 
 ## data-source investigator
 
@@ -94,10 +96,11 @@ The process snapshots FantasyCalc, KeepTradeCut, Dynasty Nerds, and FantasyPros,
 adds the DraftSharks superflex ADP already carried by `pool.json`. It measures a choice
 against only the provider-ranked players available when that pick was made. The published
 report retains every provider score and pick-level evidence; the inferred source is the
-closest supplied board, not proof that the drafter used it. Formats differ slightly and
-are recorded with each source. Paid or export-only boards can be added as canonical CSV
-files under `data_source_investigator/data/manual/`; see the process README for the CSV
-contract and the caveats around changing rankings during a live draft.
+closest supplied board, not proof that the drafter used it. The ranker uses that source as
+the manager's valuation order and `mean_log2_loss` as its adherence estimate. Formats
+differ slightly and are recorded with each source. Paid or export-only boards can be added
+as canonical CSV files under `data_source_investigator/data/manual/`; see the process
+README for the CSV contract and the caveats around changing rankings during a live draft.
 
 ## pool pipeline
 
@@ -106,7 +109,7 @@ uv run pool_pipeline/pipeline.py              # html -> projections.json -> pool
 uv run pool_pipeline/pipeline.py --report     # + every stage's validation summary on stderr
 uv run pool_pipeline/pipeline.py --only pool  # single stage
 uv run pool_pipeline/fetch_sleeper.py         # refresh the Sleeper dump (manual, ~14 MB)
-uv run rank_vor.py                            # pool.json + draft.json -> rankings.json
+uv run rank_vor.py                            # pool + draft + source artifacts -> rankings.json
 ```
 
 Three stages, ordered: `parse_projections.py` (html -> `projections.json`, the full
@@ -331,42 +334,61 @@ every pick owned).
 
 ## rankings from the live board
 
-`rank_vor.py` reads both files. `draft.json` is the simulation's **starting state**, not a
-filter applied afterwards: made picks sit on their teams' rosters, the pending picks are the
-only ones simulated, and they are played in the order that file gives — so a traded pick is
-exercised by the roster that acquired it. `rankings.json` then covers the **undrafted
-players only**, ranked over each other.
+`rank_vor.py` reads `pool.json`, `draft.json`, `data_source_matches.json`, and the
+normalized provider boards in `data_source_investigator/data/rankings.json`. `draft.json`
+is the simulation's **starting state**, not a filter applied afterwards: made picks sit on
+their teams' rosters, the pending picks are the only ones simulated, and they are played
+in the order that file gives — so a traded pick is exercised by the roster that acquired
+it. `rankings.json` then covers the **undrafted players only**, ranked over each other.
 
 ```
-uv run rank_vor.py                      # pool.json + draft.json -> rankings.json
+uv run rank_vor.py                      # all four inputs -> rankings.json
 uv run rank_vor.py --report             # + the board it started from, per team
-uv run rank_vor.py --no-draft           # ignore draft.json: rank the whole pool
-uv run rank_vor.py --draft other.json   # a different board
-uv run rank_vor.py --selftest           # lineup solver + board loader, offline
+uv run rank_vor.py --no-draft           # empty board; draft.json still maps opponents
+uv run rank_vor.py --draft other.json   # requires source matches for that draft id
+uv run rank_vor.py --selftest           # solver + opponent separation + board loader
 ```
 
 During a draft the three live steps are always run together: `refresh.py` runs
-`fetch_draft.py`, then `rank_vor.py`, then reapplies the investigator's existing source
-rankings to the new board with `investigate.py`, stopping on the first failure. It does
-not fetch or rebuild provider rankings. Each step runs through `uv run` from the repo
-root, so its own default paths apply.
+`fetch_draft.py`, reapplies the investigator's existing source rankings to the new board,
+then runs `rank_vor.py`, stopping on the first failure. That order matters because the
+ranker consumes the refreshed source associations. It does not fetch or rebuild provider
+rankings. Each step runs through `uv run` from the repo root, so its own default paths
+apply.
 
 ```
 uv run refresh.py                       # draft.json, rankings.json, source matches
 uv run refresh.py --report              # + every step's validation summary on stderr
 ```
 
+My slot alone uses the projection-based VOR and roster optimizer. Each opponent instead
+orders players by the provider board most associated with its completed picks. It never
+uses projected points, replacement levels, my team-value function, or VOR. The
+investigator's `mean_log2_loss` calibrates how tightly its Monte Carlo picks follow that
+source; `--noise 1` uses the fitted adherence and `--noise 0` forces strict provider
+order. Players missing from a provider's board are appended in DraftSharks ADP order so
+the 290-pick simulation always has a complete external board without falling back to VOR.
+
 The ranker's next-pick-option, Monte Carlo, rollout and candidate-survival stages fan out
 over a process pool (stdlib `multiprocessing`), so wall time scales with cores. The option
-stage forces each candidate at my first pending pick, redraws only the intervening
-opponents, and measures the best marginal player actually left at my following turn; the
-bulk draft policy retains its faster global-rank approximation. Runtime changes with the
-remaining board, available cores, and the number of candidates at my next pick.
+stage forces each candidate at my first pending pick, redraws the intervening opponents
+with their slot-specific source strategies, and measures the best marginal player actually
+left at my following turn; the bulk draft policy retains a faster consensus of those nine
+source boards for later-pick survival approximations. Runtime changes with the remaining
+board, available cores, and the number of candidates at my next pick.
 Candidate-survival redraws stop as soon as their candidate leaves the board, since later
 picks cannot change any of that redraw's availability observations. To trade fidelity for
 speed between picks, the levers are `--sims`
 (which also sizes the option and candidate-survival redraws) and `ROLLOUT_SIMS`/`SIMS` in
 `ranker/league.py`.
+
+Every ranking row carries `opponent_consensus_rank` and `opponent_rank_delta`. The
+consensus averages the nine complete source orders, counting a source once per manager
+associated with it; the delta is `opponent_consensus_rank - vor_rank`, so positive means
+my VOR process values the player earlier than the modeled field. The payload's
+`opponent_model.divergence` reports the number of distinct inferred sources plus mean and
+maximum absolute deltas. Those deltas identify disagreement; the Monte Carlo availability
+and next-pick rollout determine whether it can actually be exploited.
 
 The pool pipeline is not a step: it is offline and rebuilt a handful of times all
 offseason, and this runs every few minutes during a draft.
@@ -375,7 +397,9 @@ offseason, and this runs every few minutes during a draft.
 at the table: comparison tables for my next three picks, my projected final team, best
 available, then the other nine projected teams. Player comparisons show the raw Year 1
 projection, the Years 2–3 annual pace, their difference as the implied trend, and the
-model's roster-aware scores. The first pick's next-option values come from its short
+model's roster-aware scores. Recommendation cards and best available also show the modeled
+field rank delta, with positive values marking players VOR ranks earlier. The first pick's
+next-option values come from its short
 branch-specific redraws and it also surfaces the candidate-specific
 `p_available_if_i_pass` redraws and full-draft rollout; best available uses the broader
 Kaplan–Meier availability estimate and deliberately omits the redundant deterministic

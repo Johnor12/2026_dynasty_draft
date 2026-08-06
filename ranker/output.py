@@ -32,6 +32,7 @@ from .league import (
     pick_label,
     picks_for_slot,
 )
+from .opponents import OpponentStrategy
 from .pool import Player
 from .sim import Draft
 from .value import (
@@ -64,36 +65,33 @@ def build_rankings(
     Drafted players are dropped rather than flagged — they cannot be picked, and leaving
     them in would put a name at rank 1 that is not available. Their points still shape the
     replacement levels every row is measured against, which happens in `converge`. All
-    three rank columns are renumbered over what is emitted, so they read as positions on
-    the remaining board rather than as gapped survivors of the preseason one.
+    rank columns are renumbered over what is emitted, so they read as positions on the
+    remaining board rather than as gapped survivors of the preseason one.
 
     Two simulations are reported per player, and they answer different questions:
       * `sim_pick` is from the single deterministic draft, no noise.
       * `sim_adp` / `p_drafted` / `p_available_at_my_picks` come from the noisy redraws
-        (Gumbel noise on the other teams' scores) and measure the other nine teams'
-        demand only. My own simulated picks are this policy's behaviour, not market
+        (adherence-calibrated draws over their provider ranks) and measure the other nine
+        teams' demand only. My own simulated picks are this policy's behaviour, not market
         pressure — counting them as takes reported the model's own favourite stashes as
         scarce — but a redraw where I took him early also observes no opponent demand
         afterwards, so availability is a Kaplan-Meier estimate: an opponent take is the
         event, my own take censors the redraw. Under deterministic play availability is
         0 or 1, which tells you nothing about risk, so the noise band is what makes the
-        columns usable at the table. It is also where the uncertainty in the ADP signal
-        belongs.
+        columns usable at the table. It is also where uncertainty in the inferred source
+        policies belongs.
     """
     my_picks = board.my_picks
     vor = compute_vor(players, rep)
     rep_sum, wire_sum = _sum_levels(rep), _sum_levels(wire)
     available = board.available(players)
     ranked = sorted(available, key=lambda p: (-vor[p.player_id], p.player_id))
-    market_rank = {
+    opponent_rank = {
         p.player_id: i
         for i, p in enumerate(
             sorted(
                 available,
-                key=lambda p: (
-                    p.provider_adp if p.provider_adp is not None else math.inf,
-                    p.player_id,
-                ),
+                key=lambda p: (draft.opponent_consensus_rank[p.player_id], p.player_id),
             ),
             start=1,
         )
@@ -169,11 +167,10 @@ def build_rankings(
                 "latest_my_pick_likely_available": latest,
                 "p_available_at_my_picks": avail,
                 "provider_adp": p.provider_adp,
-                "market_rank": market_rank[p.player_id],
-                # Divergence from a fuzzy proxy, not a measured mispricing. The source ADP
-                # is a 12-team no-TE-premium board, so a large delta at TE mostly reflects
-                # what the signal cannot see rather than what opponents will do.
-                "adp_rank_delta": market_rank[p.player_id] - i,
+                "opponent_consensus_rank": opponent_rank[p.player_id],
+                # Positive means my VOR board values him earlier than the average of the
+                # nine slot-specific provider boards actually used in the simulations.
+                "opponent_rank_delta": opponent_rank[p.player_id] - i,
             }
         )
     return rows
@@ -387,7 +384,7 @@ def build_payload(
     sims: int,
     noise: float,
     seed: int,
-    market_weight: float,
+    opponents: dict[int, OpponentStrategy],
     option_redraw: dict | None = None,
     rollout: dict | None = None,
     survival: dict[int, dict[int, float]] | None = None,
@@ -465,44 +462,44 @@ def build_payload(
             if board.live
             else "The whole pool, from an empty board: no live draft was read."
         ),
-        "market_model": {
-            "market_weight": market_weight,
-            "who": "the other nine teams; my slot always drafts on this board",
+        "opponent_model": {
+            "who": "the other nine teams; my slot alone uses VOR and roster value",
             "how": (
-                "Each opposing pick scores candidates as (1 - w) * its own optimal value "
-                "+ w * the market's implied value, where the market's implied value comes "
-                "from pouring the ADP *ordering* into the shape of the VOR distribution "
-                "(rank-based, so the 12-team pick numbering cancels). Blended at the "
-                "decision rather than inside the valuation, so opponents still fill "
-                "roster needs — they just rank players closer to consensus."
+                "Each opponent orders legal available players by the provider board most "
+                "associated with its completed picks in data_source_matches.json. Opponent "
+                "valuation never reads projections, replacement levels, team value, or VOR. "
+                "The deterministic draft takes the source's top legal player; Monte Carlo "
+                "draws around that order using the manager's observed source adherence."
             ),
-            "why": (
-                "ADP never touches VOR, and it is not treated as the right answer. It is "
-                "the best available *estimate of how this draft will actually behave*, "
-                "which is what decides who is still on the board at my pick. It is a "
-                "fuzzy estimate, not a biased one: a true 10-team TE-premium superflex ADP "
-                "does not exist, so the closest thing on hand is a 12-team ADP with no TE "
-                "premium. Set --market-weight 0 to recover the all-drafters-optimal "
-                "assumption."
+            "adherence": (
+                "The investigator's mean_log2_loss is converted to a power distribution "
+                "over source rank among legal available players. At --noise 1, its expected "
+                "log2 choice rank matches that manager's observed loss; 0 forces strict "
+                "source order. fit_score and confidence identify association strength, "
+                "while mean_log2_loss determines adherence."
             ),
-            "what_this_is_not": (
-                "This is NOT an assumption that the other nine managers will misprice "
-                "tight ends. They know their own scoring settings and will price the "
-                "premium themselves; we simply cannot observe how. So the TE gap between "
-                "this board and `market_rank` is measurement error in our signal, not a "
-                "detected edge, and it should not be read as 'elite TEs will fall to me'. "
-                "Where the signal is weakest is where --noise, not confidence, belongs."
+            "coverage": (
+                "A provider's normalized players come first. Any pool player it does not "
+                "rank is appended in DraftSharks ADP order so all 290 picks remain possible; "
+                "the fallback is still an external opponent board, never VOR."
             ),
-            "adp_note": (
-                "`provider_adp` is passthrough reference only — an overall pick number "
-                "in the source's 12-team draft. Its values run continuously into the "
-                "thousands rather than stopping at a clean unranked sentinel, which is "
-                "why only its rank is ever used. "
-                "`market_rank` is that rank; `adp_rank_delta` is market_rank - vor_rank, "
-                "a divergence between this board and a fuzzy proxy — positive means the "
-                "proxy ranks him later than this board does, which is a prompt to check "
-                "why, not a free win."
+            "delta": (
+                "opponent_consensus_rank averages the nine managers' complete source "
+                "orders, counting a source once per associated manager, then re-ranks the "
+                "available pool. opponent_rank_delta is opponent_consensus_rank - vor_rank; "
+                "positive identifies players my VOR process values earlier than the modeled "
+                "field. Monte Carlo availability determines whether that gap is exploitable."
             ),
+            "divergence": {
+                "distinct_sources": len({s.source_id for s in opponents.values()}),
+                "mean_absolute_rank_delta": round(
+                    sum(abs(row["opponent_rank_delta"]) for row in rows) / len(rows), 1
+                ),
+                "max_absolute_rank_delta": max(
+                    abs(row["opponent_rank_delta"]) for row in rows
+                ),
+            },
+            "strategies": [opponents[slot].public() for slot in sorted(opponents)],
         },
         "replacement": {
             "definition": (
@@ -589,11 +586,13 @@ def build_payload(
             "noise": noise,
             "seed": seed,
             "note": (
-                "Gumbel noise on the other 9 teams only, to turn 0/1 availability under "
-                "deterministic play into a usable probability band. sim_pick is from the "
+                "Source-adherence Gumbel draws on the other 9 teams only, to turn 0/1 "
+                "availability under deterministic source order into a usable probability "
+                "band. At noise=1 each manager's distribution is calibrated to its observed "
+                "mean log-rank loss; noise=0 is strict source order. sim_pick is from the "
                 "noiseless draft; sim_adp, p_drafted and p_available_at_my_picks are from "
                 "these redraws and measure the other nine teams' demand only — my own "
-                "simulated picks are the policy under evaluation, not market pressure. "
+                "simulated picks are the VOR policy under evaluation, not opponent demand. "
                 "p_available_at_my_picks is a Kaplan-Meier estimate (an opponent take is "
                 "the event, my own take censors the redraw); "
                 "my_next_picks.p_available_if_i_pass is the assumption-free counterfactual "

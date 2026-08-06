@@ -26,10 +26,11 @@ turn by forcing each candidate and simulating only the intervening opponents, th
 `rollout` re-scores those candidates over the whole remaining draft with this greedy as
 the base policy.
 
-The other nine teams are pulled toward the source ADP (`market_weight`; 0 recovers
-all-drafters-fully-optimal). ADP never enters VOR. It is used only as the best available
-*estimate of how this draft will actually run*, since that is what decides who is on the
-board at my pick — see `market_value` for why it is rank-mapped and what it is not.
+My slot is the only VOR optimizer. Each of the other nine teams evaluates players from
+the provider board that best matches its completed picks, as inferred by the data-source
+investigator. Its observed source adherence controls pick noise. Opponent choices never
+use projections, replacement levels, roster value, or VOR; Monte Carlo simulations use
+those distinct source policies to estimate who reaches my picks.
 """
 
 from __future__ import annotations
@@ -55,6 +56,7 @@ from .league import (
     SURVIVAL_SIGMA,
     TEAMS,
 )
+from .opponents import OpponentStrategy
 from .pool import Player, by_position
 from .value import (
     HORIZONS,
@@ -130,8 +132,7 @@ class Draft:
         wire: dict[str, dict[str, float]] | None = None,
         noise: float = 0.0,
         rng: random.Random | None = None,
-        market_vor: dict[int, float] | None = None,
-        market_weight: float = 0.0,
+        opponents: dict[int, OpponentStrategy] | None = None,
         forced: dict[int, Player] | None = None,
         noise_from: int = 0,
         my_ban: int | None = None,
@@ -165,32 +166,33 @@ class Draft:
         self.my_slot = board.my_slot
         self.noise = noise
         self.rng = rng
-        self.market_vor = market_vor or {}
-        self.market_weight = market_weight if market_vor else 0.0
-        # The nine other teams are market-influenced, so the order players actually come
-        # off the board is the blended one — and that is what the survival model has to
-        # follow, for me as much as for them. Predicting opponents correctly is the whole
-        # point: it is what lets my picks exploit a TE the market is sleeping on.
-        w = self.market_weight
-        # The market mapping is built over the players still available, so an already
-        # drafted player has no entry and falls back to his own VOR. He is off the board
-        # and can never be a candidate; he only needs a place in the sort below.
-        perceived = {
-            p.player_id: (1 - w) * vor[p.player_id]
-            + w * self.market_vor.get(p.player_id, vor[p.player_id])
-            if w
-            else vor[p.player_id]
+        self.opponents = opponents or {}
+        missing = set(self.order) - {self.my_slot} - set(self.opponents)
+        if missing:
+            raise ValueError(f"no source strategy for opponent slot(s) {sorted(missing)}")
+        self.by_id = {p.player_id: p for p in players}
+        # The fast survival approximation for my later picks needs one league-wide order.
+        # Average the nine source ranks, counting repeated sources once per manager. This
+        # is only an approximation of the slot-specific policies; the decision in front
+        # of me is priced by branch-specific Monte Carlo redraws instead.
+        consensus_score = {
+            p.player_id: sum(s.ranks[p.player_id] for s in self.opponents.values())
+            / len(self.opponents)
             for p in players
         }
-        self.perceived = perceived
-        # pool sorted by perceived value desc drives the survival model; per-position,
+        # pool sorted by opponent consensus drives the survival model; per-position,
         # per-horizon lists sorted by that horizon's points drive candidate generation
         # (team value is monotone in each horizon component, so within a position only a
         # player on the yr1/yr23 Pareto frontier can be the best pick — the heads of the
         # two orderings are its extremes; interior frontier players are approximated away).
-        self.vor_sorted = sorted(players, key=lambda p: (-perceived[p.player_id], p.player_id))
-        for i, p in enumerate(self.vor_sorted):
-            p.vor_index = i
+        self.opponent_sorted = sorted(
+            players, key=lambda p: (consensus_score[p.player_id], p.player_id)
+        )
+        self.opponent_consensus_rank = {
+            p.player_id: i for i, p in enumerate(self.opponent_sorted, start=1)
+        }
+        for i, p in enumerate(self.opponent_sorted):
+            p.availability_index = i
         # Already-drafted players stay in the sorted structures (their rank is still a fact
         # about the pool) but carry no availability bit, so `better_available` counts only
         # players who can actually be taken ahead of a candidate.
@@ -198,7 +200,7 @@ class Draft:
         self.avail_bits = Fenwick(len(players))
         for p in players:
             if p.player_id not in self.taken:
-                self.avail_bits.add(p.vor_index, 1)
+                self.avail_bits.add(p.availability_index, 1)
         self.pos_lists = pos_by_horizon(players)
         self.heads = {h: {pos: 0 for pos in POSITIONS} for h in HORIZONS}
         self.rosters: list[list[Player]] = [list(r) for r in board.rosters]
@@ -273,25 +275,8 @@ class Draft:
         draft.json does not say whether such a player is a rookie, so they count as
         veterans — conservative, it can only force a rookie one pick early.
         """
-        eligible = POSITIONS
-        if picks_left is not None:
-            have = {pos: 0 for pos in POSITIONS}
-            for p in roster:
-                have[p.position] += 1
-            for o in off:
-                if o.get("position") in have:
-                    have[o["position"]] += 1
-            owed = {pos: max(0, DEDICATED_SLOTS[pos] - have[pos]) for pos in POSITIONS}
-            if picks_left <= sum(owed.values()):
-                eligible = tuple(pos for pos in POSITIONS if owed[pos]) or POSITIONS
-        vets_capped = sum(1 for p in roster if not p.is_rookie) + len(off) >= NON_TAXI_SLOTS
-
-        # Both restrictions can be simultaneously unsatisfiable — a team at the veteran cap
-        # still owed a QB when no rookie QB is left, which used to assert out as "pool
-        # exhausted". Every one of the 29 picks is mandatory, so relax in order of what a
-        # manager would actually give up: the taxi plan first (they can carry the veteran
-        # on the bench and cut elsewhere), then the positional requirement.
-        for positions, rookies_only in ((eligible, vets_capped), (eligible, False), (POSITIONS, False)):
+        scenarios = self._eligibility_scenarios(roster, picks_left, off)
+        for positions, rookies_only in scenarios:
             out: list[Player] = []
             seen_ids: set[int] = set()
             for pos in positions:
@@ -313,8 +298,51 @@ class Draft:
                 return out
         return []
 
+    def _eligibility_scenarios(
+        self,
+        roster: list[Player],
+        picks_left: int | None,
+        off: Sequence[dict],
+    ) -> tuple[tuple[tuple[str, ...], bool], ...]:
+        """Roster-legality filters shared by my board and the opponent boards."""
+        eligible = POSITIONS
+        if picks_left is not None:
+            have = {pos: 0 for pos in POSITIONS}
+            for p in roster:
+                have[p.position] += 1
+            for o in off:
+                if o.get("position") in have:
+                    have[o["position"]] += 1
+            owed = {pos: max(0, DEDICATED_SLOTS[pos] - have[pos]) for pos in POSITIONS}
+            if picks_left <= sum(owed.values()):
+                eligible = tuple(pos for pos in POSITIONS if owed[pos]) or POSITIONS
+        vets_capped = sum(1 for p in roster if not p.is_rookie) + len(off) >= NON_TAXI_SLOTS
+
+        # Every pick is mandatory, so relax an impossible taxi plan before an impossible
+        # dedicated-position plan.
+        return ((eligible, vets_capped), (eligible, False), (POSITIONS, False))
+
+    def opponent_candidates(self, slot: int) -> list[Player]:
+        """All legal players, ordered only by this opponent's inferred source board."""
+        strategy = self.opponents[slot]
+        roster = self.rosters[slot - 1]
+        off = self.off_pool[slot - 1]
+        for positions, rookies_only in self._eligibility_scenarios(
+            roster, self.picks_left[slot - 1], off
+        ):
+            candidates = [
+                self.by_id[player_id]
+                for player_id in strategy.order
+                if player_id not in self.taken
+                and self.by_id[player_id].position in positions
+                and (not rookies_only or self.by_id[player_id].is_rookie)
+            ]
+            if candidates:
+                return candidates
+        return []
+
     def better_available(self, p: Player) -> int:
-        return self.avail_bits.prefix(p.vor_index)
+        return self.avail_bits.prefix(p.availability_index)
 
     # -- valuation
 
@@ -438,6 +466,9 @@ class Draft:
         return expected
 
     def choose(self, pick_index: int, slot: int) -> Player:
+        if slot != self.my_slot:
+            return self.choose_opponent(pick_index, slot)
+
         roster = self.rosters[slot - 1]
         off = self.off_pool[slot - 1]
         # Availability moved since the last pick, so the price of an unfilled slot did too.
@@ -449,11 +480,6 @@ class Draft:
         streams_next = None if gap is None else self.expected_streams(gap)
         # Taking A then B values the same roster as B then A.
         lookahead_values: dict[tuple[int, ...], float] = {}
-        # I draft on my own board; the other nine are pulled toward the market's ordering.
-        # Blended at the decision, not inside the valuation, so their roster logic stays
-        # intact — they still fill needs, they just rank players closer to consensus. At
-        # market_weight 1.0 they are pure best-available-by-ADP drafters.
-        w = self.market_weight if slot != self.my_slot else 0.0
         left = self.picks_left[slot - 1]
         cands = self.candidates(roster, per_pos=1, picks_left=left, off=off)
         if self.my_ban is not None and slot == self.my_slot:
@@ -475,8 +501,6 @@ class Draft:
                 )
             )
             score = now + later
-            if w:
-                score = (1 - w) * score + w * self.market_vor[cand.player_id]
             scored.append((score, cand))
             detail.append((now, later, cand))
         assert scored, "pool exhausted"
@@ -486,20 +510,29 @@ class Draft:
                 detail, key=lambda t: (-(t[0] + t[1]), t[2].player_id)
             )
 
-        if self.noise and self.rng is not None and slot != self.my_slot and pick_index >= self.noise_from:
-            # Gumbel noise -> the other nine teams follow a softmax over their own scores
-            # instead of a strict argmax, which is what turns 0/1 availability under
-            # deterministic play into a usable probability band. Scaled to the spread
-            # between this pick's candidates, so it expresses "the ordering among
-            # near-equals is uncertain" rather than a fixed number of points; a pick with
-            # one clear best option stays nearly deterministic.
-            spread = max(s for s, _ in scored) - min(s for s, _ in scored)
-            scale = self.noise * max(spread, 1.0)
-            scored = [
-                (s - scale * math.log(-math.log(self.rng.random())), c) for s, c in scored
-            ]
-
         return max(scored, key=lambda t: (t[0], -t[1].player_id))[1]
+
+    def choose_opponent(self, pick_index: int, slot: int) -> Player:
+        """Choose from a manager's source board, without consulting my valuation."""
+        candidates = self.opponent_candidates(slot)
+        assert candidates, "pool exhausted"
+        if not self.noise or self.rng is None or pick_index < self.noise_from:
+            return candidates[0]
+
+        # The investigator measures log2(rank among available) for each real pick.
+        # rank_power makes a Gumbel-max draw over local source ranks reproduce that
+        # manager's mean loss when noise=1. `--noise` is a multiplier around the observed
+        # adherence: 0 is strict source order, 1 is the fitted behavior.
+        power = self.opponents[slot].rank_power
+        return max(
+            (
+                -power * math.log(rank)
+                - self.noise * math.log(-math.log(self.rng.random())),
+                -player.player_id,
+                player,
+            )
+            for rank, player in enumerate(candidates, start=1)
+        )[2]
 
     def run(
         self,
@@ -516,7 +549,7 @@ class Draft:
             else:
                 assert pick.player_id not in self.taken, f"forced pick {pick.name} already taken"
             self.taken.add(pick.player_id)
-            self.avail_bits.add(pick.vor_index, -1)
+            self.avail_bits.add(pick.availability_index, -1)
             self.rosters[slot - 1].append(pick)
             self.picks_left[slot - 1] -= 1
             self.pick_of[pick.player_id] = self.pick_nos[i]
@@ -525,42 +558,11 @@ class Draft:
         return None
 
 
-def market_value(players: list[Player], vor: dict[int, float]) -> dict[int, float]:
-    """Quantile-map the market's ADP ordering onto the VOR scale, over what is available.
-
-    Called with the undrafted players only, so both the ordering and the scale it is poured
-    into describe the board the opposing teams are actually looking at. On an untouched
-    board that is the whole pool.
-
-    The source ADP cannot be used as a value directly — it is a pick number, and per README
-    it is a *12-team, no-TE-premium* superflex ADP, so neither its scale nor its scoring
-    matches this league. What it does carry is a credible *ordering* of how the field ranks
-    players. So take that ordering and pour it into the shape of the VOR distribution: the
-    player the market likes best is assigned the top VOR value, the second-best the second,
-    and so on. Rank-based, so the 12-team pick numbering cancels out and the raw ADP values
-    (which run continuously into the thousands rather than stopping at a clean unranked
-    sentinel) never need interpreting as real picks.
-
-    This is the best available estimate of how the draft will actually run, not a claim that
-    the field is wrong. The other managers know their own scoring; a true 10-team TE-premium
-    superflex ADP simply does not exist to be had. So where this ordering diverges from the
-    board — TEs above all — treat it as a gap in the signal rather than an opponent error,
-    and let --noise carry that uncertainty. What it must never do is feed back into VOR
-    itself; it only shapes how the opponents behave.
-    """
-    by_adp = sorted(
-        players,
-        key=lambda p: (p.provider_adp if p.provider_adp is not None else math.inf, p.player_id),
-    )
-    scale = sorted((vor[p.player_id] for p in players), reverse=True)
-    return {p.player_id: scale[i] for i, p in enumerate(by_adp)}
-
-
 def converge(
     players: list[Player],
     board: Board,
     report: bool,
-    market_weight: float = 0.0,
+    opponents: dict[int, OpponentStrategy],
 ) -> tuple[
     dict[str, dict[str, float]],
     dict[str, dict[str, float]],
@@ -598,7 +600,6 @@ def converge(
     """
     pos = by_position(players)
     pos_h = pos_by_horizon(players)
-    available = board.available(players)
     rep = seed_replacement(players)
     stream = {h: dict(rep[h]) for h in HORIZONS}  # no draft to read a wire off yet
     trace = [
@@ -616,10 +617,9 @@ def converge(
 
     for it in range(1, MAX_ITERS + 1):
         vor = compute_vor(players, rep)
-        mkt = market_value(available, vor) if market_weight else None
         draft = Draft(
             players, rep, vor, board, wire=stream,
-            market_vor=mkt, market_weight=market_weight,
+            opponents=opponents,
         )
         draft.run()
         starter_rep, counts = replacement_from_draft(draft.rosters, pos_h)
@@ -682,15 +682,13 @@ def converge(
     # Final deterministic draft at the settled levels, so sim_pick, my_decisions and the
     # reported replacement levels describe one and the same draft.
     vor = compute_vor(players, rep)
-    mkt = market_value(available, vor) if market_weight else None
     draft = Draft(
         players, rep, vor, board, wire=stream,
-        market_vor=mkt, market_weight=market_weight,
+        opponents=opponents,
     )
     draft.run()
     _, final_counts = replacement_from_draft(draft.rosters, pos_h)
     history = {
-        "market_weight": market_weight,
         "method": "undamped iteration to a limit cycle, averaged over the cycle",
         "cycle_length": len(cycle),
         "cycle_first_seen_at_iteration": cycle_start,
@@ -717,15 +715,15 @@ def converge(
 # simulations, so they fan out over a process pool (stdlib multiprocessing). Workers get
 # the shared inputs once via the initializer; each task is identified by its seed index,
 # so results are deterministic regardless of scheduling. The playout worker looks its
-# forced candidate up by id in its *own* copy of the pool — Draft stamps `vor_index`
+# forced candidate up by id in its *own* copy of the pool — Draft stamps `availability_index`
 # onto the pool's Player objects, so a separately-pickled Player would carry a stale one.
 _WORKER: dict = {}
 
 
-def _init_worker(players, rep, board, stream, noise, seed, mkt, market_weight, vor, i_my) -> None:
+def _init_worker(players, rep, board, stream, noise, seed, opponents, vor, i_my) -> None:
     _WORKER.update(
         players=players, rep=rep, board=board, stream=stream, noise=noise, seed=seed,
-        mkt=mkt, market_weight=market_weight, vor=vor, i_my=i_my,
+        opponents=opponents, vor=vor, i_my=i_my,
         by_id={p.player_id: p for p in players},
     )
 
@@ -748,7 +746,7 @@ def _mc_draft(s: int) -> dict[int, tuple[int, bool]]:
     d = Draft(
         w["players"], w["rep"], w["vor"], w["board"], wire=w["stream"], noise=w["noise"],
         rng=random.Random(w["seed"] + s),
-        market_vor=w["mkt"], market_weight=w["market_weight"],
+        opponents=w["opponents"],
     )
     d.run()
     slot_of = dict(zip(d.pick_nos, d.order))
@@ -761,7 +759,7 @@ def _rollout_playout(task: tuple[int, int]) -> float:
     d = Draft(
         w["players"], w["rep"], w["vor"], w["board"], wire=w["stream"], noise=w["noise"],
         rng=random.Random(f"rollout-{w['seed']}-{s}"),
-        market_vor=w["mkt"], market_weight=w["market_weight"],
+        opponents=w["opponents"],
         forced={w["i_my"]: w["by_id"][cand_id]}, noise_from=w["i_my"] + 1,
     )
     d.run()
@@ -805,7 +803,7 @@ def _option_playout(task: tuple[int, int]) -> float:
     d = Draft(
         w["players"], w["rep"], w["vor"], w["board"], wire=w["stream"], noise=w["noise"],
         rng=random.Random(f"option-{w['seed']}-{s}"),
-        market_vor=w["mkt"], market_weight=w["market_weight"],
+        opponents=w["opponents"],
         forced={i_my: w["by_id"][cand_id]}, noise_from=i_my + 1,
     )
     i_next = d.next_pick[i_my]
@@ -822,7 +820,7 @@ def monte_carlo(
     sims: int,
     noise: float,
     seed: int,
-    market_weight: float = 0.0,
+    opponents: dict[int, OpponentStrategy],
 ) -> tuple[dict[int, list[tuple[int, bool]]], dict[int, int]]:
     """Noisy redraws -> per-player (pick, taken-by-me) observations (see `_mc_draft`).
 
@@ -832,13 +830,12 @@ def monte_carlo(
     players where the decision actually needs it.
     """
     vor = compute_vor(players, rep)
-    mkt = market_value(board.available(players), vor) if market_weight else None
     picks: dict[int, list[tuple[int, bool]]] = {p.player_id: [] for p in players}
     drafted: dict[int, int] = {p.player_id: 0 for p in players}
     with multiprocessing.Pool(
         _worker_pool_size(),
         initializer=_init_worker,
-        initargs=(players, rep, board, stream, noise, seed, mkt, market_weight, vor, None),
+        initargs=(players, rep, board, stream, noise, seed, opponents, vor, None),
     ) as pool:
         for pick_of in pool.map(_mc_draft, range(sims)):
             for pid, (pick, mine) in pick_of.items():
@@ -854,7 +851,7 @@ def _survival_draft(task: tuple[int, int]) -> int | None:
     d = Draft(
         w["players"], w["rep"], w["vor"], w["board"], wire=w["stream"], noise=w["noise"],
         rng=random.Random(w["seed"] + s),
-        market_vor=w["mkt"], market_weight=w["market_weight"], my_ban=cand_id,
+        opponents=w["opponents"], my_ban=cand_id,
     )
     return d.run(until_taken=cand_id)
 
@@ -868,7 +865,7 @@ def candidate_survival(
     sims: int,
     noise: float,
     seed: int,
-    market_weight: float,
+    opponents: dict[int, OpponentStrategy],
 ) -> dict[int, dict[int, float]]:
     """P(a next-pick candidate is still there at each of my picks) if I keep passing on him.
 
@@ -883,12 +880,11 @@ def candidate_survival(
     if not board.my_picks or not candidates:
         return {}
     vor = compute_vor(players, rep)
-    mkt = market_value(board.available(players), vor) if market_weight else None
     tasks = [(cand.player_id, s) for cand in candidates for s in range(sims)]
     with multiprocessing.Pool(
         _worker_pool_size(),
         initializer=_init_worker,
-        initargs=(players, rep, board, stream, noise, seed, mkt, market_weight, vor, None),
+        initargs=(players, rep, board, stream, noise, seed, opponents, vor, None),
     ) as pool:
         flat = pool.map(_survival_draft, tasks)
     out: dict[int, dict[int, float]] = {}
@@ -910,7 +906,7 @@ def option_redraw(
     sims: int,
     noise: float,
     seed: int,
-    market_weight: float,
+    opponents: dict[int, OpponentStrategy],
 ) -> dict | None:
     """Empirical next-pick option value for each candidate at my first pending pick.
 
@@ -936,12 +932,11 @@ def option_redraw(
         }
 
     vor = compute_vor(players, rep)
-    mkt = market_value(board.available(players), vor) if market_weight else None
     tasks = [(cand.player_id, s) for cand in candidates for s in range(sims)]
     with multiprocessing.Pool(
         _worker_pool_size(),
         initializer=_init_worker,
-        initargs=(players, rep, board, stream, noise, seed, mkt, market_weight, vor, i_my),
+        initargs=(players, rep, board, stream, noise, seed, opponents, vor, i_my),
     ) as pool:
         flat = pool.map(_option_playout, tasks)
     return {
@@ -965,7 +960,7 @@ def _replay_pick(
     rep: dict[str, dict[str, float]],
     board: Board,
     stream: dict[str, dict[str, float]],
-    market_weight: float,
+    opponents: dict[int, OpponentStrategy],
 ) -> Draft:
     """Re-play the deterministic draft when a re-scored recommendation changes."""
     actual_id = next((pid for pid, pk in draft.pick_of.items() if pk == pick_no), None)
@@ -973,10 +968,9 @@ def _replay_pick(
         draft.my_decisions[pick_no] = detail
         return draft
     vor = compute_vor(players, rep)
-    mkt = market_value(board.available(players), vor) if market_weight else None
     forced = Draft(
         players, rep, vor, board, wire=stream,
-        market_vor=mkt, market_weight=market_weight,
+        opponents=opponents,
         forced={board.pick_nos.index(pick_no): take},
     )
     forced.run()
@@ -991,7 +985,7 @@ def apply_option_redraw(
     rep: dict[str, dict[str, float]],
     board: Board,
     stream: dict[str, dict[str, float]],
-    market_weight: float,
+    opponents: dict[int, OpponentStrategy],
 ) -> Draft:
     """Replace the first pick's sigmoid lookahead with its branch-redraw estimates."""
     if redrawn is None:
@@ -1008,7 +1002,7 @@ def apply_option_redraw(
     detail.sort(key=lambda t: (-(t[0] + t[1]), t[2].player_id))
     return _replay_pick(
         draft, pick_no, detail[0][2], detail,
-        players, rep, board, stream, market_weight,
+        players, rep, board, stream, opponents,
     )
 
 
@@ -1021,7 +1015,7 @@ def rollout(
     sims: int,
     noise: float,
     seed: int,
-    market_weight: float,
+    opponents: dict[int, OpponentStrategy],
 ) -> dict | None:
     """Full-horizon EV for each candidate at my next pick, by playing the draft out.
 
@@ -1047,12 +1041,11 @@ def rollout(
     pick_no = board.my_picks[0]
     i_my = board.pick_nos.index(pick_no)
     vor = compute_vor(players, rep)
-    mkt = market_value(board.available(players), vor) if market_weight else None
     tasks = [(cand.player_id, s) for cand in candidates for s in range(sims)]
     with multiprocessing.Pool(
         _worker_pool_size(),
         initializer=_init_worker,
-        initargs=(players, rep, board, stream, noise, seed, mkt, market_weight, vor, i_my),
+        initargs=(players, rep, board, stream, noise, seed, opponents, vor, i_my),
     ) as pool:
         flat = pool.map(_rollout_playout, tasks)
     values = {
@@ -1085,7 +1078,7 @@ def apply_rollout(
     rep: dict[str, dict[str, float]],
     board: Board,
     stream: dict[str, dict[str, float]],
-    market_weight: float,
+    opponents: dict[int, OpponentStrategy],
 ) -> Draft:
     """Re-play the deterministic draft with the rollout's pick forced, when it overrules.
 
@@ -1103,5 +1096,5 @@ def apply_rollout(
     take = next(c for _, _, c in detail if c.player_id == rolled["take_id"])
     return _replay_pick(
         draft, pick_no, take, detail,
-        players, rep, board, stream, market_weight,
+        players, rep, board, stream, opponents,
     )
