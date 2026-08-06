@@ -323,13 +323,17 @@ pipelines as separate as they are everywhere else, and runs them from the repo r
 their own default paths apply.
 
 ```
-uv run refresh.py                       # draft.json, then rankings.json  (~18 min on 2 cores)
+uv run refresh.py                       # draft.json, then rankings.json
 uv run refresh.py --report              # + both steps' validation summaries on stderr
 ```
 
 The ranker's Monte Carlo, rollout and candidate-survival stages fan out over a process
-pool (stdlib `multiprocessing`), so wall time scales with cores — the 2-core Codespace
-is the slow case. To trade fidelity for speed between picks, the levers are `--sims`
+pool (stdlib `multiprocessing`), so wall time scales with cores. With 41 picks made, the
+default workload ran in 53–55 seconds on an 8-core/16-thread Ryzen 5900HX;
+the time changes with the remaining board and the number of candidates at my next pick.
+Candidate-survival redraws stop as soon as their candidate leaves the board, since later
+picks cannot change any of that redraw's availability observations. To trade fidelity for
+speed between picks, the levers are `--sims`
 (which also sizes the candidate-survival redraws) and `ROLLOUT_SIMS`/`SIMS` in
 `ranker/league.py`.
 

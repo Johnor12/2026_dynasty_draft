@@ -384,6 +384,7 @@ class Draft:
         roster_sorted: dict[str, list[Player]],
         taking: Player,
         streams_next: dict[str, dict[str, float]],
+        value_cache: dict[tuple[int, ...], float],
         gap: int,
         left: int,
         off: Sequence[dict] = (),
@@ -403,17 +404,26 @@ class Draft:
         future_sorted = {
             h: insert_sorted(roster_sorted[h], taking, h) for h in HORIZONS
         }
-        base = team_value(future_sorted, self.slot_rep, self.depth_value, streams_next)
+        base_key = (taking.player_id,)
+        base = value_cache.get(base_key)
+        if base is None:
+            base = team_value(future_sorted, self.slot_rep, self.depth_value, streams_next)
+            value_cache[base_key] = base
         scored: list[tuple[float, float]] = []
         for cand in self.candidates(
             future_roster, per_pos=LOOKAHEAD_PER_POS, picks_left=left, off=off
         ):
             if cand.player_id == taking.player_id:
                 continue
-            gain = (
-                team_value(future_sorted, self.slot_rep, self.depth_value, streams_next, cand)
-                - base
-            )
+            a, b = taking.player_id, cand.player_id
+            pair_key = (a, b) if a < b else (b, a)
+            pair_value = value_cache.get(pair_key)
+            if pair_value is None:
+                pair_value = team_value(
+                    future_sorted, self.slot_rep, self.depth_value, streams_next, cand
+                )
+                value_cache[pair_key] = pair_value
+            gain = pair_value - base
             scored.append((gain, survival(self.better_available(cand), gap)))
         scored.sort(key=lambda t: -t[0])
         expected = 0.0
@@ -435,6 +445,8 @@ class Draft:
         nxt = self.next_pick[pick_index]
         gap = None if nxt is None else nxt - pick_index - 1
         streams_next = None if gap is None else self.expected_streams(gap)
+        # Taking A then B values the same roster as B then A.
+        lookahead_values: dict[tuple[int, ...], float] = {}
         # I draft on my own board; the other nine are pulled toward the market's ordering.
         # Blended at the decision, not inside the valuation, so their roster logic stays
         # intact — they still fill needs, they just rank players closer to consensus. At
@@ -455,7 +467,10 @@ class Draft:
             later = (
                 0.0
                 if gap is None
-                else self.lookahead(roster, roster_sorted, cand, streams_next, gap, left - 1, off)
+                else self.lookahead(
+                    roster, roster_sorted, cand, streams_next, lookahead_values,
+                    gap, left - 1, off,
+                )
             )
             score = now + later
             if w:
@@ -484,8 +499,8 @@ class Draft:
 
         return max(scored, key=lambda t: (t[0], -t[1].player_id))[1]
 
-    def run(self) -> None:
-        """Play out the pending picks. `pick_of` is in real overall pick numbers."""
+    def run(self, until_taken: int | None = None) -> int | None:
+        """Play the pending picks, optionally stopping when one player is drafted."""
         for i, slot in enumerate(self.order):
             pick = self.forced.get(i)
             if pick is None:
@@ -497,6 +512,9 @@ class Draft:
             self.rosters[slot - 1].append(pick)
             self.picks_left[slot - 1] -= 1
             self.pick_of[pick.player_id] = self.pick_nos[i]
+            if pick.player_id == until_taken:
+                return self.pick_nos[i]
+        return None
 
 
 def market_value(players: list[Player], vor: dict[int, float]) -> dict[int, float]:
@@ -791,8 +809,7 @@ def _survival_draft(task: tuple[int, int]) -> int | None:
         rng=random.Random(w["seed"] + s),
         market_vor=w["mkt"], market_weight=w["market_weight"], my_ban=cand_id,
     )
-    d.run()
-    return d.pick_of.get(cand_id)
+    return d.run(until_taken=cand_id)
 
 
 def candidate_survival(

@@ -54,6 +54,7 @@ import math
 from .league import (
     POSITION_DEPTH_DECAY,
     POSITIONS,
+    ROSTER_SLOTS,
     SLOT_CHAIN,
     SLOT_ELIGIBLE,
     STARTING_SLOTS,
@@ -65,6 +66,7 @@ from .pool import Player, by_position
 # year 1, and years 2-3 as one block. Every level dict in the ranker — replacement,
 # wire, slot levels — is keyed by horizon first, position/slot second.
 HORIZONS = ("yr1", "yr23")
+_DEPTH_WEIGHTS = tuple(POSITION_DEPTH_DECAY**depth for depth in range(ROSTER_SLOTS))
 
 
 def horizon_points(p: Player, h: str) -> float:
@@ -101,12 +103,19 @@ def sorted_by_horizon(roster: list[Player]) -> dict[str, list[Player]]:
 
 def insert_sorted(seq: list[Player], p: Player, h: str) -> list[Player]:
     """A new list with `p` merged into an already-sorted horizon list."""
-    key = _HKEY[h]
-    kp = key(p)
-    for i, q in enumerate(seq):
-        if key(q) > kp:
-            return seq[:i] + [p] + seq[i:]
-    return seq + [p]
+    points = p.points_yr1 if h == "yr1" else p.points_yr23
+    lo, hi = 0, len(seq)
+    while lo < hi:
+        mid = (lo + hi) // 2
+        q = seq[mid]
+        q_points = q.points_yr1 if h == "yr1" else q.points_yr23
+        if q_points > points or (q_points == points and q.player_id < p.player_id):
+            lo = mid + 1
+        else:
+            hi = mid
+    out = seq.copy()
+    out.insert(lo, p)
+    return out
 
 
 # --- lineup solver ----------------------------------------------------------------
@@ -164,8 +173,9 @@ def lineup_surplus(
     surplus = 0.0
     bench: list[Player] = []
     started = {pos: 0 for pos in POSITIONS}
+    year1 = h == "yr1"
     for p in roster:
-        pts = horizon_points(p, h)
+        pts = p.points_yr1 if year1 else p.points_yr23
         placed = False
         for slot in SLOT_CHAIN[p.position]:
             if caps[slot] == 0:
@@ -183,6 +193,43 @@ def lineup_surplus(
         if n:
             surplus += n * (stream[slot] - slot_rep[slot])
     return surplus, bench, started
+
+
+def _lineup_value(
+    roster: list[Player],
+    slot_rep: dict[str, float],
+    stream: dict[str, float],
+    depth_value: dict[int, float],
+    h: str,
+) -> float:
+    """Lineup surplus plus bench value without walking the roster twice."""
+    caps = dict(STARTING_SLOTS)
+    surplus = 0.0
+    bench_depth = {pos: 0 for pos in POSITIONS}
+    bench_values: list[float] = []
+    year1 = h == "yr1"
+    for p in roster:
+        pts = p.points_yr1 if year1 else p.points_yr23
+        placed = False
+        for slot in SLOT_CHAIN[p.position]:
+            if caps[slot] == 0:
+                continue
+            if pts <= stream[slot]:
+                break
+            caps[slot] -= 1
+            surplus += pts - slot_rep[slot]
+            placed = True
+            break
+        if not placed:
+            depth = bench_depth[p.position]
+            bench_values.append(_DEPTH_WEIGHTS[depth] * depth_value[p.player_id])
+            bench_depth[p.position] = depth + 1
+    for slot, n in caps.items():
+        if n:
+            surplus += n * (stream[slot] - slot_rep[slot])
+    for value in bench_values:
+        surplus += value
+    return surplus
 
 
 def starting_positions(roster: list[Player], h: str) -> list[str]:
@@ -245,14 +292,7 @@ def team_value(
     total = 0.0
     for h in HORIZONS:
         seq = roster[h] if extra is None else insert_sorted(roster[h], extra, h)
-        surplus, bench, started = lineup_surplus(seq, slot_rep[h], streams[h], h)
-        # bench is already in this horizon's points order (see lineup_surplus).
-        seen = dict(started)
-        for p in bench:
-            depth = seen[p.position] - started[p.position]
-            surplus += POSITION_DEPTH_DECAY**depth * depth_value[h][p.player_id]
-            seen[p.position] += 1
-        total += surplus
+        total += _lineup_value(seq, slot_rep[h], streams[h], depth_value[h], h)
     return total
 
 
