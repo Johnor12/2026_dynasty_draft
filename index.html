@@ -573,7 +573,7 @@ function chanceCell(candidate, stats, pick, d) {
 
 function renderNextPicks(d, byId) {
   document.getElementById("picksNote").textContent =
-    "Roster gain is the player's marginal value to your current roster. Next-pick option value estimates the best choice left at your following turn; their sum drives the two-pick policy. For the first pick only, Final roster EV forces each candidate and plays the entire remaining draft out " +
+    "Roster gain is the player's marginal value to your current roster. Next-pick option value estimates the best choice left at your following turn; for the first pick it forces each candidate and redraws the intervening opponents. Their sum drives the two-pick policy. Final roster EV forces each first-pick candidate and plays the entire remaining draft out " +
     `${d.my_next_picks.rollout_sims} times. The recommendation changes only when an edge clears twice its simulation error. Raw player points use this league's scoring.`;
 
   const prior = [];
@@ -760,7 +760,7 @@ function renderLeagueOutlook(d) {
     renderBoard(d, state);
   });
   document.getElementById("footer").textContent =
-    `Projection input: ${d.value_input} · ${d.monte_carlo.sims} availability simulations · ${d.my_next_picks.rollout_sims} full-draft rollouts per next-pick candidate`;
+    `Projection input: ${d.value_input} · ${d.monte_carlo.sims} availability simulations · ${d.my_next_picks.option_sims} short option redraws · ${d.my_next_picks.rollout_sims} full-draft rollouts per next-pick candidate`;
   document.getElementById("app").hidden = false;
 })();
 </script>

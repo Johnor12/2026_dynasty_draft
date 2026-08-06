@@ -21,8 +21,10 @@ not be there later, not merely the highest number on the screen. It is a two-pic
 with an independence approximation across candidates, not equilibrium play — the honest
 name is a strong greedy, and the two-pick horizon is the part most likely to understate
 how early a truly scarce position gets attacked. That weakness is patched where it
-matters most — the one decision actually in front of me: `rollout` re-scores my next
-pick's candidates over the whole remaining draft, with this greedy as the base policy.
+matters most — the one decision actually in front of me: `option_redraw` prices the next
+turn by forcing each candidate and simulating only the intervening opponents, then
+`rollout` re-scores those candidates over the whole remaining draft with this greedy as
+the base policy.
 
 The other nine teams are pulled toward the source ADP (`market_weight`; 0 recovers
 all-drafters-fully-optimal). ADP never enters VOR. It is used only as the best available
@@ -499,9 +501,15 @@ class Draft:
 
         return max(scored, key=lambda t: (t[0], -t[1].player_id))[1]
 
-    def run(self, until_taken: int | None = None) -> int | None:
-        """Play the pending picks, optionally stopping when one player is drafted."""
+    def run(
+        self,
+        until_taken: int | None = None,
+        stop_before: int | None = None,
+    ) -> int | None:
+        """Play pending picks, optionally stopping at a player or before a pick index."""
         for i, slot in enumerate(self.order):
+            if i == stop_before:
+                break
             pick = self.forced.get(i)
             if pick is None:
                 pick = self.choose(i, slot)
@@ -767,6 +775,45 @@ def _rollout_playout(task: tuple[int, int]) -> float:
     )
 
 
+def _best_option_value(draft: Draft) -> float:
+    """Best marginal value available to my roster at the current draft state."""
+    slot = draft.my_slot
+    roster = draft.rosters[slot - 1]
+    draft.streams = draft.stream_levels()
+    roster_sorted = sorted_by_horizon(roster)
+    base = team_value(roster_sorted, draft.slot_rep, draft.depth_value, draft.streams)
+    values = [
+        team_value(roster_sorted, draft.slot_rep, draft.depth_value, draft.streams, cand)
+        - base
+        for cand in draft.candidates(
+            roster,
+            per_pos=1,
+            picks_left=draft.picks_left[slot - 1],
+            off=draft.off_pool[slot - 1],
+        )
+    ]
+    assert values, "pool exhausted at my following pick"
+    return max(values)
+
+
+def _option_playout(task: tuple[int, int]) -> float:
+    """Force one candidate and measure my best option at the following pick."""
+    cand_id, s = task
+    w = _WORKER
+    i_my = w["i_my"]
+    assert i_my is not None
+    d = Draft(
+        w["players"], w["rep"], w["vor"], w["board"], wire=w["stream"], noise=w["noise"],
+        rng=random.Random(f"option-{w['seed']}-{s}"),
+        market_vor=w["mkt"], market_weight=w["market_weight"],
+        forced={i_my: w["by_id"][cand_id]}, noise_from=i_my + 1,
+    )
+    i_next = d.next_pick[i_my]
+    assert i_next is not None
+    d.run(stop_before=i_next)
+    return _best_option_value(d)
+
+
 def monte_carlo(
     players: list[Player],
     rep: dict[str, dict[str, float]],
@@ -852,6 +899,117 @@ def candidate_survival(
             for pick in board.my_picks
         }
     return out
+
+
+def option_redraw(
+    players: list[Player],
+    rep: dict[str, dict[str, float]],
+    board: Board,
+    stream: dict[str, dict[str, float]],
+    candidates: list[Player],
+    sims: int,
+    noise: float,
+    seed: int,
+    market_weight: float,
+) -> dict | None:
+    """Empirical next-pick option value for each candidate at my first pending pick.
+
+    Each branch plays deterministically up to my pick, forces its candidate, then applies
+    opponent noise only until my following pick. The result is the marginal value of the
+    best player actually left there. This deliberately replaces the global-rank survival
+    shortcut for the decision in front of me: roster-aware opponents can attack a position
+    long before a globally low-ranked player would appear to be at risk.
+    """
+    if not board.my_picks or not candidates:
+        return None
+    pick_no = board.my_picks[0]
+    i_my = board.pick_nos.index(pick_no)
+    i_next = next(
+        (i for i in range(i_my + 1, len(board.order)) if board.order[i] == board.my_slot),
+        None,
+    )
+    if i_next is None:
+        return {
+            "pick_no": pick_no,
+            "sims": 0,
+            "stats": {cand.player_id: {"ev": 0.0} for cand in candidates},
+        }
+
+    vor = compute_vor(players, rep)
+    mkt = market_value(board.available(players), vor) if market_weight else None
+    tasks = [(cand.player_id, s) for cand in candidates for s in range(sims)]
+    with multiprocessing.Pool(
+        _worker_pool_size(),
+        initializer=_init_worker,
+        initargs=(players, rep, board, stream, noise, seed, mkt, market_weight, vor, i_my),
+    ) as pool:
+        flat = pool.map(_option_playout, tasks)
+    return {
+        "pick_no": pick_no,
+        "sims": sims,
+        "stats": {
+            cand.player_id: {
+                "ev": sum(flat[i * sims : (i + 1) * sims]) / sims,
+            }
+            for i, cand in enumerate(candidates)
+        },
+    }
+
+
+def _replay_pick(
+    draft: Draft,
+    pick_no: int,
+    take: Player,
+    detail: list[tuple[float, float, Player]],
+    players: list[Player],
+    rep: dict[str, dict[str, float]],
+    board: Board,
+    stream: dict[str, dict[str, float]],
+    market_weight: float,
+) -> Draft:
+    """Re-play the deterministic draft when a re-scored recommendation changes."""
+    actual_id = next((pid for pid, pk in draft.pick_of.items() if pk == pick_no), None)
+    if actual_id == take.player_id:
+        draft.my_decisions[pick_no] = detail
+        return draft
+    vor = compute_vor(players, rep)
+    mkt = market_value(board.available(players), vor) if market_weight else None
+    forced = Draft(
+        players, rep, vor, board, wire=stream,
+        market_vor=mkt, market_weight=market_weight,
+        forced={board.pick_nos.index(pick_no): take},
+    )
+    forced.run()
+    forced.my_decisions[pick_no] = detail
+    return forced
+
+
+def apply_option_redraw(
+    draft: Draft,
+    redrawn: dict | None,
+    players: list[Player],
+    rep: dict[str, dict[str, float]],
+    board: Board,
+    stream: dict[str, dict[str, float]],
+    market_weight: float,
+) -> Draft:
+    """Replace the first pick's sigmoid lookahead with its branch-redraw estimates."""
+    if redrawn is None:
+        return draft
+    pick_no = redrawn["pick_no"]
+    detail = [
+        (
+            now,
+            redrawn["stats"][cand.player_id]["ev"],
+            cand,
+        )
+        for now, _, cand in draft.my_decisions[pick_no]
+    ]
+    detail.sort(key=lambda t: (-(t[0] + t[1]), t[2].player_id))
+    return _replay_pick(
+        draft, pick_no, detail[0][2], detail,
+        players, rep, board, stream, market_weight,
+    )
 
 
 def rollout(
@@ -940,17 +1098,10 @@ def apply_rollout(
     """
     if rolled is None:
         return draft
-    detail = draft.my_decisions[rolled["pick_no"]]
-    if rolled["take_id"] == detail[0][2].player_id:
-        return draft
+    pick_no = rolled["pick_no"]
+    detail = draft.my_decisions[pick_no]
     take = next(c for _, _, c in detail if c.player_id == rolled["take_id"])
-    vor = compute_vor(players, rep)
-    mkt = market_value(board.available(players), vor) if market_weight else None
-    forced = Draft(
-        players, rep, vor, board, wire=stream,
-        market_vor=mkt, market_weight=market_weight,
-        forced={board.pick_nos.index(rolled["pick_no"]): take},
+    return _replay_pick(
+        draft, pick_no, take, detail,
+        players, rep, board, stream, market_weight,
     )
-    forced.run()
-    forced.my_decisions[rolled["pick_no"]] = detail
-    return forced

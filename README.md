@@ -32,6 +32,7 @@ draft.json                   the live board — 290 picks, made and pending
 rank_vor.py                  pool.json + draft.json -> rankings.json (run separately)
 refresh.py                   fetch the board, then re-rank — the between-picks loop
 index.html                   static dashboard for rankings.json (serve the repo root, no build)
+serve.py                     local dashboard server at http://127.0.0.1:8123
 ranker/                      the ranker's internals, one module per concern:
   league.py                  league constants, strategy knobs, draft order
   pool.py                    pool.json -> Player objects
@@ -327,14 +328,16 @@ uv run refresh.py                       # draft.json, then rankings.json
 uv run refresh.py --report              # + both steps' validation summaries on stderr
 ```
 
-The ranker's Monte Carlo, rollout and candidate-survival stages fan out over a process
-pool (stdlib `multiprocessing`), so wall time scales with cores. With 41 picks made, the
-default workload ran in 53–55 seconds on an 8-core/16-thread Ryzen 5900HX;
-the time changes with the remaining board and the number of candidates at my next pick.
+The ranker's next-pick-option, Monte Carlo, rollout and candidate-survival stages fan out
+over a process pool (stdlib `multiprocessing`), so wall time scales with cores. The option
+stage forces each candidate at my first pending pick, redraws only the intervening
+opponents, and measures the best marginal player actually left at my following turn; the
+bulk draft policy retains its faster global-rank approximation. Runtime changes with the
+remaining board, available cores, and the number of candidates at my next pick.
 Candidate-survival redraws stop as soon as their candidate leaves the board, since later
 picks cannot change any of that redraw's availability observations. To trade fidelity for
 speed between picks, the levers are `--sims`
-(which also sizes the candidate-survival redraws) and `ROLLOUT_SIMS`/`SIMS` in
+(which also sizes the option and candidate-survival redraws) and `ROLLOUT_SIMS`/`SIMS` in
 `ranker/league.py`.
 
 The pool pipeline is not a step: it is offline and rebuilt a handful of times all
@@ -344,7 +347,8 @@ offseason, and this runs every few minutes during a draft.
 at the table: comparison tables for my next three picks, my projected final team, best
 available, then the other nine projected teams. Player comparisons show the raw Year 1
 projection, the Years 2–3 annual pace, their difference as the implied trend, and the
-model's roster-aware scores. The first pick also surfaces the candidate-specific
+model's roster-aware scores. The first pick's next-option values come from its short
+branch-specific redraws and it also surfaces the candidate-specific
 `p_available_if_i_pass` redraws and full-draft rollout; best available uses the broader
 Kaplan–Meier availability estimate and deliberately omits the redundant deterministic
 pick / likely-through columns.
@@ -367,7 +371,7 @@ and status against the snapshot the board was built from, highlighting the refre
 when the board has fallen behind. My-pick calculations use `draft.my_remaining_picks`, not
 the original slot sequence in `league.my_picks`, because this draft contains traded picks.
 In the Codespace the devcontainer already serves the repo root on port 8000 at startup
-(`.devcontainer/devcontainer.json`); elsewhere, serve it with `python3 -m http.server 8123`
+(`.devcontainer/devcontainer.json`); elsewhere, serve it with `uv run serve.py`
 and open the forwarded port (a direct `file://` open is blocked by the
 browser's fetch rules, and the page says so).
 

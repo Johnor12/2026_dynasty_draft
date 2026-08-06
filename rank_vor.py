@@ -49,7 +49,15 @@ from ranker.league import MARKET_WEIGHT, NOISE, ROLLOUT_SIMS, SEED, SIMS
 from ranker.output import build_payload, build_rankings, report_board, report_summary
 from ranker.pool import load_pool
 from ranker.selftest import selftest
-from ranker.sim import apply_rollout, candidate_survival, converge, monte_carlo, rollout
+from ranker.sim import (
+    apply_option_redraw,
+    apply_rollout,
+    candidate_survival,
+    converge,
+    monte_carlo,
+    option_redraw,
+    rollout,
+)
 from ranker.validate import validate
 
 
@@ -130,7 +138,29 @@ def main(argv: list[str] | None = None) -> int:
         players, board, args.report, args.market_weight
     )
 
-    candidates = [c for _, _, c in draft.my_decisions.get(board.my_picks[0], [])] if board.my_picks else []
+    candidates = (
+        [c for _, _, c in draft.my_decisions.get(board.my_picks[0], [])]
+        if board.my_picks
+        else []
+    )
+    if args.report and candidates:
+        print(
+            f"next-pick options: {args.sims} short opponent redraws x "
+            f"{len(candidates)} candidates",
+            file=sys.stderr,
+        )
+    options = option_redraw(
+        players, rep, board, stream, candidates,
+        args.sims, args.noise, args.seed, args.market_weight,
+    )
+    draft = apply_option_redraw(
+        draft, options, players, rep, board, stream, args.market_weight
+    )
+    candidates = (
+        [c for _, _, c in draft.my_decisions.get(board.my_picks[0], [])]
+        if board.my_picks
+        else []
+    )
     if args.report and candidates:
         print(
             f"rollout: {ROLLOUT_SIMS} full-draft playouts x {len(candidates)} candidates "
@@ -167,7 +197,7 @@ def main(argv: list[str] | None = None) -> int:
     problems = board_problems + validate(rows, players, rep, counts, draft, board, history)
     payload = build_payload(
         players, pool_meta, board, rep, stream, counts, draft, history, rows, problems,
-        args.sims, args.noise, args.seed, args.market_weight, rolled, survival,
+        args.sims, args.noise, args.seed, args.market_weight, options, rolled, survival,
     )
     args.output.write_text(json.dumps(payload, indent=2, ensure_ascii=False) + "\n")
 

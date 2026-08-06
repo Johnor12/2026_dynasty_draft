@@ -283,6 +283,12 @@ def board_selftest(players: list[Player]) -> list[str]:
 
     # Resuming: every made pick survives, every pending pick is played exactly once.
     board, _ = load_board(synthetic_draft(players, made=57), players, "synthetic")
+    partial = Draft(players, rep, compute_vor(players, rep), board)
+    partial.run(stop_before=5)
+    check(
+        set(partial.pick_of.values()) == set(board.pick_nos[:5]),
+        "a short redraw did not stop immediately before its requested pick index",
+    )
     draft = Draft(players, rep, compute_vor(players, rep), board)
     draft.run()
     check(

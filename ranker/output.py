@@ -193,7 +193,9 @@ def my_next_picks(
     what the player adds to my roster now, and the expected value of the best player still
     there at my following pick if I take him.
 
-    My first pending pick additionally carries the full-horizon rollout (sim.rollout):
+    At my first pending pick, `next_pick_ev` comes from short branch-specific opponent
+    redraws rather than the global-rank survival shortcut used by the bulk draft policy.
+    That pick additionally carries the full-horizon rollout (sim.rollout):
     `rollout_ev` is the mean final value of my whole roster if I take the candidate and
     the rest of the draft plays out, `rollout_edge` is his paired advantage over the base
     policy's choice, `rollout_se` its standard error. The `take` for that pick is the
@@ -386,6 +388,7 @@ def build_payload(
     noise: float,
     seed: int,
     market_weight: float,
+    option_redraw: dict | None = None,
     rollout: dict | None = None,
     survival: dict[int, dict[int, float]] | None = None,
 ) -> dict:
@@ -433,8 +436,12 @@ def build_payload(
                 "to my roster (lineup surplus + bench depth); next_pick_ev is E[value of the "
                 "best player still there at my following pick] if I take him now. The pick "
                 "maximizes their sum, so it can disagree with vor_rank — it sees my roster "
-                "and who will keep, which vor does not. My first pending pick is additionally "
-                "scored over the whole remaining draft (rollout_ev/rollout_edge/rollout_se): "
+                "and who will keep, which vor does not. At my first pending pick, each "
+                "next_pick_ev forces that candidate, redraws only the intervening opponents, "
+                "and measures the best marginal option actually left at my following turn; "
+                "later displayed picks retain the fast global-rank approximation used by "
+                "the bulk draft policy. My first pending pick is additionally scored over "
+                "the whole remaining draft (rollout_ev/rollout_edge/rollout_se): "
                 "each candidate is forced there and the rest of the draft is played out, my "
                 "future picks by the two-pick policy, the other teams noisy. Its take stands "
                 "when a candidate's full-horizon edge over the two-pick choice clears twice "
@@ -447,6 +454,7 @@ def build_payload(
                 "out rather than estimated (compare p_available_at_my_picks, which is "
                 "Kaplan-Meier from redraws where I do take him)."
             ),
+            "option_sims": option_redraw["sims"] if option_redraw else None,
             "rollout_sims": rollout["sims"] if rollout else None,
             "picks": my_next_picks(draft, board, rollout, survival),
         },
@@ -571,8 +579,9 @@ def build_payload(
             "survival_sigma": SURVIVAL_SIGMA,
             "note": (
                 "Two-pick rollout with an independence approximation across candidates; "
-                "a strong greedy, not equilibrium play. My next pick's candidates get a "
-                "full-horizon check on top — see my_next_picks."
+                "a strong greedy, not equilibrium play. The first pending pick replaces "
+                "that approximation with short opponent redraws and gets a full-horizon "
+                "check on top — see my_next_picks."
             ),
         },
         "monte_carlo": {
