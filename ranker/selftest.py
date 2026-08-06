@@ -17,6 +17,7 @@ import sys
 from .board import fresh_board, load_board
 from .league import (
     DEDICATED_SLOTS,
+    FIRST_PICK_PER_POS,
     MY_SLOT,
     POSITIONS,
     ROUNDS,
@@ -130,6 +131,50 @@ def opponent_selftest(players: list[Player]) -> list[str]:
     print(
         "  opponent strategies: provider order stays VOR-independent, starter needs "
         "softly adjust it, and fitted rank noise reproduces source adherence",
+        file=sys.stderr,
+    )
+    return fails
+
+
+def planning_selftest(players: list[Player]) -> list[str]:
+    """The live shortlist is broader, and unavailable plan targets fall back safely."""
+    fails: list[str] = []
+    board = fresh_board()
+    rep = seed_replacement(players)
+    vor = compute_vor(players, rep)
+    opponents = synthetic_opponents(players, board)
+    first_index = board.pick_nos.index(board.my_picks[0])
+    state = Draft(players, rep, vor, board, opponents=opponents)
+    state.run(stop_before=first_index)
+    narrow = state.score_my_candidates(first_index)
+    broad = state.score_my_candidates(first_index, per_pos=FIRST_PICK_PER_POS)
+    if len(broad) <= len(narrow):
+        fails.append("planning: the first-pick candidate pool did not broaden")
+
+    first_target = broad[-1][2]
+    second_target = next(p for p in players if p.player_id != first_target.player_id)
+    external = [second_target] + [p for p in players if p.player_id != second_target.player_id]
+    opponents = synthetic_opponents(players, board, external)
+    my_indices = [i for i, slot in enumerate(board.order) if slot == board.my_slot]
+    planned = Draft(
+        players,
+        rep,
+        vor,
+        board,
+        opponents=opponents,
+        targets={my_indices[0]: first_target, my_indices[1]: second_target},
+    )
+    planned.run(stop_before=my_indices[1] + 1)
+    if planned.pick_of.get(first_target.player_id) != board.my_picks[0]:
+        fails.append("planning: an available first target was not exercised")
+    if planned.pick_of.get(second_target.player_id) != 1:
+        fails.append("planning: the opponent did not take the later target first")
+    if board.my_picks[1] not in planned.pick_of.values():
+        fails.append("planning: an unavailable later target did not fall back")
+
+    print(
+        f"  planning: first-pick pool widened from {len(narrow)} to {len(broad)}; "
+        "an unavailable later target fell back to the bulk policy",
         file=sys.stderr,
     )
     return fails
@@ -445,7 +490,12 @@ def board_selftest(players: list[Player]) -> list[str]:
 
 def selftest(players: list[Player]) -> int:
     print("selftest:", file=sys.stderr)
-    fails = lineup_selftest(players) + opponent_selftest(players) + board_selftest(players)
+    fails = (
+        lineup_selftest(players)
+        + opponent_selftest(players)
+        + planning_selftest(players)
+        + board_selftest(players)
+    )
     for f in fails:
         print(f"  FAIL {f}", file=sys.stderr)
     verdict = f"{len(fails)} failure(s)" if fails else "all checks passed"

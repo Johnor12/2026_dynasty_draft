@@ -1,13 +1,13 @@
 {
   "source": "https://api.sleeper.app/v1/draft/1388293618208374784",
-  "fetched_at": "2026-08-06T21:01:50+00:00",
+  "fetched_at": "2026-08-06T22:19:18+00:00",
   "draft_id": "1388293618208374784",
   "league_id": "1388293617071714304",
   "league_name": "Dudes",
   "season": "2026",
   "status": "drafting",
   "started_at": "2026-08-04T13:02:55+00:00",
-  "last_picked_at": "2026-08-06T19:57:37+00:00",
+  "last_picked_at": "2026-08-06T22:14:28+00:00",
   "format": {
     "type": "snake",
     "teams": 10,
@@ -16,16 +16,16 @@
     "scoring_type": "dynasty_2qb"
   },
   "pick_count": 290,
-  "picks_made": 54,
-  "picks_pending": 236,
+  "picks_made": 57,
+  "picks_pending": 233,
   "on_the_clock": {
-    "pick_no": 55,
+    "pick_no": 58,
     "round": 6,
-    "pick_in_round": 5,
-    "draft_slot": 5,
-    "user_id": "870397485556875264",
-    "username": "dirtydole",
-    "slot": "6.05"
+    "pick_in_round": 8,
+    "draft_slot": 8,
+    "user_id": "1127785716420898816",
+    "username": "johnor",
+    "slot": "6.08"
   },
   "me": {
     "username": "johnor",
@@ -41,12 +41,12 @@
     "user_id": "1127785716420898816",
     "username": "johnor",
     "slot": "6.08",
-    "picks_away": 3
+    "picks_away": 0
   },
   "board_derivation": {
     "method": "snake, order reverses at round 3; traded picks applied",
-    "checked_against_made_picks": 54,
-    "slot_and_roster_agree": 54,
+    "checked_against_made_picks": 57,
+    "slot_and_roster_agree": 57,
     "rounds_exercised": [
       1,
       2,
@@ -1129,12 +1129,12 @@
       "user_id": "870397485556875264",
       "username": "dirtydole",
       "is_mine": false,
-      "status": "pending",
-      "sleeper_id": null,
-      "name": null,
-      "position": null,
-      "team": null,
-      "is_keeper": null
+      "status": "made",
+      "sleeper_id": "5859",
+      "name": "A.J. Brown",
+      "position": "WR",
+      "team": "NE",
+      "is_keeper": false
     },
     {
       "pick_no": 56,
@@ -1145,12 +1145,12 @@
       "user_id": "1114302275305979904",
       "username": "samlemonskoff",
       "is_mine": false,
-      "status": "pending",
-      "sleeper_id": null,
-      "name": null,
-      "position": null,
-      "team": null,
-      "is_keeper": null
+      "status": "made",
+      "sleeper_id": "10859",
+      "name": "Sam LaPorta",
+      "position": "TE",
+      "team": "DET",
+      "is_keeper": false
     },
     {
       "pick_no": 57,
@@ -1161,12 +1161,12 @@
       "user_id": "1128381875430596608",
       "username": "UGrizz14",
       "is_mine": false,
-      "status": "pending",
-      "sleeper_id": null,
-      "name": null,
-      "position": null,
-      "team": null,
-      "is_keeper": null
+      "status": "made",
+      "sleeper_id": "4866",
+      "name": "Saquon Barkley",
+      "position": "RB",
+      "team": "PHI",
+      "is_keeper": false
     },
     {
       "pick_no": 58,

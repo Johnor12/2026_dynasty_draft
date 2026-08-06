@@ -559,7 +559,7 @@ function chanceCell(candidate, stats, pick, d) {
   const pickOrder = remainingPickOrder(d);
   if (candidate.p_available_if_i_pass) {
     const start = pickOrder.indexOf(pick.pick);
-    const labels = pickOrder.slice(Math.max(start, 0), Math.max(start, 0) + 3);
+    const labels = pickOrder.slice(Math.max(start, 0), Math.max(start, 0) + 4);
     const values = labels.map(label => [label, pAvailIfPassing(candidate, label, pickOrder)]);
     const [first, ...later] = values;
     return h("div", { title: "Counterfactual simulations where your team never drafts this player" },
@@ -574,8 +574,8 @@ function chanceCell(candidate, stats, pick, d) {
 
 function renderNextPicks(d, byId) {
   document.getElementById("picksNote").textContent =
-    "Roster gain is the player's marginal value to your current roster. Next-pick option value estimates the best choice left at your following turn; for the first pick it forces each candidate and redraws the intervening opponents. Their sum drives the two-pick policy. Final roster EV forces each first-pick candidate and plays the entire remaining draft out " +
-    `${d.my_next_picks.rollout_sims} times. The recommendation changes only when an edge clears twice its simulation error. Raw player points use this league's scoring.`;
+    "Roster gain is the player's marginal value to your current roster. Next-pick option value is the bulk policy's two-pick diagnostic. The first recommendation instead searches target plans across four held picks, then plays each plan through the entire remaining draft " +
+    `${d.my_next_picks.rollout_sims} times. A target that an opponent takes first falls back to the ordinary policy. The recommendation changes only when an edge clears twice its simulation error. Raw player points use this league's scoring.`;
 
   const prior = [];
   const cards = d.my_next_picks.picks.map((pick, pickIndex) => {
@@ -591,6 +591,7 @@ function renderNextPicks(d, byId) {
       const rolloutNote = candidate.rollout_edge == null ? null : candidate.rollout_edge === 0
         ? `baseline: ${baseline}`
         : `${signed(candidate.rollout_edge)} ± ${fmt(candidate.rollout_se)} vs ${baseline}`;
+      const planNote = candidate.four_pick_plan?.map(target => `${target.pick} ${target.name}`).join(" → ");
       return h("tr", { class: isTake ? "recommended" : "" },
         h("td", {},
           h("div", { class: "player-main" }, candidate.name, " ",
@@ -616,7 +617,8 @@ function renderNextPicks(d, byId) {
         h("td", {}, chanceCell(candidate, stats, pick, d)),
         hasRollout ? h("td", { class: "num" },
           h("div", {}, fmt(candidate.rollout_ev)),
-          h("div", { class: "cell-note" }, rolloutNote)) : null);
+          h("div", { class: "cell-note" }, rolloutNote),
+          planNote ? h("div", { class: "cell-note" }, planNote) : null) : null);
     });
     prior.push(pick.take.replace(/ \((QB|RB|WR|TE)\)$/, ""));
     return h("article", { class: "card pick-card" },
@@ -771,7 +773,7 @@ function renderLeagueOutlook(d) {
     renderBoard(d, state);
   });
   document.getElementById("footer").textContent =
-    `Projection input: ${d.value_input} · ${d.monte_carlo.sims} availability simulations · ${d.my_next_picks.option_sims} short option redraws · ${d.my_next_picks.rollout_sims} full-draft rollouts per next-pick candidate`;
+    `Projection input: ${d.value_input} · ${d.monte_carlo.sims} availability simulations · ${d.my_next_picks.option_sims} short option redraws · ${d.my_next_picks.rollout_sims} full-draft rollouts per four-pick plan`;
   document.getElementById("app").hidden = false;
 })();
 </script>

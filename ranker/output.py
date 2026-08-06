@@ -17,7 +17,9 @@ from .board import Board
 from .league import (
     BENCH_SLOTS,
     DEPTH_BASE,
+    FIRST_PICK_PER_POS,
     INSURANCE_BASE,
+    LOOKAHEAD_PICKS,
     POINTS_FIELD,
     POSITION_DEPTH_DECAY,
     POSITIONS,
@@ -181,7 +183,7 @@ def my_next_picks(
     board: Board,
     rollout: dict | None = None,
     survival: dict[int, dict[int, float]] | None = None,
-    limit: int = 3,
+    limit: int = LOOKAHEAD_PICKS,
 ) -> list[dict]:
     """The model's own decision at each of my next picks, from the deterministic draft.
 
@@ -192,7 +194,7 @@ def my_next_picks(
 
     At my first pending pick, `next_pick_ev` comes from short branch-specific opponent
     redraws rather than the global-rank survival shortcut used by the bulk draft policy.
-    That pick additionally carries the full-horizon rollout (sim.rollout):
+    That pick additionally carries a four-pick target plan and full-horizon rollout:
     `rollout_ev` is the mean final value of my whole roster if I take the candidate and
     the rest of the draft plays out, `rollout_edge` is his paired advantage over the base
     policy's choice, `rollout_se` its standard error. The `take` for that pick is the
@@ -211,9 +213,8 @@ def my_next_picks(
         if not detail:
             continue
         rolled = rollout if rollout and rollout["pick_no"] == pick_no else None
-        take = detail[0][2]
-        if rolled:
-            take = next(c for _, _, c in detail if c.player_id == rolled["take_id"])
+        actual_id = next((pid for pid, pk in draft.pick_of.items() if pk == pick_no), None)
+        take = draft.by_id[actual_id] if actual_id is not None else detail[0][2]
         candidates = []
         for now, later, c in detail:
             row = {
@@ -229,6 +230,18 @@ def my_next_picks(
                 row["rollout_ev"] = round(s["ev"], 1)
                 row["rollout_edge"] = round(s["edge"], 1)
                 row["rollout_se"] = round(s["se"], 1)
+                plan = rolled.get("plans", {}).get(c.player_id)
+                if plan:
+                    row["four_pick_plan"] = [
+                        {
+                            "pick": pick_label(pk),
+                            "player_id": player_id,
+                            "name": draft.by_id[player_id].name,
+                            "position": draft.by_id[player_id].position,
+                        }
+                        for pk, player_id in zip(rolled["pick_nos"], plan["target_ids"])
+                    ]
+                    row["plan_deterministic_ev"] = round(plan["deterministic_ev"], 1)
             if survival and pick_no == board.my_picks[0] and c.player_id in survival:
                 # Same emission rule as p_available_at_my_picks: certainties are noise.
                 row["p_available_if_i_pass"] = {
@@ -437,10 +450,13 @@ def build_payload(
                 "next_pick_ev forces that candidate, redraws only the intervening opponents, "
                 "and measures the best marginal option actually left at my following turn; "
                 "later displayed picks retain the fast global-rank approximation used by "
-                "the bulk draft policy. My first pending pick is additionally scored over "
-                "the whole remaining draft (rollout_ev/rollout_edge/rollout_se): "
-                "each candidate is forced there and the rest of the draft is played out, my "
-                "future picks by the two-pick policy, the other teams noisy. Its take stands "
+                "the bulk draft policy. My first pending pick searches target plans across "
+                "my next four held picks; every shorter prefix is eligible, so the ordinary "
+                "policy can resume at any turn. The best deterministic plan of each length "
+                "is then scored over the whole remaining draft, and the best noisy EV "
+                "represents that first candidate "
+                "(rollout_ev/rollout_edge/rollout_se), with a planned target used only if he "
+                "survives and the ordinary policy used otherwise. Its take stands "
                 "when a candidate's full-horizon edge over the two-pick choice clears twice "
                 "its standard error, and when it overrules, the deterministic draft is "
                 "re-played with that pick forced — so sim_pick, example_draft and the later "
@@ -453,6 +469,8 @@ def build_payload(
             ),
             "option_sims": option_redraw["sims"] if option_redraw else None,
             "rollout_sims": rollout["sims"] if rollout else None,
+            "lookahead_picks": LOOKAHEAD_PICKS,
+            "first_pick_candidates_per_position_horizon": FIRST_PICK_PER_POS,
             "picks": my_next_picks(draft, board, rollout, survival),
         },
         "rankings_note": (
@@ -573,13 +591,16 @@ def build_payload(
                 "and a startable veteran are both worth bench picks for different reasons, "
                 "each in the horizon where he actually produces."
             ),
-            "lookahead": "value now + E[best value still available at my next pick]",
+            "lookahead": (
+                "first pending decision: four held picks with survival-aware target plans; "
+                "bulk policy: value now + E[best value at the following pick]"
+            ),
             "survival_sigma": SURVIVAL_SIGMA,
             "note": (
-                "Two-pick rollout with an independence approximation across candidates; "
-                "a strong greedy, not equilibrium play. The first pending pick replaces "
-                "that approximation with short opponent redraws and gets a full-horizon "
-                "check on top — see my_next_picks."
+                "The bulk policy is a two-pick greedy with an independence approximation. "
+                "The first pending pick uses banned-me availability redraws to build plans "
+                "across four held picks, then noisy full-draft rollouts choose among them — "
+                "see my_next_picks."
             ),
         },
         "monte_carlo": {
@@ -691,7 +712,7 @@ def report_summary(
         )
     recs = my_next_picks(draft, board, rollout)
     if recs:
-        print("\nmy next picks (value now + E[left at my following pick]):", file=sys.stderr)
+        print("\nmy next picks (four-pick plan; two-pick scores shown):", file=sys.stderr)
         for rec in recs:
             cands = ", ".join(
                 f"{c['name']} {c['score']:.0f} ({c['value_now']:.0f}+{c['next_pick_ev']:.0f})"
@@ -705,6 +726,12 @@ def report_summary(
                 for c in first["candidates"]
             )
             print(f"  {first['pick']} full-horizon rollout: {cands}", file=sys.stderr)
+            chosen = next(c for c in first["candidates"] if c["player_id"] == first["take_id"])
+            plan = " -> ".join(
+                f"{target['pick']} {target['name']}" for target in chosen.get("four_pick_plan", [])
+            )
+            if plan:
+                print(f"  selected four-pick plan: {plan}", file=sys.stderr)
         if survival:
             # Last of my picks each candidate survives to at even odds if I keep passing
             # on him ('--' = likely gone before my current pick comes back around).

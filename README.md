@@ -374,38 +374,45 @@ deterministic. Players missing from a provider's board are appended in DraftShar
 order so the 290-pick simulation always has a complete external board without falling
 back to VOR.
 
-The ranker's next-pick-option, Monte Carlo, rollout and candidate-survival stages fan out
-over a process pool (stdlib `multiprocessing`), so wall time scales with cores. The option
-stage forces each candidate at my first pending pick, redraws the intervening opponents
-with their slot-specific source strategies, and measures the best marginal player actually
-left at my following turn; the bulk draft policy retains a faster consensus of those nine
-source boards for later-pick survival approximations. Runtime changes with the remaining
-board, available cores, and the number of candidates at my next pick.
-Candidate-survival redraws stop as soon as their candidate leaves the board, since later
-picks cannot change any of that redraw's availability observations. To trade fidelity for
-speed between picks, the levers are `--sims`
-(which also sizes the option and candidate-survival redraws) and `ROLLOUT_SIMS`/`SIMS` in
-`ranker/league.py`.
+The ranker's next-pick-option, Monte Carlo, four-pick planning, rollout and
+candidate-survival stages fan out over a process pool (stdlib `multiprocessing`), so wall
+time scales with cores. The first decision uses a broader pool — the top three players in
+each position's year-1 and years-2-3 orders, deduplicated — while the bulk draft policy
+keeps its cheaper positional extremes. The option stage forces each candidate, redraws the
+intervening opponents, and measures the best marginal player actually left at my following
+turn. Candidate-survival redraws then measure how long every first-pick candidate lasts if
+I never take him. A beam uses those probabilities to propose target sequences across my
+next four held picks; every shorter prefix remains eligible, so ordinary two-pick drafting
+can resume at any turn. The best deterministic plan of each length is evaluated against
+noisy opponents, and the winning plan for each first candidate is played to the end of the
+draft for the reported final-roster EV. A target already taken by an opponent falls back to
+the ordinary policy.
+
+Runtime changes with the remaining board, available cores, candidate count and lookahead
+depth. Candidate-survival redraws stop as soon as their candidate leaves the board. The
+simulation levers remain `--sims` (option and candidate-survival redraws) and
+`ROLLOUT_SIMS`/`SIMS` in `ranker/league.py`; the four-pick depth and first-pick breadth are
+hardcoded league strategy constants there.
 
 Every ranking row carries `opponent_consensus_rank` and `opponent_rank_delta`. The
 consensus averages the nine complete source orders, counting a source once per manager
 associated with it; the delta is `opponent_consensus_rank - vor_rank`, so positive means
 my VOR process values the player earlier than the modeled field. The payload's
 `opponent_model.divergence` reports the number of distinct inferred sources plus mean and
-maximum absolute deltas. Those deltas identify disagreement; the Monte Carlo availability
-and next-pick rollout determine whether it can actually be exploited.
+maximum absolute deltas. Those deltas identify disagreement; the four-pick plan and its
+Monte Carlo rollout determine whether it can actually be exploited.
 
 The pool pipeline is not a step: it is offline and rebuilt a handful of times all
 offseason, and this runs every few minutes during a draft.
 
 `index.html` is a read-only dashboard view of `rankings.json`, ordered around the decisions
-at the table: comparison tables for my next three picks, my projected final team, best
+at the table: comparison tables for my next four picks, my projected final team, best
 available, then the other nine projected teams. Player comparisons show the raw Year 1
 projection, the Years 2–3 annual pace, their difference as the implied trend, and the
 model's roster-aware scores. Recommendation cards and best available also show the modeled
 field rank delta, with positive values marking players VOR ranks earlier. The first pick's
-next-option values come from its short
-branch-specific redraws and it also surfaces the candidate-specific
+next-option values come from its short branch-specific redraws; its final-EV cell shows the
+four-pick target plan selected for each candidate. It also surfaces the candidate-specific
 `p_available_if_i_pass` redraws and full-draft rollout; best available uses the broader
 Kaplan–Meier availability estimate and deliberately omits the redundant deterministic
 pick / likely-through columns.

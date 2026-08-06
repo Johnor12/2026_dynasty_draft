@@ -57,6 +57,13 @@ SURVIVAL_SIGMA = 3.5  # softness of "will he last until my next pick"
 # lists take the top of both the year-1 and the years-2-3 ordering, so this yields up
 # to four distinct players per position.
 LOOKAHEAD_PER_POS = 2
+# The live decision gets a broader pool than the bulk policy: the top three players from
+# each horizon/position ordering. This is enough to retain useful interior tradeoffs such
+# as a balanced veteran sitting behind the year-1 and years-2-3 extremes.
+FIRST_PICK_PER_POS = 3
+# The live decision plans targets across this many of my held picks before the ordinary
+# two-pick policy resumes. Four reaches across both sides of the next snake turn here.
+LOOKAHEAD_PICKS = 4
 # An entirely unfilled dedicated starter group receives a 3x source-rank boost;
 # the boost fades linearly as that position's dedicated starters are filled.
 OPPONENT_BALANCE_STRENGTH = 2.0

@@ -27,9 +27,10 @@ three years does this player add versus the best guy any team could have had at 
 position without spending a starting-caliber pick, period by period" (`vor_yr1` and
 `vor_yr23` carry the split). The `my_next_picks`
 block is the direct answer to "who should I draft next" — unlike `vor`, it sees my roster
-and the odds a player survives to my following pick, and its first pick is scored by
-playing every candidate out to the end of the draft (ranker/sim.py `rollout`). Rank
-columns are renumbered over the undrafted players actually emitted.
+and opponent demand. Its first decision searches target plans across my next four held
+picks, then plays each first-candidate plan out to the end of the draft (ranker/sim.py
+`four_pick_lookahead` and `rollout`). Rank columns are renumbered over the undrafted
+players actually emitted.
 
 A caveat the data imposes, not the model: QB replacement lands around QB20-21 = ~820
 points, which compresses elite QB value hard (Josh Allen is ~+225). That follows from the
@@ -56,8 +57,10 @@ from ranker.selftest import selftest
 from ranker.sim import (
     apply_option_redraw,
     apply_rollout,
+    broaden_first_pick,
     candidate_survival,
     converge,
+    four_pick_lookahead,
     monte_carlo,
     option_redraw,
     rollout,
@@ -170,6 +173,7 @@ def main(argv: list[str] | None = None) -> int:
     rep, stream, counts, draft, history = converge(
         players, board, args.report, opponents
     )
+    draft = broaden_first_pick(draft, players, rep, board, stream, opponents)
 
     candidates = (
         [c for _, _, c in draft.my_decisions.get(board.my_picks[0], [])]
@@ -196,13 +200,31 @@ def main(argv: list[str] | None = None) -> int:
     )
     if args.report and candidates:
         print(
-            f"rollout: {ROLLOUT_SIMS} full-draft playouts x {len(candidates)} candidates "
-            f"at my next pick",
+            f"candidate survival: {args.sims} banned-me redraws x {len(candidates)} "
+            f"candidates",
+            file=sys.stderr,
+        )
+    survival = candidate_survival(
+        players, rep, board, stream, candidates,
+        args.sims, args.noise, args.seed, opponents,
+    )
+    if args.report and candidates:
+        print(
+            f"four-pick lookahead: broadened {len(candidates)}-candidate first-pick pool",
+            file=sys.stderr,
+        )
+    lookahead = four_pick_lookahead(
+        players, rep, board, stream, candidates, survival, opponents
+    )
+    if args.report and candidates:
+        print(
+            f"rollout: {ROLLOUT_SIMS} full-draft playouts x "
+            f"{len(candidates)} four-pick plan sets",
             file=sys.stderr,
         )
     rolled = rollout(
         players, rep, board, stream, candidates,
-        ROLLOUT_SIMS, args.noise, args.seed, opponents,
+        ROLLOUT_SIMS, args.noise, args.seed, opponents, lookahead,
     )
     draft = apply_rollout(draft, rolled, players, rep, board, stream, opponents)
 
@@ -214,16 +236,6 @@ def main(argv: list[str] | None = None) -> int:
         )
     picks, drafted = monte_carlo(
         players, rep, board, stream, args.sims, args.noise, args.seed, opponents
-    )
-    if args.report and candidates:
-        print(
-            f"candidate survival: {args.sims} banned-me redraws x {len(candidates)} "
-            f"candidates",
-            file=sys.stderr,
-        )
-    survival = candidate_survival(
-        players, rep, board, stream, candidates,
-        args.sims, args.noise, args.seed, opponents,
     )
     rows = build_rankings(players, rep, stream, draft, picks, drafted, args.sims, board)
 
