@@ -49,7 +49,7 @@ from ranker.league import MARKET_WEIGHT, NOISE, ROLLOUT_SIMS, SEED, SIMS
 from ranker.output import build_payload, build_rankings, report_board, report_summary
 from ranker.pool import load_pool
 from ranker.selftest import selftest
-from ranker.sim import apply_rollout, converge, monte_carlo, rollout
+from ranker.sim import apply_rollout, candidate_survival, converge, monte_carlo, rollout
 from ranker.validate import validate
 
 
@@ -152,17 +152,27 @@ def main(argv: list[str] | None = None) -> int:
     picks, drafted = monte_carlo(
         players, rep, board, stream, args.sims, args.noise, args.seed, args.market_weight
     )
+    if args.report and candidates:
+        print(
+            f"candidate survival: {args.sims} banned-me redraws x {len(candidates)} "
+            f"candidates",
+            file=sys.stderr,
+        )
+    survival = candidate_survival(
+        players, rep, board, stream, candidates,
+        args.sims, args.noise, args.seed, args.market_weight,
+    )
     rows = build_rankings(players, rep, stream, draft, picks, drafted, args.sims, board)
 
     problems = board_problems + validate(rows, players, rep, counts, draft, board, history)
     payload = build_payload(
         players, pool_meta, board, rep, stream, counts, draft, history, rows, problems,
-        args.sims, args.noise, args.seed, args.market_weight, rolled,
+        args.sims, args.noise, args.seed, args.market_weight, rolled, survival,
     )
     args.output.write_text(json.dumps(payload, indent=2, ensure_ascii=False) + "\n")
 
     if args.report:
-        report_summary(rows, rep, counts, draft, board, rolled)
+        report_summary(rows, rep, counts, draft, board, rolled, survival)
     if problems:
         print(f"\n{len(problems)} VALIDATION PROBLEM(S):", file=sys.stderr)
         for p in problems:

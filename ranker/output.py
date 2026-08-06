@@ -69,10 +69,16 @@ def build_rankings(
 
     Two simulations are reported per player, and they answer different questions:
       * `sim_pick` is from the single deterministic draft, no noise.
-      * `sim_adp` / `p_available_at_my_picks` come from the noisy redraws (Gumbel noise on
-        the other teams' scores). Under deterministic play availability is 0 or 1, which
-        tells you nothing about risk, so the noise band is what makes the columns usable
-        at the table. It is also where the uncertainty in the ADP signal belongs.
+      * `sim_adp` / `p_drafted` / `p_available_at_my_picks` come from the noisy redraws
+        (Gumbel noise on the other teams' scores) and measure the other nine teams'
+        demand only. My own simulated picks are this policy's behaviour, not market
+        pressure — counting them as takes reported the model's own favourite stashes as
+        scarce — but a redraw where I took him early also observes no opponent demand
+        afterwards, so availability is a Kaplan-Meier estimate: an opponent take is the
+        event, my own take censors the redraw. Under deterministic play availability is
+        0 or 1, which tells you nothing about risk, so the noise band is what makes the
+        columns usable at the table. It is also where the uncertainty in the ADP signal
+        belongs.
     """
     my_picks = board.my_picks
     vor = compute_vor(players, rep)
@@ -96,28 +102,39 @@ def build_rankings(
     rows: list[dict] = []
     for i, p in enumerate(ranked, start=1):
         pos_rank[p.position] += 1
-        seen = picks[p.player_id]
-        # Availability at each of my picks, across the noisy redraws. Only the uncertain
-        # ones are emitted; a 0.0 or 1.0 entry carries no information for a draft board.
-        # `latest` is the actionable one — how long I can wait on him — so it is the last
-        # pick still at even odds, not the first (which is trivially 1.02 for everybody
-        # except whoever goes 1.01).
+        seen = picks[p.player_id]  # (pick, taken_by_me) per redraw he was drafted in
+        # P(no opponent has taken him before each of my picks), Kaplan-Meier: walking the
+        # takes in pick order, an opponent take drops survival by 1/at_risk; my own take
+        # censors the redraw (removes it from at_risk without an event) — after it that
+        # redraw can no longer show opponent demand, and counting it as either scarcity
+        # or availability was wrong in turn. Ties sort events before censors ((pick,
+        # False) < (pick, True)), the conservative convention. KM assumes my take times
+        # are independent of opponent demand — my slot drafts noiselessly, so roughly
+        # true; `p_available_if_i_pass` in my_next_picks is the assumption-free
+        # counterfactual where the decision needs one. Only uncertain entries are
+        # emitted; a 0.0 or 1.0 carries no information for a draft board. `latest` is
+        # the last pick still at even odds, not the first (which is trivially 1.02 for
+        # everybody except whoever goes 1.01).
         avail = {}
         latest = None
+        surv, at_risk, j = 1.0, sims, 0
+        removals = sorted(seen)
         for pick in my_picks:
-            # `>=`, not `>`: a player taken *at* one of my picks was taken by me, so he was
-            # on the board when I got there. Using `>` reported the board's top TE as
-            # unavailable at 1.02 in exactly the sims where he was my 1.02 pick.
-            prob = (sum(1 for s in seen if s >= pick) + (sims - len(seen))) / sims
-            if 0.01 < prob < 0.99:
-                avail[pick_label(pick)] = round(prob, 3)
-            if prob >= 0.5:
+            while j < len(removals) and removals[j][0] < pick:
+                if not removals[j][1]:
+                    surv *= 1.0 - 1.0 / at_risk
+                at_risk -= 1
+                j += 1
+            if 0.01 < surv < 0.99:
+                avail[pick_label(pick)] = round(surv, 3)
+            if surv >= 0.5:
                 latest = pick_label(pick)
         sim_pick = draft.pick_of.get(p.player_id)
-        mean = sum(seen) / len(seen) if seen else None
+        opp = [pk for pk, mine in seen if not mine]
+        mean = sum(opp) / len(opp) if opp else None
         sd = (
-            math.sqrt(sum((x - mean) ** 2 for x in seen) / len(seen))
-            if seen and len(seen) > 1
+            math.sqrt(sum((x - mean) ** 2 for x in opp) / len(opp))
+            if len(opp) > 1
             else None
         )
         rows.append(
@@ -163,7 +180,11 @@ def build_rankings(
 
 
 def my_next_picks(
-    draft: Draft, board: Board, rollout: dict | None = None, limit: int = 3
+    draft: Draft,
+    board: Board,
+    rollout: dict | None = None,
+    survival: dict[int, dict[int, float]] | None = None,
+    limit: int = 3,
 ) -> list[dict]:
     """The model's own decision at each of my next picks, from the deterministic draft.
 
@@ -178,6 +199,12 @@ def my_next_picks(
     policy's choice, `rollout_se` its standard error. The `take` for that pick is the
     rollout's — it can overrule the two-pick score, but only when the edge is clearly
     above the playout noise.
+
+    Its candidates also carry `p_available_if_i_pass` (sim.candidate_survival): across
+    redraws where my slot is banned from ever taking him, the share where no opponent
+    has taken him before each of my picks — the honest "how long can I wait on him".
+    Unlike the Kaplan-Meier `p_available_at_my_picks`, it needs no independence
+    assumption: the redraws actually play the pass-on-him counterfactual out.
     """
     out: list[dict] = []
     for pick_no in board.my_picks[:limit]:
@@ -202,6 +229,13 @@ def my_next_picks(
                 row["rollout_ev"] = round(s["ev"], 1)
                 row["rollout_edge"] = round(s["edge"], 1)
                 row["rollout_se"] = round(s["se"], 1)
+            if survival and pick_no == board.my_picks[0] and c.player_id in survival:
+                # Same emission rule as p_available_at_my_picks: certainties are noise.
+                row["p_available_if_i_pass"] = {
+                    pick_label(pk): round(p, 3)
+                    for pk, p in survival[c.player_id].items()
+                    if 0.01 < p < 0.99
+                }
             candidates.append(row)
         out.append(
             {
@@ -318,6 +352,7 @@ def build_payload(
     seed: int,
     market_weight: float,
     rollout: dict | None = None,
+    survival: dict[int, dict[int, float]] | None = None,
 ) -> dict:
     pos_h = pos_by_horizon(players)
     return {
@@ -370,10 +405,15 @@ def build_payload(
                 "when a candidate's full-horizon edge over the two-pick choice clears twice "
                 "its standard error, and when it overrules, the deterministic draft is "
                 "re-played with that pick forced — so sim_pick, example_draft and the later "
-                "picks here all describe the recommended path."
+                "picks here all describe the recommended path. Its candidates also carry "
+                "p_available_if_i_pass — P(no opponent has taken him before each of my "
+                "picks) across redraws where my slot never takes him: the honest 'how "
+                "long can I wait', with the pass-on-him counterfactual actually played "
+                "out rather than estimated (compare p_available_at_my_picks, which is "
+                "Kaplan-Meier from redraws where I do take him)."
             ),
             "rollout_sims": rollout["sims"] if rollout else None,
-            "picks": my_next_picks(draft, board, rollout),
+            "picks": my_next_picks(draft, board, rollout, survival),
         },
         "rankings_note": (
             "Undrafted players only, ranked over each other. `vor` is a points quantity "
@@ -507,7 +547,15 @@ def build_payload(
             "note": (
                 "Gumbel noise on the other 9 teams only, to turn 0/1 availability under "
                 "deterministic play into a usable probability band. sim_pick is from the "
-                "noiseless draft; sim_adp and p_available_at_my_picks are from these."
+                "noiseless draft; sim_adp, p_drafted and p_available_at_my_picks are from "
+                "these redraws and measure the other nine teams' demand only — my own "
+                "simulated picks are the policy under evaluation, not market pressure. "
+                "p_available_at_my_picks is a Kaplan-Meier estimate (an opponent take is "
+                "the event, my own take censors the redraw); "
+                "my_next_picks.p_available_if_i_pass is the assumption-free counterfactual "
+                "for the candidates that matter. sim_adp and p_drafted are over observed "
+                "opponent takes, so both read shallow for a player this policy usually "
+                "grabs first."
             ),
         },
         "validation": {"problems": problems, "ok": not problems},
@@ -577,6 +625,7 @@ def report_summary(
     draft: Draft,
     board: Board,
     rollout: dict | None = None,
+    survival: dict[int, dict[int, float]] | None = None,
 ) -> None:
     """Top of the board, the recommendation, and the levels, on stderr."""
     top = rows[:12]
@@ -610,6 +659,24 @@ def report_summary(
                 for c in first["candidates"]
             )
             print(f"  {first['pick']} full-horizon rollout: {cands}", file=sys.stderr)
+        if survival:
+            # Last of my picks each candidate survives to at even odds if I keep passing
+            # on him ('--' = likely gone before my current pick comes back around).
+            parts = []
+            for _, _, c in draft.my_decisions.get(board.my_picks[0], []):
+                sv = survival.get(c.player_id)
+                if not sv:
+                    continue
+                last = None
+                for pk in board.my_picks:
+                    if sv[pk] < 0.5:
+                        break
+                    last = pk
+                parts.append(f"{c.name} {pick_label(last) if last else '--'}")
+            print(
+                f"  {first['pick']} last even-odds pick if I pass: " + ", ".join(parts),
+                file=sys.stderr,
+            )
     for h in HORIZONS:
         print(
             f"\nreplacement {h}: "

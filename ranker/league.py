@@ -62,7 +62,7 @@ NOISE = 0.35  # Gumbel scale, as a fraction of the spread between a pick's candi
 # doubled the state (8 starter counts + 8 wire levels), so exact recurrence takes
 # longer than the 24 the single-horizon state needed.
 MAX_ITERS = 80
-MARKET_WEIGHT = 0.8  # how far the other nine teams are pulled toward the source ADP
+MARKET_WEIGHT = 0.7  # how far the other nine teams are pulled toward the source ADP
 SIMS = 200
 ROLLOUT_SIMS = 100  # full-draft playouts per candidate at my next pick (sim.rollout)
 SEED = 20260804

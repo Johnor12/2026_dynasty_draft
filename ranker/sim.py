@@ -132,6 +132,7 @@ class Draft:
         market_weight: float = 0.0,
         forced: dict[int, Player] | None = None,
         noise_from: int = 0,
+        my_ban: int | None = None,
     ) -> None:
         self.players = players
         self.rep = rep
@@ -213,6 +214,8 @@ class Draft:
         # before it plays deterministically, so every playout branches from one state.
         self.forced = forced or {}
         self.noise_from = noise_from
+        # My slot never drafts this player (candidate_survival's counterfactual redraws).
+        self.my_ban = my_ban
 
     def _next_pick_table(self) -> list[int | None]:
         """For each pick index, the slot's following pick index (None if it is their last)."""
@@ -438,9 +441,13 @@ class Draft:
         # market_weight 1.0 they are pure best-available-by-ADP drafters.
         w = self.market_weight if slot != self.my_slot else 0.0
         left = self.picks_left[slot - 1]
+        cands = self.candidates(roster, per_pos=1, picks_left=left, off=off)
+        if self.my_ban is not None and slot == self.my_slot:
+            # The ban yields to roster legality: if he is my only legal candidate, take him.
+            cands = [c for c in cands if c.player_id != self.my_ban] or cands
         scored: list[tuple[float, Player]] = []
         detail: list[tuple[float, float, Player]] = []
-        for cand in self.candidates(roster, per_pos=1, picks_left=left, off=off):
+        for cand in cands:
             now = (
                 team_value(roster_sorted, self.slot_rep, self.depth_value, self.streams, cand)
                 - base
@@ -701,7 +708,16 @@ def _worker_pool_size() -> int:
     return max(1, len(os.sched_getaffinity(0)))
 
 
-def _mc_draft(s: int) -> dict[int, int]:
+def _mc_draft(s: int) -> dict[int, tuple[int, bool]]:
+    """One noisy redraw -> per player (pick taken at, taken by my slot?).
+
+    The flag matters because my own simulated picks are this policy's behaviour, not
+    market pressure: counting them as takes reported the model's own favourite stashes
+    as scarce (a player the policy grabs early looked "gone by 5.03" when in most
+    redraws *I* was the one taking him). They cannot just be dropped either — a redraw
+    where I took him early observes no opponent demand after that pick — so downstream
+    they are censoring times, not events (see build_rankings).
+    """
     w = _WORKER
     d = Draft(
         w["players"], w["rep"], w["vor"], w["board"], wire=w["stream"], noise=w["noise"],
@@ -709,7 +725,8 @@ def _mc_draft(s: int) -> dict[int, int]:
         market_vor=w["mkt"], market_weight=w["market_weight"],
     )
     d.run()
-    return d.pick_of
+    slot_of = dict(zip(d.pick_nos, d.order))
+    return {pid: (pk, slot_of[pk] == d.my_slot) for pid, pk in d.pick_of.items()}
 
 
 def _rollout_playout(task: tuple[int, int]) -> float:
@@ -741,11 +758,17 @@ def monte_carlo(
     noise: float,
     seed: int,
     market_weight: float = 0.0,
-) -> tuple[dict[int, list[int]], dict[int, int]]:
-    """Noisy redraws -> pick distribution per player. Returns picks seen and draft counts."""
+) -> tuple[dict[int, list[tuple[int, bool]]], dict[int, int]]:
+    """Noisy redraws -> per-player (pick, taken-by-me) observations (see `_mc_draft`).
+
+    Returns the observations and, per player, the count of redraws in which an
+    *opponent* took him — my own takes are censoring, not demand.
+    `candidate_survival` is the assumption-free counterfactual, priced only for the
+    players where the decision actually needs it.
+    """
     vor = compute_vor(players, rep)
     mkt = market_value(board.available(players), vor) if market_weight else None
-    picks: dict[int, list[int]] = {p.player_id: [] for p in players}
+    picks: dict[int, list[tuple[int, bool]]] = {p.player_id: [] for p in players}
     drafted: dict[int, int] = {p.player_id: 0 for p in players}
     with multiprocessing.Pool(
         _worker_pool_size(),
@@ -753,10 +776,65 @@ def monte_carlo(
         initargs=(players, rep, board, stream, noise, seed, mkt, market_weight, vor, None),
     ) as pool:
         for pick_of in pool.map(_mc_draft, range(sims)):
-            for pid, pick in pick_of.items():
-                picks[pid].append(pick)
-                drafted[pid] += 1
+            for pid, (pick, mine) in pick_of.items():
+                picks[pid].append((pick, mine))
+                if not mine:
+                    drafted[pid] += 1
     return picks, drafted
+
+
+def _survival_draft(task: tuple[int, int]) -> int | None:
+    cand_id, s = task
+    w = _WORKER
+    d = Draft(
+        w["players"], w["rep"], w["vor"], w["board"], wire=w["stream"], noise=w["noise"],
+        rng=random.Random(w["seed"] + s),
+        market_vor=w["mkt"], market_weight=w["market_weight"], my_ban=cand_id,
+    )
+    d.run()
+    return d.pick_of.get(cand_id)
+
+
+def candidate_survival(
+    players: list[Player],
+    rep: dict[str, dict[str, float]],
+    board: Board,
+    stream: dict[str, dict[str, float]],
+    candidates: list[Player],
+    sims: int,
+    noise: float,
+    seed: int,
+    market_weight: float,
+) -> dict[int, dict[int, float]]:
+    """P(a next-pick candidate is still there at each of my picks) if I keep passing on him.
+
+    "How long can I wait on him" cannot be read off `monte_carlo`: my slot drafts in
+    those redraws, and for a player this policy likes it takes him early in most of them,
+    which censors the opponents' demand exactly where the question matters. So each
+    candidate gets his own redraws with my slot banned from ever taking him (`my_ban`) —
+    the other nine teams play exactly as in `monte_carlo` — and availability at my pick
+    is simply "no opponent had taken him yet". Priced for my next pick's candidates only:
+    one banned-me redraw set per player is too expensive for the whole board.
+    """
+    if not board.my_picks or not candidates:
+        return {}
+    vor = compute_vor(players, rep)
+    mkt = market_value(board.available(players), vor) if market_weight else None
+    tasks = [(cand.player_id, s) for cand in candidates for s in range(sims)]
+    with multiprocessing.Pool(
+        _worker_pool_size(),
+        initializer=_init_worker,
+        initargs=(players, rep, board, stream, noise, seed, mkt, market_weight, vor, None),
+    ) as pool:
+        flat = pool.map(_survival_draft, tasks)
+    out: dict[int, dict[int, float]] = {}
+    for i, cand in enumerate(candidates):
+        taken = flat[i * sims : (i + 1) * sims]
+        out[cand.player_id] = {
+            pick: sum(1 for pk in taken if pk is None or pk >= pick) / sims
+            for pick in board.my_picks
+        }
+    return out
 
 
 def rollout(

@@ -323,14 +323,15 @@ pipelines as separate as they are everywhere else, and runs them from the repo r
 their own default paths apply.
 
 ```
-uv run refresh.py                       # draft.json, then rankings.json  (~9 min on 2 cores)
+uv run refresh.py                       # draft.json, then rankings.json  (~18 min on 2 cores)
 uv run refresh.py --report              # + both steps' validation summaries on stderr
 ```
 
-The ranker's Monte Carlo and rollout stages fan out over a process pool (stdlib
-`multiprocessing`), so wall time scales with cores — the 2-core Codespace is the slow
-case. To trade fidelity for speed between picks, the levers are `--sims` and
-`ROLLOUT_SIMS`/`SIMS` in `ranker/league.py`.
+The ranker's Monte Carlo, rollout and candidate-survival stages fan out over a process
+pool (stdlib `multiprocessing`), so wall time scales with cores — the 2-core Codespace
+is the slow case. To trade fidelity for speed between picks, the levers are `--sims`
+(which also sizes the candidate-survival redraws) and `ROLLOUT_SIMS`/`SIMS` in
+`ranker/league.py`.
 
 The pool pipeline is not a step: it is offline and rebuilt a handful of times all
 offseason, and this runs every few minutes during a draft.
