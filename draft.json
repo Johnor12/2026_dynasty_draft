@@ -1,13 +1,13 @@
 {
   "source": "https://api.sleeper.app/v1/draft/1388293618208374784",
-  "fetched_at": "2026-08-06T00:25:18+00:00",
+  "fetched_at": "2026-08-06T01:10:33+00:00",
   "draft_id": "1388293618208374784",
   "league_id": "1388293617071714304",
   "league_name": "Dudes",
   "season": "2026",
   "status": "drafting",
   "started_at": "2026-08-04T13:02:55+00:00",
-  "last_picked_at": "2026-08-06T00:09:49+00:00",
+  "last_picked_at": "2026-08-06T01:07:42+00:00",
   "format": {
     "type": "snake",
     "teams": 10,
@@ -16,16 +16,16 @@
     "scoring_type": "dynasty_2qb"
   },
   "pick_count": 290,
-  "picks_made": 37,
-  "picks_pending": 253,
+  "picks_made": 38,
+  "picks_pending": 252,
   "on_the_clock": {
-    "pick_no": 38,
+    "pick_no": 39,
     "round": 4,
-    "pick_in_round": 8,
-    "draft_slot": 8,
-    "user_id": "1127785716420898816",
-    "username": "johnor",
-    "slot": "4.08"
+    "pick_in_round": 9,
+    "draft_slot": 9,
+    "user_id": "207916077173182464",
+    "username": "dccb31",
+    "slot": "4.09"
   },
   "me": {
     "username": "johnor",
@@ -34,19 +34,19 @@
     "roster_id": 2
   },
   "my_next_pick": {
-    "pick_no": 38,
-    "round": 4,
-    "pick_in_round": 8,
+    "pick_no": 43,
+    "round": 5,
+    "pick_in_round": 3,
     "draft_slot": 8,
     "user_id": "1127785716420898816",
     "username": "johnor",
-    "slot": "4.08",
-    "picks_away": 0
+    "slot": "5.03",
+    "picks_away": 4
   },
   "board_derivation": {
     "method": "snake, order reverses at round 3; traded picks applied",
-    "checked_against_made_picks": 37,
-    "slot_and_roster_agree": 37,
+    "checked_against_made_picks": 38,
+    "slot_and_roster_agree": 38,
     "rounds_exercised": [
       1,
       2,
@@ -799,12 +799,12 @@
       "user_id": "1127785716420898816",
       "username": "johnor",
       "is_mine": true,
-      "status": "pending",
-      "sleeper_id": null,
-      "name": null,
-      "position": null,
-      "team": null,
-      "is_keeper": null
+      "status": "made",
+      "sleeper_id": "8183",
+      "name": "Brock Purdy",
+      "position": "QB",
+      "team": "SF",
+      "is_keeper": false
     },
     {
       "pick_no": 39,
