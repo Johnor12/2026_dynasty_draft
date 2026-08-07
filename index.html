@@ -574,7 +574,7 @@ function chanceCell(candidate, stats, pick, d) {
 
 function renderNextPicks(d, byId) {
   document.getElementById("picksNote").textContent =
-    "Roster gain is the player's marginal value to your current roster. Next-pick option value and two-pick total describe the ordinary fallback policy; they are diagnostics, not the first card's ranking. The first card is ordered by final-roster EV after searching target plans across four held picks and playing each plan through the entire remaining draft " +
+    "Lineup gain is the player's marginal expected-lineup value, including call-up probability for positional depth and one unique waiver fallback per position. Next-pick option value and two-pick total describe the ordinary fallback policy; they are diagnostics, not the first card's ranking. The first card is ordered by final-roster EV after searching target plans across four held picks and playing each plan through the entire remaining draft " +
     `${d.my_next_picks.rollout_sims} times. Rollout edges use the two-pick choice as the fallback baseline, while final-roster EV remains the objective. A listed path contains only forced targets; the ordinary policy resumes after its last target or whenever an opponent takes a target first. The recommendation changes only when an edge clears twice its simulation error. Raw player points use this league's scoring.`;
 
   const prior = [];
@@ -637,7 +637,7 @@ function renderNextPicks(d, byId) {
             h("th", {}, "Player"), h("th", { class: "num" }, "Year 1"),
             h("th", { class: "num" }, "Years 2–3 / yr"), h("th", { class: "num" }, "Trend / yr"),
             h("th", { class: "num", title: "Three-year points above the period-specific marginal starter" }, "VOR"),
-            h("th", { class: "num", title: "Marginal value added to your roster" }, "Roster gain"),
+            h("th", { class: "num", title: "Marginal expected-lineup value added to your roster" }, "Lineup gain"),
             h("th", { class: "num", title: "Expected value of your best option at the following pick" }, "Next-pick option"),
             h("th", { class: "num", title: "Ordinary-policy diagnostic; this does not rank the first card" }, "Two-pick total"),
             h("th", {}, "Chance to reach"),

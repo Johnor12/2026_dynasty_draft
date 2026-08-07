@@ -67,6 +67,11 @@ Each component keeps its own paths, entry points, and implementation context. Of
 checks remain beside the draft, investigator, and ranker code they exercise. The pipelines
 meet through their published JSON contracts rather than shared orchestration.
 
+The ranker values a roster as expected optimal lineup points in separate year-one and
+years-2–3 horizons. Position-wide availability determines when depth is called on, and
+one unique final waiver body per position supplies the fallback. Marginal-starter VOR is
+reported separately rather than mixed into bench utility.
+
 ## Common workflows
 
 Rebuild the projection pool after saving updated provider HTML:

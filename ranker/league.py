@@ -45,13 +45,12 @@ SLOT_ELIGIBLE = {
 
 # --- strategy knobs ---------------------------------------------------------------
 
-DEPTH_BASE = 0.30  # growth: a first backup keeps this fraction of his upside over the wire
-POSITION_DEPTH_DECAY = 0.55  # ...and each further body at the same position much less
-# Insurance: expected share of a season the first backup at a position inherits from the
-# starters ahead of him — their byes plus games missed to injury. RB highest (two dedicated
-# starters, worst attrition), QB lowest (one starter, durable). Judgment-call constants on
-# league-wide averages, not per-player durability.
-INSURANCE_BASE = {"QB": 0.08, "RB": 0.20, "WR": 0.12, "TE": 0.10}
+# Chance a player is unavailable when a lineup job must be filled. The expected-lineup
+# solver applies these position-wide assumptions to the whole depth chart: a backup's
+# contribution is the exact probability that too few higher-ranked teammates are active.
+# Projections already express growth, so years 2-3 use the same availability model rather
+# than receiving a second, separate growth bonus.
+UNAVAILABLE_RATE = {"QB": 0.08, "RB": 0.20, "WR": 0.12, "TE": 0.10}
 SURVIVAL_SIGMA = 3.5  # softness of "will he last until my next pick"
 # Candidates per position *per horizon ordering* considered for the next pick — the
 # lists take the top of both the year-1 and the years-2-3 ordering, so this yields up

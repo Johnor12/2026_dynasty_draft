@@ -32,7 +32,7 @@ def converge(
     Draft,
     dict,
 ]:
-    """Fixed point: replacement -> valuation -> draft -> starter counts -> replacement.
+    """Fixed point: wire value -> draft -> starter counts and wire value.
 
     All levels and counts are per horizon (value.HORIZONS): each iteration's draft is
     measured twice — once on year-1 points, once on years-2-3 points — and both sets of
@@ -45,15 +45,15 @@ def converge(
 
     So iterate undamped, watch for a repeated state, and average the replacement levels
     over the cycle once one closes. Each iteration is a deterministic function of the
-    previous one's (replacement, wire) pair, and the replacement levels are themselves a
-    function of the starter counts, so the state key is the counts plus the wire levels.
+    previous one's wire levels, and the replacement levels are a function of the resulting
+    starter counts, so the state key is the counts plus the wire levels.
     A cycle of length 1 is an exact fixed point; a longer cycle means the draft genuinely
     alternates between neighbouring league shapes (e.g. 20 vs 21 RBs starting) and the
     average across it is the honest answer. The cycle is reported rather than hidden.
 
-    Two levels come out of each draft and both are iterated: the marginal-starter level
-    that is the VOR baseline, and the wire level that prices bench depth. They are separate
-    quantities and must not be collapsed into one (see `slot_replacement`).
+    Two levels come out of each draft: the marginal-starter level that reports VOR, and
+    the wire level that supplies one unique fallback body per position inside expected
+    lineup value. They answer different questions and are reported separately.
 
     Every draft here starts from `board`, so on a live board the fixed point is over the
     rosters this league will actually finish with. The measurement is still league-wide and
@@ -171,4 +171,3 @@ def converge(
         "trace": trace,
     }
     return rep, stream, counts, draft, history
-

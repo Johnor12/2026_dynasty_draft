@@ -16,9 +16,9 @@ from collections.abc import Sequence
 from .board import Board
 from .league import FIRST_PICK_PER_POS, LOOKAHEAD_PICKS
 from .opponents import OpponentStrategy
-from .pool import Player
+from .pool import Player, by_position
 from .simulation import Draft
-from .value import compute_vor, sorted_by_horizon, team_value
+from .value import compute_vor, sorted_by_horizon, team_value, wire_replacement
 
 
 def broaden_first_pick(
@@ -76,12 +76,8 @@ def _target_map(plan: Sequence[int]) -> dict[int, Player]:
 
 def _final_roster_value(draft: Draft) -> float:
     """The common end-of-draft objective used by plan screening and noisy rollouts."""
-    return team_value(
-        sorted_by_horizon(draft.rosters[draft.board.my_slot - 1]),
-        draft.slot_rep,
-        draft.depth_value,
-        draft.stream_levels(),
-    )
+    wire = wire_replacement(draft.taken, by_position(draft.players))
+    return team_value(sorted_by_horizon(draft.rosters[draft.board.my_slot - 1]), wire)
 
 
 def _plan_playout(plan: tuple[int, ...]) -> float:
@@ -134,14 +130,12 @@ def _best_option_value(draft: Draft) -> float:
     """Best marginal value available to my roster at the current draft state."""
     slot = draft.my_slot
     roster = draft.rosters[slot - 1]
-    draft.streams = draft.stream_levels()
     roster_sorted = sorted_by_horizon(roster)
-    base = team_value(roster_sorted, draft.slot_rep, draft.depth_value, draft.streams)
+    base = team_value(roster_sorted, draft.wire)
     off = draft.off_pool[slot - 1]
     values = [
         (
-            team_value(roster_sorted, draft.slot_rep, draft.depth_value, draft.streams, cand)
-            - base
+            team_value(roster_sorted, draft.wire, cand) - base
         )
         / draft.roster_depth_penalty(roster, off, cand.position)
         for cand in draft.candidates(
@@ -268,7 +262,7 @@ def four_pick_lookahead(
     """Choose one target plan per first-pick candidate across my next four held picks.
 
     Candidate survival supplies the market timing signal the old two-pick policy discarded.
-    A small beam proposes sequences by survival-weighted marginal roster gain; every prefix
+    A small beam proposes sequences by survival-weighted marginal lineup gain; every prefix
     is also retained, so resuming the ordinary policy is an explicit option at turns two,
     three, and four. The best deterministic plan of each length advances; `rollout` applies
     opponent noise and chooses the winning plan for each first candidate.
@@ -283,15 +277,12 @@ def four_pick_lookahead(
     # board can be several opponent picks away from my pick.
     state = Draft(players, rep, vor, board, wire=stream, opponents=opponents)
     state.run(stop_before=first_index)
-    state.streams = state.stream_levels()
     roster = state.rosters[board.my_slot - 1]
     off = state.off_pool[board.my_slot - 1]
     picks_left = state.picks_left[board.my_slot - 1]
     by_id = {p.player_id: p for p in candidates}
     candidate_ids = tuple(by_id)
-    base = team_value(
-        sorted_by_horizon(roster), state.slot_rep, state.depth_value, state.streams
-    )
+    base = team_value(sorted_by_horizon(roster), state.wire)
     value_cache: dict[tuple[int, ...], float] = {(): base}
 
     def roster_value(plan: tuple[int, ...]) -> float:
@@ -300,9 +291,7 @@ def four_pick_lookahead(
         if value is None:
             value = team_value(
                 sorted_by_horizon(roster + [by_id[player_id] for player_id in plan]),
-                state.slot_rep,
-                state.depth_value,
-                state.streams,
+                state.wire,
             )
             value_cache[key] = value
         return value

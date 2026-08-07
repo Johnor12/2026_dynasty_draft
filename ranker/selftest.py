@@ -9,9 +9,6 @@ be rejected.
 from __future__ import annotations
 
 import dataclasses
-import itertools
-import math
-import random
 import sys
 
 from .board import fresh_board, load_board
@@ -22,9 +19,6 @@ from .league import (
     POSITIONS,
     ROSTER_DEPTH_TARGETS,
     ROUNDS,
-    SEED,
-    SLOT_ELIGIBLE,
-    STARTING_SLOTS,
     TEAMS,
     TOTAL_PICKS,
     draft_order,
@@ -34,13 +28,12 @@ from .opponents import OpponentStrategy, expected_log2_rank, rank_power
 from .pool import Player
 from .simulation import Draft
 from .value import (
-    HORIZONS,
     compute_vor,
-    horizon_points,
-    lineup_surplus,
+    expected_lineup_value,
+    position_expected_value,
     seed_replacement,
-    slot_replacement,
     sorted_by_horizon,
+    team_value,
 )
 
 
@@ -217,73 +210,104 @@ def planning_selftest(players: list[Player]) -> list[str]:
     return fails
 
 
-def brute_force_surplus(
-    roster: list[Player], slot_rep: dict[str, float], stream: dict[str, float], h: str
-) -> float:
-    """Exhaustive best assignment of a small roster to slots, in one horizon.
-
-    Same objective as the greedy: filled slots earn (points - slot_rep), slots left
-    open earn (stream - slot_rep). Benching everyone is a legal assignment, so the
-    maximum can be negative on a bad roster against a picked-clean board.
-    """
-    slots = [s for s, n in STARTING_SLOTS.items() for _ in range(n)]
-    empty = sum(stream[s] - slot_rep[s] for s in slots)
-    best = -math.inf
-    for combo in itertools.product(range(len(slots) + 1), repeat=len(roster)):
-        used: set[int] = set()
-        total = empty
-        ok = True
-        for p, s in zip(roster, combo):
-            if s == len(slots):  # benched
-                continue
-            if s in used or p.position not in SLOT_ELIGIBLE[slots[s]]:
-                ok = False
-                break
-            used.add(s)
-            total += horizon_points(p, h) - stream[slots[s]]
-        if ok:
-            best = max(best, total)
-    return best
-
-
-def lineup_selftest(players: list[Player], trials: int = 300, seed: int = SEED) -> list[str]:
-    """The greedy lineup solver must match brute force on random rosters, per horizon.
-
-    Two stream scenarios per roster: a fresh board (stream = the slot levels, so an open
-    slot costs nothing) and a picked-clean one (stream at 60% of the levels, so open
-    slots go negative and below-replacement starters still beat streaming).
-    """
-    rng = random.Random(seed)
-    rep = seed_replacement(players)
-    slot_rep = slot_replacement(rep)
+def lineup_selftest(players: list[Player]) -> list[str]:
+    """Expected lineup value is exact on small cases and monotone by construction."""
     fails: list[str] = []
-    worst = 0.0
-    for _ in range(trials):
-        roster = rng.sample(players, rng.randint(1, 6))
-        roster_sorted = sorted_by_horizon(roster)
-        for h in HORIZONS:
-            scenarios = (dict(slot_rep[h]), {s: 0.6 * v for s, v in slot_rep[h].items()})
-            for stream in scenarios:
-                greedy, _, _ = lineup_surplus(roster_sorted[h], slot_rep[h], stream, h)
-                exact = brute_force_surplus(roster, slot_rep[h], stream, h)
-                worst = max(worst, exact - greedy)
-                if exact - greedy > 1e-6:
-                    fails.append(
-                        f"lineup solver ({h}, stream {stream['QB']:.0f}): "
-                        + ", ".join(
-                            f"{p.name}({p.position},{horizon_points(p, h):.0f})"
-                            for p in roster
-                        )
-                        + f"  greedy={greedy:.1f} exact={exact:.1f}"
-                    )
-                    break
-            if fails:
-                break
-        if fails:
-            break
+
+    def check(ok: bool, message: str) -> None:
+        if not ok:
+            fails.append(f"lineup: {message}")
+
+    def player(player_id: int, name: str, position: str, yr1: int, yr23: int) -> Player:
+        return Player(
+            player_id=player_id,
+            name=name,
+            position=position,
+            team="TEST",
+            age=25.0,
+            bye_week=None,
+            is_rookie=False,
+            points=yr1 + yr23,
+            points_1yr=yr1,
+            provider_adp=None,
+        )
+
+    qb1 = player(900001, "QB 1", "QB", 100, 100)
+    qb2 = player(900002, "QB 2", "QB", 80, 80)
+    # With one QB job: QB1 always supplies his unconditional projection, QB2 is used
+    # when QB1 is unavailable, and the unique wire body is used only when both are out.
+    one_qb = position_expected_value([qb1, qb2], 50.0, 1, "yr1")
+    check(
+        abs(one_qb - (100.0 + 0.08 * 80.0 + 0.08**2 * 50.0)) < 1e-9,
+        f"one-QB expectation is {one_qb:.6f}",
+    )
+    two_qb = position_expected_value([qb1, qb2], 50.0, 2, "yr1")
+    check(
+        abs(two_qb - (180.0 + (1.0 - 0.92**2) * 50.0)) < 1e-9,
+        f"two-QB expectation is {two_qb:.6f}",
+    )
+
+    zero_wire = {"QB": 100.0, "RB": 0.0, "WR": 0.0, "TE": 0.0}
+    empty = expected_lineup_value([], zero_wire, "yr1")
+    check(abs(empty - 100.0) < 1e-9, "one wire QB filled more than one lineup slot")
+
+    base = [
+        player(900010, "Base QB", "QB", 327, 531),
+        player(900011, "RB 1", "RB", 220, 400),
+        player(900012, "RB 2", "RB", 200, 380),
+        player(900013, "WR 1", "WR", 230, 440),
+        player(900014, "WR 2", "WR", 210, 420),
+        player(900015, "WR 3", "WR", 190, 400),
+        player(900016, "TE 1", "TE", 180, 350),
+    ]
+    wire = {
+        "yr1": {"QB": 13.0, "RB": 45.0, "WR": 92.0, "TE": 97.0},
+        "yr23": {"QB": 191.0, "RB": 163.0, "WR": 263.0, "TE": 227.0},
+    }
+    low = player(900020, "Low QB", "QB", 325, 515)
+    high = player(900021, "High QB", "QB", 325, 546)
+    low_future = expected_lineup_value(base + [low], wire["yr23"], "yr23")
+    high_future = expected_lineup_value(base + [high], wire["yr23"], "yr23")
+    check(high_future > low_future, "a higher same-position future projection lost value")
+
+    before = team_value(sorted_by_horizon(base), wire)
+    after = team_value(sorted_by_horizon(base + [low]), wire)
+    check(after >= before, "adding a player lowered roster value")
+    improved = player(low.player_id, low.name, low.position, low.points_1yr, 532)
+    low_threshold = player(low.player_id, low.name, low.position, low.points_1yr, 530)
+    low_value = team_value(sorted_by_horizon(base + [low_threshold]), wire)
+    improved_value = team_value(sorted_by_horizon(base + [improved]), wire)
+    check(improved_value > low_value, "crossing the former stream threshold lowered value")
+
+    # Regression for the live-board smell that motivated this model: Stafford's larger
+    # years-2-3 projection must add more future-lineup value than Murray's to the roster
+    # that currently owns Purdy. Their year-1 difference is deliberately excluded here.
+    by_name = {p.name: p for p in players}
+    current = [
+        by_name[name]
+        for name in (
+            "Ja'Marr Chase",
+            "Jeremiyah Love",
+            "Nico Collins",
+            "Brock Purdy",
+            "TreVeyon Henderson",
+            "Tucker Kraft",
+            "Zay Flowers",
+            "Josh Jacobs",
+        )
+    ]
+    murray = by_name["Kyler Murray"]
+    stafford = by_name["Matthew Stafford"]
+    murray_future = expected_lineup_value(current + [murray], wire["yr23"], "yr23")
+    stafford_future = expected_lineup_value(current + [stafford], wire["yr23"], "yr23")
+    check(
+        stafford_future > murray_future,
+        "Stafford's higher years-2-3 projection valued below Murray's",
+    )
+
     print(
-        f"  greedy lineup solver matched brute force on {trials} random rosters "
-        f"x {len(HORIZONS)} horizons x 2 stream scenarios (max shortfall {worst:.2e})",
+        "  expected lineup: exact QB depth probabilities, unique wire capacity, and "
+        "projection/addition monotonicity",
         file=sys.stderr,
     )
     return fails

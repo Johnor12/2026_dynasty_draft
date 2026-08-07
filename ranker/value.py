@@ -1,72 +1,43 @@
-"""What a roster is worth, and where replacement levels come from.
+"""Expected lineup points and replacement-level measurement.
 
-Everything is in points above a baseline, never raw points, so that filling an empty
-slot is never confused with a real gain — and everything is priced *per horizon*.
-The provider's cumulative 1- and 3-year projections split each player into two
-components: year 1 (`points_1yr`) and years 2-3 (`points - points_1yr`). Lineups are
-fielded per season, so a 69-point injury year cannot hide inside a healthy 3-year sum:
-the starting lineup is solved separately on each component against that horizon's own
-replacement levels, and the surpluses add. A team's value is
+The provider's cumulative projections are split into year 1 and years 2-3. A roster is
+valued separately in both horizons, then the results are added. Within one horizon the
+solver considers every legal positional composition of the ten starting slots.
 
-    V(roster) = sum over horizons h of
-        sum over filled starting slots of (points_h - that slot's replacement_h)
-      + sum over players benched in h of  0.55^d * depth_value_h
+For a composition that starts ``c`` players at a position, players are ordered by their
+points when active. The first ``c`` receive their full projection. Every deeper player
+receives his projection times the probability that fewer than ``c`` higher-ranked
+teammates are available. Those probabilities come from the position-wide unavailable
+rates in ``league.py`` and are calculated exactly with a small Bernoulli distribution.
+The best waiver player at the position is inserted once as an always-available body, so
+one free agent can fill one lineup job, never several simultaneous holes.
 
-where the year-1 bench job is insurance only — ins[pos] * max(points_yr1 - wire_yr1, 0),
-a backup who cannot play this season cannot cover starter games missed this season —
-and the years-2-3 bench jobs are growth plus insurance on the years-2-3 excess,
-(0.30 + ins[pos]) * max(points_yr23 - wire_yr23, 0). Both are measured against that
-horizon's wire and floored at zero. A backloaded rookie still outranks a flat veteran
-with the same 3-year sum on the bench — his value just lives in the horizon where he
-actually produces it.
-
-A starting slot no rostered body can beat is *streamed*, and streaming is not free: the
-slot yields the stream level — the best player still available at a position the slot
-accepts, capped at the replacement level — and is charged (stream - replacement) <= 0.
-Early in a draft the cap binds and streaming costs nothing, which is the documented
-counterfactual for skipping a position (you end the draft with a late-round starter,
-not with nothing). As startable bodies at a horizon dry up, the stream level falls and
-every unfilled slot at that horizon goes negative, which is what stops a roster from
-punting year 1 for free while it stacks years-2-3 value: by the end of the draft the
-stream level *is* the wire, so a year-1 hole is charged what it actually costs.
-
-d counts the bench players that team already has at the same position, per horizon. The
-value of a player to a team is V(roster + player) - V(roster). Three choices in there
-each cost a degenerate draft to learn, and are explained at their definitions:
-
-  * Starting slots are priced against the *marginal-starter* level, the same baseline VOR
-    reports, so the board and the simulated drafters cannot disagree (`slot_replacement`).
-  * A flex slot is priced at max over the positions it accepts, so a player is worth
-    strictly less there than in his dedicated slot. That is where scarcity comes from,
-    rather than being asserted.
-  * Bench value is measured against the wire and floored at zero, discounted by depth at
-    the player's own position (`team_value`).
-
-Roster legality is a constraint, not a price: 1 QB / 2 RB / 3 WR / 1 TE come from slots
-nothing else can cover, so once a team's remaining picks equal its unfilled mandatory
-spots, its candidates narrow to what it still owes (`Draft.candidates` in simulation.py).
+This is one objective with one set of units: expected lineup points. There is no role
+threshold and no separate bench bonus. A better projection can retain every role a worse
+projection could fill, which makes roster value monotone when a player improves, is
+replaced by a better same-position player, or is simply added. Marginal-starter levels
+remain the board's VOR baseline; they are not mixed into roster utility.
 """
 
 from __future__ import annotations
 
 import math
+from functools import lru_cache
 
 from .league import (
-    POSITION_DEPTH_DECAY,
+    DEDICATED_SLOTS,
     POSITIONS,
-    ROSTER_SLOTS,
     SLOT_CHAIN,
-    SLOT_ELIGIBLE,
     STARTING_SLOTS,
     TEAMS,
+    UNAVAILABLE_RATE,
 )
 from .pool import Player, by_position
 
 # The two value horizons the provider's cumulative projections can distinguish:
 # year 1, and years 2-3 as one block. Every level dict in the ranker — replacement,
-# wire, slot levels — is keyed by horizon first, position/slot second.
+# and wire — is keyed by horizon first, position second.
 HORIZONS = ("yr1", "yr23")
-_DEPTH_WEIGHTS = tuple(POSITION_DEPTH_DECAY**depth for depth in range(ROSTER_SLOTS))
 
 
 def horizon_points(p: Player, h: str) -> float:
@@ -118,118 +89,108 @@ def insert_sorted(seq: list[Player], p: Player, h: str) -> list[Player]:
     return out
 
 
-# --- lineup solver ----------------------------------------------------------------
+# --- expected lineup solver -------------------------------------------------------
 
 
-def slot_replacement(rep: dict[str, dict[str, float]]) -> dict[str, dict[str, float]]:
-    """What each starting slot yields without spending a valuable pick on it, per horizon.
-
-    Built from the same baseline as VOR, deliberately, so that the board and the simulated
-    drafters cannot disagree. Pricing these off the wire levels instead was tried and is
-    wrong: the wire QB is worth 223, so filling an empty QB slot scored ~795 and the
-    optimizer took Jayden Daniels (VOR 206) at 1.02 over Trey McBride (VOR 446) sitting
-    right there. The flaw is the counterfactual — if you skip a QB early you do not end the
-    draft with nothing at QB, you end it with a late-round QB, which is the marginal-starter
-    level by construction. So that is the price of an empty slot.
-
-    What this pricing does *not* capture is that filling the slot late still costs a pick;
-    that is a roster-legality matter, handled by reserving picks in `Draft.candidates`
-    rather than by distorting the value here.
-    """
-    return {
-        h: {slot: max(rep[h][pos] for pos in elig) for slot, elig in SLOT_ELIGIBLE.items()}
-        for h in HORIZONS
-    }
-
-
-def lineup_surplus(
-    roster: list[Player],
-    slot_rep: dict[str, float],
-    stream: dict[str, float],
-    h: str,
-) -> tuple[float, list[Player], dict[str, int]]:
-    """Points above replacement from the optimal starting lineup in one horizon.
-
-    `roster` must already be sorted by this horizon's points descending (`_HKEY[h]` —
-    see `sorted_by_horizon`); the greedy's exactness depends on walking it in that order.
-
-    `slot_rep` is that horizon's slot levels and `stream` what each slot yields unfilled
-    (the best available body the slot accepts, capped at `slot_rep` — see the module
-    docstring). A slot is filled when a rostered player beats its stream level, earning
-    (points - slot_rep) even when that is negative — a below-replacement starter still
-    beats signing the stream — and every slot left open is charged (stream - slot_rep).
-
-    Greedy in descending horizon points, each player taking the most restrictive slot
-    still open. Exact because slot eligibility is laminar and both levels are
-    non-decreasing along every chain (`stream` is a min against `slot_rep` of a max over
-    a growing eligibility set), so a player never gains by moving to a looser slot;
-    --selftest checks this against brute force. A player who cannot beat the stream in
-    the tightest open slot cannot beat it anywhere looser and is benched. The lineups
-    can differ between horizons — that is the point: a player recovering from injury is
-    benched in year 1 and started in years 2-3. The bench comes back in horizon-points
-    order because the roster is walked in that order.
-    """
-    caps = dict(STARTING_SLOTS)
-    surplus = 0.0
-    bench: list[Player] = []
-    started = {pos: 0 for pos in POSITIONS}
-    year1 = h == "yr1"
-    for p in roster:
-        pts = p.points_yr1 if year1 else p.points_yr23
-        placed = False
-        for slot in SLOT_CHAIN[p.position]:
-            if caps[slot] == 0:
-                continue
-            if pts <= stream[slot]:
-                break
-            caps[slot] -= 1
-            surplus += pts - slot_rep[slot]
-            started[p.position] += 1
-            placed = True
-            break
-        if not placed:
-            bench.append(p)
-    for slot, n in caps.items():
-        if n:
-            surplus += n * (stream[slot] - slot_rep[slot])
-    return surplus, bench, started
+def _starter_compositions() -> tuple[dict[str, int], ...]:
+    """All position counts that can legally occupy the ten starting slots."""
+    total = sum(STARTING_SLOTS.values())
+    out: list[dict[str, int]] = []
+    for qb in range(DEDICATED_SLOTS["QB"], DEDICATED_SLOTS["QB"] + 2):
+        for rb in range(DEDICATED_SLOTS["RB"], DEDICATED_SLOTS["RB"] + 4):
+            for wr in range(DEDICATED_SLOTS["WR"], DEDICATED_SLOTS["WR"] + 4):
+                for te in range(DEDICATED_SLOTS["TE"], DEDICATED_SLOTS["TE"] + 4):
+                    counts = {"QB": qb, "RB": rb, "WR": wr, "TE": te}
+                    if sum(counts.values()) != total:
+                        continue
+                    qb_extra = qb - DEDICATED_SLOTS["QB"]
+                    non_qb_extra = sum(
+                        counts[pos] - DEDICATED_SLOTS[pos] for pos in ("RB", "WR", "TE")
+                    )
+                    if qb_extra <= STARTING_SLOTS["SF"] and non_qb_extra <= (
+                        STARTING_SLOTS["FLEX"] + STARTING_SLOTS["SF"] - qb_extra
+                    ):
+                        out.append(counts)
+    return tuple(out)
 
 
-def _lineup_value(
-    roster: list[Player],
-    slot_rep: dict[str, float],
-    stream: dict[str, float],
-    depth_value: dict[int, float],
-    h: str,
+_STARTER_COMPOSITIONS = _starter_compositions()
+
+
+@lru_cache(maxsize=32_768)
+def _position_expected_values(
+    projections: tuple[tuple[int, float], ...],
+    wire_points: float,
+    unavailable: float,
+    max_starters: int,
+) -> tuple[float, ...]:
+    """All starter-count values for one depth chart; cached across candidate branches."""
+    available = 1.0 - unavailable
+    entries = [
+        (points / available, points, available, player_id)
+        for player_id, points in projections
+    ]
+    # One actual free agent, not an unlimited scalar that can fill every open slot.
+    entries.append((wire_points, wire_points, 1.0, -1))
+    entries.sort(key=lambda row: (-row[0], row[3]))
+
+    out = [0.0]
+    for starter_count in range(1, max_starters + 1):
+        # dist[k] = P(exactly k higher bodies are active), with the final cell
+        # collecting saturated states that cannot leave a job for a lower body.
+        dist = [1.0] + [0.0] * starter_count
+        total = 0.0
+        for _, expected_points, active_probability, _ in entries:
+            total += expected_points * sum(dist[:starter_count])
+            next_dist = [0.0] * (starter_count + 1)
+            for active_higher, probability in enumerate(dist):
+                next_dist[active_higher] += probability * (1.0 - active_probability)
+                next_dist[min(active_higher + 1, starter_count)] += (
+                    probability * active_probability
+                )
+            dist = next_dist
+        out.append(total)
+    return tuple(out)
+
+
+def position_expected_value(
+    players: list[Player], wire_points: float, starter_count: int, h: str
 ) -> float:
-    """Lineup surplus plus bench value without walking the roster twice."""
-    caps = dict(STARTING_SLOTS)
-    surplus = 0.0
-    bench_depth = {pos: 0 for pos in POSITIONS}
-    bench_values: list[float] = []
-    year1 = h == "yr1"
-    for p in roster:
-        pts = p.points_yr1 if year1 else p.points_yr23
-        placed = False
-        for slot in SLOT_CHAIN[p.position]:
-            if caps[slot] == 0:
-                continue
-            if pts <= stream[slot]:
-                break
-            caps[slot] -= 1
-            surplus += pts - slot_rep[slot]
-            placed = True
-            break
-        if not placed:
-            depth = bench_depth[p.position]
-            bench_values.append(_DEPTH_WEIGHTS[depth] * depth_value[p.player_id])
-            bench_depth[p.position] = depth + 1
-    for slot, n in caps.items():
-        if n:
-            surplus += n * (stream[slot] - slot_rep[slot])
-    for value in bench_values:
-        surplus += value
-    return surplus
+    """Expected points from one position with a unique, always-available wire body.
+
+    Player projections are unconditional. Dividing by availability orders players by
+    their points when active; multiplying that active rate by their own availability
+    returns the original projection. The running Bernoulli distribution supplies the
+    probability that fewer than ``starter_count`` higher bodies are active, which is the
+    probability this depth-chart entry is called on.
+    """
+    unavailable = UNAVAILABLE_RATE[players[0].position] if players else 0.0
+    projections = tuple(sorted((p.player_id, horizon_points(p, h)) for p in players))
+    return _position_expected_values(
+        projections, wire_points, unavailable, starter_count
+    )[starter_count]
+
+
+def expected_lineup_value(
+    roster: list[Player], wire: dict[str, float], h: str
+) -> float:
+    """Highest expected lineup value across every legal starter composition."""
+    by_pos = {pos: [] for pos in POSITIONS}
+    for player in roster:
+        by_pos[player.position].append(player)
+    max_count = {pos: max(c[pos] for c in _STARTER_COMPOSITIONS) for pos in POSITIONS}
+    values = {}
+    for pos in POSITIONS:
+        projections = tuple(
+            sorted((p.player_id, horizon_points(p, h)) for p in by_pos[pos])
+        )
+        values[pos] = _position_expected_values(
+            projections, wire[pos], UNAVAILABLE_RATE[pos], max_count[pos]
+        )
+    return max(
+        sum(values[pos][counts[pos]] for pos in POSITIONS)
+        for counts in _STARTER_COMPOSITIONS
+    )
 
 
 def starting_positions(roster: list[Player], h: str) -> list[str]:
@@ -254,46 +215,18 @@ def starting_positions(roster: list[Player], h: str) -> list[str]:
 
 def team_value(
     roster: dict[str, list[Player]],
-    slot_rep: dict[str, dict[str, float]],
-    depth_value: dict[str, dict[int, float]],
-    streams: dict[str, dict[str, float]],
+    wire: dict[str, dict[str, float]],
     extra: Player | None = None,
 ) -> float:
-    """Per-horizon starting-lineup surplus plus bench depth value, summed over horizons.
-
-    `roster` is the pre-sorted per-horizon form from `sorted_by_horizon`; `extra` prices
-    the roster with one more player without re-sorting, which is how every candidate at
-    every pick is valued.
-
-    Starters are priced against the marginal-starter baseline (via `slot_rep`) because that
-    is what you would otherwise have in the slot, and slots nobody fills are charged their
-    stream level (`streams`, built by `Draft.stream_levels` from what is actually still
-    available). Bench players are priced against the
-    *wire* — `depth_value` is the per-horizon growth + insurance value built in
-    `Draft.__init__` — because a backup's job is to beat what you would otherwise have to
-    sign, and then discounted by how likely he ever plays.
-
-    The discount is by depth at the player's own position, not by a running bench index: a
-    team's fifth QB cannot start in a league with two QB-capable slots, however large his
-    value looks. Using a raw bench index let one team draft ten QBs. Depth is counted
-    within each horizon, in that horizon's pecking order — the injured veteran is the
-    year-1 bench's last body and the years-2-3 lineup's starter, not one or the other.
-
-    Each `depth_value` term is floored at zero, and that floor is essential rather than
-    cosmetic. An
-    earlier version used unfloored VOR to keep deep picks ordered, which quietly inverted
-    the incentive: when a candidate's value is negative, a *smaller* depth weight makes the
-    marginal impact closer to zero and therefore better, so stacking a position until its
-    weight vanished became the optimal move. One team drafted twenty tight ends. Measuring
-    against the wire instead keeps the quantity non-negative — so no perverse stacking —
-    while staying informative deep into the draft, since nearly every drafted player clears
-    the wire even when he is far below the marginal starter.
-    """
-    total = 0.0
-    for h in HORIZONS:
-        seq = roster[h] if extra is None else insert_sorted(roster[h], extra, h)
-        total += _lineup_value(seq, slot_rep[h], streams[h], depth_value[h], h)
-    return total
+    """Expected optimal lineup points over both horizons."""
+    return sum(
+        expected_lineup_value(
+            roster[h] if extra is None else insert_sorted(roster[h], extra, h),
+            wire[h],
+            h,
+        )
+        for h in HORIZONS
+    )
 
 
 def compute_vor(players: list[Player], rep: dict[str, dict[str, float]]) -> dict[int, float]:
@@ -308,10 +241,8 @@ def upside_points(p: Player) -> float:
     """Reporting diagnostic: the 3-year total re-projected at the years-2-3 pace.
 
     Equal to `points` for a perfectly flat scorer, above it for a backloaded player,
-    below it for a declining veteran. No longer a pricing input — bench growth is
-    measured directly on the years-2-3 component against the years-2-3 wire in
-    `Draft.__init__` — but kept in the output because the gap against `points_3yr`
-    reads as the provider's implied growth per season.
+    below it for a declining veteran. It is a reporting diagnostic, not a pricing input:
+    future growth already lives in the years-2-3 projection and lineup.
     """
     return 1.5 * (p.points - p.points_1yr)
 
@@ -399,10 +330,9 @@ def wire_replacement(
     questions — `replacement.levels` asks "how much better is he than the worst player
     good enough to start in this league", `replacement.wire_levels` asks "how much better
     is he than what I could sign for nothing after the draft". The former is the
-    conventional VBD baseline and the sort key here, because starting slots are the scarce
-    resource a draft pick buys; the latter prices bench depth (`team_value`). The best
-    year-1 add and the best years-2-3 stash can be different players — post-draft you can
-    sign either, so each horizon takes its own max.
+    conventional VBD baseline and the board's sort key. The latter contributes one unique,
+    always-available body per position to expected lineup value. The best year-1 add and
+    the best years-2-3 stash can be different players, so each horizon takes its own max.
     """
     out: dict[str, dict[str, float]] = {h: {} for h in HORIZONS}
     for position, players in pos.items():

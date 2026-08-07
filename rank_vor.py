@@ -9,25 +9,25 @@
 Scope is this league and nothing else; the league constants and strategy knobs live in
 ranker/league.py. The value inputs are `points_3yr` and `points_1yr` from `pool.json` —
 points in this league's scoring, split into two horizons: year 1 and years 2-3 (see
-ranker/pool.py for why the provider's 3D value is deliberately unused). Lineups are
-fielded per season, so each horizon is priced against its own replacement levels — a
-69-point injury year cannot hide inside a healthy 3-year sum. The method, in one breath:
-how many players start at each position is an *outcome* of how the league drafts, so
-per-horizon replacement levels are found as a fixed point of an optimal-drafter draft
-simulation (`ranker/simulation.py` and `ranker/convergence.py`), while roster value and
-the replacement measurement live in `ranker/value.py`, and `draft.json` — the live board —
-is the simulation's starting state,
-not a filter (ranker/board.py). Only my slot uses that VOR valuation. Every opponent uses
+ranker/pool.py for why the provider's 3D value is deliberately unused). Lineups and VOR
+are measured per horizon, so a 69-point injury year cannot hide inside a healthy 3-year
+sum. The method, in one breath: how many players start at each position is an *outcome*
+of how the league drafts, so
+per-horizon replacement levels are measured from the converged draft, while my roster is
+valued as expected optimal lineup points under position-wide availability with one unique
+waiver fallback per position (`ranker/value.py`). `draft.json` — the live board — is the
+simulation's starting state, not a filter (ranker/board.py). Only my slot uses the
+projection-based roster objective. Every opponent uses
 the external provider board most associated with its prior picks, loaded from the
 data-source investigator; unfilled dedicated starters softly adjust that order, and its
 observed adherence controls Monte Carlo choice noise. A compounding soft-depth preference
 keeps every simulated drafter's late roster shape plausible without imposing position limits.
 
-The output's headline `vor` sums the horizons: (year-1 points minus the year-1
-marginal-starter level) + (years-2-3 points minus that level) — "how many points over
-three years does this player add versus the best guy any team could have had at his
-position without spending a starting-caliber pick, period by period" (`vor_yr1` and
-`vor_yr23` carry the split). The `my_next_picks`
+The output's headline `vor` remains a board statistic and sums the horizons: (year-1
+points minus the year-1 marginal-starter level) + (years-2-3 points minus that level) —
+"how many points over three years does this player add versus the best guy any team could
+have had at his position without spending a starting-caliber pick, period by period"
+(`vor_yr1` and `vor_yr23` carry the split). The `my_next_picks`
 block is the direct answer to "who should I draft next" — unlike `vor`, it sees my roster
 and opponent demand. Its first decision searches target plans across my next four held
 picks, then plays each first-candidate plan out to the end of the draft

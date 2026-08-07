@@ -21,7 +21,7 @@ undrafted players only.
 - `pool.py`: pool document to `Player` objects
 - `board.py`: live `draft.json` to the immutable starting state
 - `opponents.py`: inferred provider boards to complete opponent strategies
-- `value.py`: horizon points, lineup value, depth value, and replacement measurement
+- `value.py`: horizon points, expected lineup value, and replacement measurement
 - `simulation.py`: one deterministic draft state and pick policies
 - `convergence.py`: replacement-level fixed point
 - `planning.py`: Monte Carlo availability, candidate survival, lookahead, and rollouts
@@ -38,15 +38,21 @@ Replacement is solved separately for both horizons. At each horizon it is the ne
 after all simulated starters at that position; flexible starting slots determine their
 position mix from actual roster value rather than a hardcoded positional count.
 
-This creates a fixed point:
+The final waiver bodies affect my expected-lineup choices, and those choices affect who
+remains undrafted. This creates a fixed point:
 
 ```text
-replacement -> player/team value -> simulated draft -> starter counts -> replacement
+wire levels -> expected lineup value -> simulated draft -> starter counts + wire levels
 ```
 
 The map is discrete and can alternate between neighboring league shapes, so convergence
-detects a repeated state and averages levels over that cycle. Bench depth is separately
-priced above the final waiver-wire level, with year-one insurance and years-2–3 growth.
+detects a repeated state and averages levels over that cycle. For each legal positional
+composition, the expected-lineup solver orders players by their points when active. A
+deeper player contributes with the exact probability that too few higher teammates are
+available. One always-available waiver body can fill one job at each position; it is not
+an unlimited scalar. The best composition wins, making value monotone when a projection
+improves or a player is added. Years 2–3 use their own projections and lineup, with no
+second growth bonus.
 
 ## Opponents and planning
 
@@ -59,9 +65,10 @@ limits: a large enough source-rank gap can still justify another player at a dee
 Observed `mean_log2_loss` calibrates randomness around that preference. Missing provider
 players are appended in DraftSharks ADP order; opponents never fall back to VOR.
 
-My simulated pick policy applies the same depth penalty to marginal roster gain. It does
-not change projected roster value; it breaks late-draft ties among small positive gains
-so a thin position is not routinely crowded out by a ninth quarterback or tight end.
+My simulated pick policy applies the same depth penalty to marginal expected-lineup
+gain. It does not change projected roster value; it breaks late-draft ties among small
+positive gains so a thin position is not routinely crowded out by a ninth quarterback
+or tight end.
 
 The bulk deterministic policy scores value now plus the expected best option at its next
 pick. The live decision broadens the candidate set, redraws intervening opponents, measures

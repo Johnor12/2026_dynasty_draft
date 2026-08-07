@@ -5,12 +5,9 @@ from __future__ import annotations
 from .board import Board
 from .league import (
     BENCH_SLOTS,
-    DEPTH_BASE,
     FIRST_PICK_PER_POS,
-    INSURANCE_BASE,
     LOOKAHEAD_PICKS,
     POINTS_FIELD,
-    POSITION_DEPTH_DECAY,
     POSITIONS,
     ROSTER_DEPTH_PENALTY,
     ROSTER_DEPTH_TARGETS,
@@ -21,6 +18,7 @@ from .league import (
     TAXI_SLOTS,
     TEAMS,
     TOTAL_PICKS,
+    UNAVAILABLE_RATE,
     draft_order,
     pick_label,
     picks_for_slot,
@@ -29,7 +27,7 @@ from .opponents import OpponentStrategy
 from .pool import Player
 from .rankings import _sum_levels, my_next_picks
 from .simulation import Draft
-from .value import HORIZONS, pos_by_horizon, slot_replacement
+from .value import HORIZONS, pos_by_horizon
 
 
 def team_names(board: Board) -> dict[int, str | None]:
@@ -180,9 +178,10 @@ def build_payload(
         "value_note": (
             "Projected points in this league's scheme, split into two horizons — year 1 "
             "(points_1yr) and years 2-3 (points_3yr - points_1yr) — because lineups are "
-            "fielded per season: the starting lineup is solved per horizon against that "
-            "horizon's replacement levels, so an injury-wrecked year 1 cannot hide inside "
-            "a healthy 3-year sum. Draftsharks' 3D value is deliberately unused: it is a "
+            "fielded per season. Roster value is the best expected legal lineup in each "
+            "horizon, including the probability that deeper players are called on when "
+            "higher teammates are unavailable and one unique waiver body per position. "
+            "Draftsharks' 3D value is deliberately unused: it is a "
             "provider-scaled ordinal, not points, so it cannot be differenced against a "
             "replacement level."
         ),
@@ -212,8 +211,9 @@ def build_payload(
         "my_next_picks": {
             "note": (
                 "The model's own choice at each of my next picks, from the deterministic "
-                "draft at the converged levels. value_now is the candidate's marginal value "
-                "to my roster (lineup surplus + bench depth), divided by the soft depth "
+                "draft at the converged levels. value_now is the candidate's marginal "
+                "expected-lineup value with one unique waiver fallback per position, "
+                "divided by the soft depth "
                 "penalty when the position is already deep; next_pick_ev is E[value of the "
                 "best player still there at my following pick], with the same adjustment, "
                 "if I take him now. The pick "
@@ -332,45 +332,25 @@ def build_payload(
             "wire_note": (
                 "The best player at each position left undrafted — the post-draft free "
                 "agent baseline, per horizon (the best year-1 add and the best years-2-3 "
-                "stash can differ). It is what `vor_vs_wire` measures against (as the "
-                "horizon sum), and inside the simulation it prices bench depth. Far below "
-                "the marginal-starter level because 290 of the pool's 350 players get "
-                "rostered."
-            ),
-            "slot_levels": {
-                h: {k: round(v, 1) for k, v in lv.items()}
-                for h, lv in slot_replacement(rep).items()
-            },
-            "slot_levels_note": (
-                "What an empty starting slot is priced at inside the simulation: the "
-                "marginal-starter level of the best position the slot accepts, so a flex "
-                "slot is max(RB, WR, TE) and a player is worth strictly less there than in "
-                "his dedicated slot — that is where positional scarcity comes from. "
-                "Marginal-starter, not the wire, because skipping a position early means "
-                "ending the draft with a late-round starter there, not with a free agent "
-                "(see slot_replacement in ranker/value.py)."
+                "stash can differ). `vor_vs_wire` measures against their horizon sum. "
+                "Inside roster valuation, each position contributes this body once as an "
+                "always-available fallback; it cannot fill two simultaneous lineup jobs."
             ),
             "convergence": history,
         },
         "strategy": {
             "objective": (
-                "sum over horizons (year 1, years 2-3) of starting-lineup points above "
-                "that horizon's replacement + decayed bench value (growth + insurance)"
+                "sum over horizons (year 1, years 2-3) of expected optimal legal lineup "
+                "points under position-wide player availability"
             ),
-            "depth_base": DEPTH_BASE,
-            "position_depth_decay": POSITION_DEPTH_DECAY,
-            "insurance_base": INSURANCE_BASE,
+            "unavailable_rate": UNAVAILABLE_RATE,
             "depth_note": (
-                "Bench value decays with how many players that team already has at the "
-                "same position, not with a running bench index — a fifth QB cannot start "
-                "in a two-QB-slot league however large his VOR looks. Each body benched "
-                "in a horizon is priced on that horizon's excess over its wire: in year 1 "
-                "insurance only — insurance_base, his position's expected share of starter "
-                "games missed to byes and injury; a player who cannot play this season "
-                "cannot cover it — and in years 2-3 growth (depth_base, the chance he "
-                "grows past a starter) plus the same insurance. So a backloaded rookie "
-                "and a startable veteran are both worth bench picks for different reasons, "
-                "each in the horizon where he actually produces."
+                "For each legal positional composition, players are ordered by points "
+                "when active. A deeper player contributes when fewer than the required "
+                "number of higher teammates are available; that probability is calculated "
+                "exactly from unavailable_rate. The highest-value legal composition wins. "
+                "Years 2-3 receive no extra growth bonus because their projection and "
+                "separately solved lineup already contain growth."
             ),
             "roster_depth_preference": {
                 "targets": ROSTER_DEPTH_TARGETS,

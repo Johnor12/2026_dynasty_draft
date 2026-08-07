@@ -14,25 +14,20 @@ from collections.abc import Sequence
 from .board import Board
 from .league import (
     DEDICATED_SLOTS,
-    DEPTH_BASE,
-    INSURANCE_BASE,
     LOOKAHEAD_PER_POS,
     NON_TAXI_SLOTS,
     OPPONENT_BALANCE_STRENGTH,
     POSITIONS,
     ROSTER_DEPTH_PENALTY,
     ROSTER_DEPTH_TARGETS,
-    SLOT_ELIGIBLE,
     SURVIVAL_SIGMA,
 )
 from .opponents import OpponentStrategy
 from .pool import Player
 from .value import (
     HORIZONS,
-    horizon_points,
     pos_by_horizon,
     insert_sorted,
-    slot_replacement,
     sorted_by_horizon,
     team_value,
 )
@@ -104,27 +99,11 @@ class Draft:
     ) -> None:
         self.players = players
         self.rep = rep
-        self.slot_rep = slot_replacement(rep)
         self.vor = vor
-        # A bench body's jobs, per horizon, each measured against that horizon's wire and
-        # floored at zero (see value.team_value for why the floor is load-bearing). Year 1
-        # is insurance only — a player who cannot play this season cannot cover starter
-        # games missed this season. Years 2-3 add growth (DEPTH_BASE, the chance he grows
-        # past a starter) to the same insurance weight, both on the years-2-3 excess.
-        # Before any draft exists to read a wire off, fall back to the VOR baseline.
+        # Before a completed draft exists to identify its unique waiver bodies, use the
+        # marginal starters as the iteration-0 fallback. Convergence replaces these with
+        # the best final undrafted player at each position and horizon.
         self.wire = rep if wire is None else wire
-        self.depth_value = {
-            "yr1": {
-                p.player_id: INSURANCE_BASE[p.position]
-                * max(horizon_points(p, "yr1") - self.wire["yr1"][p.position], 0.0)
-                for p in players
-            },
-            "yr23": {
-                p.player_id: (DEPTH_BASE + INSURANCE_BASE[p.position])
-                * max(horizon_points(p, "yr23") - self.wire["yr23"][p.position], 0.0)
-                for p in players
-            },
-        }
         self.board = board
         self.order = board.order
         self.pick_nos = board.pick_nos
@@ -171,7 +150,6 @@ class Draft:
         self.rosters: list[list[Player]] = [list(r) for r in board.rosters]
         self.off_pool = board.off_pool  # read-only here; nothing is ever added
         self.pick_of: dict[int, int] = {}
-        self.streams = self.stream_levels()  # refreshed at every pick in `choose`
         # My picks' scored candidates as (value_now, next_pick_ev, player), best first.
         # Recorded on deterministic runs only — this is what "who should I draft next"
         # reads off the final draft.
@@ -371,74 +349,11 @@ class Draft:
 
     # -- valuation
 
-    def stream_levels(self) -> dict[str, dict[str, float]]:
-        """What each starting slot yields unfilled, per horizon, on the current board.
-
-        The best available body a slot accepts, capped at the slot's replacement level:
-        skipping a slot early costs nothing (a starter-grade body will still be there —
-        the documented empty-slot counterfactual), but once the last bodies above a
-        horizon's level are drafted the stream falls with the board, so an unfilled
-        year-1 slot is charged what filling it late would actually yield. At the end of
-        the draft this is the wire. Recomputed at every pick (`choose`) and after a
-        finished draft (`rollout`), because it is a fact about availability, not levels.
-        """
-        out: dict[str, dict[str, float]] = {}
-        for h in HORIZONS:
-            best: dict[str, float] = {}
-            for pos in POSITIONS:
-                self._advance(h, pos)
-                lst, i = self.pos_lists[h][pos], self.heads[h][pos]
-                best[pos] = horizon_points(lst[i], h) if i < len(lst) else 0.0
-            out[h] = {
-                slot: min(lv, max(best[pos] for pos in SLOT_ELIGIBLE[slot]))
-                for slot, lv in self.slot_rep[h].items()
-            }
-        return out
-
-    def expected_streams(self, gap: int) -> dict[str, dict[str, float]]:
-        """Stream levels as they are expected to stand `gap` picks from now.
-
-        `stream_levels` reads the board as it is; a lookahead that reuses it assumes the
-        board holds still, which hides exactly the moment that matters — the last
-        startable body at a position leaving between this team's picks. So the lookahead
-        prices next-pick rosters against the expected best-available at each position
-        after `gap` picks, from the same survival model the candidates use: the best
-        available survives, or the next one is the best, and so on down the list. Players
-        the current pick might itself remove are still counted as available — in the
-        branch where one is drafted here he fills the very slot being streamed, so the
-        optimism is confined to flex slots, whose stream another position usually sets
-        anyway.
-        """
-        if gap <= 0:
-            return self.streams
-        out: dict[str, dict[str, float]] = {}
-        for h in HORIZONS:
-            best: dict[str, float] = {}
-            for pos in POSITIONS:
-                self._advance(h, pos)
-                expected = 0.0
-                mass = 1.0
-                for p in self.pos_lists[h][pos][self.heads[h][pos] :]:
-                    if p.player_id in self.taken:
-                        continue
-                    surv = survival(self.better_available(p), gap)
-                    expected += mass * surv * horizon_points(p, h)
-                    mass *= 1.0 - surv
-                    if mass < 1e-4:
-                        break
-                best[pos] = expected
-            out[h] = {
-                slot: min(lv, max(best[pos] for pos in SLOT_ELIGIBLE[slot]))
-                for slot, lv in self.slot_rep[h].items()
-            }
-        return out
-
     def lookahead(
         self,
         roster: list[Player],
         roster_sorted: dict[str, list[Player]],
         taking: Player,
-        streams_next: dict[str, dict[str, float]],
         value_cache: dict[tuple[int, ...], float],
         gap: int,
         left: int,
@@ -446,13 +361,10 @@ class Draft:
     ) -> float:
         """E[value of the best player still available at this team's next pick].
 
-        Everything here is valued at `streams_next` — the stream levels expected to hold
-        `gap` picks from now (`expected_streams`) — so a roster that leaves a slot
-        unfilled while the last startable bodies drain away is charged for it at the
-        moment the decision is being made, not one pick too late. Order statistic over
-        the plausible next-pick candidates: the best surviving one is
-        candidate i if i survives and everyone better does not. Candidates are treated as
-        independent, which slightly understates the chance that a whole position gets
+        The roster objective already includes one unique waiver body at each position.
+        Order statistic over the plausible next-pick candidates: the best surviving one
+        is candidate i if i survives and everyone better does not. Candidates are treated
+        as independent, which slightly understates the chance that a whole position gets
         cleared out between picks.
         """
         future_roster = roster + [taking]
@@ -462,7 +374,7 @@ class Draft:
         base_key = (taking.player_id,)
         base = value_cache.get(base_key)
         if base is None:
-            base = team_value(future_sorted, self.slot_rep, self.depth_value, streams_next)
+            base = team_value(future_sorted, self.wire)
             value_cache[base_key] = base
         scored: list[tuple[float, float]] = []
         for cand in self.candidates(
@@ -474,9 +386,7 @@ class Draft:
             pair_key = (a, b) if a < b else (b, a)
             pair_value = value_cache.get(pair_key)
             if pair_value is None:
-                pair_value = team_value(
-                    future_sorted, self.slot_rep, self.depth_value, streams_next, cand
-                )
+                pair_value = team_value(future_sorted, self.wire, cand)
                 value_cache[pair_key] = pair_value
             gain = (pair_value - base) / self.roster_depth_penalty(
                 future_roster, off, cand.position
@@ -499,13 +409,10 @@ class Draft:
         slot = self.my_slot
         roster = self.rosters[slot - 1]
         off = self.off_pool[slot - 1]
-        # Availability moved since the last pick, so the price of an unfilled slot did too.
-        self.streams = self.stream_levels()
         roster_sorted = sorted_by_horizon(roster)
-        base = team_value(roster_sorted, self.slot_rep, self.depth_value, self.streams)
+        base = team_value(roster_sorted, self.wire)
         nxt = self.next_pick[pick_index]
         gap = None if nxt is None else nxt - pick_index - 1
-        streams_next = None if gap is None else self.expected_streams(gap)
         # Taking A then B values the same roster as B then A.
         lookahead_values: dict[tuple[int, ...], float] = {}
         left = self.picks_left[slot - 1]
@@ -522,15 +429,13 @@ class Draft:
         detail: list[tuple[float, float, Player]] = []
         for cand in cands:
             now = (
-                team_value(roster_sorted, self.slot_rep, self.depth_value, self.streams, cand)
-                - base
+                team_value(roster_sorted, self.wire, cand) - base
             ) / self.roster_depth_penalty(roster, off, cand.position)
             later = (
                 0.0
                 if gap is None
                 else self.lookahead(
-                    roster, roster_sorted, cand, streams_next, lookahead_values,
-                    gap, left - 1, off,
+                    roster, roster_sorted, cand, lookahead_values, gap, left - 1, off,
                 )
             )
             detail.append((now, later, cand))
