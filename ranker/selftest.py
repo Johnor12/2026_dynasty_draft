@@ -16,8 +16,8 @@ from .league import (
     DEDICATED_SLOTS,
     FIRST_PICK_PER_POS,
     MY_SLOT,
+    OPPONENT_DEPTH_TARGETS,
     POSITIONS,
-    ROSTER_DEPTH_TARGETS,
     ROUNDS,
     TEAMS,
     TOTAL_PICKS,
@@ -121,9 +121,9 @@ def opponent_selftest(players: list[Player]) -> list[str]:
     # doubled against other positions. This is a preference, not a positional limit: a
     # sufficiently large source gap can still justify the extra WR.
     board = fresh_board()
-    board.rosters[0] = wrs[: ROSTER_DEPTH_TARGETS["WR"]]
+    board.rosters[0] = wrs[: OPPONENT_DEPTH_TARGETS["WR"]]
     board.picks_left[0] -= len(board.rosters[0])
-    depth_order = complete([wrs[ROSTER_DEPTH_TARGETS["WR"]], rb])
+    depth_order = complete([wrs[OPPONENT_DEPTH_TARGETS["WR"]], rb])
     depth = Draft(
         players,
         rep,
@@ -134,7 +134,7 @@ def opponent_selftest(players: list[Player]) -> list[str]:
     if depth.choose_opponent(0, 1) != rb:
         fails.append("opponent did not prefer close RB over excessive WR depth")
 
-    start = ROSTER_DEPTH_TARGETS["WR"]
+    start = OPPONENT_DEPTH_TARGETS["WR"]
     depth_value_order = complete(wrs[start : start + 6] + [rb])
     depth_value = Draft(
         players,
@@ -143,14 +143,14 @@ def opponent_selftest(players: list[Player]) -> list[str]:
         board,
         opponents=synthetic_opponents(players, board, depth_value_order),
     )
-    if depth_value.choose_opponent(0, 1) != wrs[ROSTER_DEPTH_TARGETS["WR"]]:
+    if depth_value.choose_opponent(0, 1) != wrs[OPPONENT_DEPTH_TARGETS["WR"]]:
         fails.append("opponent depth preference acted like a hard positional limit")
-    if depth.roster_depth_penalty(wrs[: start - 1], (), "WR") != 1.0:
-        fails.append("roster depth preference started before its target")
-    if depth.roster_depth_penalty(wrs[:start], (), "WR") != 2.0:
-        fails.append("roster depth preference did not start at its target")
-    if depth.roster_depth_penalty(wrs[: start + 1], (), "WR") != 4.0:
-        fails.append("roster depth preference did not compound with excess depth")
+    if depth.opponent_depth_penalty(wrs[: start - 1], (), "WR") != 1.0:
+        fails.append("opponent depth preference started before its target")
+    if depth.opponent_depth_penalty(wrs[:start], (), "WR") != 2.0:
+        fails.append("opponent depth preference did not start at its target")
+    if depth.opponent_depth_penalty(wrs[: start + 1], (), "WR") != 4.0:
+        fails.append("opponent depth preference did not compound with excess depth")
 
     for loss in (0.3, 1.5, 2.7):
         power = rank_power(loss, len(players))
@@ -167,7 +167,7 @@ def opponent_selftest(players: list[Player]) -> list[str]:
 
 
 def planning_selftest(players: list[Player]) -> list[str]:
-    """The live shortlist is broader, and unavailable plan targets fall back safely."""
+    """My policy uses lineup value, broadens live choices, and falls back safely."""
     fails: list[str] = []
     board = fresh_board()
     rep = seed_replacement(players)
@@ -180,6 +180,29 @@ def planning_selftest(players: list[Player]) -> list[str]:
     broad = state.score_my_candidates(first_index, per_pos=FIRST_PICK_PER_POS)
     if len(broad) <= len(narrow):
         fails.append("planning: the first-pick candidate pool did not broaden")
+
+    # Even past an opponent's comfortable depth, my reported value_now is the raw
+    # marginal expected-lineup value. The opponent heuristic must not leak into my policy.
+    deep_board = fresh_board()
+    wrs = [p for p in players if p.position == "WR"]
+    deep_roster = wrs[: OPPONENT_DEPTH_TARGETS["WR"]]
+    deep_board.rosters[deep_board.my_slot - 1] = deep_roster
+    deep_board.picks_left[deep_board.my_slot - 1] -= len(deep_roster)
+    deep_state = Draft(
+        players,
+        rep,
+        vor,
+        deep_board,
+        opponents=synthetic_opponents(players, deep_board),
+    )
+    deep_index = deep_board.pick_nos.index(deep_board.my_picks[0])
+    deep_sorted = sorted_by_horizon(deep_roster)
+    deep_base = team_value(deep_sorted, deep_state.wire)
+    for now, _, candidate in deep_state.score_my_candidates(deep_index):
+        raw_marginal = team_value(deep_sorted, deep_state.wire, candidate) - deep_base
+        if abs(now - raw_marginal) > 1e-9:
+            fails.append("planning: opponent depth heuristic changed my marginal value")
+            break
 
     first_target = broad[-1][2]
     second_target = next(p for p in players if p.player_id != first_target.player_id)
@@ -204,7 +227,7 @@ def planning_selftest(players: list[Player]) -> list[str]:
 
     print(
         f"  planning: first-pick pool widened from {len(narrow)} to {len(broad)}; "
-        "an unavailable later target fell back to the bulk policy",
+        "my values stayed projection-only; an unavailable later target fell back",
         file=sys.stderr,
     )
     return fails

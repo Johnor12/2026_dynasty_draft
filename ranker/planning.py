@@ -134,10 +134,7 @@ def _best_option_value(draft: Draft) -> float:
     base = team_value(roster_sorted, draft.wire)
     off = draft.off_pool[slot - 1]
     values = [
-        (
-            team_value(roster_sorted, draft.wire, cand) - base
-        )
-        / draft.roster_depth_penalty(roster, off, cand.position)
+        team_value(roster_sorted, draft.wire, cand) - base
         for cand in draft.candidates(
             roster,
             per_pos=1,
@@ -328,12 +325,9 @@ def four_pick_lookahead(
             expanded: list[tuple[float, tuple[int, ...]]] = []
             for score, plan in states:
                 before = roster_value(plan)
-                future_roster = roster + [by_id[pid] for pid in plan]
                 for player_id in legal_after(plan, depth):
                     next_plan = plan + (player_id,)
-                    marginal = (roster_value(next_plan) - before) / state.roster_depth_penalty(
-                        future_roster, off, by_id[player_id].position
-                    )
+                    marginal = roster_value(next_plan) - before
                     next_score = score + available_probability(player_id, pick_no) * marginal
                     expanded.append((next_score, next_plan))
             if not expanded:

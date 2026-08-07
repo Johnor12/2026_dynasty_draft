@@ -21,7 +21,8 @@ projection-based roster objective. Every opponent uses
 the external provider board most associated with its prior picks, loaded from the
 data-source investigator; unfilled dedicated starters softly adjust that order, and its
 observed adherence controls Monte Carlo choice noise. A compounding soft-depth preference
-keeps every simulated drafter's late roster shape plausible without imposing position limits.
+keeps opponents' late roster shapes plausible without imposing position limits. My slot's
+choices contain no positional roster-size heuristic.
 
 The output's headline `vor` remains a board statistic and sums the horizons: (year-1
 points minus the year-1 marginal-starter level) + (years-2-3 points minus that level) —

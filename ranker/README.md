@@ -65,10 +65,9 @@ limits: a large enough source-rank gap can still justify another player at a dee
 Observed `mean_log2_loss` calibrates randomness around that preference. Missing provider
 players are appended in DraftSharks ADP order; opponents never fall back to VOR.
 
-My simulated pick policy applies the same depth penalty to marginal expected-lineup
-gain. It does not change projected roster value; it breaks late-draft ties among small
-positive gains so a thin position is not routinely crowded out by a ninth quarterback
-or tight end.
+My simulated pick policy does not use those targets or any other positional roster-size
+heuristic. Positional depth is priced only by projected expected-lineup value, so a roster
+shape that differs from the opponents' conventional behavior can be a source of value.
 
 The bulk deterministic policy scores value now plus the expected best option at its next
 pick. The live decision broadens the candidate set, redraws intervening opponents, measures

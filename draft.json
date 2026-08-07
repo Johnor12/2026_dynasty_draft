@@ -1,13 +1,13 @@
 {
   "source": "https://api.sleeper.app/v1/draft/1388293618208374784",
-  "fetched_at": "2026-08-07T22:20:42+00:00",
+  "fetched_at": "2026-08-07T22:26:50+00:00",
   "draft_id": "1388293618208374784",
   "league_id": "1388293617071714304",
   "league_name": "Dudes",
   "season": "2026",
   "status": "drafting",
   "started_at": "2026-08-04T13:02:55+00:00",
-  "last_picked_at": "2026-08-07T22:01:04+00:00",
+  "last_picked_at": "2026-08-07T22:22:19+00:00",
   "format": {
     "type": "snake",
     "teams": 10,
@@ -16,16 +16,16 @@
     "scoring_type": "dynasty_2qb"
   },
   "pick_count": 290,
-  "picks_made": 85,
-  "picks_pending": 205,
+  "picks_made": 86,
+  "picks_pending": 204,
   "on_the_clock": {
-    "pick_no": 86,
+    "pick_no": 87,
     "round": 9,
-    "pick_in_round": 6,
-    "draft_slot": 5,
-    "user_id": "870397485556875264",
-    "username": "dirtydole",
-    "slot": "9.06"
+    "pick_in_round": 7,
+    "draft_slot": 4,
+    "user_id": "735592932748435456",
+    "username": "bwood637",
+    "slot": "9.07"
   },
   "me": {
     "username": "johnor",
@@ -41,12 +41,12 @@
     "user_id": "1127785716420898816",
     "username": "johnor",
     "slot": "9.09",
-    "picks_away": 3
+    "picks_away": 2
   },
   "board_derivation": {
     "method": "snake, order reverses at round 3; traded picks applied",
-    "checked_against_made_picks": 85,
-    "slot_and_roster_agree": 85,
+    "checked_against_made_picks": 86,
+    "slot_and_roster_agree": 86,
     "rounds_exercised": [
       1,
       2,
@@ -1712,12 +1712,12 @@
       "user_id": "870397485556875264",
       "username": "dirtydole",
       "is_mine": false,
-      "status": "pending",
-      "sleeper_id": null,
-      "name": null,
-      "position": null,
-      "team": null,
-      "is_keeper": null
+      "status": "made",
+      "sleeper_id": "12490",
+      "name": "Bhayshul Tuten",
+      "position": "RB",
+      "team": "JAX",
+      "is_keeper": false
     },
     {
       "pick_no": 87,

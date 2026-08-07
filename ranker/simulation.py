@@ -17,9 +17,9 @@ from .league import (
     LOOKAHEAD_PER_POS,
     NON_TAXI_SLOTS,
     OPPONENT_BALANCE_STRENGTH,
+    OPPONENT_DEPTH_PENALTY,
+    OPPONENT_DEPTH_TARGETS,
     POSITIONS,
-    ROSTER_DEPTH_PENALTY,
-    ROSTER_DEPTH_TARGETS,
     SURVIVAL_SIGMA,
 )
 from .opponents import OpponentStrategy
@@ -319,13 +319,13 @@ class Draft:
         return have
 
     @staticmethod
-    def roster_depth_penalty(
+    def opponent_depth_penalty(
         roster: Sequence[Player], off: Sequence[dict], position: str
     ) -> float:
-        """Preference penalty for adding one more player at an already-deep position."""
+        """Opponent preference penalty for an already-deep position."""
         have = Draft.position_counts(roster, off)[position]
-        excess_depth = max(have - ROSTER_DEPTH_TARGETS[position] + 1, 0)
-        return ROSTER_DEPTH_PENALTY**excess_depth
+        excess_depth = max(have - OPPONENT_DEPTH_TARGETS[position] + 1, 0)
+        return OPPONENT_DEPTH_PENALTY**excess_depth
 
     def opponent_position_adjustments(self, slot: int) -> dict[str, float]:
         """Source-rank multipliers for starter needs and excessive bench depth."""
@@ -340,7 +340,7 @@ class Draft:
                 * max(required - have[position], 0)
                 / required
             )
-            depth_penalty = self.roster_depth_penalty(roster, off, position)
+            depth_penalty = self.opponent_depth_penalty(roster, off, position)
             out[position] = depth_penalty / starter_boost
         return out
 
@@ -388,9 +388,7 @@ class Draft:
             if pair_value is None:
                 pair_value = team_value(future_sorted, self.wire, cand)
                 value_cache[pair_key] = pair_value
-            gain = (pair_value - base) / self.roster_depth_penalty(
-                future_roster, off, cand.position
-            )
+            gain = pair_value - base
             scored.append((gain, survival(self.better_available(cand), gap)))
         scored.sort(key=lambda t: -t[0])
         expected = 0.0
@@ -428,9 +426,7 @@ class Draft:
             cands = [c for c in cands if c.player_id != self.my_ban] or cands
         detail: list[tuple[float, float, Player]] = []
         for cand in cands:
-            now = (
-                team_value(roster_sorted, self.wire, cand) - base
-            ) / self.roster_depth_penalty(roster, off, cand.position)
+            now = team_value(roster_sorted, self.wire, cand) - base
             later = (
                 0.0
                 if gap is None
