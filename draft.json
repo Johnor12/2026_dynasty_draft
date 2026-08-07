@@ -1,13 +1,13 @@
 {
   "source": "https://api.sleeper.app/v1/draft/1388293618208374784",
-  "fetched_at": "2026-08-07T12:54:25+00:00",
+  "fetched_at": "2026-08-07T16:14:50+00:00",
   "draft_id": "1388293618208374784",
   "league_id": "1388293617071714304",
   "league_name": "Dudes",
   "season": "2026",
   "status": "drafting",
   "started_at": "2026-08-04T13:02:55+00:00",
-  "last_picked_at": "2026-08-07T12:53:25+00:00",
+  "last_picked_at": "2026-08-07T16:01:47+00:00",
   "format": {
     "type": "snake",
     "teams": 10,
@@ -16,16 +16,16 @@
     "scoring_type": "dynasty_2qb"
   },
   "pick_count": 290,
-  "picks_made": 69,
-  "picks_pending": 221,
+  "picks_made": 72,
+  "picks_pending": 218,
   "on_the_clock": {
-    "pick_no": 70,
-    "round": 7,
-    "pick_in_round": 10,
-    "draft_slot": 1,
-    "user_id": "207916077173182464",
-    "username": "dccb31",
-    "slot": "7.10"
+    "pick_no": 73,
+    "round": 8,
+    "pick_in_round": 3,
+    "draft_slot": 3,
+    "user_id": "865368720548196352",
+    "username": "jedmxk",
+    "slot": "8.03"
   },
   "me": {
     "username": "johnor",
@@ -41,12 +41,12 @@
     "user_id": "1127785716420898816",
     "username": "johnor",
     "slot": "9.09",
-    "picks_away": 19
+    "picks_away": 16
   },
   "board_derivation": {
     "method": "snake, order reverses at round 3; traded picks applied",
-    "checked_against_made_picks": 69,
-    "slot_and_roster_agree": 69,
+    "checked_against_made_picks": 72,
+    "slot_and_roster_agree": 72,
     "rounds_exercised": [
       1,
       2,
@@ -54,7 +54,8 @@
       4,
       5,
       6,
-      7
+      7,
+      8
     ],
     "mismatches": []
   },
@@ -191,6 +192,20 @@
       "previous_owner_id": 1
     },
     {
+      "round": 8,
+      "season": "2026",
+      "roster_id": 3,
+      "owner_id": 6,
+      "previous_owner_id": 3
+    },
+    {
+      "round": 11,
+      "season": "2026",
+      "roster_id": 3,
+      "owner_id": 6,
+      "previous_owner_id": 3
+    },
+    {
       "round": 6,
       "season": "2026",
       "roster_id": 4,
@@ -216,6 +231,20 @@
       "season": "2026",
       "roster_id": 6,
       "owner_id": 4,
+      "previous_owner_id": 6
+    },
+    {
+      "round": 8,
+      "season": "2026",
+      "roster_id": 6,
+      "owner_id": 3,
+      "previous_owner_id": 6
+    },
+    {
+      "round": 11,
+      "season": "2026",
+      "roster_id": 6,
+      "owner_id": 3,
       "previous_owner_id": 6
     },
     {
@@ -1370,28 +1399,28 @@
       "user_id": "207916077173182464",
       "username": "dccb31",
       "is_mine": false,
-      "status": "pending",
-      "sleeper_id": null,
-      "name": null,
-      "position": null,
-      "team": null,
-      "is_keeper": null
+      "status": "made",
+      "sleeper_id": "11584",
+      "name": "Bucky Irving",
+      "position": "RB",
+      "team": "TB",
+      "is_keeper": false
     },
     {
       "pick_no": 71,
       "round": 8,
       "pick_in_round": 1,
       "draft_slot": 1,
-      "roster_id": 6,
-      "user_id": "1388546393752240128",
-      "username": "AndNic31",
+      "roster_id": 3,
+      "user_id": "751220778036551680",
+      "username": "nedjh2",
       "is_mine": false,
-      "status": "pending",
-      "sleeper_id": null,
-      "name": null,
-      "position": null,
-      "team": null,
-      "is_keeper": null
+      "status": "made",
+      "sleeper_id": "12481",
+      "name": "Cam Skattebo",
+      "position": "RB",
+      "team": "NYG",
+      "is_keeper": false
     },
     {
       "pick_no": 72,
@@ -1402,12 +1431,12 @@
       "user_id": "870397485556875264",
       "username": "dirtydole",
       "is_mine": false,
-      "status": "pending",
-      "sleeper_id": null,
-      "name": null,
-      "position": null,
-      "team": null,
-      "is_keeper": null
+      "status": "made",
+      "sleeper_id": "6801",
+      "name": "Tee Higgins",
+      "position": "WR",
+      "team": "CIN",
+      "is_keeper": false
     },
     {
       "pick_no": 73,
@@ -1526,9 +1555,9 @@
       "round": 8,
       "pick_in_round": 10,
       "draft_slot": 10,
-      "roster_id": 3,
-      "user_id": "751220778036551680",
-      "username": "nedjh2",
+      "roster_id": 6,
+      "user_id": "1388546393752240128",
+      "username": "AndNic31",
       "is_mine": false,
       "status": "pending",
       "sleeper_id": null,
@@ -1862,9 +1891,9 @@
       "round": 11,
       "pick_in_round": 1,
       "draft_slot": 10,
-      "roster_id": 3,
-      "user_id": "751220778036551680",
-      "username": "nedjh2",
+      "roster_id": 6,
+      "user_id": "1388546393752240128",
+      "username": "AndNic31",
       "is_mine": false,
       "status": "pending",
       "sleeper_id": null,
@@ -2006,9 +2035,9 @@
       "round": 11,
       "pick_in_round": 10,
       "draft_slot": 1,
-      "roster_id": 6,
-      "user_id": "1388546393752240128",
-      "username": "AndNic31",
+      "roster_id": 3,
+      "user_id": "751220778036551680",
+      "username": "nedjh2",
       "is_mine": false,
       "status": "pending",
       "sleeper_id": null,
