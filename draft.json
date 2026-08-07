@@ -1,13 +1,13 @@
 {
   "source": "https://api.sleeper.app/v1/draft/1388293618208374784",
-  "fetched_at": "2026-08-07T16:14:50+00:00",
+  "fetched_at": "2026-08-07T18:55:33+00:00",
   "draft_id": "1388293618208374784",
   "league_id": "1388293617071714304",
   "league_name": "Dudes",
   "season": "2026",
   "status": "drafting",
   "started_at": "2026-08-04T13:02:55+00:00",
-  "last_picked_at": "2026-08-07T16:01:47+00:00",
+  "last_picked_at": "2026-08-07T18:44:24+00:00",
   "format": {
     "type": "snake",
     "teams": 10,
@@ -16,16 +16,16 @@
     "scoring_type": "dynasty_2qb"
   },
   "pick_count": 290,
-  "picks_made": 72,
-  "picks_pending": 218,
+  "picks_made": 75,
+  "picks_pending": 215,
   "on_the_clock": {
-    "pick_no": 73,
+    "pick_no": 76,
     "round": 8,
-    "pick_in_round": 3,
-    "draft_slot": 3,
-    "user_id": "865368720548196352",
-    "username": "jedmxk",
-    "slot": "8.03"
+    "pick_in_round": 6,
+    "draft_slot": 6,
+    "user_id": "1114302275305979904",
+    "username": "samlemonskoff",
+    "slot": "8.06"
   },
   "me": {
     "username": "johnor",
@@ -41,12 +41,12 @@
     "user_id": "1127785716420898816",
     "username": "johnor",
     "slot": "9.09",
-    "picks_away": 16
+    "picks_away": 13
   },
   "board_derivation": {
     "method": "snake, order reverses at round 3; traded picks applied",
-    "checked_against_made_picks": 72,
-    "slot_and_roster_agree": 72,
+    "checked_against_made_picks": 75,
+    "slot_and_roster_agree": 75,
     "rounds_exercised": [
       1,
       2,
@@ -1447,12 +1447,12 @@
       "user_id": "865368720548196352",
       "username": "jedmxk",
       "is_mine": false,
-      "status": "pending",
-      "sleeper_id": null,
-      "name": null,
-      "position": null,
-      "team": null,
-      "is_keeper": null
+      "status": "made",
+      "sleeper_id": "13269",
+      "name": "Fernando Mendoza",
+      "position": "QB",
+      "team": "LV",
+      "is_keeper": false
     },
     {
       "pick_no": 74,
@@ -1463,12 +1463,12 @@
       "user_id": "735592932748435456",
       "username": "bwood637",
       "is_mine": false,
-      "status": "pending",
-      "sleeper_id": null,
-      "name": null,
-      "position": null,
-      "team": null,
-      "is_keeper": null
+      "status": "made",
+      "sleeper_id": "8148",
+      "name": "Jameson Williams",
+      "position": "WR",
+      "team": "DET",
+      "is_keeper": false
     },
     {
       "pick_no": 75,
@@ -1479,12 +1479,12 @@
       "user_id": "1128025586577879040",
       "username": "justinmfftt",
       "is_mine": false,
-      "status": "pending",
-      "sleeper_id": null,
-      "name": null,
-      "position": null,
-      "team": null,
-      "is_keeper": null
+      "status": "made",
+      "sleeper_id": "13286",
+      "name": "Jadarian Price",
+      "position": "RB",
+      "team": "SEA",
+      "is_keeper": false
     },
     {
       "pick_no": 76,

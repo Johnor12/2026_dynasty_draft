@@ -574,24 +574,29 @@ function chanceCell(candidate, stats, pick, d) {
 
 function renderNextPicks(d, byId) {
   document.getElementById("picksNote").textContent =
-    "Roster gain is the player's marginal value to your current roster. Next-pick option value is the bulk policy's two-pick diagnostic. The first recommendation instead searches target plans across four held picks, then plays each plan through the entire remaining draft " +
-    `${d.my_next_picks.rollout_sims} times. A target that an opponent takes first falls back to the ordinary policy. The recommendation changes only when an edge clears twice its simulation error. Raw player points use this league's scoring.`;
+    "Roster gain is the player's marginal value to your current roster. Next-pick option value and two-pick total describe the ordinary fallback policy; they are diagnostics, not the first card's ranking. The first card is ordered by final-roster EV after searching target plans across four held picks and playing each plan through the entire remaining draft " +
+    `${d.my_next_picks.rollout_sims} times. Rollout edges use the two-pick choice as the fallback baseline, while final-roster EV remains the objective. A listed path contains only forced targets; the ordinary policy resumes after its last target or whenever an opponent takes a target first. The recommendation changes only when an edge clears twice its simulation error. Raw player points use this league's scoring.`;
 
   const prior = [];
   const cards = d.my_next_picks.picks.map((pick, pickIndex) => {
     const hasRollout = pick.candidates.some(candidate => candidate.rollout_ev != null);
     const baseline = pick.candidates.find(candidate => candidate.rollout_edge === 0)?.name;
+    const candidates = hasRollout
+      ? [...pick.candidates].sort((a, b) => b.rollout_ev - a.rollout_ev)
+      : pick.candidates;
     const context = pickIndex === 0 && d.draft.next_pick_of_mine?.slot === pick.pick
       ? `${pick.overall} overall · ${d.draft.next_pick_of_mine.picks_away} picks between`
       : `${pick.overall} overall${prior.length ? ` · after ${prior.join(" + ")}` : ""}`;
-    const rows = pick.candidates.map(candidate => {
+    const rows = candidates.map(candidate => {
       const stats = byId.get(candidate.player_id);
       const isTake = candidate.player_id === pick.take_id;
       const trend = trendPerYear(stats);
       const rolloutNote = candidate.rollout_edge == null ? null : candidate.rollout_edge === 0
-        ? `baseline: ${baseline}`
-        : `${signed(candidate.rollout_edge)} ± ${fmt(candidate.rollout_se)} vs ${baseline}`;
-      const planNote = candidate.four_pick_plan?.map(target => `${target.pick} ${target.name}`).join(" → ");
+        ? `fallback baseline: ${baseline}`
+        : `${signed(candidate.rollout_edge)} ± ${fmt(candidate.rollout_se)} vs fallback ${baseline}`;
+      const targets = candidate.four_pick_plan
+        ?.map(target => `${target.pick} ${target.name}`).join(" → ");
+      const planNote = targets ? `Targets: ${targets}; ordinary policy thereafter` : null;
       return h("tr", { class: isTake ? "recommended" : "" },
         h("td", {},
           h("div", { class: "player-main" }, candidate.name, " ",
@@ -634,8 +639,9 @@ function renderNextPicks(d, byId) {
             h("th", { class: "num", title: "Three-year points above the period-specific marginal starter" }, "VOR"),
             h("th", { class: "num", title: "Marginal value added to your roster" }, "Roster gain"),
             h("th", { class: "num", title: "Expected value of your best option at the following pick" }, "Next-pick option"),
-            h("th", { class: "num" }, "Two-pick total"), h("th", {}, "Chance to reach"),
-            hasRollout ? h("th", { class: "num" }, "Final roster EV") : null)),
+            h("th", { class: "num", title: "Ordinary-policy diagnostic; this does not rank the first card" }, "Two-pick total"),
+            h("th", {}, "Chance to reach"),
+            hasRollout ? h("th", { class: "num", title: "Mean final-roster value; the first card is sorted highest first" }, "Final roster EV ↓") : null)),
           h("tbody", {}, ...rows))));
   });
   document.getElementById("picksGrid").replaceChildren(...cards);
