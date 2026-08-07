@@ -43,35 +43,82 @@ def name_key(player: dict) -> tuple[str, str]:
     return normalized_name(str(player.get("name") or "")), str(player.get("position") or "")
 
 
-def is_taken(player: dict, ids: set[str], names: set[tuple[str, str]]) -> bool:
+def alias_key(player: dict) -> tuple[str, str, str, str] | None:
+    parts = re.findall(
+        r"[a-z0-9]+",
+        unicodedata.normalize("NFKD", str(player.get("name") or "")).casefold(),
+    )
+    while parts and parts[-1] in SUFFIXES:
+        parts.pop()
+    team = str(player.get("team") or "")
+    if len(parts) < 2 or not team:
+        return None
+    return parts[0], parts[-1], str(player.get("position") or ""), team
+
+
+def same_player(left: dict, right: dict) -> bool:
+    """Match exact identities, plus conservative Cam/Cameron-style name variants."""
+    left_id, right_id = left.get("sleeper_id"), right.get("sleeper_id")
+    if left_id is not None and right_id is not None:
+        return str(left_id) == str(right_id)
+    if name_key(left) == name_key(right):
+        return True
+    left_alias, right_alias = alias_key(left), alias_key(right)
+    if left_alias is None or right_alias is None:
+        return False
+    left_first, *left_rest = left_alias
+    right_first, *right_rest = right_alias
+    return (
+        left_rest == right_rest
+        and (left_first.startswith(right_first) or right_first.startswith(left_first))
+    )
+
+
+def is_taken(
+    player: dict,
+    prior_ids: set[str],
+    prior_names: set[tuple[str, str]],
+    prior_aliases: dict[tuple[str, str, str], set[str]],
+) -> bool:
     sleeper_id = player.get("sleeper_id")
-    return (sleeper_id is not None and str(sleeper_id) in ids) or name_key(player) in names
+    if sleeper_id is not None:
+        return str(sleeper_id) in prior_ids
+    if name_key(player) in prior_names:
+        return True
+    alias = alias_key(player)
+    if alias is None:
+        return False
+    first, *rest = alias
+    return any(
+        first.startswith(prior_first) or prior_first.startswith(first)
+        for prior_first in prior_aliases.get(tuple(rest), set())
+    )
 
 
 def chosen_index(available: list[dict], pick: dict) -> int | None:
-    sleeper_id = pick.get("sleeper_id")
-    if sleeper_id is not None:
-        matches = [
-            index
-            for index, player in enumerate(available)
-            if player.get("sleeper_id") is not None
-            and str(player["sleeper_id"]) == str(sleeper_id)
-        ]
-        if len(matches) == 1:
-            return matches[0]
-    key = name_key(pick)
-    matches = [index for index, player in enumerate(available) if name_key(player) == key]
+    matches = [index for index, player in enumerate(available) if same_player(player, pick)]
     return matches[0] if len(matches) == 1 else None
 
 
 def evidence_for_pick(
     source_players: list[dict],
     pick: dict,
-    prior_ids: set[str],
-    prior_names: set[tuple[str, str]],
+    prior: list[dict],
 ) -> dict:
+    prior_ids = {
+        str(row["sleeper_id"]) for row in prior if row.get("sleeper_id") is not None
+    }
+    prior_names = {name_key(row) for row in prior}
+    prior_aliases: dict[tuple[str, str, str], set[str]] = defaultdict(set)
+    for row in prior:
+        alias = alias_key(row)
+        if alias is not None:
+            first, *rest = alias
+            prior_aliases[tuple(rest)].add(first)
     available = [
-        player for player in source_players if not is_taken(player, prior_ids, prior_names)
+        player
+        for player in source_players
+        if not is_taken(player, prior_ids, prior_names, prior_aliases)
     ]
     index = chosen_index(available, pick)
     base = {
@@ -115,11 +162,7 @@ def score_source(source: dict, picks: list[dict], made_before: dict[int, list[di
     availability_ranks = []
     for pick in picks:
         previous = made_before[pick["pick_no"]]
-        prior_ids = {
-            str(row["sleeper_id"]) for row in previous if row.get("sleeper_id") is not None
-        }
-        prior_names = {name_key(row) for row in previous}
-        item = evidence_for_pick(source["players"], pick, prior_ids, prior_names)
+        item = evidence_for_pick(source["players"], pick, previous)
         evidence.append(item)
         if item["matched"]:
             availability_rank = item["availability_rank"]
@@ -260,7 +303,8 @@ def selftest() -> list[str]:
         ]
     }
     pick = {"pick_no": 2, "round": 1, "name": "Bravo", "position": "RB", "sleeper_id": "2"}
-    evidence = evidence_for_pick(source["players"], pick, {"1"}, {("alpha", "WR")})
+    prior = [{"name": "Alpha", "position": "WR", "sleeper_id": "1"}]
+    evidence = evidence_for_pick(source["players"], pick, prior)
     if evidence["availability_rank"] != 1:
         problems.append("a previously drafted player was not removed from the available board")
     suffix_pick = {
@@ -270,13 +314,21 @@ def selftest() -> list[str]:
         "position": "WR",
         "sleeper_id": None,
     }
-    evidence = evidence_for_pick(source["players"], suffix_pick, set(), set())
+    evidence = evidence_for_pick(source["players"], suffix_pick, [])
     if evidence["availability_rank"] != 1:
         problems.append("suffix-insensitive name fallback did not match")
     missing = {"pick_no": 1, "round": 1, "name": "Nobody", "position": "TE"}
-    evidence = evidence_for_pick(source["players"], missing, set(), set())
+    evidence = evidence_for_pick(source["players"], missing, [])
     if evidence["matched"]:
         problems.append("a missing player was reported as matched")
+    cam = {"name": "Cam Ward", "position": "QB", "team": "TEN"}
+    cameron = {"name": "Cameron Ward", "position": "QB", "team": "TEN"}
+    if not same_player(cam, cameron):
+        problems.append("first-name abbreviation did not match the full name")
+    tahj = {"name": "Tahj Washington", "position": "WR", "team": "MIA"}
+    malik = {"name": "Malik Washington", "position": "WR", "team": "MIA"}
+    if same_player(tahj, malik):
+        problems.append("unrelated players with the same last name and team matched")
     return problems
 
 

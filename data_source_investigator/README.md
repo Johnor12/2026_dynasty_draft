@@ -8,6 +8,7 @@ was made: drafted players above it are removed before its availability rank is m
 uv run data_source_investigator/pipeline.py --report
 uv run data_source_investigator/pipeline.py --only investigate  # reuse the snapshots
 uv run data_source_investigator/investigate.py --selftest
+uv run evaluate_opponents.py  # forward replay, 100 prediction draws per opponent pick
 uv run refresh.py --report  # refresh the draft, VOR board, and evaluation only
 uv run serve.py  # open http://127.0.0.1:8123/data_source_investigator/
 ```
@@ -34,6 +35,12 @@ investigation after fetching the draft and before simulating the remaining picks
 fit heatmap and a selected team's pick/source availability matrix. Selecting any matrix
 cell shows the provider's overall rank, the player's rank among those still available,
 and up to five higher-ranked players the team passed.
+
+Provider identities join by Sleeper id first and normalized name second. When a source
+lacks the id, a final conservative tier accepts first-name abbreviations only when the
+first names are prefixes and last name, team, and position all agree (`Cam Ward` to
+`Cameron Ward`). It intentionally does not make last-name-only guesses such as matching
+Tahj Washington to Malik Washington.
 
 ## Manual sources
 

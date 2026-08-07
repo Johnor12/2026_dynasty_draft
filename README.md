@@ -33,6 +33,7 @@ pool.json                    the draft pool — 350 players, 13 fields
 draft.json                   the live board — 290 picks, made and pending
 data_source_matches.json     closest ranking provider for each drafter, with evidence
 rank_vor.py                  pool + draft + opponent sources -> rankings.json
+evaluate_opponents.py        forward-replay accuracy check for the opponent model
 refresh.py                   fetch, re-rank, and re-evaluate sources between picks
 index.html                   static dashboard for rankings.json (serve the repo root, no build)
 serve.py                     local server for both static dashboards on port 8123
@@ -89,6 +90,7 @@ the pool and the investigator's roster ids to draft slots.
 uv run data_source_investigator/pipeline.py --report
 uv run data_source_investigator/pipeline.py --only investigate  # reuse ranking snapshots
 uv run data_source_investigator/investigate.py --selftest
+uv run evaluate_opponents.py
 uv run serve.py  # open http://127.0.0.1:8123/data_source_investigator/
 ```
 
@@ -101,6 +103,16 @@ the manager's valuation order and `mean_log2_loss` as its adherence estimate. Fo
 differ slightly and are recorded with each source. Paid or export-only boards can be added
 as canonical CSV files under `data_source_investigator/data/manual/`; see the process
 README for the CSV contract and the caveats around changing rankings during a live draft.
+
+`evaluate_opponents.py` measures that prediction process without future-pick leakage. It
+replays every completed pick not made by my roster, re-runs source inference using only
+earlier picks, reconstructs the board and roster at that moment, and draws 100 stochastic
+choices. Its primary error is the absolute distance between the simulated and actual
+players on the model's balance-adjusted preference order; it also reports exact hit rate,
+the actual player's predicted rank, Monte Carlo standard error, opponent summaries, and
+the ten worst misses. Provider boards are held at the one available ranking snapshot, so
+the replay is forward-looking in draft evidence but cannot recreate historical provider
+rankings. Before an opponent has made a pick, DraftSharks ADP is the cold-start board.
 
 ## pool pipeline
 

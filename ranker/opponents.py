@@ -1,20 +1,26 @@
 """Opponent boards inferred from this league's completed picks.
 
 Each opponent uses the provider board that best fits their picks in
-``data_source_matches.json``. Provider ranks are joined to the pool by Sleeper id; a
-provider's uncovered tail follows DraftSharks ADP so every mandatory pick remains
-possible without ever falling back to this ranker's projections or VOR.
+``data_source_matches.json``. Provider ranks are joined to the pool by Sleeper id, then
+by conservative name variants when a normalized source row lacks that id. A provider's
+uncovered tail follows DraftSharks ADP so every mandatory pick remains possible without
+ever falling back to this ranker's projections or VOR.
 """
 
 from __future__ import annotations
 
 import json
 import math
+import re
+import unicodedata
 from dataclasses import dataclass
 from pathlib import Path
 
 from .board import Board
 from .pool import Player
+
+SUFFIXES = {"jr", "sr", "ii", "iii", "iv", "v"}
+COLD_START_LOG2_LOSS = 1.5
 
 
 @dataclass(frozen=True, slots=True)
@@ -69,40 +75,81 @@ def rank_power(mean_log2_loss: float, choices: int) -> float:
     return (lo + hi) / 2
 
 
+def _name_parts(value: str) -> list[str]:
+    parts = re.findall(r"[a-z0-9]+", unicodedata.normalize("NFKD", value).casefold())
+    while parts and parts[-1] in SUFFIXES:
+        parts.pop()
+    return parts
+
+
 def _source_order(source: dict, by_sleeper: dict[str, Player]) -> list[int]:
     order: list[int] = []
     seen: set[int] = set()
+    by_name: dict[tuple[str, str], list[Player]] = {}
+    by_last_team: dict[tuple[str, str, str], list[Player]] = {}
+    for player in by_sleeper.values():
+        parts = _name_parts(player.name)
+        by_name.setdefault(("".join(parts), player.position), []).append(player)
+        if len(parts) >= 2 and player.team:
+            by_last_team.setdefault(
+                (parts[-1], player.position, player.team), []
+            ).append(player)
     for row in source["players"]:
         sleeper_id = row.get("sleeper_id")
         player = by_sleeper.get(str(sleeper_id)) if sleeper_id is not None else None
+        parts = _name_parts(str(row.get("name") or ""))
+        if player is None:
+            matches = by_name.get(("".join(parts), str(row.get("position") or "")), [])
+            player = matches[0] if len(matches) == 1 else None
+        if player is None and len(parts) >= 2 and row.get("team"):
+            matches = by_last_team.get(
+                (parts[-1], str(row.get("position") or ""), row["team"]), []
+            )
+            matches = [
+                match
+                for match in matches
+                if (ours := _name_parts(match.name))
+                and (parts[0].startswith(ours[0]) or ours[0].startswith(parts[0]))
+            ]
+            player = matches[0] if len(matches) == 1 else None
         if player is not None and player.player_id not in seen:
             seen.add(player.player_id)
             order.append(player.player_id)
     return order
 
 
-def load_opponent_strategies(
+def _complete_order(
+    source: dict,
+    fallback_order: list[int],
+    by_sleeper: dict[str, Player],
+) -> tuple[int, ...]:
+    primary = _source_order(source, by_sleeper)
+    primary_ids = set(primary)
+    return tuple(
+        primary + [player_id for player_id in fallback_order if player_id not in primary_ids]
+    )
+
+
+def build_opponent_strategies(
     players: list[Player],
     board: Board,
     draft: dict,
-    matches_path: Path,
-    rankings_path: Path,
+    matches: dict,
+    rankings: dict,
 ) -> dict[int, OpponentStrategy]:
-    """Load one complete, non-VOR player order for every opposing draft slot."""
-    matches = json.loads(matches_path.read_text())
-    rankings = json.loads(rankings_path.read_text())
+    """Build one complete, non-VOR player order for every opposing draft slot."""
 
     draft_id = draft.get("draft_id")
     if matches.get("draft", {}).get("draft_id") != draft_id:
         raise ValueError(
-            f"{matches_path} describes draft {matches.get('draft', {}).get('draft_id')}, "
+            f"source matches describe draft {matches.get('draft', {}).get('draft_id')}, "
             f"not {draft_id}"
         )
     snapshot = matches.get("ranking_snapshot", {}).get("generated_at")
     if snapshot != rankings.get("generated_at"):
         raise ValueError(
-            f"{matches_path} used ranking snapshot {snapshot}, but {rankings_path} is "
-            f"{rankings.get('generated_at')}"
+            f"source matches used ranking snapshot {snapshot}, but rankings are "
+            f"from {rankings.get('generated_at')}"
         )
 
     by_sleeper = {str(p.sleeper_id): p for p in players if p.sleeper_id is not None}
@@ -112,7 +159,7 @@ def load_opponent_strategies(
     sources = {source["id"]: source for source in rankings["sources"]}
     fallback = sources.get("draftsharks_adp")
     if fallback is None:
-        raise ValueError(f"{rankings_path} has no draftsharks_adp tail fallback")
+        raise ValueError("rankings have no draftsharks_adp tail fallback")
     fallback_order = _source_order(fallback, by_sleeper)
     if len(fallback_order) != len(players):
         raise ValueError(
@@ -131,35 +178,42 @@ def load_opponent_strategies(
         roster_id = slot_row["roster_id"]
         owner = owner_matches.get(roster_id)
         if owner is None:
-            raise ValueError(f"roster {roster_id} in draft slot {slot} has no source match")
-        inferred = owner["inferred_source"]
+            inferred = {
+                "source_id": fallback["id"],
+                "fit_score": 0.0,
+                "mean_log2_loss": COLD_START_LOG2_LOSS,
+            }
+            confidence = "insufficient"
+        else:
+            inferred = owner["inferred_source"]
+            confidence = owner["confidence"]
         source_id = inferred["source_id"]
         source = sources.get(source_id)
         if source is None:
-            raise ValueError(f"inferred source {source_id!r} is absent from {rankings_path}")
+            raise ValueError(f"inferred source {source_id!r} is absent from rankings")
 
         primary = _source_order(source, by_sleeper)
-        primary_ids = set(primary)
-        order = primary + [player_id for player_id in fallback_order if player_id not in primary_ids]
+        order = _complete_order(source, fallback_order, by_sleeper)
         if len(order) != len(players):
             raise ValueError(
-                f"opponent slot {slot}'s {source_id} board covers {len(order)}/{len(players)} players"
+                f"opponent slot {slot}'s {source_id} board covers "
+                f"{len(order)}/{len(players)} players"
             )
         loss = float(inferred["mean_log2_loss"])
         strategies[slot] = OpponentStrategy(
             slot=slot,
             roster_id=roster_id,
-            username=owner.get("username"),
+            username=owner.get("username") if owner else slot_row.get("username"),
             source_id=source_id,
             source_name=source["name"],
             source_format=source.get("format"),
             fit_score=float(inferred["fit_score"]),
-            confidence=owner["confidence"],
+            confidence=confidence,
             mean_log2_loss=loss,
             rank_power=rank_power(loss, len(players)),
             primary_players=len(primary),
             ranks={player_id: rank for rank, player_id in enumerate(order, start=1)},
-            order=tuple(order),
+            order=order,
         )
 
     expected_slots = set(range(1, len(slots) + 1)) - {board.my_slot}
@@ -169,3 +223,16 @@ def load_opponent_strategies(
             f"want {sorted(expected_slots)}"
         )
     return strategies
+
+
+def load_opponent_strategies(
+    players: list[Player],
+    board: Board,
+    draft: dict,
+    matches_path: Path,
+    rankings_path: Path,
+) -> dict[int, OpponentStrategy]:
+    """Load source artifacts and build every opposing draft-slot policy."""
+    matches = json.loads(matches_path.read_text())
+    rankings = json.loads(rankings_path.read_text())
+    return build_opponent_strategies(players, board, draft, matches, rankings)
