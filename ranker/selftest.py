@@ -31,7 +31,7 @@ from .league import (
 )
 from .opponents import OpponentStrategy, expected_log2_rank, rank_power
 from .pool import Player
-from .sim import Draft
+from .simulation import Draft
 from .value import (
     HORIZONS,
     compute_vor,

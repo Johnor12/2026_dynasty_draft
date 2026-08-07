@@ -14,8 +14,9 @@ fielded per season, so each horizon is priced against its own replacement levels
 69-point injury year cannot hide inside a healthy 3-year sum. The method, in one breath:
 how many players start at each position is an *outcome* of how the league drafts, so
 per-horizon replacement levels are found as a fixed point of an optimal-drafter draft
-simulation (ranker/sim.py), roster value and the replacement measurement live in
-ranker/value.py, and `draft.json` — the live board — is the simulation's starting state,
+simulation (`ranker/simulation.py` and `ranker/convergence.py`), while roster value and
+the replacement measurement live in `ranker/value.py`, and `draft.json` — the live board —
+is the simulation's starting state,
 not a filter (ranker/board.py). Only my slot uses that VOR valuation. Every opponent uses
 the external provider board most associated with its prior picks, loaded from the
 data-source investigator; unfilled dedicated starters softly adjust that order, and its
@@ -28,8 +29,8 @@ position without spending a starting-caliber pick, period by period" (`vor_yr1` 
 `vor_yr23` carry the split). The `my_next_picks`
 block is the direct answer to "who should I draft next" — unlike `vor`, it sees my roster
 and opponent demand. Its first decision searches target plans across my next four held
-picks, then plays each first-candidate plan out to the end of the draft (ranker/sim.py
-`four_pick_lookahead` and `rollout`). Rank columns are renumbered over the undrafted
+picks, then plays each first-candidate plan out to the end of the draft
+(`ranker/planning.py`). Rank columns are renumbered over the undrafted
 players actually emitted.
 
 A caveat the data imposes, not the model: QB replacement lands around QB20-21 = ~820
@@ -49,22 +50,24 @@ import sys
 from pathlib import Path
 
 from ranker.board import fresh_board, load_board
+from ranker.convergence import converge
 from ranker.league import NOISE, ROLLOUT_SIMS, SEED, SIMS
 from ranker.opponents import load_opponent_strategies
-from ranker.output import build_payload, build_rankings, report_board, report_summary
-from ranker.pool import load_pool
-from ranker.selftest import selftest
-from ranker.sim import (
+from ranker.output import build_payload
+from ranker.planning import (
     apply_option_redraw,
     apply_rollout,
     broaden_first_pick,
     candidate_survival,
-    converge,
     four_pick_lookahead,
     monte_carlo,
     option_redraw,
     rollout,
 )
+from ranker.pool import load_pool
+from ranker.rankings import build_rankings
+from ranker.report import report_board, report_summary
+from ranker.selftest import selftest
 from ranker.validate import validate
 
 REPO_ROOT = Path(__file__).resolve().parent
@@ -234,10 +237,10 @@ def main(argv: list[str] | None = None) -> int:
             f"(adherence noise multiplier={args.noise})",
             file=sys.stderr,
         )
-    picks, drafted = monte_carlo(
+    picks = monte_carlo(
         players, rep, board, stream, args.sims, args.noise, args.seed, opponents
     )
-    rows = build_rankings(players, rep, stream, draft, picks, drafted, args.sims, board)
+    rows = build_rankings(players, rep, stream, draft, picks, args.sims, board)
 
     problems = board_problems + validate(rows, players, rep, counts, draft, board, history)
     payload = build_payload(

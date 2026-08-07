@@ -75,7 +75,7 @@ NOISE = 1.0
 # longer than the 24 the single-horizon state needed.
 MAX_ITERS = 80
 SIMS = 200
-ROLLOUT_SIMS = 100  # full-draft playouts per candidate at my next pick (sim.rollout)
+ROLLOUT_SIMS = 100  # full-draft playouts per candidate at my next pick (planning.rollout)
 SEED = 20260804
 
 

@@ -19,6 +19,11 @@ Provider formats are not identical; `data/rankings.json` and the final report re
 exact format for each source. Raw web responses stay in `data/raw/`, so parsing can be
 repeated without replacing the snapshot.
 
+Implementation context is separated by concern: `fetch_rankings.py` owns network
+snapshots, `providers.py` owns provider-specific formats, `identity.py` owns canonical
+player resolution, `build_rankings.py` assembles normalized boards, and `investigate.py`
+scores those boards against the draft.
+
 `data_source_matches.json` is the published report. For each drafter it includes the
 closest and second-closest source, a separation-based confidence label, every provider's
 score, and pick-level evidence showing the higher-ranked available players they passed.

@@ -22,7 +22,7 @@ from .league import (
     picks_for_slot,
 )
 from .pool import Player
-from .sim import Draft
+from .simulation import Draft
 from .value import HORIZONS, horizon_points, pos_by_horizon, starting_positions
 
 

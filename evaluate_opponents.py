@@ -31,7 +31,7 @@ from ranker.board import load_board  # noqa: E402
 from ranker.league import NOISE, SEED  # noqa: E402
 from ranker.opponents import build_opponent_strategies  # noqa: E402
 from ranker.pool import Player, load_pool  # noqa: E402
-from ranker.sim import Draft  # noqa: E402
+from ranker.simulation import Draft  # noqa: E402
 from ranker.value import compute_vor, seed_replacement  # noqa: E402
 
 TRIALS = 100

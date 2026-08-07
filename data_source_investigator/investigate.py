@@ -17,37 +17,27 @@ import argparse
 import datetime as dt
 import json
 import math
-import re
 import statistics
 import sys
-import unicodedata
 from collections import defaultdict
 from pathlib import Path
 
 import paths
+from identity import SUFFIXES, normalized_name, words
 
-SUFFIXES = {"jr", "sr", "ii", "iii", "iv", "v"}
 MISSING_PICK_LOSS = 5.0  # Same loss as repeatedly choosing 32nd among available players.
 SKIPPED_EXAMPLES = 5
 
 
-def normalized_name(value: str) -> str:
-    plain = unicodedata.normalize("NFKD", value).casefold()
-    parts = re.findall(r"[a-z0-9]+", plain)
-    while parts and parts[-1] in SUFFIXES:
-        parts.pop()
-    return "".join(parts)
-
-
 def name_key(player: dict) -> tuple[str, str]:
-    return normalized_name(str(player.get("name") or "")), str(player.get("position") or "")
+    return (
+        normalized_name(str(player.get("name") or ""), drop_suffix=True),
+        str(player.get("position") or ""),
+    )
 
 
 def alias_key(player: dict) -> tuple[str, str, str, str] | None:
-    parts = re.findall(
-        r"[a-z0-9]+",
-        unicodedata.normalize("NFKD", str(player.get("name") or "")).casefold(),
-    )
+    parts = words(str(player.get("name") or ""))
     while parts and parts[-1] in SUFFIXES:
         parts.pop()
     team = str(player.get("team") or "")

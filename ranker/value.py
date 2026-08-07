@@ -44,7 +44,7 @@ each cost a degenerate draft to learn, and are explained at their definitions:
 
 Roster legality is a constraint, not a price: 1 QB / 2 RB / 3 WR / 1 TE come from slots
 nothing else can cover, so once a team's remaining picks equal its unfilled mandatory
-spots, its candidates narrow to what it still owes (`Draft.candidates` in sim.py).
+spots, its candidates narrow to what it still owes (`Draft.candidates` in simulation.py).
 """
 
 from __future__ import annotations
