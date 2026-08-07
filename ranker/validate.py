@@ -13,6 +13,7 @@ from .league import (
     MAX_ITERS,
     NON_TAXI_SLOTS,
     POSITIONS,
+    ROSTER_DEPTH_TARGETS,
     ROUNDS,
     STARTING_SLOTS,
     TEAMS,
@@ -127,6 +128,14 @@ def validate(
             have = sum(1 for p in roster if p.position == pos)
             have += sum(1 for o in off if o.get("position") == pos)
             check(have >= need, f"slot {i} has {have} {pos}, needs {need}")
+        for pos, target in ROSTER_DEPTH_TARGETS.items():
+            have = sum(1 for p in roster if p.position == pos)
+            have += sum(1 for o in off if o.get("position") == pos)
+            check(
+                have <= target + 5,
+                f"slot {i} roster-shape smell: {have} {pos} exceeds soft target "
+                f"{target} by more than 5",
+            )
 
     vors = [r["vor"] for r in rows]
     check(vors == sorted(vors, reverse=True), "rows are not sorted by VOR descending")

@@ -152,8 +152,9 @@ def my_next_picks(
 
     This is the question the whole script exists to answer, so it is surfaced rather than
     left implicit in `sim_pick`. The candidates carry the two parts of the decision score:
-    what the player adds to my roster now, and the expected value of the best player still
-    there at my following pick if I take him.
+    what the player adds to my roster now after the soft roster-depth preference, and the
+    similarly adjusted expected value of the best player still there at my following pick
+    if I take him.
 
     At my first pending pick, `next_pick_ev` comes from short branch-specific opponent
     redraws rather than the global-rank survival shortcut used by the bulk draft policy.

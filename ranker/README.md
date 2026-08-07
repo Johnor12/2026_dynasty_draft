@@ -51,9 +51,17 @@ priced above the final waiver-wire level, with year-one insurance and years-2–
 ## Opponents and planning
 
 My slot alone uses projections and roster value. Each opponent uses the provider board
-closest to its completed picks, with a soft boost for unfilled dedicated starters.
+closest to its completed picks, with a soft boost for unfilled dedicated starters and a
+compounding source-rank penalty for adding players beyond comfortable positional depth.
+The depth targets sum to 25, so the last four spots remain source-driven rather than
+forcing every opponent into one exact roster shape. These are preferences, not draft
+limits: a large enough source-rank gap can still justify another player at a deep position.
 Observed `mean_log2_loss` calibrates randomness around that preference. Missing provider
 players are appended in DraftSharks ADP order; opponents never fall back to VOR.
+
+My simulated pick policy applies the same depth penalty to marginal roster gain. It does
+not change projected roster value; it breaks late-draft ties among small positive gains
+so a thin position is not routinely crowded out by a ninth quarterback or tight end.
 
 The bulk deterministic policy scores value now plus the expected best option at its next
 pick. The live decision broadens the candidate set, redraws intervening opponents, measures
@@ -69,4 +77,3 @@ fields, opponent consensus deltas, and availability estimates for each undrafted
 headline VOR. `example_draft` contains structured final-roster records for dashboard
 lineup comparison. `validation.problems` is empty on success; any problem makes the CLI
 exit nonzero.
-

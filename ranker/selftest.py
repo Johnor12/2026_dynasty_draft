@@ -20,6 +20,7 @@ from .league import (
     FIRST_PICK_PER_POS,
     MY_SLOT,
     POSITIONS,
+    ROSTER_DEPTH_TARGETS,
     ROUNDS,
     SEED,
     SLOT_ELIGIBLE,
@@ -123,6 +124,41 @@ def opponent_selftest(players: list[Player]) -> list[str]:
     if value.choose_opponent(0, 1) != wrs[3]:
         fails.append("opponent balance preference overrode too large a source-rank gap")
 
+    # Once a roster reaches comfortable WR depth, another WR's adjusted source rank is
+    # doubled against other positions. This is a preference, not a positional limit: a
+    # sufficiently large source gap can still justify the extra WR.
+    board = fresh_board()
+    board.rosters[0] = wrs[: ROSTER_DEPTH_TARGETS["WR"]]
+    board.picks_left[0] -= len(board.rosters[0])
+    depth_order = complete([wrs[ROSTER_DEPTH_TARGETS["WR"]], rb])
+    depth = Draft(
+        players,
+        rep,
+        vor,
+        board,
+        opponents=synthetic_opponents(players, board, depth_order),
+    )
+    if depth.choose_opponent(0, 1) != rb:
+        fails.append("opponent did not prefer close RB over excessive WR depth")
+
+    start = ROSTER_DEPTH_TARGETS["WR"]
+    depth_value_order = complete(wrs[start : start + 6] + [rb])
+    depth_value = Draft(
+        players,
+        rep,
+        vor,
+        board,
+        opponents=synthetic_opponents(players, board, depth_value_order),
+    )
+    if depth_value.choose_opponent(0, 1) != wrs[ROSTER_DEPTH_TARGETS["WR"]]:
+        fails.append("opponent depth preference acted like a hard positional limit")
+    if depth.roster_depth_penalty(wrs[: start - 1], (), "WR") != 1.0:
+        fails.append("roster depth preference started before its target")
+    if depth.roster_depth_penalty(wrs[:start], (), "WR") != 2.0:
+        fails.append("roster depth preference did not start at its target")
+    if depth.roster_depth_penalty(wrs[: start + 1], (), "WR") != 4.0:
+        fails.append("roster depth preference did not compound with excess depth")
+
     for loss in (0.3, 1.5, 2.7):
         power = rank_power(loss, len(players))
         if abs(expected_log2_rank(power, len(players)) - loss) > 1e-6:
@@ -130,7 +166,8 @@ def opponent_selftest(players: list[Player]) -> list[str]:
 
     print(
         "  opponent strategies: provider order stays VOR-independent, starter needs "
-        "softly adjust it, and fitted rank noise reproduces source adherence",
+        "and excessive depth softly adjust it, and fitted rank noise reproduces "
+        "source adherence",
         file=sys.stderr,
     )
     return fails

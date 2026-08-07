@@ -10,3 +10,12 @@ affecting positional differences. injuries would also cause a commiserate increa
 
 Bye weeks on the other hand we can apply (exactly for year one, randomly for future years), because they affect all players
 equally.
+
+  4. Opponent-source uncertainty is discarded.
+
+  Eight of nine opponents currently have a weak source classification, but each is assigned categorically to its single closest board (ranker/
+  opponents.py:190).
+
+  The forward replay passed mechanically, but its predictive results were mixed:
+
+  - 67 opponent picks evaluated.

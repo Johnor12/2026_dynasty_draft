@@ -20,6 +20,8 @@ from .league import (
     NON_TAXI_SLOTS,
     OPPONENT_BALANCE_STRENGTH,
     POSITIONS,
+    ROSTER_DEPTH_PENALTY,
+    ROSTER_DEPTH_TARGETS,
     SLOT_ELIGIBLE,
     SURVIVAL_SIGMA,
 )
@@ -328,21 +330,41 @@ class Draft:
                 )
         return False
 
-    def opponent_balance_boosts(self, slot: int) -> dict[str, float]:
-        """Source-rank boosts for this roster's unfilled dedicated starters."""
+    @staticmethod
+    def position_counts(roster: Sequence[Player], off: Sequence[dict]) -> dict[str, int]:
         have = {position: 0 for position in POSITIONS}
-        for player in self.rosters[slot - 1]:
+        for player in roster:
             have[player.position] += 1
-        for row in self.off_pool[slot - 1]:
+        for row in off:
             if row.get("position") in have:
                 have[row["position"]] += 1
-        return {
-            position: 1.0
-            + OPPONENT_BALANCE_STRENGTH
-            * max(required - have[position], 0)
-            / required
-            for position, required in DEDICATED_SLOTS.items()
-        }
+        return have
+
+    @staticmethod
+    def roster_depth_penalty(
+        roster: Sequence[Player], off: Sequence[dict], position: str
+    ) -> float:
+        """Preference penalty for adding one more player at an already-deep position."""
+        have = Draft.position_counts(roster, off)[position]
+        excess_depth = max(have - ROSTER_DEPTH_TARGETS[position] + 1, 0)
+        return ROSTER_DEPTH_PENALTY**excess_depth
+
+    def opponent_position_adjustments(self, slot: int) -> dict[str, float]:
+        """Source-rank multipliers for starter needs and excessive bench depth."""
+        roster = self.rosters[slot - 1]
+        off = self.off_pool[slot - 1]
+        have = self.position_counts(roster, off)
+        out: dict[str, float] = {}
+        for position, required in DEDICATED_SLOTS.items():
+            starter_boost = (
+                1.0
+                + OPPONENT_BALANCE_STRENGTH
+                * max(required - have[position], 0)
+                / required
+            )
+            depth_penalty = self.roster_depth_penalty(roster, off, position)
+            out[position] = depth_penalty / starter_boost
+        return out
 
     def better_available(self, p: Player) -> int:
         return self.avail_bits.prefix(p.availability_index)
@@ -456,7 +478,9 @@ class Draft:
                     future_sorted, self.slot_rep, self.depth_value, streams_next, cand
                 )
                 value_cache[pair_key] = pair_value
-            gain = pair_value - base
+            gain = (pair_value - base) / self.roster_depth_penalty(
+                future_roster, off, cand.position
+            )
             scored.append((gain, survival(self.better_available(cand), gap)))
         scored.sort(key=lambda t: -t[0])
         expected = 0.0
@@ -500,7 +524,7 @@ class Draft:
             now = (
                 team_value(roster_sorted, self.slot_rep, self.depth_value, self.streams, cand)
                 - base
-            )
+            ) / self.roster_depth_penalty(roster, off, cand.position)
             later = (
                 0.0
                 if gap is None
@@ -528,9 +552,9 @@ class Draft:
         """Choose from a balance-adjusted source board, without consulting my valuation."""
         candidates = self.opponent_candidates(slot)
         assert candidates, "pool exhausted"
-        boosts = self.opponent_balance_boosts(slot)
+        adjustments = self.opponent_position_adjustments(slot)
         ranked = [
-            (rank / boosts[player.position], rank, player)
+            (rank * adjustments[player.position], rank, player)
             for rank, player in enumerate(candidates, start=1)
         ]
         if not self.noise or self.rng is None or pick_index < self.noise_from:

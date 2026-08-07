@@ -12,6 +12,8 @@ from .league import (
     POINTS_FIELD,
     POSITION_DEPTH_DECAY,
     POSITIONS,
+    ROSTER_DEPTH_PENALTY,
+    ROSTER_DEPTH_TARGETS,
     ROUNDS,
     SCHEME,
     STARTING_SLOTS,
@@ -211,8 +213,10 @@ def build_payload(
             "note": (
                 "The model's own choice at each of my next picks, from the deterministic "
                 "draft at the converged levels. value_now is the candidate's marginal value "
-                "to my roster (lineup surplus + bench depth); next_pick_ev is E[value of the "
-                "best player still there at my following pick] if I take him now. The pick "
+                "to my roster (lineup surplus + bench depth), divided by the soft depth "
+                "penalty when the position is already deep; next_pick_ev is E[value of the "
+                "best player still there at my following pick], with the same adjustment, "
+                "if I take him now. The pick "
                 "maximizes their sum, so it can disagree with vor_rank — it sees my roster "
                 "and who will keep, which vor does not. At my first pending pick, each "
                 "next_pick_ev forces that candidate, redraws only the intervening opponents, "
@@ -255,9 +259,18 @@ def build_payload(
                 "associated with its completed picks in data_source_matches.json. Opponent "
                 "valuation never reads projections, replacement levels, team value, or VOR. "
                 "A position's source rank receives a soft boost in proportion to its "
-                "unfilled dedicated starters; the deterministic draft takes the best "
-                "adjusted rank, and Monte Carlo draws around that preference."
+                "unfilled dedicated starters and a compounding penalty beyond its "
+                "comfortable depth; the deterministic draft takes the best adjusted "
+                "rank, and Monte Carlo draws around that preference."
             ),
+            "depth_preference": {
+                "targets": ROSTER_DEPTH_TARGETS,
+                "penalty_per_extra_player": ROSTER_DEPTH_PENALTY,
+                "note": (
+                    "Targets sum to 25, leaving four roster spots to spill into the best "
+                    "remaining positions. This adjusts source rank and is not a draft limit."
+                ),
+            },
             "adherence": (
                 "The investigator's mean_log2_loss is converted to a power distribution "
                 "over source rank among legal available players, before the roster-balance "
@@ -359,6 +372,16 @@ def build_payload(
                 "and a startable veteran are both worth bench picks for different reasons, "
                 "each in the horizon where he actually produces."
             ),
+            "roster_depth_preference": {
+                "targets": ROSTER_DEPTH_TARGETS,
+                "penalty_per_extra_player": ROSTER_DEPTH_PENALTY,
+                "note": (
+                    "The simulated pick score divides marginal gain by this compounding "
+                    "penalty. It shapes choices but does not change final roster value or "
+                    "act as a positional limit. Validation flags a deterministic roster "
+                    "more than five players beyond any target."
+                ),
+            },
             "lookahead": (
                 "first pending decision: four held picks with survival-aware target plans; "
                 "bulk policy: value now + E[best value at the following pick]"

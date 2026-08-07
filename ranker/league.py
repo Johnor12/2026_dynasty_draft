@@ -67,6 +67,11 @@ LOOKAHEAD_PICKS = 4
 # An entirely unfilled dedicated starter group receives a 3x source-rank boost;
 # the boost fades linearly as that position's dedicated starters are filled.
 OPPONENT_BALANCE_STRENGTH = 2.0
+# Another player beyond these comfortable depths pays a compounding preference penalty.
+# These sum to 25, leaving four picks to spill into the best remaining positions rather
+# than prescribing one exact roster shape.
+ROSTER_DEPTH_TARGETS = {"QB": 3, "RB": 8, "WR": 11, "TE": 3}
+ROSTER_DEPTH_PENALTY = 2.0
 # Multiplier around each opponent's fitted source adherence: 1 reproduces the observed
 # mean log-rank loss before roster-balance adjustments, while 0 removes random variation.
 NOISE = 1.0

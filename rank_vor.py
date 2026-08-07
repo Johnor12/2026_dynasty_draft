@@ -20,7 +20,8 @@ is the simulation's starting state,
 not a filter (ranker/board.py). Only my slot uses that VOR valuation. Every opponent uses
 the external provider board most associated with its prior picks, loaded from the
 data-source investigator; unfilled dedicated starters softly adjust that order, and its
-observed adherence controls Monte Carlo choice noise.
+observed adherence controls Monte Carlo choice noise. A compounding soft-depth preference
+keeps every simulated drafter's late roster shape plausible without imposing position limits.
 
 The output's headline `vor` sums the horizons: (year-1 points minus the year-1
 marginal-starter level) + (years-2-3 points minus that level) — "how many points over
