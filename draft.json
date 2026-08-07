@@ -1,13 +1,13 @@
 {
   "source": "https://api.sleeper.app/v1/draft/1388293618208374784",
-  "fetched_at": "2026-08-07T21:24:06+00:00",
+  "fetched_at": "2026-08-07T22:20:42+00:00",
   "draft_id": "1388293618208374784",
   "league_id": "1388293617071714304",
   "league_name": "Dudes",
   "season": "2026",
   "status": "drafting",
   "started_at": "2026-08-04T13:02:55+00:00",
-  "last_picked_at": "2026-08-07T21:22:29+00:00",
+  "last_picked_at": "2026-08-07T22:01:04+00:00",
   "format": {
     "type": "snake",
     "teams": 10,
@@ -16,16 +16,16 @@
     "scoring_type": "dynasty_2qb"
   },
   "pick_count": 290,
-  "picks_made": 82,
-  "picks_pending": 208,
+  "picks_made": 85,
+  "picks_pending": 205,
   "on_the_clock": {
-    "pick_no": 83,
+    "pick_no": 86,
     "round": 9,
-    "pick_in_round": 3,
-    "draft_slot": 8,
-    "user_id": "1128025586577879040",
-    "username": "justinmfftt",
-    "slot": "9.03"
+    "pick_in_round": 6,
+    "draft_slot": 5,
+    "user_id": "870397485556875264",
+    "username": "dirtydole",
+    "slot": "9.06"
   },
   "me": {
     "username": "johnor",
@@ -41,12 +41,12 @@
     "user_id": "1127785716420898816",
     "username": "johnor",
     "slot": "9.09",
-    "picks_away": 6
+    "picks_away": 3
   },
   "board_derivation": {
     "method": "snake, order reverses at round 3; traded picks applied",
-    "checked_against_made_picks": 82,
-    "slot_and_roster_agree": 82,
+    "checked_against_made_picks": 85,
+    "slot_and_roster_agree": 85,
     "rounds_exercised": [
       1,
       2,
@@ -1664,12 +1664,12 @@
       "user_id": "1128025586577879040",
       "username": "justinmfftt",
       "is_mine": false,
-      "status": "pending",
-      "sleeper_id": null,
-      "name": null,
-      "position": null,
-      "team": null,
-      "is_keeper": null
+      "status": "made",
+      "sleeper_id": "12545",
+      "name": "Tyler Shough",
+      "position": "QB",
+      "team": "NO",
+      "is_keeper": false
     },
     {
       "pick_no": 84,
@@ -1680,12 +1680,12 @@
       "user_id": "1128381875430596608",
       "username": "UGrizz14",
       "is_mine": false,
-      "status": "pending",
-      "sleeper_id": null,
-      "name": null,
-      "position": null,
-      "team": null,
-      "is_keeper": null
+      "status": "made",
+      "sleeper_id": "4892",
+      "name": "Baker Mayfield",
+      "position": "QB",
+      "team": "TB",
+      "is_keeper": false
     },
     {
       "pick_no": 85,
@@ -1696,12 +1696,12 @@
       "user_id": "1114302275305979904",
       "username": "samlemonskoff",
       "is_mine": false,
-      "status": "pending",
-      "sleeper_id": null,
-      "name": null,
-      "position": null,
-      "team": null,
-      "is_keeper": null
+      "status": "made",
+      "sleeper_id": "3198",
+      "name": "Derrick Henry",
+      "position": "RB",
+      "team": "BAL",
+      "is_keeper": false
     },
     {
       "pick_no": 86,
