@@ -1,13 +1,13 @@
 {
   "source": "https://api.sleeper.app/v1/draft/1388293618208374784",
-  "fetched_at": "2026-08-07T12:31:12+00:00",
+  "fetched_at": "2026-08-07T12:54:25+00:00",
   "draft_id": "1388293618208374784",
   "league_id": "1388293617071714304",
   "league_name": "Dudes",
   "season": "2026",
   "status": "drafting",
   "started_at": "2026-08-04T13:02:55+00:00",
-  "last_picked_at": "2026-08-07T12:30:15+00:00",
+  "last_picked_at": "2026-08-07T12:53:25+00:00",
   "format": {
     "type": "snake",
     "teams": 10,
@@ -16,16 +16,16 @@
     "scoring_type": "dynasty_2qb"
   },
   "pick_count": 290,
-  "picks_made": 68,
-  "picks_pending": 222,
+  "picks_made": 69,
+  "picks_pending": 221,
   "on_the_clock": {
-    "pick_no": 69,
+    "pick_no": 70,
     "round": 7,
-    "pick_in_round": 9,
-    "draft_slot": 2,
-    "user_id": "1127785716420898816",
-    "username": "johnor",
-    "slot": "7.09"
+    "pick_in_round": 10,
+    "draft_slot": 1,
+    "user_id": "207916077173182464",
+    "username": "dccb31",
+    "slot": "7.10"
   },
   "me": {
     "username": "johnor",
@@ -34,19 +34,19 @@
     "roster_id": 2
   },
   "my_next_pick": {
-    "pick_no": 69,
-    "round": 7,
+    "pick_no": 89,
+    "round": 9,
     "pick_in_round": 9,
     "draft_slot": 2,
     "user_id": "1127785716420898816",
     "username": "johnor",
-    "slot": "7.09",
-    "picks_away": 0
+    "slot": "9.09",
+    "picks_away": 19
   },
   "board_derivation": {
     "method": "snake, order reverses at round 3; traded picks applied",
-    "checked_against_made_picks": 68,
-    "slot_and_roster_agree": 68,
+    "checked_against_made_picks": 69,
+    "slot_and_roster_agree": 69,
     "rounds_exercised": [
       1,
       2,
@@ -1354,12 +1354,12 @@
       "user_id": "1127785716420898816",
       "username": "johnor",
       "is_mine": true,
-      "status": "pending",
-      "sleeper_id": null,
-      "name": null,
-      "position": null,
-      "team": null,
-      "is_keeper": null
+      "status": "made",
+      "sleeper_id": "5850",
+      "name": "Josh Jacobs",
+      "position": "RB",
+      "team": "GB",
+      "is_keeper": false
     },
     {
       "pick_no": 70,
