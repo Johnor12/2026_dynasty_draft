@@ -1,13 +1,13 @@
 {
   "source": "https://api.sleeper.app/v1/draft/1388293618208374784",
-  "fetched_at": "2026-08-07T12:08:39+00:00",
+  "fetched_at": "2026-08-07T12:31:12+00:00",
   "draft_id": "1388293618208374784",
   "league_id": "1388293617071714304",
   "league_name": "Dudes",
   "season": "2026",
   "status": "drafting",
   "started_at": "2026-08-04T13:02:55+00:00",
-  "last_picked_at": "2026-08-07T09:05:01+00:00",
+  "last_picked_at": "2026-08-07T12:30:15+00:00",
   "format": {
     "type": "snake",
     "teams": 10,
@@ -16,16 +16,16 @@
     "scoring_type": "dynasty_2qb"
   },
   "pick_count": 290,
-  "picks_made": 67,
-  "picks_pending": 223,
+  "picks_made": 68,
+  "picks_pending": 222,
   "on_the_clock": {
-    "pick_no": 68,
+    "pick_no": 69,
     "round": 7,
-    "pick_in_round": 8,
-    "draft_slot": 3,
-    "user_id": "865368720548196352",
-    "username": "jedmxk",
-    "slot": "7.08"
+    "pick_in_round": 9,
+    "draft_slot": 2,
+    "user_id": "1127785716420898816",
+    "username": "johnor",
+    "slot": "7.09"
   },
   "me": {
     "username": "johnor",
@@ -41,12 +41,12 @@
     "user_id": "1127785716420898816",
     "username": "johnor",
     "slot": "7.09",
-    "picks_away": 1
+    "picks_away": 0
   },
   "board_derivation": {
     "method": "snake, order reverses at round 3; traded picks applied",
-    "checked_against_made_picks": 67,
-    "slot_and_roster_agree": 67,
+    "checked_against_made_picks": 68,
+    "slot_and_roster_agree": 68,
     "rounds_exercised": [
       1,
       2,
@@ -1338,12 +1338,12 @@
       "user_id": "865368720548196352",
       "username": "jedmxk",
       "is_mine": false,
-      "status": "pending",
-      "sleeper_id": null,
-      "name": null,
-      "position": null,
-      "team": null,
-      "is_keeper": null
+      "status": "made",
+      "sleeper_id": "5022",
+      "name": "Dallas Goedert",
+      "position": "TE",
+      "team": "PHI",
+      "is_keeper": false
     },
     {
       "pick_no": 69,
