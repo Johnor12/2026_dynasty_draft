@@ -1,13 +1,13 @@
 {
   "source": "https://api.sleeper.app/v1/draft/1388293618208374784",
-  "fetched_at": "2026-08-07T20:31:11+00:00",
+  "fetched_at": "2026-08-07T20:37:27+00:00",
   "draft_id": "1388293618208374784",
   "league_id": "1388293617071714304",
   "league_name": "Dudes",
   "season": "2026",
   "status": "drafting",
   "started_at": "2026-08-04T13:02:55+00:00",
-  "last_picked_at": "2026-08-07T19:27:57+00:00",
+  "last_picked_at": "2026-08-07T20:34:28+00:00",
   "format": {
     "type": "snake",
     "teams": 10,
@@ -16,16 +16,16 @@
     "scoring_type": "dynasty_2qb"
   },
   "pick_count": 290,
-  "picks_made": 78,
-  "picks_pending": 212,
+  "picks_made": 81,
+  "picks_pending": 209,
   "on_the_clock": {
-    "pick_no": 79,
-    "round": 8,
-    "pick_in_round": 9,
+    "pick_no": 82,
+    "round": 9,
+    "pick_in_round": 2,
     "draft_slot": 9,
     "user_id": "207916077173182464",
     "username": "dccb31",
-    "slot": "8.09"
+    "slot": "9.02"
   },
   "me": {
     "username": "johnor",
@@ -41,12 +41,12 @@
     "user_id": "1127785716420898816",
     "username": "johnor",
     "slot": "9.09",
-    "picks_away": 10
+    "picks_away": 7
   },
   "board_derivation": {
     "method": "snake, order reverses at round 3; traded picks applied",
-    "checked_against_made_picks": 78,
-    "slot_and_roster_agree": 78,
+    "checked_against_made_picks": 81,
+    "slot_and_roster_agree": 81,
     "rounds_exercised": [
       1,
       2,
@@ -55,7 +55,8 @@
       5,
       6,
       7,
-      8
+      8,
+      9
     ],
     "mismatches": []
   },
@@ -1599,12 +1600,12 @@
       "user_id": "207916077173182464",
       "username": "dccb31",
       "is_mine": false,
-      "status": "pending",
-      "sleeper_id": null,
-      "name": null,
-      "position": null,
-      "team": null,
-      "is_keeper": null
+      "status": "made",
+      "sleeper_id": "13330",
+      "name": "Kenyon Sadiq",
+      "position": "TE",
+      "team": "NYJ",
+      "is_keeper": false
     },
     {
       "pick_no": 80,
@@ -1615,12 +1616,12 @@
       "user_id": "1388546393752240128",
       "username": "AndNic31",
       "is_mine": false,
-      "status": "pending",
-      "sleeper_id": null,
-      "name": null,
-      "position": null,
-      "team": null,
-      "is_keeper": null
+      "status": "made",
+      "sleeper_id": "13298",
+      "name": "KC Concepcion",
+      "position": "WR",
+      "team": "CLE",
+      "is_keeper": false
     },
     {
       "pick_no": 81,
@@ -1631,12 +1632,12 @@
       "user_id": "751220778036551680",
       "username": "nedjh2",
       "is_mine": false,
-      "status": "pending",
-      "sleeper_id": null,
-      "name": null,
-      "position": null,
-      "team": null,
-      "is_keeper": null
+      "status": "made",
+      "sleeper_id": "8167",
+      "name": "Christian Watson",
+      "position": "WR",
+      "team": "GB",
+      "is_keeper": false
     },
     {
       "pick_no": 82,
