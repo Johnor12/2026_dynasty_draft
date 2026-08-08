@@ -624,12 +624,17 @@ function renderNextPicks(d, byId) {
           h("div", { class: "cell-note" }, rolloutNote),
           planNote ? h("div", { class: "cell-note" }, planNote) : null) : null);
     });
-    prior.push(pick.take.replace(/ \((QB|RB|WR|TE)\)$/, ""));
+    prior.push((pick.deterministic_fallback || pick.take).replace(/ \((QB|RB|WR|TE)\)$/, ""));
     return h("article", { class: "card pick-card" },
       h("div", { class: "pick-head" },
         h("span", { class: "pick-label" }, `Pick ${pick.pick}`),
         h("span", { class: "pick-context" }, context),
-        h("span", { class: "recommendation" }, "Recommendation: ", h("strong", {}, pick.take))),
+        h("span", { class: "recommendation" },
+          pickIndex === 0 && hasRollout ? "Recommendation if available: " : "Recommendation: ",
+          h("strong", {}, pick.take),
+          pick.deterministic_fallback
+            ? ` · deterministic fallback: ${pick.deterministic_fallback}`
+            : null)),
       h("div", { class: "pick-table-wrap" },
         h("table", { class: `pick-table${hasRollout ? " has-rollout" : ""}` },
           h("thead", {}, h("tr", {},

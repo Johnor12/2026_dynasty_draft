@@ -74,6 +74,8 @@ pick. The live shortlist starts from the current board before intervening oppone
 then removes candidates below 5% survival to my turn. Candidate branches are evaluated
 conditional on reaching that turn. Four-pick planning applies the same 5% floor to each
 later target's conditional survival before playing finalists to the end of the draft.
+The first `take` is the EV recommendation if available; when the noiseless example has
+already removed it, `deterministic_fallback` identifies the example draft's legal choice.
 Worker processes receive immutable inputs once, and seeded task ids keep results
 deterministic across scheduling.
 

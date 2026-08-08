@@ -27,6 +27,7 @@ from .league import (
 from .opponents import OpponentStrategy, expected_log2_rank, rank_power
 from .planning import apply_survival_floor, broaden_first_pick, conditional_survival
 from .pool import Player
+from .rankings import my_next_picks
 from .simulation import Draft
 from .value import (
     compute_vor,
@@ -208,6 +209,22 @@ def planning_selftest(players: list[Player]) -> list[str]:
     }
     if low.player_id in kept or contested.player_id not in kept:
         fails.append("planning: the 5% first-pick survival floor kept the wrong candidates")
+    rolled = {
+        "pick_no": board.my_picks[0],
+        "take_id": contested.player_id,
+        "stats": {
+            candidate.player_id: {"ev": 1.0, "edge": 0.0, "se": 0.0}
+            for _, _, candidate in deterministic.my_decisions[board.my_picks[0]]
+        },
+        "plans": {},
+    }
+    recommendation = my_next_picks(
+        deterministic, board, rolled, survival, limit=1
+    )[0]
+    if recommendation["take_id"] != contested.player_id:
+        fails.append("planning: deterministic availability vetoed the conditional take")
+    if recommendation.get("deterministic_fallback_id") in (None, contested.player_id):
+        fails.append("planning: conditional take did not retain a distinct legal fallback")
     later = board.my_picks[1]
     conditional = {contested.player_id: {board.my_picks[0]: 0.50, later: 0.02}}
     if conditional_survival(
@@ -262,7 +279,8 @@ def planning_selftest(players: list[Player]) -> list[str]:
     print(
         f"  planning: first-pick pool widened from {len(narrow)} to {len(broad)}; "
         "live candidates survived the deterministic prefix, the 5% floor removed long "
-        "shots, my values stayed projection-only, and an unavailable later target fell back",
+        "shots, the conditional take kept a distinct fallback, my values stayed "
+        "projection-only, and an unavailable later target fell back",
         file=sys.stderr,
     )
     return fails

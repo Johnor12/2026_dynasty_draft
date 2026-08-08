@@ -148,7 +148,7 @@ def my_next_picks(
     survival: dict[int, dict[int, float]] | None = None,
     limit: int = LOOKAHEAD_PICKS,
 ) -> list[dict]:
-    """The model's own decision at each of my next picks, from the deterministic draft.
+    """The model's recommendation plus the deterministic draft's fallback path.
 
     This is the question the whole script exists to answer, so it is surfaced rather than
     left implicit in `sim_pick`. The candidates carry the two parts of the decision score:
@@ -163,8 +163,9 @@ def my_next_picks(
     `rollout_ev` is the mean final value of my whole roster if I take the candidate and
     the rest of the draft plays out, `rollout_edge` is his paired advantage over the
     ordinary policy on the same conditioned path, and `rollout_se` is its standard error.
-    The `take` for that pick is the
-    rollout's — it can overrule the two-pick score, but only when the edge is clearly
+    The first `take` is the rollout's conditional recommendation. If the deterministic
+    example removes it before my turn, `deterministic_fallback` records what that path
+    takes instead. A rollout can overrule the two-pick score only when the edge is clearly
     above the playout noise.
 
     Its candidates also carry `p_available_if_i_pass` (planning.candidate_survival): across
@@ -180,7 +181,8 @@ def my_next_picks(
             continue
         rolled = rollout if rollout and rollout["pick_no"] == pick_no else None
         actual_id = next((pid for pid, pk in draft.pick_of.items() if pk == pick_no), None)
-        take = draft.by_id[actual_id] if actual_id is not None else detail[0][2]
+        fallback = draft.by_id[actual_id] if actual_id is not None else detail[0][2]
+        take = draft.by_id[rolled["take_id"]] if rolled else fallback
         candidates = []
         for now, later, c in detail:
             row = {
@@ -216,13 +218,15 @@ def my_next_picks(
                     if 0.01 < p < 0.99
                 }
             candidates.append(row)
-        out.append(
-            {
-                "pick": pick_label(pick_no),
-                "overall": pick_no,
-                "take_id": take.player_id,
-                "take": f"{take.name} ({take.position})",
-                "candidates": candidates,
-            }
-        )
+        pick = {
+            "pick": pick_label(pick_no),
+            "overall": pick_no,
+            "take_id": take.player_id,
+            "take": f"{take.name} ({take.position})",
+            "candidates": candidates,
+        }
+        if fallback.player_id != take.player_id:
+            pick["deterministic_fallback_id"] = fallback.player_id
+            pick["deterministic_fallback"] = f"{fallback.name} ({fallback.position})"
+        out.append(pick)
     return out

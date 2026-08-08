@@ -576,8 +576,8 @@ def rollout(
     first-pick candidate. Each playout redraws the opponents before my pick until that
     candidate survives, then compares the target plan with the ordinary policy on the
     same path. Later targets still fall back if an opponent gets there first. `take_id`
-    only considers candidates available on the noiseless path and only overrides the
-    ordinary choice when its conditional edge clears 2 standard errors.
+    is conditional on availability and only overrides the ordinary choice when its edge
+    clears 2 standard errors.
     """
     if not board.my_picks or not candidates:
         return None
@@ -616,11 +616,7 @@ def rollout(
         _, _, values[cand.player_id], selected_plans[cand.player_id] = choices[0]
         baselines[cand.player_id] = [baseline for _, baseline in runs]
 
-    deterministic = Draft(players, rep, vor, board, wire=stream, opponents=opponents)
-    deterministic.run(stop_before=i_my)
-    eligible = [cand for cand in candidates if cand.player_id not in deterministic.taken]
-    assert eligible, "no rollout candidate is available on the deterministic path"
-    base = eligible[0]  # candidates remain sorted by the ordinary two-pick policy
+    base = candidates[0]  # candidates remain sorted by the ordinary two-pick policy
     stats: dict[int, dict[str, float]] = {}
     for cand in candidates:
         diffs = [
@@ -639,7 +635,7 @@ def rollout(
             "se": math.sqrt(var / sims),
         }
     take_id = base.player_id
-    for cand in eligible:
+    for cand in candidates:
         s = stats[cand.player_id]
         if s["edge"] > 2 * s["se"] and s["edge"] > stats[take_id]["edge"]:
             take_id = cand.player_id
@@ -662,20 +658,19 @@ def apply_rollout(
     stream: dict[str, dict[str, float]],
     opponents: dict[int, OpponentStrategy],
 ) -> Draft:
-    """Re-play the deterministic draft with the rollout's four-pick target plan.
+    """Apply the recommended plan when its first target survives the noiseless path.
 
-    Without this, sim_pick and example_draft would show the two-pick policy's choice at my
-    next pick while my_next_picks recommends another plan. One extra deterministic draft
-    makes every reported block describe the path I am actually being told to play. The
-    candidates' two-pick detail is transplanted unchanged: the deterministic prefix up to
-    my pick is identical in both drafts, so the scores are too — only the selection
-    differs, and everything after it re-plays around that choice.
+    The recommendation itself is conditional on availability. If the noiseless example
+    removes that player first, it remains a fallback example rather than vetoing the
+    higher-EV recommendation or forcing an impossible duplicate pick.
     """
     if rolled is None:
         return draft
     pick_no = rolled["pick_no"]
     detail = draft.my_decisions[pick_no]
     take = next(c for _, _, c in detail if c.player_id == rolled["take_id"])
+    if not _available_in_deterministic_draft(draft, pick_no, take):
+        return draft
     plan_ids = rolled.get("plans", {}).get(take.player_id, {}).get(
         "target_ids", [take.player_id]
     )
