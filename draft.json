@@ -1,13 +1,13 @@
 {
   "source": "https://api.sleeper.app/v1/draft/1388293618208374784",
-  "fetched_at": "2026-08-08T13:54:10+00:00",
+  "fetched_at": "2026-08-08T16:14:15+00:00",
   "draft_id": "1388293618208374784",
   "league_id": "1388293617071714304",
   "league_name": "Dudes",
   "season": "2026",
   "status": "drafting",
   "started_at": "2026-08-04T13:02:55+00:00",
-  "last_picked_at": "2026-08-08T13:18:06+00:00",
+  "last_picked_at": "2026-08-08T16:07:26+00:00",
   "format": {
     "type": "snake",
     "teams": 10,
@@ -16,16 +16,16 @@
     "scoring_type": "dynasty_2qb"
   },
   "pick_count": 290,
-  "picks_made": 93,
-  "picks_pending": 197,
+  "picks_made": 97,
+  "picks_pending": 193,
   "on_the_clock": {
-    "pick_no": 94,
+    "pick_no": 98,
     "round": 10,
-    "pick_in_round": 4,
-    "draft_slot": 4,
-    "user_id": "735592932748435456",
-    "username": "bwood637",
-    "slot": "10.04"
+    "pick_in_round": 8,
+    "draft_slot": 8,
+    "user_id": "1127785716420898816",
+    "username": "johnor",
+    "slot": "10.08"
   },
   "me": {
     "username": "johnor",
@@ -41,12 +41,12 @@
     "user_id": "1127785716420898816",
     "username": "johnor",
     "slot": "10.08",
-    "picks_away": 4
+    "picks_away": 0
   },
   "board_derivation": {
     "method": "snake, order reverses at round 3; traded picks applied",
-    "checked_against_made_picks": 93,
-    "slot_and_roster_agree": 93,
+    "checked_against_made_picks": 97,
+    "slot_and_roster_agree": 97,
     "rounds_exercised": [
       1,
       2,
@@ -1841,12 +1841,12 @@
       "user_id": "735592932748435456",
       "username": "bwood637",
       "is_mine": false,
-      "status": "pending",
-      "sleeper_id": null,
-      "name": null,
-      "position": null,
-      "team": null,
-      "is_keeper": null
+      "status": "made",
+      "sleeper_id": "421",
+      "name": "Matthew Stafford",
+      "position": "QB",
+      "team": "LAR",
+      "is_keeper": false
     },
     {
       "pick_no": 95,
@@ -1857,12 +1857,12 @@
       "user_id": "870397485556875264",
       "username": "dirtydole",
       "is_mine": false,
-      "status": "pending",
-      "sleeper_id": null,
-      "name": null,
-      "position": null,
-      "team": null,
-      "is_keeper": null
+      "status": "made",
+      "sleeper_id": "5927",
+      "name": "Terry McLaurin",
+      "position": "WR",
+      "team": "WAS",
+      "is_keeper": false
     },
     {
       "pick_no": 96,
@@ -1873,12 +1873,12 @@
       "user_id": "1114302275305979904",
       "username": "samlemonskoff",
       "is_mine": false,
-      "status": "pending",
-      "sleeper_id": null,
-      "name": null,
-      "position": null,
-      "team": null,
-      "is_keeper": null
+      "status": "made",
+      "sleeper_id": "5846",
+      "name": "DK Metcalf",
+      "position": "WR",
+      "team": "PIT",
+      "is_keeper": false
     },
     {
       "pick_no": 97,
@@ -1889,12 +1889,12 @@
       "user_id": "1128381875430596608",
       "username": "UGrizz14",
       "is_mine": false,
-      "status": "pending",
-      "sleeper_id": null,
-      "name": null,
-      "position": null,
-      "team": null,
-      "is_keeper": null
+      "status": "made",
+      "sleeper_id": "9756",
+      "name": "Jordan Addison",
+      "position": "WR",
+      "team": "MIN",
+      "is_keeper": false
     },
     {
       "pick_no": 98,
