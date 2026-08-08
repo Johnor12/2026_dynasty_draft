@@ -163,10 +163,11 @@ def my_next_picks(
     `rollout_ev` is the mean final value of my whole roster if I take the candidate and
     the rest of the draft plays out, `rollout_edge` is his paired advantage over the
     ordinary policy on the same conditioned path, and `rollout_se` is its standard error.
-    The first `take` is the rollout's conditional recommendation. If the deterministic
-    example removes it before my turn, `deterministic_fallback` records what that path
-    takes instead. A rollout can overrule the two-pick score only when the edge is clearly
-    above the playout noise.
+    Every candidate carries a measured edge, the two-pick leader included, so `rollout_ev`
+    ranks them directly. The first `take` is the rollout's conditional recommendation. If
+    the deterministic example removes it before my turn, `deterministic_fallback` records
+    what that path takes instead. A rollout can overrule the two-pick leader only by
+    beating his plan by more than the playout noise between them.
 
     Its candidates also carry `p_available_if_i_pass` (planning.candidate_survival): across
     redraws where my slot is banned from ever taking him, the share where no opponent
@@ -211,11 +212,13 @@ def my_next_picks(
                     ]
                     row["plan_screen_ev"] = round(plan["screen_ev"], 1)
             if survival and pick_no == board.my_picks[0] and c.player_id in survival:
-                # Same emission rule as p_available_at_my_picks: certainties are noise.
+                # Emitted for every pick, unlike p_available_at_my_picks: dropping the
+                # certainties here deletes the answer. A player nobody else will ever take
+                # and one who is gone by my next pick both serialize to nothing, and the
+                # two cases carry opposite advice. This is one pick's shortlist, so the
+                # full series is cheap.
                 row["p_available_if_i_pass"] = {
-                    pick_label(pk): round(p, 3)
-                    for pk, p in survival[c.player_id].items()
-                    if 0.01 < p < 0.99
+                    pick_label(pk): round(p, 3) for pk, p in survival[c.player_id].items()
                 }
             candidates.append(row)
         pick = {

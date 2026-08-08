@@ -25,7 +25,12 @@ from .league import (
     pick_label,
 )
 from .opponents import OpponentStrategy, expected_log2_rank, rank_power
-from .planning import apply_survival_floor, broaden_first_pick, conditional_survival
+from .planning import (
+    apply_survival_floor,
+    broaden_first_pick,
+    conditional_survival,
+    rollout_decision,
+)
 from .pool import Player
 from .rankings import my_next_picks
 from .simulation import Draft
@@ -231,6 +236,27 @@ def planning_selftest(players: list[Player]) -> list[str]:
     ) >= 0.05:
         fails.append("planning: later survival was not conditioned on reaching the first pick")
 
+    # Base 1's own plan is worth +60 over the ordinary policy, so it keeps the take. A base
+    # pinned at zero instead makes candidate 2's +20 look like the only improvement, and
+    # candidate 3's larger mean margin is all playout noise.
+    rollout_baselines = {pid: [100.0] * 4 for pid in (1, 2, 3)}
+    rollout_stats, rollout_take = rollout_decision(
+        [1, 2, 3],
+        {1: [160.0] * 4, 2: [120.0] * 4, 3: [300.0, 60.0, 300.0, 60.0]},
+        rollout_baselines,
+    )
+    if rollout_stats[1]["edge"] != 60.0:
+        fails.append("planning: the rollout base's own plan edge was not measured")
+    if rollout_take != 1:
+        fails.append("planning: a rollout candidate worth less than the base took the pick")
+    # A smaller margin that is consistent across the shared draws does override it.
+    if rollout_decision(
+        [1, 2, 3],
+        {1: [160.0] * 4, 2: [120.0] * 4, 3: [165.0, 166.0, 164.0, 165.0]},
+        rollout_baselines,
+    )[1] != 3:
+        fails.append("planning: the rollout take did not beat the base's plan through the noise")
+
     # Even past an opponent's comfortable depth, my reported value_now is the raw
     # marginal expected-lineup value. The opponent heuristic must not leak into my policy.
     deep_board = fresh_board()
@@ -278,8 +304,9 @@ def planning_selftest(players: list[Player]) -> list[str]:
     print(
         f"  planning: first-pick pool widened from {len(narrow)} to {len(broad)}; "
         "live candidates survived the deterministic prefix, the 5% floor removed long "
-        "shots, the conditional take kept a distinct fallback, my values stayed "
-        "projection-only, and an unavailable later target fell back",
+        "shots, the conditional take kept a distinct fallback, the rollout measured the "
+        "base's own plan and only lost the take to a margin above the playout noise, my "
+        "values stayed projection-only, and an unavailable later target fell back",
         file=sys.stderr,
     )
     return fails

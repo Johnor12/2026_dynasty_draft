@@ -374,18 +374,6 @@ function pAvailAt(row, pickLabel, myPickOrder) {
   return null;
 }
 
-function pAvailIfPassing(candidate, pickLabel, myPickOrder) {
-  const available = candidate.p_available_if_i_pass;
-  if (!available) return null;
-  if (pickLabel in available) return available[pickLabel];
-  const index = myPickOrder.indexOf(pickLabel);
-  const keyIndexes = Object.keys(available).map(key => myPickOrder.indexOf(key)).filter(i => i >= 0);
-  if (index < 0 || keyIndexes.length === 0) return null;
-  if (index < Math.min(...keyIndexes)) return 1;
-  if (index > Math.max(...keyIndexes)) return 0;
-  return null;
-}
-
 /* This mirrors ranker.value.starting_positions for raw projected starter totals. */
 const STARTING_SLOTS = { QB: 1, RB: 2, WR: 3, TE: 1, FLEX: 2, SF: 1 };
 const SLOT_CHAIN = {
@@ -558,9 +546,10 @@ async function pollLive(d) {
 function chanceCell(candidate, stats, pick, d) {
   const pickOrder = remainingPickOrder(d);
   if (candidate.p_available_if_i_pass) {
+    /* candidate_survival covers every remaining pick, so this is a plain lookup. */
     const start = pickOrder.indexOf(pick.pick);
     const labels = pickOrder.slice(Math.max(start, 0), Math.max(start, 0) + 4);
-    const values = labels.map(label => [label, pAvailIfPassing(candidate, label, pickOrder)]);
+    const values = labels.map(label => [label, candidate.p_available_if_i_pass[label] ?? null]);
     const [first, ...later] = values;
     return h("div", { title: "Counterfactual simulations where your team never drafts this player" },
       h("div", { class: "chance-main" }, first ? `${pct(first[1])} here` : "—"),
@@ -575,7 +564,7 @@ function chanceCell(candidate, stats, pick, d) {
 function renderNextPicks(d, byId) {
   document.getElementById("picksNote").textContent =
     "Lineup gain is the player's marginal expected-lineup value, including call-up probability for positional depth and one unique waiver fallback per position. Next-pick option value and two-pick total describe the ordinary fallback policy; they are diagnostics, not the first card's ranking. The first card is ordered by final-roster EV after searching target plans across four held picks and playing each plan through the entire remaining draft " +
-    `${d.my_next_picks.rollout_sims} times, conditional on each candidate reaching your turn. Candidates and later targets below 5% survival are omitted. Rollout edges compare with the ordinary policy on the same path, while final-roster EV remains the objective. A listed path contains only forced targets; the ordinary policy resumes after its last target or whenever an opponent takes a target first. The recommendation changes only when an edge clears twice its simulation error. Raw player points use this league's scoring.`;
+    `${d.my_next_picks.rollout_sims} times, conditional on each candidate reaching your turn. Candidates and later targets below 5% survival are omitted. Rollout edges compare each plan with the ordinary policy on the same path — every candidate's, including the two-pick leader's, so final-roster EV ranks them directly and remains the objective. A listed path contains only forced targets; the ordinary policy resumes after its last target or whenever an opponent takes a target first. The two-pick leader keeps the recommendation unless a candidate beats his plan by twice the simulation error between them. Raw player points use this league's scoring.`;
 
   const prior = [];
   const cards = d.my_next_picks.picks.map((pick, pickIndex) => {
@@ -590,8 +579,7 @@ function renderNextPicks(d, byId) {
       const stats = byId.get(candidate.player_id);
       const isTake = candidate.player_id === pick.take_id;
       const trend = trendPerYear(stats);
-      const rolloutNote = candidate.rollout_edge == null ? null : candidate.rollout_edge === 0
-        ? "ordinary-policy baseline"
+      const rolloutNote = candidate.rollout_edge == null ? null
         : `${signed(candidate.rollout_edge)} ± ${fmt(candidate.rollout_se)} vs ordinary policy`;
       const targets = candidate.four_pick_plan
         ?.map(target => `${target.pick} ${target.name}`).join(" → ");

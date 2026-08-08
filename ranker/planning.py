@@ -559,6 +559,50 @@ def apply_option_redraw(
     )
 
 
+def _paired_mean(diffs: list[float]) -> float:
+    return sum(diffs) / len(diffs)
+
+
+def _paired_se(diffs: list[float]) -> float:
+    """Standard error of a paired difference of means over common random draws."""
+    if len(diffs) <= 1:
+        return 0.0
+    mean = _paired_mean(diffs)
+    var = sum((x - mean) ** 2 for x in diffs) / (len(diffs) - 1)
+    return math.sqrt(var / len(diffs))
+
+
+def rollout_decision(
+    ids: list[int],
+    values: dict[int, list[float]],
+    baselines: dict[int, list[float]],
+) -> tuple[dict[int, dict[str, float]], int]:
+    """Paired rollout stats and the conditional take, with `ids[0]` as the base.
+
+    The base's own multi-pick plan can beat the ordinary policy too, so its edge is
+    measured like everyone else's rather than assumed zero — otherwise a candidate worth
+    less than the base looks like the only improvement on the board. That also makes the
+    base a noisy reference, so an override is tested against its plan directly on the
+    shared draws rather than against its edge.
+    """
+    stats: dict[int, dict[str, float]] = {}
+    for pid in ids:
+        diffs = [value - base for value, base in zip(values[pid], baselines[pid])]
+        stats[pid] = {
+            "ev": _paired_mean(values[pid]),
+            "edge": _paired_mean(diffs),
+            "se": _paired_se(diffs),
+        }
+    base_id = ids[0]
+    take_id, best_margin = base_id, 0.0
+    for pid in ids[1:]:
+        over_base = [value - base for value, base in zip(values[pid], values[base_id])]
+        margin = _paired_mean(over_base)
+        if margin > best_margin and margin > 2 * _paired_se(over_base):
+            take_id, best_margin = pid, margin
+    return stats, take_id
+
+
 def rollout(
     players: list[Player],
     rep: dict[str, dict[str, float]],
@@ -576,9 +620,11 @@ def rollout(
     `four_pick_lookahead` supplies one screened target plan of each length for every
     first-pick candidate. Each playout redraws the opponents before my pick until that
     candidate survives, then compares the target plan with the ordinary policy on the
-    same path. Later targets still fall back if an opponent gets there first. `take_id`
-    is conditional on availability and only overrides the ordinary choice when its edge
-    clears 2 standard errors.
+    same path. Later targets still fall back if an opponent gets there first. Every
+    candidate's `edge` is that paired comparison, the base included: its plan is a plan
+    too, not the ordinary policy. `take_id` is conditional on availability and overrides
+    the base only when it beats the base's own plan by 2 standard errors of their paired
+    difference.
     """
     if not board.my_picks or not candidates:
         return None
@@ -617,29 +663,10 @@ def rollout(
         _, _, values[cand.player_id], selected_plans[cand.player_id] = choices[0]
         baselines[cand.player_id] = [baseline for _, baseline in runs]
 
-    base = candidates[0]  # candidates remain sorted by the ordinary two-pick policy
-    stats: dict[int, dict[str, float]] = {}
-    for cand in candidates:
-        diffs = [
-            value - baseline
-            for value, baseline in zip(values[cand.player_id], baselines[cand.player_id])
-        ]
-        edge = 0.0 if cand.player_id == base.player_id else sum(diffs) / sims
-        var = (
-            0.0
-            if cand.player_id == base.player_id or sims <= 1
-            else sum((x - edge) ** 2 for x in diffs) / (sims - 1)
-        )
-        stats[cand.player_id] = {
-            "ev": sum(values[cand.player_id]) / sims,
-            "edge": edge,
-            "se": math.sqrt(var / sims),
-        }
-    take_id = base.player_id
-    for cand in candidates:
-        s = stats[cand.player_id]
-        if s["edge"] > 2 * s["se"] and s["edge"] > stats[take_id]["edge"]:
-            take_id = cand.player_id
+    # candidates remain sorted by the ordinary two-pick policy, so the first one is the base
+    stats, take_id = rollout_decision(
+        [cand.player_id for cand in candidates], values, baselines
+    )
     return {
         "pick_no": pick_no,
         "pick_nos": (lookahead or {}).get("pick_nos", [pick_no]),
