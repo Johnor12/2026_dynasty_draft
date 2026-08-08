@@ -1,10 +1,8 @@
 """Deterministic draft state and pick policies.
 
-`Draft` resumes an immutable live board, applies roster legality, and gives every team
-the same expected-lineup objective. My slot uses the pool projections and one-pick
-lookahead; opponents use source-rank-implied projections and immediate value only.
-Fixed-point replacement convergence is in `convergence.py`; stochastic redraws and
-deeper plans are in `planning.py`.
+`Draft` resumes an immutable live board, applies roster legality, values my slot, and
+uses each opponent's inferred provider order. Fixed-point replacement convergence is in
+`convergence.py`; stochastic redraws and deeper plans are in `planning.py`.
 """
 
 from __future__ import annotations
@@ -18,15 +16,16 @@ from .league import (
     DEDICATED_SLOTS,
     LOOKAHEAD_PER_POS,
     NON_TAXI_SLOTS,
+    OPPONENT_BALANCE_STRENGTH,
+    OPPONENT_DEPTH_PENALTY,
+    OPPONENT_DEPTH_TARGETS,
     POSITIONS,
     SURVIVAL_SIGMA,
 )
-from .opponents import OpponentStrategy, rank_power
+from .opponents import OpponentStrategy
 from .pool import Player
 from .value import (
     HORIZONS,
-    ProjectionMap,
-    horizon_points,
     insert_sorted,
     pos_by_horizon,
     sorted_by_horizon,
@@ -126,9 +125,8 @@ class Draft:
             / len(self.opponents)
             for p in players
         }
-        # Pool sorted by opponent consensus drives my fast survival model. Candidate
-        # generation has separate per-horizon orders for my projections and each
-        # opponent's implied projections.
+        # Pool sorted by opponent consensus drives my fast survival model; per-position,
+        # per-horizon lists sorted by my projections drive only my candidate generation.
         self.opponent_sorted = sorted(
             players, key=lambda p: (consensus_score[p.player_id], p.player_id)
         )
@@ -147,18 +145,6 @@ class Draft:
                 self.avail_bits.add(p.availability_index, 1)
         self.pos_lists = pos_by_horizon(players)
         self.heads = {h: {pos: 0 for pos in POSITIONS} for h in HORIZONS}
-        self.opponent_pos_lists = {
-            slot: pos_by_horizon(players, strategy.projections)
-            for slot, strategy in self.opponents.items()
-        }
-        self.opponent_heads = {
-            slot: {h: {pos: 0 for pos in POSITIONS} for h in HORIZONS}
-            for slot in self.opponents
-        }
-        self.opponent_wire = {
-            slot: self._translate_wire(strategy.projections)
-            for slot, strategy in self.opponents.items()
-        }
         self.rosters: list[list[Player]] = [list(r) for r in board.rosters]
         self.off_pool = board.off_pool  # read-only here; nothing is ever added
         self.pick_of: dict[int, int] = {}
@@ -191,32 +177,12 @@ class Draft:
 
     # -- availability helpers
 
-    def _translate_wire(
-        self, projections: ProjectionMap
-    ) -> dict[str, dict[str, float]]:
-        """Carry the common waiver-depth estimate into another point valuation."""
-        implied = pos_by_horizon(self.players, projections)
-        out = {h: {} for h in HORIZONS}
-        for h in HORIZONS:
-            for pos in POSITIONS:
-                canonical = self.pos_lists[h][pos]
-                rank = sum(horizon_points(player, h) > self.wire[h][pos] for player in canonical)
-                player = implied[h][pos][min(rank, len(implied[h][pos]) - 1)]
-                out[h][pos] = horizon_points(player, h, projections)
-        return out
-
-    def _advance(
-        self,
-        h: str,
-        pos: str,
-        pos_lists: dict[str, dict[str, list[Player]]],
-        heads: dict[str, dict[str, int]],
-    ) -> None:
-        lst = pos_lists[h][pos]
-        i = heads[h][pos]
+    def _advance(self, h: str, pos: str) -> None:
+        lst = self.pos_lists[h][pos]
+        i = self.heads[h][pos]
         while i < len(lst) and lst[i].player_id in self.taken:
             i += 1
-        heads[h][pos] = i
+        self.heads[h][pos] = i
 
     def candidates(
         self,
@@ -224,8 +190,6 @@ class Draft:
         per_pos: int = 1,
         picks_left: int | None = None,
         off: Sequence[dict] = (),
-        pos_lists: dict[str, dict[str, list[Player]]] | None = None,
-        heads: dict[str, dict[str, int]] | None = None,
     ) -> list[Player]:
         """Best available at each position *by each horizon*, honouring taxi and
         roster-legality limits.
@@ -255,17 +219,15 @@ class Draft:
         draft.json does not say whether such a player is a rookie, so they count as
         veterans — conservative, it can only force a rookie one pick early.
         """
-        pos_lists = self.pos_lists if pos_lists is None else pos_lists
-        heads = self.heads if heads is None else heads
         scenarios = self._eligibility_scenarios(roster, picks_left, off)
         for positions, rookies_only in scenarios:
             out: list[Player] = []
             seen_ids: set[int] = set()
             for pos in positions:
                 for h in HORIZONS:
-                    self._advance(h, pos, pos_lists, heads)
+                    self._advance(h, pos)
                     found = 0
-                    for p in pos_lists[h][pos][heads[h][pos] :]:
+                    for p in self.pos_lists[h][pos][self.heads[h][pos] :]:
                         if p.player_id in self.taken:
                             continue
                         if rookies_only and not p.is_rookie:
@@ -304,46 +266,23 @@ class Draft:
         # dedicated-position plan.
         return ((eligible, vets_capped), (eligible, False), (POSITIONS, False))
 
-    def pareto_candidates(
-        self,
-        roster: list[Player],
-        projections: ProjectionMap,
-        picks_left: int,
-        off: Sequence[dict],
-    ) -> list[Player]:
-        """Every legal within-position projection frontier player.
-
-        A same-position player worse in both horizons cannot produce more immediate
-        lineup value. Removing only those dominated players keeps level-0 maximization
-        exact without scoring the full remaining pool at every opponent pick.
-        """
+    def opponent_candidates(self, slot: int) -> list[Player]:
+        """All legal players, ordered only by this opponent's inferred source board."""
+        strategy = self.opponents[slot]
+        roster = self.rosters[slot - 1]
+        off = self.off_pool[slot - 1]
         for positions, rookies_only in self._eligibility_scenarios(
-            roster, picks_left, off
+            roster, self.picks_left[slot - 1], off
         ):
-            out: list[Player] = []
-            for position in positions:
-                legal = [
-                    player
-                    for player in self.players
-                    if player.position == position
-                    and player.player_id not in self.taken
-                    and (not rookies_only or player.is_rookie)
-                ]
-                legal.sort(
-                    key=lambda player: (
-                        -horizon_points(player, "yr1", projections),
-                        -horizon_points(player, "yr23", projections),
-                        player.player_id,
-                    )
-                )
-                best_future = -math.inf
-                for player in legal:
-                    future = horizon_points(player, "yr23", projections)
-                    if future > best_future:
-                        out.append(player)
-                        best_future = future
-            if out:
-                return out
+            candidates = [
+                self.by_id[player_id]
+                for player_id in strategy.order
+                if player_id not in self.taken
+                and self.by_id[player_id].position in positions
+                and (not rookies_only or self.by_id[player_id].is_rookie)
+            ]
+            if candidates:
+                return candidates
         return []
 
     def target_is_legal(self, target: Player, slot: int) -> bool:
@@ -366,6 +305,42 @@ class Draft:
                     not rookies_only or target.is_rookie
                 )
         return False
+
+    @staticmethod
+    def position_counts(roster: Sequence[Player], off: Sequence[dict]) -> dict[str, int]:
+        have = {position: 0 for position in POSITIONS}
+        for player in roster:
+            have[player.position] += 1
+        for row in off:
+            if row.get("position") in have:
+                have[row["position"]] += 1
+        return have
+
+    @staticmethod
+    def opponent_depth_penalty(
+        roster: Sequence[Player], off: Sequence[dict], position: str
+    ) -> float:
+        """Opponent preference penalty for an already-deep position."""
+        have = Draft.position_counts(roster, off)[position]
+        excess_depth = max(have - OPPONENT_DEPTH_TARGETS[position] + 1, 0)
+        return OPPONENT_DEPTH_PENALTY**excess_depth
+
+    def opponent_position_adjustments(self, slot: int) -> dict[str, float]:
+        """Source-rank multipliers for starter needs and excessive bench depth."""
+        roster = self.rosters[slot - 1]
+        off = self.off_pool[slot - 1]
+        have = self.position_counts(roster, off)
+        out: dict[str, float] = {}
+        for position, required in DEDICATED_SLOTS.items():
+            starter_boost = (
+                1.0
+                + OPPONENT_BALANCE_STRENGTH
+                * max(required - have[position], 0)
+                / required
+            )
+            depth_penalty = self.opponent_depth_penalty(roster, off, position)
+            out[position] = depth_penalty / starter_boost
+        return out
 
     def better_available(self, p: Player) -> int:
         return self.avail_bits.prefix(p.availability_index)
@@ -461,45 +436,6 @@ class Draft:
         assert detail, "pool exhausted"
         return sorted(detail, key=lambda t: (-(t[0] + t[1]), t[2].player_id))
 
-    def score_opponent_candidates(
-        self, slot: int, per_pos: int | None = None
-    ) -> list[tuple[float, float, Player]]:
-        """Immediate expected-lineup value under this opponent's projections."""
-        strategy = self.opponents[slot]
-        roster = self.rosters[slot - 1]
-        off = self.off_pool[slot - 1]
-        wire = self.opponent_wire[slot]
-        candidates = (
-            self.pareto_candidates(
-                roster,
-                strategy.projections,
-                self.picks_left[slot - 1],
-                off,
-            )
-            if per_pos is None
-            else self.candidates(
-                roster,
-                per_pos=per_pos,
-                picks_left=self.picks_left[slot - 1],
-                off=off,
-                pos_lists=self.opponent_pos_lists[slot],
-                heads=self.opponent_heads[slot],
-            )
-        )
-        base, candidate_values = team_values_with_candidates(
-            roster, wire, candidates, strategy.projections
-        )
-        detail = [
-            (
-                candidate_values[candidate.player_id] - base,
-                0.0,
-                candidate,
-            )
-            for candidate in candidates
-        ]
-        assert detail, "pool exhausted"
-        return sorted(detail, key=lambda row: (-row[0], row[2].player_id))
-
     def choose(self, pick_index: int, slot: int) -> Player:
         if slot != self.my_slot:
             return self.choose_opponent(pick_index, slot)
@@ -512,23 +448,32 @@ class Draft:
         return detail[0][2]
 
     def choose_opponent(self, pick_index: int, slot: int) -> Player:
-        """Choose immediate EV under source-implied points; never use my projections."""
-        ranked = self.score_opponent_candidates(slot)
+        """Choose from a balance-adjusted source board, without consulting my valuation."""
+        candidates = self.opponent_candidates(slot)
+        assert candidates, "pool exhausted"
+        adjustments = self.opponent_position_adjustments(slot)
+        ranked = [
+            (rank * adjustments[player.position], rank, player)
+            for rank, player in enumerate(candidates, start=1)
+        ]
         if not self.noise or self.rng is None or pick_index < self.noise_from:
-            return ranked[0][2]
+            return min(ranked, key=lambda row: (row[0], row[1], row[2].player_id))[2]
 
-        # Historical source adherence controls mistakes around the level-0 EV order.
-        # `--noise` scales that variation; deterministic simulations remain pure EV.
-        power = rank_power(self.opponents[slot].mean_log2_loss, len(ranked))
+        # The investigator measures log2(rank among available) for each real pick.
+        # rank_power calibrates source adherence; the balance-adjusted rank then gives a
+        # nearby player at an unfilled starter position better odds without guaranteeing
+        # the pick. `--noise` scales random variation around that preference.
+        power = self.opponents[slot].rank_power
         return max(
             (
                 -power * math.log(preference_rank)
                 - self.noise * math.log(-math.log(self.rng.random())),
+                -source_rank,
                 -player.player_id,
                 player,
             )
-            for preference_rank, (_, _, player) in enumerate(ranked, start=1)
-        )[2]
+            for preference_rank, source_rank, player in ranked
+        )[3]
 
     def run(
         self,

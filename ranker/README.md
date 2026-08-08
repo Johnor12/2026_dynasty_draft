@@ -20,7 +20,7 @@ undrafted players only.
 - `league.py`: league shape and hardcoded strategy constants
 - `pool.py`: pool document to `Player` objects
 - `board.py`: live `draft.json` to the immutable starting state
-- `opponents.py`: inferred provider boards to source-implied point projections
+- `opponents.py`: inferred provider boards to complete opponent strategies
 - `value.py`: horizon points, expected lineup value, and replacement measurement
 - `simulation.py`: one deterministic draft state and pick policies
 - `convergence.py`: replacement-level fixed point
@@ -38,9 +38,8 @@ Replacement is solved separately for both horizons. At each horizon it is the ne
 after all simulated starters at that position; flexible starting slots determine their
 position mix from actual roster value rather than a hardcoded positional count.
 
-The final waiver depth affects every team's expected-lineup choices, and those choices
-affect who remains undrafted. Opponents see the same positional depth translated into
-their implied projections. This creates a fixed point:
+The final waiver bodies affect my expected-lineup choices, and those choices affect who
+remains undrafted. This creates a fixed point:
 
 ```text
 wire levels -> expected lineup value -> simulated draft -> starter counts + wire levels
@@ -57,30 +56,19 @@ second growth bonus.
 
 ## Opponents and planning
 
-Every team uses the same expected-lineup objective and the same backup-point attribution.
-Positional depth is priced by projected points and position-wide unavailability, with one
-unique waiver fallback; there are no opponent starter boosts, depth targets, or positional
-roster-size heuristics.
+Personal and opponent strategies are intentionally separate. My slot alone uses
+projections and expected-lineup roster value. Each opponent uses the provider board
+closest to its completed picks, with a soft boost for unfilled dedicated starters and a
+compounding source-rank penalty for adding players beyond comfortable positional depth.
+The depth targets sum to 25, so the last four spots remain source-driven rather than
+forcing every opponent into one exact roster shape. These are preferences, not draft
+limits: a large enough source-rank gap can still justify another player at a deep position.
+Observed `mean_log2_loss` calibrates randomness around that preference. Missing provider
+players are appended in DraftSharks ADP order; opponents never fall back to personal VOR.
 
-The difference is information and search depth. Each opponent uses the provider board
-closest to its completed picks. Source rank `r` receives the `r`-th value on our
-projection-backed VOR curve, then that player's positional replacement level is added to
-express the value as a three-year point total. This borrows point units, not player
-opinions: the external order decides which player receives each value. DraftSharks'
-`points_1yr` pace versus its years 2–3 annual pace classifies the player as front-loaded,
-balanced, or back-loaded (within 10% counts as balanced). The median year-1 share of that
-class splits the implied total, so players retain the provider's timeline signal without
-an LLM classification or a unique noisy split for every player.
-Opponents maximize immediate roster EV under those implied projections (level 0). My slot
-uses our projections, one-pick lookahead in the bulk simulation, and deeper planning for
-the live decision. All final projections, VOR, replacement levels, and roster reporting
-use our projections; opponent-implied points affect their simulated choices only.
-
-Observed `mean_log2_loss` calibrates random mistakes around each opponent's level-0 EV
-order. Draws remain among players not dominated at their position in both horizons: this
-models an intentionally strong field instead of reproducing irrational reaches. Missing
-provider players are appended in DraftSharks ADP order before ranks are translated, so
-every mandatory pick remains possible.
+My simulated pick policy does not use those targets or any other positional roster-size
+heuristic. Positional depth is priced only by projected expected-lineup value, so a roster
+shape that differs from the opponents' conventional behavior can be a source of value.
 
 The bulk deterministic policy scores value now plus the expected best option at its next
 pick. The live shortlist starts from the current board before intervening opponents pick,
@@ -95,8 +83,7 @@ deterministic across scheduling.
 ## Output contract
 
 `rankings.json.rankings` contains VOR, horizon splits, projected and simulated pick
-fields, opponent consensus ranks and implied points, our projection edge against that
-consensus, and availability estimates for each undrafted player.
+fields, opponent consensus deltas, and availability estimates for each undrafted player.
 `my_next_picks` is the roster-aware recommendation and can intentionally disagree with
 headline VOR. `example_draft` contains structured final-roster records for dashboard
 lineup comparison. `validation.problems` is empty on success; any problem makes the CLI

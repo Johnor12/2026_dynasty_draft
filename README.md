@@ -70,11 +70,10 @@ meet through their published JSON contracts rather than shared orchestration.
 The ranker values a roster as expected optimal lineup points in separate year-one and
 years-2–3 horizons. Position-wide availability determines when depth is called on, and
 one unique final waiver body per position supplies the fallback. Marginal-starter VOR is
-reported separately rather than mixed into bench utility. Every simulated team uses this
-objective: opponents maximize immediate value under projections implied by their inferred
-external rankings, while my slot uses the pool projections plus lookahead and rollout.
-Opponent-implied points affect picks only; final rankings and roster evaluations always
-use the pool projections.
+reported separately rather than mixed into bench utility. Personal and opponent strategies
+are intentionally separate: my slot uses the projection-based roster objective, while each
+opponent follows its inferred external board with roster-balance adjustments and fitted
+choice noise. Opponent picks never use personal projections or VOR.
 
 ## Common workflows
 
@@ -108,6 +107,9 @@ uv run draft_pipeline/fetch_draft.py --selftest
 uv run data_source_investigator/investigate.py --selftest
 uv run evaluate_opponents.py
 ```
+
+Before and after changing an opponent model or pick policy, run
+`uv run evaluate_opponents.py` and compare its replay accuracy.
 
 ## Dashboard and automation
 

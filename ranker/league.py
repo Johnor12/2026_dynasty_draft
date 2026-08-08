@@ -66,8 +66,16 @@ CANDIDATE_SURVIVAL_FLOOR = 0.05
 # The live decision plans targets across this many of my held picks before the ordinary
 # two-pick policy resumes. Four reaches across both sides of the next snake turn here.
 LOOKAHEAD_PICKS = 4
+# An entirely unfilled dedicated starter group receives a 3x source-rank boost;
+# the boost fades linearly as that position's dedicated starters are filled.
+OPPONENT_BALANCE_STRENGTH = 2.0
+# Opponents become increasingly reluctant to add players beyond these comfortable depths.
+# These sum to 25, leaving four picks to spill into their source board rather than
+# prescribing one exact roster shape. My slot never uses this heuristic.
+OPPONENT_DEPTH_TARGETS = {"QB": 3, "RB": 8, "WR": 11, "TE": 3}
+OPPONENT_DEPTH_PENALTY = 2.0
 # Multiplier around each opponent's fitted source adherence: 1 reproduces the observed
-# variation around its valuation order, while 0 removes random variation.
+# mean log-rank loss before roster-balance adjustments, while 0 removes random variation.
 NOISE = 1.0
 # Cap on fixed-point iterations before a cycle must have closed. Per-horizon levels
 # doubled the state (8 starter counts + 8 wire levels), so exact recurrence takes

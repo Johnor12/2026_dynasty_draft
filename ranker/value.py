@@ -17,10 +17,6 @@ threshold and no separate bench bonus. A better projection can retain every role
 projection could fill, which makes roster value monotone when a player improves, is
 replaced by a better same-position player, or is simply added. Marginal-starter levels
 remain the board's VOR baseline; they are not mixed into roster utility.
-
-The same solver accepts an optional player-to-points map. Opponents pass their
-source-implied projections through that path; callers that omit it use the canonical pool
-projections, which remain the basis of replacement, recommendations, and final reporting.
 """
 
 from __future__ import annotations
@@ -42,16 +38,10 @@ from .pool import Player, by_position
 # year 1, and years 2-3 as one block. Every level dict in the ranker — replacement,
 # and wire — is keyed by horizon first, position second.
 HORIZONS = ("yr1", "yr23")
-ProjectionMap = dict[int, tuple[float, float]]
-_HORIZON_INDEX = {"yr1": 0, "yr23": 1}
 
 
-def horizon_points(
-    p: Player, h: str, projections: ProjectionMap | None = None
-) -> float:
-    """A player's points in one horizon under the selected valuation."""
-    if projections is not None:
-        return projections[p.player_id][_HORIZON_INDEX[h]]
+def horizon_points(p: Player, h: str) -> float:
+    """A player's points in one horizon (precomputed on Player — see pool.py)."""
     return p.points_yr1 if h == "yr1" else p.points_yr23
 
 
@@ -63,30 +53,15 @@ _HKEY = {
 }
 
 
-def pos_by_horizon(
-    players: list[Player], projections: ProjectionMap | None = None
-) -> dict[str, dict[str, list[Player]]]:
+def pos_by_horizon(players: list[Player]) -> dict[str, dict[str, list[Player]]]:
     """Per-horizon position lists, each sorted by that horizon's points descending."""
     pos = by_position(players)
-    if projections is not None:
-        return {
-            h: {
-                k: sorted(
-                    v,
-                    key=lambda p: (-horizon_points(p, h, projections), p.player_id),
-                )
-                for k, v in pos.items()
-            }
-            for h in HORIZONS
-        }
     return {
         h: {k: sorted(v, key=_HKEY[h]) for k, v in pos.items()} for h in HORIZONS
     }
 
 
-def sorted_by_horizon(
-    roster: list[Player], projections: ProjectionMap | None = None
-) -> dict[str, list[Player]]:
+def sorted_by_horizon(roster: list[Player]) -> dict[str, list[Player]]:
     """A roster pre-sorted per horizon — the form `team_value` consumes.
 
     Valuing a candidate means re-valuing the roster with him added, thousands of times
@@ -94,30 +69,17 @@ def sorted_by_horizon(
     simulation. So the roster is sorted once per pick and each candidate is merged in
     by `insert_sorted`.
     """
-    if projections is not None:
-        return {
-            h: sorted(
-                roster,
-                key=lambda p: (-horizon_points(p, h, projections), p.player_id),
-            )
-            for h in HORIZONS
-        }
     return {h: sorted(roster, key=_HKEY[h]) for h in HORIZONS}
 
 
-def insert_sorted(
-    seq: list[Player],
-    p: Player,
-    h: str,
-    projections: ProjectionMap | None = None,
-) -> list[Player]:
+def insert_sorted(seq: list[Player], p: Player, h: str) -> list[Player]:
     """A new list with `p` merged into an already-sorted horizon list."""
-    points = horizon_points(p, h, projections)
+    points = horizon_points(p, h)
     lo, hi = 0, len(seq)
     while lo < hi:
         mid = (lo + hi) // 2
         q = seq[mid]
-        q_points = horizon_points(q, h, projections)
+        q_points = horizon_points(q, h)
         if q_points > points or (q_points == points and q.player_id < p.player_id):
             lo = mid + 1
         else:
@@ -217,7 +179,6 @@ def expected_lineup_value(
     roster: list[Player],
     wire: dict[str, float],
     h: str,
-    projections: ProjectionMap | None = None,
 ) -> float:
     """Highest expected lineup value across every legal starter composition."""
     by_pos = {pos: [] for pos in POSITIONS}
@@ -226,10 +187,7 @@ def expected_lineup_value(
     values = {}
     for pos in POSITIONS:
         position_projections = tuple(
-            sorted(
-                (p.player_id, horizon_points(p, h, projections))
-                for p in by_pos[pos]
-            )
+            sorted((p.player_id, horizon_points(p, h)) for p in by_pos[pos])
         )
         values[pos] = _position_expected_values(
             position_projections, wire[pos], UNAVAILABLE_RATE[pos], _MAX_STARTERS[pos]
@@ -264,17 +222,15 @@ def team_value(
     roster: dict[str, list[Player]],
     wire: dict[str, dict[str, float]],
     extra: Player | None = None,
-    projections: ProjectionMap | None = None,
 ) -> float:
     """Expected optimal lineup points over both horizons."""
     return sum(
         expected_lineup_value(
             roster[h]
             if extra is None
-            else insert_sorted(roster[h], extra, h, projections),
+            else insert_sorted(roster[h], extra, h),
             wire[h],
             h,
-            projections,
         )
         for h in HORIZONS
     )
@@ -284,12 +240,11 @@ def team_values_with_candidates(
     roster: list[Player],
     wire: dict[str, dict[str, float]],
     candidates: list[Player],
-    projections: ProjectionMap | None = None,
 ) -> tuple[float, dict[int, float]]:
     """Roster value and each one-player addition, sharing the unchanged positions.
 
     A candidate alters one position. Computing the other three depth charts once per
-    horizon avoids rebuilding them for every level-0 opponent option during rollouts.
+    horizon avoids rebuilding them for every personal-strategy option during rollouts.
     """
     by_pos = {pos: [] for pos in POSITIONS}
     for player in roster:
@@ -301,7 +256,7 @@ def team_values_with_candidates(
         point_rows = {
             pos: tuple(
                 sorted(
-                    (player.player_id, horizon_points(player, h, projections))
+                    (player.player_id, horizon_points(player, h))
                     for player in by_pos[pos]
                 )
             )
@@ -325,7 +280,7 @@ def team_values_with_candidates(
             candidate_rows = tuple(
                 sorted(
                     point_rows[pos]
-                    + ((candidate.player_id, horizon_points(candidate, h, projections)),)
+                    + ((candidate.player_id, horizon_points(candidate, h)),)
                 )
             )
             candidate_position_values = _position_expected_values(

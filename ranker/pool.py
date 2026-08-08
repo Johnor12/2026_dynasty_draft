@@ -2,8 +2,7 @@
 
 The value inputs are `points_3yr` — three-year points at 0.5/rec with a 0.5 TE
 premium, which is this league's scoring — and `points_1yr`, whose gap against it is
-the provider's implied growth. The ranker values the horizons separately, and the
-opponent model also uses their relative annual pace to classify career shape.
+the provider's implied growth. The ranker values the horizons separately.
 Draftsharks' 3D value is ignored entirely and
 is not even carried into the pool: it is a provider-scaled ordinal that already bakes in
 someone else's roster assumptions, and it is not in points, so it cannot be differenced

@@ -1,16 +1,10 @@
-"""Opponent valuations inferred from this league's completed picks.
+"""Opponent boards inferred from this league's completed picks.
 
 Each opponent uses the provider board that best fits their picks in
 ``data_source_matches.json``. Provider ranks are joined to the pool by Sleeper id, then
 by conservative name variants when a normalized source row lacks that id. A provider's
-uncovered tail follows DraftSharks ADP so every mandatory pick remains possible.
-
-An ordinal board is translated into projected points by mapping its rank-value curve to
-this pool's VOR curve, then adding the position's projection-backed replacement points.
-DraftSharks' year-1 versus three-year pace classifies the player as front-loaded,
-balanced, or back-loaded; the class's median timeline splits that implied total into the
-two lineup horizons. Opponents can therefore use the same expected-lineup objective as
-my slot while disagreeing about which player owns each projection.
+uncovered tail follows DraftSharks ADP so every mandatory pick remains possible without
+ever falling back to this ranker's projections or VOR.
 """
 
 from __future__ import annotations
@@ -18,19 +12,15 @@ from __future__ import annotations
 import json
 import math
 import re
-import statistics
 import unicodedata
 from dataclasses import dataclass
-from functools import lru_cache
 from pathlib import Path
 
 from .board import Board
 from .pool import Player
-from .value import HORIZONS, ProjectionMap, compute_vor, seed_replacement
 
 SUFFIXES = {"jr", "sr", "ii", "iii", "iv", "v"}
 COLD_START_LOG2_LOSS = 1.5
-CAREER_SHAPE_TOLERANCE = 0.10
 
 
 @dataclass(frozen=True, slots=True)
@@ -44,10 +34,10 @@ class OpponentStrategy:
     fit_score: float
     confidence: str
     mean_log2_loss: float
+    rank_power: float
     primary_players: int
     ranks: dict[int, int]
     order: tuple[int, ...]
-    projections: ProjectionMap
 
     def public(self) -> dict:
         return {
@@ -60,8 +50,8 @@ class OpponentStrategy:
             "fit_score": self.fit_score,
             "confidence": self.confidence,
             "mean_log2_loss": self.mean_log2_loss,
+            "rank_power": round(self.rank_power, 3),
             "players_ranked_by_source": self.primary_players,
-            "valuation": "source rank mapped to implied points; DraftSharks timeline class",
         }
 
 
@@ -72,7 +62,6 @@ def expected_log2_rank(power: float, choices: int) -> float:
     return sum(w * math.log2(k) for k, w in enumerate(weights, start=1)) / total
 
 
-@lru_cache(maxsize=None)
 def rank_power(mean_log2_loss: float, choices: int) -> float:
     """Calibrate source-rank choice noise to the investigator's observed loss."""
     target = min(max(mean_log2_loss, 0.0), expected_log2_rank(0.0, choices))
@@ -139,61 +128,6 @@ def _complete_order(
     return tuple(
         primary + [player_id for player_id in fallback_order if player_id not in primary_ids]
     )
-
-
-def career_shape(player: Player) -> str:
-    """Classify DraftSharks' year 1 pace against its years 2-3 annual pace."""
-    year_one = player.points_1yr
-    future_year = (player.points - player.points_1yr) / 2
-    if year_one > future_year * (1 + CAREER_SHAPE_TOLERANCE):
-        return "front_loaded"
-    if future_year > year_one * (1 + CAREER_SHAPE_TOLERANCE):
-        return "back_loaded"
-    return "balanced"
-
-
-def career_shape_shares(players: list[Player]) -> dict[str, float]:
-    """Representative year-1 share for each DraftSharks timeline class."""
-    shares: dict[str, list[float]] = {
-        "front_loaded": [],
-        "balanced": [],
-        "back_loaded": [],
-    }
-    for player in players:
-        shares[career_shape(player)].append(player.points_1yr / player.points)
-    return {shape: statistics.median(values) for shape, values in shares.items()}
-
-
-def implied_projections(players: list[Player], order: tuple[int, ...]) -> ProjectionMap:
-    """Translate one complete ordinal board into two-horizon point projections.
-
-    Rank ``r`` receives the ``r``-th value on this pool's projection-backed VOR curve.
-    Adding the player's positional replacement level turns that common value back into
-    fantasy points. This preserves the source's cross-position ordering without treating
-    its arbitrary value scale as points. The source supplies the total valuation; the
-    DraftSharks' 1-year/3-year timeline supplies only its career-shape class.
-    """
-    if len(order) != len(players) or len(set(order)) != len(players):
-        raise ValueError("an opponent projection order must cover every player once")
-    by_id = {player.player_id: player for player in players}
-    if set(order) != set(by_id):
-        raise ValueError("an opponent projection order does not match the player pool")
-
-    rep = seed_replacement(players)
-    rep_total = {
-        position: sum(rep[h][position] for h in HORIZONS)
-        for position in rep[HORIZONS[0]]
-    }
-    value_curve = sorted(compute_vor(players, rep).values(), reverse=True)
-    shape_shares = career_shape_shares(players)
-    projections: ProjectionMap = {}
-    for rank, player_id in enumerate(order, start=1):
-        player = by_id[player_id]
-        total = max(1.0, rep_total[player.position] + value_curve[rank - 1])
-        year_one_share = shape_shares[career_shape(player)]
-        year_one = total * year_one_share
-        projections[player_id] = (year_one, total - year_one)
-    return projections
 
 
 def build_opponent_strategies(
@@ -276,10 +210,10 @@ def build_opponent_strategies(
             fit_score=float(inferred["fit_score"]),
             confidence=confidence,
             mean_log2_loss=loss,
+            rank_power=rank_power(loss, len(players)),
             primary_players=len(primary),
             ranks={player_id: rank for rank, player_id in enumerate(order, start=1)},
             order=order,
-            projections=implied_projections(players, order),
         )
 
     expected_slots = set(range(1, len(slots) + 1)) - {board.my_slot}

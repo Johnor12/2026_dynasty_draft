@@ -180,7 +180,7 @@
     border-radius: 999px; padding: 5px 12px; font: inherit; font-size: 12px; cursor: pointer;
   }
   .filters .fbtn[aria-pressed="true"] { background: var(--ink); color: var(--page); border-color: var(--ink); }
-  .board-table { min-width: 990px; }
+  .board-table { min-width: 920px; }
   .board-table .pname { font-weight: 650; }
   .board-table .team { color: var(--muted); font-size: 11.5px; margin-left: 5px; }
   .meter-cell { display: inline-flex; align-items: center; gap: 7px; }
@@ -285,7 +285,6 @@
               <th class="num">3-year<br>total</th>
               <th class="num">VOR</th>
               <th class="num" title="Opponent consensus rank minus your VOR rank">Field Δ</th>
-              <th class="num" title="Your three-year projection minus the modeled field's implied projection">Proj Δ</th>
               <th id="availHead">Chance at next pick</th>
             </tr>
           </thead>
@@ -608,7 +607,6 @@ function renderNextPicks(d, byId) {
                 `board #${stats.vor_rank}`,
                 `field #${stats.opponent_consensus_rank}`,
                 `Δ ${signed(stats.opponent_rank_delta)}`,
-                `proj Δ ${signed(stats.projection_edge_vs_opponents)}`,
                 stats.team,
                 stats.age == null ? null : `age ${fmt(stats.age)}`,
               ].filter(Boolean).join(" · ")
@@ -679,7 +677,7 @@ function renderBoard(d, state) {
     ? `Undrafted players ranked by three-year VOR. Chance at ${nextPick} is the estimated probability no opponent takes the player first, from ${d.monte_carlo.sims} simulated drafts.`
     : "Undrafted players ranked by three-year VOR.";
   document.getElementById("boardNote").textContent =
-    "Year 1 and Years 2–3 / year are your raw projected fantasy points in this league's scoring. Trend is the later annual pace minus Year 1. VOR subtracts the position's period-specific marginal starter over all three years. Field Δ is opponent consensus rank minus VOR rank, so positive means your process values the player earlier. Proj Δ is your three-year projection minus the field's average source-implied projection; positive is an exploitable valuation edge. The recommendation tables also account for your roster and who may survive. Best-available odds use a Kaplan–Meier opponent-demand estimate; use the pass-on-him odds in the first recommendation table for the candidates that matter most.";
+    "Year 1 and Years 2–3 / year are raw projected fantasy points in this league's scoring. Trend is the later annual pace minus Year 1. VOR subtracts the position's period-specific marginal starter over all three years. Field Δ is opponent consensus rank minus VOR rank, so positive means your process values the player earlier than the modeled field. The recommendation tables also account for your roster and who may survive. Best-available odds use a Kaplan–Meier opponent-demand estimate; use the pass-on-him odds in the first recommendation table for the candidates that matter most.";
 
   let rows = d.rankings;
   if (state.position !== "ALL") rows = rows.filter(row => row.position === state.position);
@@ -704,10 +702,6 @@ function renderBoard(d, state) {
         class: `num ${trendClass(row.opponent_rank_delta)}`,
         title: `Modeled field rank ${row.opponent_consensus_rank}`,
       }, signed(row.opponent_rank_delta)),
-      h("td", {
-        class: `num ${trendClass(row.projection_edge_vs_opponents)}`,
-        title: `Field-implied three-year points ${fmt(row.opponent_implied_points_3yr)}`,
-      }, signed(row.projection_edge_vs_opponents)),
       h("td", {}, available == null ? "—" : h("span", { class: "meter-cell" },
         h("span", { class: "meter" }, h("i", { style: `width:${Math.round(available * 100)}%` })),
         h("span", { class: "pct" }, pct(available)))));
