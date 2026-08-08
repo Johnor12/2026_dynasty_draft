@@ -78,7 +78,8 @@ later target's conditional survival before playing finalists to the end of the d
 The first `take` is the EV recommendation if available; when the noiseless example has
 already removed it, `deterministic_fallback` identifies the example draft's legal choice.
 Worker processes receive immutable inputs once, and seeded task ids keep results
-deterministic across scheduling.
+deterministic across scheduling. Planning uses at most eight workers so a rerank does not
+saturate every host CPU; this changes elapsed time, not the simulations or their output.
 
 ## Output contract
 

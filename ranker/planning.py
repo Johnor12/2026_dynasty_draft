@@ -82,7 +82,8 @@ def _init_worker(
 
 
 def _worker_pool_size() -> int:
-    return max(1, len(os.sched_getaffinity(0)))
+    # Four busy workers leave enough host headroom for sustained reranks.
+    return max(1, min(8, len(os.sched_getaffinity(0))))
 
 
 def _target_map(plan: Sequence[int]) -> dict[int, Player]:

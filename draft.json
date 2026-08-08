@@ -1,13 +1,13 @@
 {
   "source": "https://api.sleeper.app/v1/draft/1388293618208374784",
-  "fetched_at": "2026-08-08T16:14:15+00:00",
+  "fetched_at": "2026-08-08T16:44:32+00:00",
   "draft_id": "1388293618208374784",
   "league_id": "1388293617071714304",
   "league_name": "Dudes",
   "season": "2026",
   "status": "drafting",
   "started_at": "2026-08-04T13:02:55+00:00",
-  "last_picked_at": "2026-08-08T16:07:26+00:00",
+  "last_picked_at": "2026-08-08T16:41:34+00:00",
   "format": {
     "type": "snake",
     "teams": 10,
@@ -16,16 +16,16 @@
     "scoring_type": "dynasty_2qb"
   },
   "pick_count": 290,
-  "picks_made": 97,
-  "picks_pending": 193,
+  "picks_made": 98,
+  "picks_pending": 192,
   "on_the_clock": {
-    "pick_no": 98,
+    "pick_no": 99,
     "round": 10,
-    "pick_in_round": 8,
-    "draft_slot": 8,
-    "user_id": "1127785716420898816",
-    "username": "johnor",
-    "slot": "10.08"
+    "pick_in_round": 9,
+    "draft_slot": 9,
+    "user_id": "207916077173182464",
+    "username": "dccb31",
+    "slot": "10.09"
   },
   "me": {
     "username": "johnor",
@@ -34,19 +34,19 @@
     "roster_id": 2
   },
   "my_next_pick": {
-    "pick_no": 98,
-    "round": 10,
-    "pick_in_round": 8,
+    "pick_no": 103,
+    "round": 11,
+    "pick_in_round": 3,
     "draft_slot": 8,
     "user_id": "1127785716420898816",
     "username": "johnor",
-    "slot": "10.08",
-    "picks_away": 0
+    "slot": "11.03",
+    "picks_away": 4
   },
   "board_derivation": {
     "method": "snake, order reverses at round 3; traded picks applied",
-    "checked_against_made_picks": 97,
-    "slot_and_roster_agree": 97,
+    "checked_against_made_picks": 98,
+    "slot_and_roster_agree": 98,
     "rounds_exercised": [
       1,
       2,
@@ -1905,12 +1905,12 @@
       "user_id": "1127785716420898816",
       "username": "johnor",
       "is_mine": true,
-      "status": "pending",
-      "sleeper_id": null,
-      "name": null,
-      "position": null,
-      "team": null,
-      "is_keeper": null
+      "status": "made",
+      "sleeper_id": "13275",
+      "name": "Ty Simpson",
+      "position": "QB",
+      "team": "LAR",
+      "is_keeper": false
     },
     {
       "pick_no": 99,
