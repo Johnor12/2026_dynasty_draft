@@ -70,7 +70,11 @@ meet through their published JSON contracts rather than shared orchestration.
 The ranker values a roster as expected optimal lineup points in separate year-one and
 years-2–3 horizons. Position-wide availability determines when depth is called on, and
 one unique final waiver body per position supplies the fallback. Marginal-starter VOR is
-reported separately rather than mixed into bench utility.
+reported separately rather than mixed into bench utility. Every simulated team uses this
+objective: opponents maximize immediate value under projections implied by their inferred
+external rankings, while my slot uses the pool projections plus lookahead and rollout.
+Opponent-implied points affect picks only; final rankings and roster evaluations always
+use the pool projections.
 
 ## Common workflows
 

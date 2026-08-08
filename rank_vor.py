@@ -16,13 +16,12 @@ of how the league drafts, so
 per-horizon replacement levels are measured from the converged draft, while my roster is
 valued as expected optimal lineup points under position-wide availability with one unique
 waiver fallback per position (`ranker/value.py`). `draft.json` — the live board — is the
-simulation's starting state, not a filter (ranker/board.py). Only my slot uses the
-projection-based roster objective. Every opponent uses
-the external provider board most associated with its prior picks, loaded from the
-data-source investigator; unfilled dedicated starters softly adjust that order, and its
-observed adherence controls Monte Carlo choice noise. A compounding soft-depth preference
-keeps opponents' late roster shapes plausible without imposing position limits. My slot's
-choices contain no positional roster-size heuristic.
+simulation's starting state, not a filter (ranker/board.py). Every team uses that same
+projection-based roster objective and backup attribution. An opponent's closest external
+provider order is translated into implied point projections; its deterministic policy
+maximizes immediate roster EV (level 0), while my slot adds lookahead and rollout. The
+opponent's observed adherence controls Monte Carlo choice noise. No team uses a positional
+roster-size heuristic.
 
 The output's headline `vor` remains a board statistic and sums the horizons: (year-1
 points minus the year-1 marginal-starter level) + (years-2-3 points minus that level) —
@@ -106,7 +105,7 @@ def main(argv: list[str] | None = None) -> int:
         "--noise",
         type=float,
         default=NOISE,
-        help="opponent pick randomness (0 = deterministic balance-adjusted source order)",
+        help="opponent pick randomness (0 = deterministic level-0 EV)",
     )
     ap.add_argument("--seed", type=int, default=SEED)
     args = ap.parse_args(argv)
@@ -165,7 +164,7 @@ def main(argv: list[str] | None = None) -> int:
             file=sys.stderr,
         )
         report_board(board)
-        print("opponent source strategies:", file=sys.stderr)
+        print("opponent level-0 valuations:", file=sys.stderr)
         for slot in sorted(opponents):
             strategy = opponents[slot]
             print(
@@ -243,7 +242,7 @@ def main(argv: list[str] | None = None) -> int:
 
     if args.report:
         print(
-            f"monte carlo: {args.sims} source-strategy drafts "
+            f"monte carlo: {args.sims} level-0 opponent drafts "
             f"(adherence noise multiplier={args.noise})",
             file=sys.stderr,
         )

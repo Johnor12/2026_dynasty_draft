@@ -12,7 +12,6 @@ from .league import (
     DEDICATED_SLOTS,
     MAX_ITERS,
     NON_TAXI_SLOTS,
-    OPPONENT_DEPTH_TARGETS,
     POSITIONS,
     ROUNDS,
     STARTING_SLOTS,
@@ -128,16 +127,6 @@ def validate(
             have = sum(1 for p in roster if p.position == pos)
             have += sum(1 for o in off if o.get("position") == pos)
             check(have >= need, f"slot {i} has {have} {pos}, needs {need}")
-        if i != board.my_slot:
-            for pos, target in OPPONENT_DEPTH_TARGETS.items():
-                have = sum(1 for p in roster if p.position == pos)
-                have += sum(1 for o in off if o.get("position") == pos)
-                check(
-                    have <= target + 5,
-                    f"opponent slot {i} roster-shape smell: {have} {pos} exceeds "
-                    f"soft target {target} by more than 5",
-                )
-
     vors = [r["vor"] for r in rows]
     check(vors == sorted(vors, reverse=True), "rows are not sorted by VOR descending")
     source_ids = {strategy.source_id for strategy in draft.opponents.values()}

@@ -16,7 +16,6 @@ from .league import (
     DEDICATED_SLOTS,
     FIRST_PICK_PER_POS,
     MY_SLOT,
-    OPPONENT_DEPTH_TARGETS,
     POSITIONS,
     ROUNDS,
     TEAMS,
@@ -24,7 +23,14 @@ from .league import (
     draft_order,
     pick_label,
 )
-from .opponents import OpponentStrategy, expected_log2_rank, rank_power
+from .opponents import (
+    OpponentStrategy,
+    career_shape,
+    career_shape_shares,
+    expected_log2_rank,
+    implied_projections,
+    rank_power,
+)
 from .planning import apply_survival_floor, broaden_first_pick, conditional_survival
 from .pool import Player
 from .rankings import my_next_picks
@@ -42,7 +48,7 @@ from .value import (
 def synthetic_opponents(
     players: list[Player], board, first_order: list[Player] | None = None
 ) -> dict[int, OpponentStrategy]:
-    """Complete external boards for simulation tests; no VOR value is stored in them."""
+    """Complete source-implied valuations for simulation tests."""
     default = first_order or players
     order = tuple(p.player_id for p in default)
     ranks = {player_id: rank for rank, player_id in enumerate(order, start=1)}
@@ -57,10 +63,10 @@ def synthetic_opponents(
             fit_score=100.0,
             confidence="strong",
             mean_log2_loss=0.5,
-            rank_power=rank_power(0.5, len(players)),
             primary_players=len(players),
             ranks=ranks,
             order=order,
+            projections=implied_projections(players, order),
         )
         for slot in range(1, TEAMS + 1)
         if slot != board.my_slot
@@ -68,91 +74,57 @@ def synthetic_opponents(
 
 
 def opponent_selftest(players: list[Player]) -> list[str]:
-    """Opponent source order stays VOR-independent and bends toward roster balance."""
+    """Opponents share lineup EV but use source-implied points with no lookahead."""
     fails: list[str] = []
     board = fresh_board()
     rep = seed_replacement(players)
     vor = compute_vor(players, rep)
-    # Put the lowest-VOR player first on every external board. An opponent must take him;
-    # my optimizer must not, demonstrating that candidate generation is separated too.
+
+    # Reverse the canonical value order. The opponent's points must follow the source,
+    # while every implied player's exact horizon split follows DraftSharks' own ratio.
     external = sorted(players, key=lambda p: (vor[p.player_id], p.player_id))
     opponents = synthetic_opponents(players, board, external)
+    strategy = opponents[1]
+    first, last = external[0], external[-1]
+    first_total = sum(strategy.projections[first.player_id])
+    last_total = sum(strategy.projections[last.player_id])
+    if first_total - sum(rep[h][first.position] for h in ("yr1", "yr23")) <= (
+        last_total - sum(rep[h][last.position] for h in ("yr1", "yr23"))
+    ):
+        fails.append("opponent rank-to-points translation did not preserve source value order")
+    shape_shares = career_shape_shares(players)
+    if not (
+        shape_shares["front_loaded"]
+        > shape_shares["balanced"]
+        > shape_shares["back_loaded"]
+    ):
+        fails.append("DraftSharks timeline classes are not ordered front to back")
+    implied_share = strategy.projections[first.player_id][0] / first_total
+    expected_share = shape_shares[career_shape(first)]
+    if abs(implied_share - expected_share) > 1e-12:
+        fails.append("opponent implied points did not preserve DraftSharks timeline class")
+
     draft = Draft(players, rep, vor, board, opponents=opponents)
-    opponent_take = draft.choose_opponent(0, 1)
-    my_take = draft.choose(1, board.my_slot)
-    if opponent_take != external[0]:
-        fails.append("opponent ignored the top player on its inferred source board")
-    if my_take == external[0]:
-        fails.append("my VOR optimizer followed the opponent source board")
-
-    # A filled WR group versus an empty RB group gives the best RB a soft 3x rank boost:
-    # close source values bend toward RB, while a large enough source gap still wins.
-    wrs = [p for p in players if p.position == "WR"]
-    rb = next(p for p in players if p.position == "RB")
-    board = fresh_board()
-    board.rosters[0] = wrs[:3]
-    board.picks_left[0] -= 3
-
-    def complete(prefix: list[Player]) -> list[Player]:
-        ids = {p.player_id for p in prefix}
-        return prefix + [p for p in players if p.player_id not in ids]
-
-    close_order = complete([wrs[3], rb])
-    close = Draft(
-        players,
-        rep,
-        vor,
-        board,
-        opponents=synthetic_opponents(players, board, close_order),
+    detail = draft.score_opponent_candidates(1)
+    roster_sorted = sorted_by_horizon([], strategy.projections)
+    base = team_value(
+        roster_sorted, draft.opponent_wire[1], projections=strategy.projections
     )
-    if close.choose_opponent(0, 1) != rb:
-        fails.append("opponent did not prefer a close RB with RB starters unfilled")
-
-    value_order = complete([wrs[3], wrs[4], wrs[5], rb])
-    value = Draft(
-        players,
-        rep,
-        vor,
-        board,
-        opponents=synthetic_opponents(players, board, value_order),
-    )
-    if value.choose_opponent(0, 1) != wrs[3]:
-        fails.append("opponent balance preference overrode too large a source-rank gap")
-
-    # Once a roster reaches comfortable WR depth, another WR's adjusted source rank is
-    # doubled against other positions. This is a preference, not a positional limit: a
-    # sufficiently large source gap can still justify the extra WR.
-    board = fresh_board()
-    board.rosters[0] = wrs[: OPPONENT_DEPTH_TARGETS["WR"]]
-    board.picks_left[0] -= len(board.rosters[0])
-    depth_order = complete([wrs[OPPONENT_DEPTH_TARGETS["WR"]], rb])
-    depth = Draft(
-        players,
-        rep,
-        vor,
-        board,
-        opponents=synthetic_opponents(players, board, depth_order),
-    )
-    if depth.choose_opponent(0, 1) != rb:
-        fails.append("opponent did not prefer close RB over excessive WR depth")
-
-    start = OPPONENT_DEPTH_TARGETS["WR"]
-    depth_value_order = complete(wrs[start : start + 6] + [rb])
-    depth_value = Draft(
-        players,
-        rep,
-        vor,
-        board,
-        opponents=synthetic_opponents(players, board, depth_value_order),
-    )
-    if depth_value.choose_opponent(0, 1) != wrs[OPPONENT_DEPTH_TARGETS["WR"]]:
-        fails.append("opponent depth preference acted like a hard positional limit")
-    if depth.opponent_depth_penalty(wrs[: start - 1], (), "WR") != 1.0:
-        fails.append("opponent depth preference started before its target")
-    if depth.opponent_depth_penalty(wrs[:start], (), "WR") != 2.0:
-        fails.append("opponent depth preference did not start at its target")
-    if depth.opponent_depth_penalty(wrs[: start + 1], (), "WR") != 4.0:
-        fails.append("opponent depth preference did not compound with excess depth")
+    for now, later, candidate in detail:
+        expected = team_value(
+            roster_sorted,
+            draft.opponent_wire[1],
+            candidate,
+            strategy.projections,
+        ) - base
+        if abs(now - expected) > 1e-9:
+            fails.append("opponent candidate score is not marginal expected-lineup value")
+            break
+        if later != 0.0:
+            fails.append("opponent level-0 policy used lookahead")
+            break
+    if draft.choose_opponent(0, 1) != detail[0][2]:
+        fails.append("opponent did not maximize immediate expected-lineup value")
 
     for loss in (0.3, 1.5, 2.7):
         power = rank_power(loss, len(players))
@@ -160,9 +132,9 @@ def opponent_selftest(players: list[Player]) -> list[str]:
             fails.append(f"source-adherence calibration missed mean log2 loss {loss}")
 
     print(
-        "  opponent strategies: provider order stays VOR-independent, starter needs "
-        "and excessive depth softly adjust it, and fitted rank noise reproduces "
-        "source adherence",
+        "  opponent strategies: source ranks become horizon-shaped implied points; "
+        "the common expected-lineup/backup objective is maximized at level 0, and "
+        "fitted rank noise reproduces source adherence",
         file=sys.stderr,
     )
     return fails
@@ -232,11 +204,11 @@ def planning_selftest(players: list[Player]) -> list[str]:
     ) >= 0.05:
         fails.append("planning: later survival was not conditioned on reaching the first pick")
 
-    # Even past an opponent's comfortable depth, my reported value_now is the raw
-    # marginal expected-lineup value. The opponent heuristic must not leak into my policy.
+    # A deep roster's reported value_now remains the raw marginal expected-lineup value.
+    # An opponent's implied projections must not leak into my valuation.
     deep_board = fresh_board()
     wrs = [p for p in players if p.position == "WR"]
-    deep_roster = wrs[: OPPONENT_DEPTH_TARGETS["WR"]]
+    deep_roster = wrs[:11]
     deep_board.rosters[deep_board.my_slot - 1] = deep_roster
     deep_board.picks_left[deep_board.my_slot - 1] -= len(deep_roster)
     deep_state = Draft(
@@ -252,7 +224,7 @@ def planning_selftest(players: list[Player]) -> list[str]:
     for now, _, candidate in deep_state.score_my_candidates(deep_index):
         raw_marginal = team_value(deep_sorted, deep_state.wire, candidate) - deep_base
         if abs(now - raw_marginal) > 1e-9:
-            fails.append("planning: opponent depth heuristic changed my marginal value")
+            fails.append("planning: opponent valuation changed my marginal value")
             break
 
     first_target = broad[-1][2]

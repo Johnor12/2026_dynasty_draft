@@ -100,6 +100,14 @@ def build_rankings(
             if len(opp) > 1
             else None
         )
+        opponent_year_one = sum(
+            strategy.projections[p.player_id][0]
+            for strategy in draft.opponents.values()
+        ) / len(draft.opponents)
+        opponent_three_year = sum(
+            sum(strategy.projections[p.player_id])
+            for strategy in draft.opponents.values()
+        ) / len(draft.opponents)
         rows.append(
             {
                 "vor_rank": i,
@@ -132,6 +140,14 @@ def build_rankings(
                 "latest_my_pick_likely_available": latest,
                 "p_available_at_my_picks": avail,
                 "provider_adp": p.provider_adp,
+                "opponent_implied_points_1yr": round(opponent_year_one, 1),
+                "opponent_implied_points_3yr": round(opponent_three_year, 1),
+                # Positive is the projection edge this strategy can exploit. These
+                # consensus points explain opponent choices; our points above still
+                # drive every recommendation and final roster evaluation.
+                "projection_edge_vs_opponents": round(
+                    p.points - opponent_three_year, 1
+                ),
                 "opponent_consensus_rank": opponent_rank[p.player_id],
                 # Positive means my VOR board values him earlier than the average of the
                 # nine slot-specific provider boards actually used in the simulations.

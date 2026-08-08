@@ -17,6 +17,10 @@ threshold and no separate bench bonus. A better projection can retain every role
 projection could fill, which makes roster value monotone when a player improves, is
 replaced by a better same-position player, or is simply added. Marginal-starter levels
 remain the board's VOR baseline; they are not mixed into roster utility.
+
+The same solver accepts an optional player-to-points map. Opponents pass their
+source-implied projections through that path; callers that omit it use the canonical pool
+projections, which remain the basis of replacement, recommendations, and final reporting.
 """
 
 from __future__ import annotations
@@ -38,10 +42,16 @@ from .pool import Player, by_position
 # year 1, and years 2-3 as one block. Every level dict in the ranker — replacement,
 # and wire — is keyed by horizon first, position second.
 HORIZONS = ("yr1", "yr23")
+ProjectionMap = dict[int, tuple[float, float]]
+_HORIZON_INDEX = {"yr1": 0, "yr23": 1}
 
 
-def horizon_points(p: Player, h: str) -> float:
-    """A player's points in one horizon (precomputed on Player — see pool.py)."""
+def horizon_points(
+    p: Player, h: str, projections: ProjectionMap | None = None
+) -> float:
+    """A player's points in one horizon under the selected valuation."""
+    if projections is not None:
+        return projections[p.player_id][_HORIZON_INDEX[h]]
     return p.points_yr1 if h == "yr1" else p.points_yr23
 
 
@@ -53,15 +63,30 @@ _HKEY = {
 }
 
 
-def pos_by_horizon(players: list[Player]) -> dict[str, dict[str, list[Player]]]:
+def pos_by_horizon(
+    players: list[Player], projections: ProjectionMap | None = None
+) -> dict[str, dict[str, list[Player]]]:
     """Per-horizon position lists, each sorted by that horizon's points descending."""
     pos = by_position(players)
+    if projections is not None:
+        return {
+            h: {
+                k: sorted(
+                    v,
+                    key=lambda p: (-horizon_points(p, h, projections), p.player_id),
+                )
+                for k, v in pos.items()
+            }
+            for h in HORIZONS
+        }
     return {
         h: {k: sorted(v, key=_HKEY[h]) for k, v in pos.items()} for h in HORIZONS
     }
 
 
-def sorted_by_horizon(roster: list[Player]) -> dict[str, list[Player]]:
+def sorted_by_horizon(
+    roster: list[Player], projections: ProjectionMap | None = None
+) -> dict[str, list[Player]]:
     """A roster pre-sorted per horizon — the form `team_value` consumes.
 
     Valuing a candidate means re-valuing the roster with him added, thousands of times
@@ -69,17 +94,30 @@ def sorted_by_horizon(roster: list[Player]) -> dict[str, list[Player]]:
     simulation. So the roster is sorted once per pick and each candidate is merged in
     by `insert_sorted`.
     """
+    if projections is not None:
+        return {
+            h: sorted(
+                roster,
+                key=lambda p: (-horizon_points(p, h, projections), p.player_id),
+            )
+            for h in HORIZONS
+        }
     return {h: sorted(roster, key=_HKEY[h]) for h in HORIZONS}
 
 
-def insert_sorted(seq: list[Player], p: Player, h: str) -> list[Player]:
+def insert_sorted(
+    seq: list[Player],
+    p: Player,
+    h: str,
+    projections: ProjectionMap | None = None,
+) -> list[Player]:
     """A new list with `p` merged into an already-sorted horizon list."""
-    points = p.points_yr1 if h == "yr1" else p.points_yr23
+    points = horizon_points(p, h, projections)
     lo, hi = 0, len(seq)
     while lo < hi:
         mid = (lo + hi) // 2
         q = seq[mid]
-        q_points = q.points_yr1 if h == "yr1" else q.points_yr23
+        q_points = horizon_points(q, h, projections)
         if q_points > points or (q_points == points and q.player_id < p.player_id):
             lo = mid + 1
         else:
@@ -115,6 +153,10 @@ def _starter_compositions() -> tuple[dict[str, int], ...]:
 
 
 _STARTER_COMPOSITIONS = _starter_compositions()
+_MAX_STARTERS = {
+    pos: max(composition[pos] for composition in _STARTER_COMPOSITIONS)
+    for pos in POSITIONS
+}
 
 
 @lru_cache(maxsize=32_768)
@@ -172,20 +214,25 @@ def position_expected_value(
 
 
 def expected_lineup_value(
-    roster: list[Player], wire: dict[str, float], h: str
+    roster: list[Player],
+    wire: dict[str, float],
+    h: str,
+    projections: ProjectionMap | None = None,
 ) -> float:
     """Highest expected lineup value across every legal starter composition."""
     by_pos = {pos: [] for pos in POSITIONS}
     for player in roster:
         by_pos[player.position].append(player)
-    max_count = {pos: max(c[pos] for c in _STARTER_COMPOSITIONS) for pos in POSITIONS}
     values = {}
     for pos in POSITIONS:
-        projections = tuple(
-            sorted((p.player_id, horizon_points(p, h)) for p in by_pos[pos])
+        position_projections = tuple(
+            sorted(
+                (p.player_id, horizon_points(p, h, projections))
+                for p in by_pos[pos]
+            )
         )
         values[pos] = _position_expected_values(
-            projections, wire[pos], UNAVAILABLE_RATE[pos], max_count[pos]
+            position_projections, wire[pos], UNAVAILABLE_RATE[pos], _MAX_STARTERS[pos]
         )
     return max(
         sum(values[pos][counts[pos]] for pos in POSITIONS)
@@ -217,16 +264,88 @@ def team_value(
     roster: dict[str, list[Player]],
     wire: dict[str, dict[str, float]],
     extra: Player | None = None,
+    projections: ProjectionMap | None = None,
 ) -> float:
     """Expected optimal lineup points over both horizons."""
     return sum(
         expected_lineup_value(
-            roster[h] if extra is None else insert_sorted(roster[h], extra, h),
+            roster[h]
+            if extra is None
+            else insert_sorted(roster[h], extra, h, projections),
             wire[h],
             h,
+            projections,
         )
         for h in HORIZONS
     )
+
+
+def team_values_with_candidates(
+    roster: list[Player],
+    wire: dict[str, dict[str, float]],
+    candidates: list[Player],
+    projections: ProjectionMap | None = None,
+) -> tuple[float, dict[int, float]]:
+    """Roster value and each one-player addition, sharing the unchanged positions.
+
+    A candidate alters one position. Computing the other three depth charts once per
+    horizon avoids rebuilding them for every level-0 opponent option during rollouts.
+    """
+    by_pos = {pos: [] for pos in POSITIONS}
+    for player in roster:
+        by_pos[player.position].append(player)
+
+    baseline = 0.0
+    values = {candidate.player_id: 0.0 for candidate in candidates}
+    for h in HORIZONS:
+        point_rows = {
+            pos: tuple(
+                sorted(
+                    (player.player_id, horizon_points(player, h, projections))
+                    for player in by_pos[pos]
+                )
+            )
+            for pos in POSITIONS
+        }
+        base_position_values = {
+            pos: _position_expected_values(
+                point_rows[pos],
+                wire[h][pos],
+                UNAVAILABLE_RATE[pos],
+                _MAX_STARTERS[pos],
+            )
+            for pos in POSITIONS
+        }
+        baseline += max(
+            sum(base_position_values[pos][counts[pos]] for pos in POSITIONS)
+            for counts in _STARTER_COMPOSITIONS
+        )
+        for candidate in candidates:
+            pos = candidate.position
+            candidate_rows = tuple(
+                sorted(
+                    point_rows[pos]
+                    + ((candidate.player_id, horizon_points(candidate, h, projections)),)
+                )
+            )
+            candidate_position_values = _position_expected_values(
+                candidate_rows,
+                wire[h][pos],
+                UNAVAILABLE_RATE[pos],
+                _MAX_STARTERS[pos],
+            )
+            values[candidate.player_id] += max(
+                sum(
+                    (
+                        candidate_position_values
+                        if position == pos
+                        else base_position_values[position]
+                    )[counts[position]]
+                    for position in POSITIONS
+                )
+                for counts in _STARTER_COMPOSITIONS
+            )
+    return baseline, values
 
 
 def compute_vor(players: list[Player], rep: dict[str, dict[str, float]]) -> dict[int, float]:

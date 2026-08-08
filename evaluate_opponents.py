@@ -3,8 +3,8 @@
 
 For each pick, source inference sees only picks made before it. The model then draws
 100 choices from that exact board state. Error is the absolute distance between the
-drawn and actual players on the model's balance-adjusted preference order; exact hits
-and the actual player's preference rank are reported alongside it.
+drawn and actual players on the model's immediate-EV order; exact hits and the actual
+player's preference rank are reported alongside it.
 
 Usage:
     uv run evaluate_opponents.py
@@ -51,17 +51,9 @@ def replay_before(draft: dict, pick_no: int) -> dict:
 
 
 def preference_order(model: Draft, slot: int) -> list[Player]:
-    candidates = model.opponent_candidates(slot)
-    boosts = model.opponent_balance_boosts(slot)
     return [
         row[2]
-        for row in sorted(
-            (
-                (rank / boosts[player.position], rank, player)
-                for rank, player in enumerate(candidates, start=1)
-            ),
-            key=lambda row: (row[0], row[1], row[2].player_id),
-        )
+        for row in model.score_opponent_candidates(slot, per_pos=len(model.players))
     ]
 
 

@@ -8,8 +8,6 @@ from .league import (
     CANDIDATE_SURVIVAL_FLOOR,
     FIRST_PICK_PER_POS,
     LOOKAHEAD_PICKS,
-    OPPONENT_DEPTH_PENALTY,
-    OPPONENT_DEPTH_TARGETS,
     POINTS_FIELD,
     POSITIONS,
     ROUNDS,
@@ -24,7 +22,7 @@ from .league import (
     pick_label,
     picks_for_slot,
 )
-from .opponents import OpponentStrategy
+from .opponents import OpponentStrategy, career_shape, career_shape_shares
 from .pool import Player
 from .rankings import _sum_levels, my_next_picks
 from .simulation import Draft
@@ -172,6 +170,7 @@ def build_payload(
     survival: dict[int, dict[int, float]] | None = None,
 ) -> dict:
     pos_h = pos_by_horizon(players)
+    shape_shares = career_shape_shares(players)
     return {
         "generated_from": pool_meta["source_file"],
         "scoring_scheme": SCHEME,
@@ -207,7 +206,9 @@ def build_payload(
                 "the reported deterministic fallback instead. Made picks are "
                 "facts from the live board; every pending pick is the model drafting. Read "
                 "it for smells: position hoarding, a position left to the last rounds, "
-                "fewer than 4 rookies to fill the taxi spots."
+                "fewer than 4 rookies to fill the taxi spots. Every displayed projection "
+                "and final-roster diagnostic uses our pool projections, including for "
+                "opponents; their implied projections affect picks only."
             ),
             "rosters": example_rosters(draft, board),
         },
@@ -263,43 +264,72 @@ def build_payload(
             else "The whole pool, from an empty board: no live draft was read."
         ),
         "opponent_model": {
-            "who": "the other nine teams; my slot alone uses VOR and roster value",
-            "how": (
-                "Each opponent orders legal available players by the provider board most "
-                "associated with its completed picks in data_source_matches.json. Opponent "
-                "valuation never reads projections, replacement levels, team value, or VOR. "
-                "A position's source rank receives a soft boost in proportion to its "
-                "unfilled dedicated starters and a compounding penalty beyond its "
-                "comfortable depth; the deterministic draft takes the best adjusted "
-                "rank, and Monte Carlo draws around that preference."
+            "who": (
+                "all teams maximize the same expected-lineup value; opponents use level 0 "
+                "while my slot adds lookahead and rollout"
             ),
-            "depth_preference": {
-                "targets": OPPONENT_DEPTH_TARGETS,
-                "penalty_per_extra_player": OPPONENT_DEPTH_PENALTY,
-                "note": (
-                    "Targets sum to 25, leaving four roster spots to spill into the best "
-                    "remaining positions. This adjusts opponent source rank only and is "
-                    "not a draft limit or an input to my roster valuation."
+            "how": (
+                "Each opponent's closest provider board is translated into implied point "
+                "projections. At every pick it takes the legal player with the largest "
+                "immediate increase in expected optimal lineup points under those "
+                "projections. The same unavailable-rate backup attribution and one-body "
+                "waiver fallback used by my slot price roster depth. There are no opponent "
+                "starter boosts, positional depth targets, or other roster heuristics. "
+                "Only players not dominated at their position in both horizons need "
+                "scoring, so this level-0 maximization is exact."
+            ),
+            "projection_translation": {
+                "total": (
+                    "Source rank r receives the r-th value on our projection-backed VOR "
+                    "curve; adding that player's positional replacement level converts "
+                    "the ordinal value into a three-year point total. The reference curve "
+                    "sets units only: the source order decides which player receives each "
+                    "value."
+                ),
+                "horizons": (
+                    "DraftSharks' points_1yr pace is compared with its years 2-3 annual "
+                    "pace to classify each player as front-loaded, balanced, or "
+                    "back-loaded; rates within 10% are balanced. The class's median "
+                    "year-1 share splits the implied total between the two horizons."
+                ),
+                "timeline_classes": {
+                    shape: {
+                        "players": sum(career_shape(player) == shape for player in players),
+                        "year_one_share": round(share, 3),
+                        "years_2_3_share": round(1 - share, 3),
+                    }
+                    for shape, share in shape_shares.items()
+                },
+                "final_evaluation": (
+                    "Opponent-implied points are used only to simulate their decisions. "
+                    "Replacement levels, VOR, recommendations, example-roster projections, "
+                    "and every final roster evaluation use our pool projections."
                 ),
             },
             "adherence": (
                 "The investigator's mean_log2_loss is converted to a power distribution "
-                "over source rank among legal available players, before the roster-balance "
-                "adjustment. --noise 1 uses that fitted randomness; 0 removes randomness "
-                "but retains the balance adjustment. fit_score and confidence identify "
-                "association strength, while mean_log2_loss determines adherence."
+                "and applied as random mistakes around the opponent's immediate-EV order. "
+                "Draws stay on the non-dominated frontier, deliberately modeling the "
+                "worst-case intelligent field rather than inventing irrational reaches. "
+                "--noise 1 uses that fitted variation; 0 makes every opponent maximize "
+                "level-0 EV deterministically. fit_score and confidence identify association "
+                "strength, while mean_log2_loss determines adherence."
             ),
             "coverage": (
                 "A provider's normalized players come first. Any pool player it does not "
                 "rank is appended in DraftSharks ADP order so all 290 picks remain possible; "
-                "the fallback is still an external opponent board, never VOR."
+                "the player ordering remains external even though the common reference "
+                "curve supplies point units."
             ),
             "delta": (
                 "opponent_consensus_rank averages the nine managers' complete source "
                 "orders, counting a source once per associated manager, then re-ranks the "
                 "available pool. opponent_rank_delta is opponent_consensus_rank - vor_rank; "
                 "positive identifies players my VOR process values earlier than the modeled "
-                "field. Monte Carlo availability determines whether that gap is exploitable."
+                "field. opponent_implied_points_1yr/3yr average the nine translated "
+                "valuations, and projection_edge_vs_opponents is our three-year projection "
+                "minus that consensus. Monte Carlo availability determines whether those "
+                "gaps are exploitable."
             ),
             "divergence": {
                 "distinct_sources": len({s.source_id for s in opponents.values()}),
@@ -365,7 +395,8 @@ def build_payload(
             ),
             "lookahead": (
                 "first pending decision: four held picks with survival-aware target plans; "
-                "bulk policy: value now + E[best value at the following pick]"
+                "my bulk policy: value now + E[best value at the following pick]; "
+                "opponents: value now only (level 0)"
             ),
             "survival_sigma": SURVIVAL_SIGMA,
             "note": (
@@ -380,11 +411,11 @@ def build_payload(
             "noise": noise,
             "seed": seed,
             "note": (
-                "Balance-adjusted source-rank Gumbel draws on the other 9 teams only, to "
+                "Immediate-EV-rank Gumbel draws on the other 9 teams only, to "
                 "turn 0/1 availability under the deterministic preference into a usable "
-                "probability band. At noise=1 the source-rank component is calibrated to "
-                "each manager's observed mean log-rank loss before the balance adjustment; "
-                "noise=0 removes random variation but retains that adjustment. sim_pick is "
+                "probability band. At noise=1 the concentration is calibrated from each "
+                "manager's observed mean source log-rank loss; noise=0 removes random "
+                "variation. sim_pick is "
                 "from the noiseless draft; sim_adp, p_drafted and "
                 "p_available_at_my_picks are from these redraws and measure the other nine "
                 "teams' demand only — my own "
