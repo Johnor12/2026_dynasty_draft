@@ -1,13 +1,13 @@
 {
   "source": "https://api.sleeper.app/v1/draft/1388293618208374784",
-  "fetched_at": "2026-08-07T22:26:50+00:00",
+  "fetched_at": "2026-08-08T02:45:22+00:00",
   "draft_id": "1388293618208374784",
   "league_id": "1388293617071714304",
   "league_name": "Dudes",
   "season": "2026",
-  "status": "drafting",
+  "status": "paused",
   "started_at": "2026-08-04T13:02:55+00:00",
-  "last_picked_at": "2026-08-07T22:22:19+00:00",
+  "last_picked_at": "2026-08-08T01:12:22+00:00",
   "format": {
     "type": "snake",
     "teams": 10,
@@ -16,16 +16,16 @@
     "scoring_type": "dynasty_2qb"
   },
   "pick_count": 290,
-  "picks_made": 86,
-  "picks_pending": 204,
+  "picks_made": 88,
+  "picks_pending": 202,
   "on_the_clock": {
-    "pick_no": 87,
+    "pick_no": 89,
     "round": 9,
-    "pick_in_round": 7,
-    "draft_slot": 4,
-    "user_id": "735592932748435456",
-    "username": "bwood637",
-    "slot": "9.07"
+    "pick_in_round": 9,
+    "draft_slot": 2,
+    "user_id": "1127785716420898816",
+    "username": "johnor",
+    "slot": "9.09"
   },
   "me": {
     "username": "johnor",
@@ -41,12 +41,12 @@
     "user_id": "1127785716420898816",
     "username": "johnor",
     "slot": "9.09",
-    "picks_away": 2
+    "picks_away": 0
   },
   "board_derivation": {
     "method": "snake, order reverses at round 3; traded picks applied",
-    "checked_against_made_picks": 86,
-    "slot_and_roster_agree": 86,
+    "checked_against_made_picks": 88,
+    "slot_and_roster_agree": 88,
     "rounds_exercised": [
       1,
       2,
@@ -1728,12 +1728,12 @@
       "user_id": "735592932748435456",
       "username": "bwood637",
       "is_mine": false,
-      "status": "pending",
-      "sleeper_id": null,
-      "name": null,
-      "position": null,
-      "team": null,
-      "is_keeper": null
+      "status": "made",
+      "sleeper_id": "12489",
+      "name": "RJ Harvey",
+      "position": "RB",
+      "team": "DEN",
+      "is_keeper": false
     },
     {
       "pick_no": 88,
@@ -1744,12 +1744,12 @@
       "user_id": "865368720548196352",
       "username": "jedmxk",
       "is_mine": false,
-      "status": "pending",
-      "sleeper_id": null,
-      "name": null,
-      "position": null,
-      "team": null,
-      "is_keeper": null
+      "status": "made",
+      "sleeper_id": "4983",
+      "name": "DJ Moore",
+      "position": "WR",
+      "team": "BUF",
+      "is_keeper": false
     },
     {
       "pick_no": 89,
