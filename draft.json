@@ -1,13 +1,13 @@
 {
   "source": "https://api.sleeper.app/v1/draft/1388293618208374784",
-  "fetched_at": "2026-08-08T02:45:22+00:00",
+  "fetched_at": "2026-08-08T13:54:10+00:00",
   "draft_id": "1388293618208374784",
   "league_id": "1388293617071714304",
   "league_name": "Dudes",
   "season": "2026",
-  "status": "paused",
+  "status": "drafting",
   "started_at": "2026-08-04T13:02:55+00:00",
-  "last_picked_at": "2026-08-08T01:12:22+00:00",
+  "last_picked_at": "2026-08-08T13:18:06+00:00",
   "format": {
     "type": "snake",
     "teams": 10,
@@ -16,16 +16,16 @@
     "scoring_type": "dynasty_2qb"
   },
   "pick_count": 290,
-  "picks_made": 88,
-  "picks_pending": 202,
+  "picks_made": 93,
+  "picks_pending": 197,
   "on_the_clock": {
-    "pick_no": 89,
-    "round": 9,
-    "pick_in_round": 9,
-    "draft_slot": 2,
-    "user_id": "1127785716420898816",
-    "username": "johnor",
-    "slot": "9.09"
+    "pick_no": 94,
+    "round": 10,
+    "pick_in_round": 4,
+    "draft_slot": 4,
+    "user_id": "735592932748435456",
+    "username": "bwood637",
+    "slot": "10.04"
   },
   "me": {
     "username": "johnor",
@@ -34,19 +34,19 @@
     "roster_id": 2
   },
   "my_next_pick": {
-    "pick_no": 89,
-    "round": 9,
-    "pick_in_round": 9,
-    "draft_slot": 2,
+    "pick_no": 98,
+    "round": 10,
+    "pick_in_round": 8,
+    "draft_slot": 8,
     "user_id": "1127785716420898816",
     "username": "johnor",
-    "slot": "9.09",
-    "picks_away": 0
+    "slot": "10.08",
+    "picks_away": 4
   },
   "board_derivation": {
     "method": "snake, order reverses at round 3; traded picks applied",
-    "checked_against_made_picks": 88,
-    "slot_and_roster_agree": 88,
+    "checked_against_made_picks": 93,
+    "slot_and_roster_agree": 93,
     "rounds_exercised": [
       1,
       2,
@@ -56,7 +56,8 @@
       6,
       7,
       8,
-      9
+      9,
+      10
     ],
     "mismatches": []
   },
@@ -1760,12 +1761,12 @@
       "user_id": "1127785716420898816",
       "username": "johnor",
       "is_mine": true,
-      "status": "pending",
-      "sleeper_id": null,
-      "name": null,
-      "position": null,
-      "team": null,
-      "is_keeper": null
+      "status": "made",
+      "sleeper_id": "5849",
+      "name": "Kyler Murray",
+      "position": "QB",
+      "team": "MIN",
+      "is_keeper": false
     },
     {
       "pick_no": 90,
@@ -1776,12 +1777,12 @@
       "user_id": "1388546393752240128",
       "username": "AndNic31",
       "is_mine": false,
-      "status": "pending",
-      "sleeper_id": null,
-      "name": null,
-      "position": null,
-      "team": null,
-      "is_keeper": null
+      "status": "made",
+      "sleeper_id": "9228",
+      "name": "Bryce Young",
+      "position": "QB",
+      "team": "CAR",
+      "is_keeper": false
     },
     {
       "pick_no": 91,
@@ -1792,12 +1793,12 @@
       "user_id": "1388546393752240128",
       "username": "AndNic31",
       "is_mine": false,
-      "status": "pending",
-      "sleeper_id": null,
-      "name": null,
-      "position": null,
-      "team": null,
-      "is_keeper": null
+      "status": "made",
+      "sleeper_id": "6790",
+      "name": "D'Andre Swift",
+      "position": "RB",
+      "team": "CHI",
+      "is_keeper": false
     },
     {
       "pick_no": 92,
@@ -1808,12 +1809,12 @@
       "user_id": "1128025586577879040",
       "username": "justinmfftt",
       "is_mine": false,
-      "status": "pending",
-      "sleeper_id": null,
-      "name": null,
-      "position": null,
-      "team": null,
-      "is_keeper": null
+      "status": "made",
+      "sleeper_id": "8131",
+      "name": "Isaiah Likely",
+      "position": "TE",
+      "team": "NYG",
+      "is_keeper": false
     },
     {
       "pick_no": 93,
@@ -1824,12 +1825,12 @@
       "user_id": "865368720548196352",
       "username": "jedmxk",
       "is_mine": false,
-      "status": "pending",
-      "sleeper_id": null,
-      "name": null,
-      "position": null,
-      "team": null,
-      "is_keeper": null
+      "status": "made",
+      "sleeper_id": "8142",
+      "name": "Alec Pierce",
+      "position": "WR",
+      "team": "IND",
+      "is_keeper": false
     },
     {
       "pick_no": 94,
