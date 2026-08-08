@@ -1,13 +1,13 @@
 {
   "source": "https://api.sleeper.app/v1/draft/1388293618208374784",
-  "fetched_at": "2026-08-08T18:59:02+00:00",
+  "fetched_at": "2026-08-08T22:03:22+00:00",
   "draft_id": "1388293618208374784",
   "league_id": "1388293617071714304",
   "league_name": "Dudes",
   "season": "2026",
   "status": "drafting",
   "started_at": "2026-08-04T13:02:55+00:00",
-  "last_picked_at": "2026-08-08T18:18:02+00:00",
+  "last_picked_at": "2026-08-08T21:41:29+00:00",
   "format": {
     "type": "snake",
     "teams": 10,
@@ -16,16 +16,16 @@
     "scoring_type": "dynasty_2qb"
   },
   "pick_count": 290,
-  "picks_made": 111,
-  "picks_pending": 179,
+  "picks_made": 114,
+  "picks_pending": 176,
   "on_the_clock": {
-    "pick_no": 112,
+    "pick_no": 115,
     "round": 12,
-    "pick_in_round": 2,
-    "draft_slot": 2,
-    "user_id": "1127785716420898816",
-    "username": "johnor",
-    "slot": "12.02"
+    "pick_in_round": 5,
+    "draft_slot": 5,
+    "user_id": "870397485556875264",
+    "username": "dirtydole",
+    "slot": "12.05"
   },
   "me": {
     "username": "johnor",
@@ -34,19 +34,19 @@
     "roster_id": 2
   },
   "my_next_pick": {
-    "pick_no": 112,
-    "round": 12,
-    "pick_in_round": 2,
+    "pick_no": 129,
+    "round": 13,
+    "pick_in_round": 9,
     "draft_slot": 2,
     "user_id": "1127785716420898816",
     "username": "johnor",
-    "slot": "12.02",
-    "picks_away": 0
+    "slot": "13.09",
+    "picks_away": 14
   },
   "board_derivation": {
     "method": "snake, order reverses at round 3; traded picks applied",
-    "checked_against_made_picks": 111,
-    "slot_and_roster_agree": 111,
+    "checked_against_made_picks": 114,
+    "slot_and_roster_agree": 114,
     "rounds_exercised": [
       1,
       2,
@@ -2131,12 +2131,12 @@
       "user_id": "1127785716420898816",
       "username": "johnor",
       "is_mine": true,
-      "status": "pending",
-      "sleeper_id": null,
-      "name": null,
-      "position": null,
-      "team": null,
-      "is_keeper": null
+      "status": "made",
+      "sleeper_id": "13349",
+      "name": "Eli Stowers",
+      "position": "TE",
+      "team": "PHI",
+      "is_keeper": false
     },
     {
       "pick_no": 113,
@@ -2147,12 +2147,12 @@
       "user_id": "865368720548196352",
       "username": "jedmxk",
       "is_mine": false,
-      "status": "pending",
-      "sleeper_id": null,
-      "name": null,
-      "position": null,
-      "team": null,
-      "is_keeper": null
+      "status": "made",
+      "sleeper_id": "5870",
+      "name": "Daniel Jones",
+      "position": "QB",
+      "team": "IND",
+      "is_keeper": false
     },
     {
       "pick_no": 114,
@@ -2163,12 +2163,12 @@
       "user_id": "735592932748435456",
       "username": "bwood637",
       "is_mine": false,
-      "status": "pending",
-      "sleeper_id": null,
-      "name": null,
-      "position": null,
-      "team": null,
-      "is_keeper": null
+      "status": "made",
+      "sleeper_id": "8110",
+      "name": "Jake Ferguson",
+      "position": "TE",
+      "team": "DAL",
+      "is_keeper": false
     },
     {
       "pick_no": 115,
