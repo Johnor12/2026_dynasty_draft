@@ -157,11 +157,13 @@ def my_next_picks(
     through projected expected-lineup value, never through a roster-size heuristic.
 
     At my first pending pick, `next_pick_ev` comes from short branch-specific opponent
-    redraws rather than the global-rank survival shortcut used by the bulk draft policy.
+    redraws conditioned on the candidate reaching that turn rather than the global-rank
+    survival shortcut used by the bulk draft policy.
     That pick additionally carries a four-pick target plan and full-horizon rollout:
     `rollout_ev` is the mean final value of my whole roster if I take the candidate and
-    the rest of the draft plays out, `rollout_edge` is his paired advantage over the base
-    policy's choice, `rollout_se` its standard error. The `take` for that pick is the
+    the rest of the draft plays out, `rollout_edge` is his paired advantage over the
+    ordinary policy on the same conditioned path, and `rollout_se` is its standard error.
+    The `take` for that pick is the
     rollout's — it can overrule the two-pick score, but only when the edge is clearly
     above the playout noise.
 
@@ -205,7 +207,7 @@ def my_next_picks(
                         }
                         for pk, player_id in zip(rolled["pick_nos"], plan["target_ids"])
                     ]
-                    row["plan_deterministic_ev"] = round(plan["deterministic_ev"], 1)
+                    row["plan_screen_ev"] = round(plan["screen_ev"], 1)
             if survival and pick_no == board.my_picks[0] and c.player_id in survival:
                 # Same emission rule as p_available_at_my_picks: certainties are noise.
                 row["p_available_if_i_pass"] = {

@@ -5,6 +5,7 @@ from __future__ import annotations
 from .board import Board
 from .league import (
     BENCH_SLOTS,
+    CANDIDATE_SURVIVAL_FLOOR,
     FIRST_PICK_PER_POS,
     LOOKAHEAD_PICKS,
     OPPONENT_DEPTH_PENALTY,
@@ -211,24 +212,28 @@ def build_payload(
         "my_next_picks": {
             "note": (
                 "The model's own choice at each of my next picks, from the deterministic "
-                "draft at the converged levels. value_now is the candidate's marginal "
+                "draft at the converged levels. The first shortlist starts from the live "
+                "board before intervening opponents pick, then drops candidates below a "
+                "5% chance of reaching my turn. value_now is the candidate's marginal "
                 "expected-lineup value with one unique waiver fallback per position; "
                 "next_pick_ev is E[value of the best player still there at my following "
                 "pick] if I take him now. No positional roster-size heuristic adjusts "
                 "either value. The pick "
                 "maximizes their sum, so it can disagree with vor_rank — it sees my roster "
                 "and who will keep, which vor does not. At my first pending pick, each "
-                "next_pick_ev forces that candidate, redraws only the intervening opponents, "
-                "and measures the best marginal option actually left at my following turn; "
+                "next_pick_ev redraws the pre-pick opponents until that candidate survives, "
+                "takes him, and measures the best marginal option actually left at my "
+                "following turn; "
                 "later displayed picks retain the fast global-rank approximation used by "
                 "the bulk draft policy. My first pending pick searches target plans across "
                 "my next four held picks; every shorter prefix is eligible, so the ordinary "
-                "policy can resume at any turn. The best deterministic plan of each length "
-                "is then scored over the whole remaining draft, and the best noisy EV "
+                "policy can resume at any turn. Later targets below 5% conditional survival "
+                "are dropped. The best screened plan of each length is then scored over the "
+                "whole remaining draft, and the best noisy EV "
                 "represents that first candidate "
                 "(rollout_ev/rollout_edge/rollout_se), with a planned target used only if he "
                 "survives and the ordinary policy used otherwise. Its take stands "
-                "when a candidate's full-horizon edge over the two-pick choice clears twice "
+                "when a candidate's full-horizon edge over the ordinary policy clears twice "
                 "its standard error, and when it overrules, the deterministic draft is "
                 "re-played with that pick forced — so sim_pick, example_draft and the later "
                 "picks here all describe the recommended path. Its candidates also carry "
@@ -242,6 +247,7 @@ def build_payload(
             "rollout_sims": rollout["sims"] if rollout else None,
             "lookahead_picks": LOOKAHEAD_PICKS,
             "first_pick_candidates_per_position_horizon": FIRST_PICK_PER_POS,
+            "candidate_survival_floor": CANDIDATE_SURVIVAL_FLOOR,
             "picks": my_next_picks(draft, board, rollout, survival),
         },
         "rankings_note": (

@@ -25,6 +25,7 @@ from .league import (
     pick_label,
 )
 from .opponents import OpponentStrategy, expected_log2_rank, rank_power
+from .planning import apply_survival_floor, broaden_first_pick, conditional_survival
 from .pool import Player
 from .simulation import Draft
 from .value import (
@@ -167,7 +168,7 @@ def opponent_selftest(players: list[Player]) -> list[str]:
 
 
 def planning_selftest(players: list[Player]) -> list[str]:
-    """My policy uses lineup value, broadens live choices, and falls back safely."""
+    """My policy uses lineup value, survival-gates live choices, and falls back safely."""
     fails: list[str] = []
     board = fresh_board()
     rep = seed_replacement(players)
@@ -175,11 +176,44 @@ def planning_selftest(players: list[Player]) -> list[str]:
     opponents = synthetic_opponents(players, board)
     first_index = board.pick_nos.index(board.my_picks[0])
     state = Draft(players, rep, vor, board, opponents=opponents)
-    state.run(stop_before=first_index)
     narrow = state.score_my_candidates(first_index)
     broad = state.score_my_candidates(first_index, per_pos=FIRST_PICK_PER_POS)
     if len(broad) <= len(narrow):
         fails.append("planning: the first-pick candidate pool did not broaden")
+
+    # The live pool is built before an intervening deterministic opponent can erase a
+    # plausible option. The survival floor, rather than that one path, removes long shots.
+    contested = broad[0][2]
+    external = [contested] + [p for p in players if p.player_id != contested.player_id]
+    opponents = synthetic_opponents(players, board, external)
+    deterministic = Draft(players, rep, vor, board, opponents=opponents)
+    deterministic.run()
+    if deterministic.pick_of.get(contested.player_id) != 1:
+        fails.append("planning: synthetic opponent did not take the contested candidate")
+    broaden_first_pick(deterministic, players, rep, board, rep, opponents)
+    detail = deterministic.my_decisions[board.my_picks[0]]
+    if contested.player_id not in {candidate.player_id for _, _, candidate in detail}:
+        fails.append("planning: deterministic pre-pick path erased a live candidate")
+    low = detail[-1][2]
+    survival = {
+        candidate.player_id: {
+            board.my_picks[0]: 0.04 if candidate.player_id == low.player_id else 0.50
+        }
+        for _, _, candidate in detail
+    }
+    apply_survival_floor(deterministic, board, survival)
+    kept = {
+        candidate.player_id
+        for _, _, candidate in deterministic.my_decisions[board.my_picks[0]]
+    }
+    if low.player_id in kept or contested.player_id not in kept:
+        fails.append("planning: the 5% first-pick survival floor kept the wrong candidates")
+    later = board.my_picks[1]
+    conditional = {contested.player_id: {board.my_picks[0]: 0.50, later: 0.02}}
+    if conditional_survival(
+        conditional, contested.player_id, board.my_picks[0], later
+    ) >= 0.05:
+        fails.append("planning: later survival was not conditioned on reaching the first pick")
 
     # Even past an opponent's comfortable depth, my reported value_now is the raw
     # marginal expected-lineup value. The opponent heuristic must not leak into my policy.
@@ -227,7 +261,8 @@ def planning_selftest(players: list[Player]) -> list[str]:
 
     print(
         f"  planning: first-pick pool widened from {len(narrow)} to {len(broad)}; "
-        "my values stayed projection-only; an unavailable later target fell back",
+        "live candidates survived the deterministic prefix, the 5% floor removed long "
+        "shots, my values stayed projection-only, and an unavailable later target fell back",
         file=sys.stderr,
     )
     return fails

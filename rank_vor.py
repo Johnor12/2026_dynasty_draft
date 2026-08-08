@@ -59,6 +59,7 @@ from ranker.output import build_payload
 from ranker.planning import (
     apply_option_redraw,
     apply_rollout,
+    apply_survival_floor,
     broaden_first_pick,
     candidate_survival,
     four_pick_lookahead,
@@ -187,7 +188,23 @@ def main(argv: list[str] | None = None) -> int:
     )
     if args.report and candidates:
         print(
-            f"next-pick options: {args.sims} short opponent redraws x "
+            f"candidate survival: {args.sims} banned-me redraws x {len(candidates)} "
+            f"live-board candidates",
+            file=sys.stderr,
+        )
+    survival = candidate_survival(
+        players, rep, board, stream, candidates,
+        args.sims, args.noise, args.seed, opponents,
+    )
+    draft = apply_survival_floor(draft, board, survival)
+    candidates = (
+        [c for _, _, c in draft.my_decisions.get(board.my_picks[0], [])]
+        if board.my_picks
+        else []
+    )
+    if args.report and candidates:
+        print(
+            f"next-pick options: {args.sims} conditional opponent redraws x "
             f"{len(candidates)} candidates",
             file=sys.stderr,
         )
@@ -205,21 +222,12 @@ def main(argv: list[str] | None = None) -> int:
     )
     if args.report and candidates:
         print(
-            f"candidate survival: {args.sims} banned-me redraws x {len(candidates)} "
-            f"candidates",
-            file=sys.stderr,
-        )
-    survival = candidate_survival(
-        players, rep, board, stream, candidates,
-        args.sims, args.noise, args.seed, opponents,
-    )
-    if args.report and candidates:
-        print(
             f"four-pick lookahead: broadened {len(candidates)}-candidate first-pick pool",
             file=sys.stderr,
         )
     lookahead = four_pick_lookahead(
-        players, rep, board, stream, candidates, survival, opponents
+        players, rep, board, stream, candidates, survival, opponents,
+        args.noise, args.seed,
     )
     if args.report and candidates:
         print(

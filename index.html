@@ -575,12 +575,11 @@ function chanceCell(candidate, stats, pick, d) {
 function renderNextPicks(d, byId) {
   document.getElementById("picksNote").textContent =
     "Lineup gain is the player's marginal expected-lineup value, including call-up probability for positional depth and one unique waiver fallback per position. Next-pick option value and two-pick total describe the ordinary fallback policy; they are diagnostics, not the first card's ranking. The first card is ordered by final-roster EV after searching target plans across four held picks and playing each plan through the entire remaining draft " +
-    `${d.my_next_picks.rollout_sims} times. Rollout edges use the two-pick choice as the fallback baseline, while final-roster EV remains the objective. A listed path contains only forced targets; the ordinary policy resumes after its last target or whenever an opponent takes a target first. The recommendation changes only when an edge clears twice its simulation error. Raw player points use this league's scoring.`;
+    `${d.my_next_picks.rollout_sims} times, conditional on each candidate reaching your turn. Candidates and later targets below 5% survival are omitted. Rollout edges compare with the ordinary policy on the same path, while final-roster EV remains the objective. A listed path contains only forced targets; the ordinary policy resumes after its last target or whenever an opponent takes a target first. The recommendation changes only when an edge clears twice its simulation error. Raw player points use this league's scoring.`;
 
   const prior = [];
   const cards = d.my_next_picks.picks.map((pick, pickIndex) => {
     const hasRollout = pick.candidates.some(candidate => candidate.rollout_ev != null);
-    const baseline = pick.candidates.find(candidate => candidate.rollout_edge === 0)?.name;
     const candidates = hasRollout
       ? [...pick.candidates].sort((a, b) => b.rollout_ev - a.rollout_ev)
       : pick.candidates;
@@ -592,8 +591,8 @@ function renderNextPicks(d, byId) {
       const isTake = candidate.player_id === pick.take_id;
       const trend = trendPerYear(stats);
       const rolloutNote = candidate.rollout_edge == null ? null : candidate.rollout_edge === 0
-        ? `fallback baseline: ${baseline}`
-        : `${signed(candidate.rollout_edge)} ± ${fmt(candidate.rollout_se)} vs fallback ${baseline}`;
+        ? "ordinary-policy baseline"
+        : `${signed(candidate.rollout_edge)} ± ${fmt(candidate.rollout_se)} vs ordinary policy`;
       const targets = candidate.four_pick_plan
         ?.map(target => `${target.pick} ${target.name}`).join(" → ");
       const planNote = targets ? `Targets: ${targets}; ordinary policy thereafter` : null;

@@ -70,10 +70,12 @@ heuristic. Positional depth is priced only by projected expected-lineup value, s
 shape that differs from the opponents' conventional behavior can be a source of value.
 
 The bulk deterministic policy scores value now plus the expected best option at its next
-pick. The live decision broadens the candidate set, redraws intervening opponents, measures
-candidate survival when I keep passing, proposes target plans across four held picks, and
-plays finalists to the end of the draft. Worker processes receive immutable inputs once,
-and seeded task ids keep results deterministic across scheduling.
+pick. The live shortlist starts from the current board before intervening opponents pick,
+then removes candidates below 5% survival to my turn. Candidate branches are evaluated
+conditional on reaching that turn. Four-pick planning applies the same 5% floor to each
+later target's conditional survival before playing finalists to the end of the draft.
+Worker processes receive immutable inputs once, and seeded task ids keep results
+deterministic across scheduling.
 
 ## Output contract
 

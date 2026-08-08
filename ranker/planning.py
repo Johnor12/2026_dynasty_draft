@@ -14,7 +14,7 @@ import random
 from collections.abc import Sequence
 
 from .board import Board
-from .league import FIRST_PICK_PER_POS, LOOKAHEAD_PICKS
+from .league import CANDIDATE_SURVIVAL_FLOOR, FIRST_PICK_PER_POS, LOOKAHEAD_PICKS
 from .opponents import OpponentStrategy
 from .pool import Player, by_position
 from .simulation import Draft
@@ -29,7 +29,7 @@ def broaden_first_pick(
     stream: dict[str, dict[str, float]],
     opponents: dict[int, OpponentStrategy],
 ) -> Draft:
-    """Replace only the live first decision's shortlist with the broader candidate pool."""
+    """Build the live shortlist before intervening opponents can remove candidates."""
     if not board.my_picks:
         return draft
     pick_no = board.my_picks[0]
@@ -37,10 +37,28 @@ def broaden_first_pick(
     state = Draft(
         players, rep, compute_vor(players, rep), board, wire=stream, opponents=opponents
     )
-    state.run(stop_before=pick_index)
     draft.my_decisions[pick_no] = state.score_my_candidates(
         pick_index, per_pos=FIRST_PICK_PER_POS
     )
+    return draft
+
+
+def apply_survival_floor(
+    draft: Draft,
+    board: Board,
+    survival: dict[int, dict[int, float]],
+) -> Draft:
+    """Drop live candidates that almost never reach the pending decision."""
+    if not board.my_picks:
+        return draft
+    pick_no = board.my_picks[0]
+    detail = [
+        row
+        for row in draft.my_decisions[pick_no]
+        if survival[row[2].player_id][pick_no] >= CANDIDATE_SURVIVAL_FLOOR
+    ]
+    assert detail, "no first-pick candidate clears the survival floor"
+    draft.my_decisions[pick_no] = detail
     return draft
 
 # The noisy redraws and the rollout playouts are hundreds of independent, seeded draft
@@ -74,6 +92,21 @@ def _target_map(plan: Sequence[int]) -> dict[int, Player]:
     return {i: w["by_id"][player_id] for i, player_id in zip(indices, plan)}
 
 
+def _conditioned_seed(kind: str, cand_id: int, sample: int) -> str:
+    """A seeded opponent path where the candidate reaches my pending pick."""
+    w = _WORKER
+    for attempt in range(10_000):
+        draw_seed = f"{kind}-{w['seed']}-{sample}-{attempt}"
+        probe = Draft(
+            w["players"], w["rep"], w["vor"], w["board"], wire=w["stream"],
+            noise=w["noise"], rng=random.Random(draw_seed), opponents=w["opponents"],
+        )
+        probe.run(stop_before=w["i_my"])
+        if cand_id not in probe.taken:
+            return draw_seed
+    raise RuntimeError(f"candidate {cand_id} never survived to my pick")
+
+
 def _final_roster_value(draft: Draft) -> float:
     """The common end-of-draft objective used by plan screening and noisy rollouts."""
     wire = wire_replacement(draft.taken, by_position(draft.players))
@@ -81,11 +114,13 @@ def _final_roster_value(draft: Draft) -> float:
 
 
 def _plan_playout(plan: tuple[int, ...]) -> float:
-    """One deterministic full-draft screen for a four-pick target plan."""
+    """One conditional full-draft screen for a four-pick target plan."""
     w = _WORKER
+    draw_seed = _conditioned_seed("screen", plan[0], 0)
     d = Draft(
         w["players"], w["rep"], w["vor"], w["board"], wire=w["stream"],
-        opponents=w["opponents"], targets=_target_map(plan),
+        noise=w["noise"], rng=random.Random(draw_seed), opponents=w["opponents"],
+        targets=_target_map(plan),
     )
     d.run()
     return _final_roster_value(d)
@@ -112,18 +147,26 @@ def _mc_draft(s: int) -> dict[int, tuple[int, bool]]:
     return {pid: (pk, slot_of[pk] == d.my_slot) for pid, pk in d.pick_of.items()}
 
 
-def _rollout_playout(task: tuple[int, int, int]) -> float:
-    cand_id, plan_index, s = task
+def _rollout_playout(task: tuple[int, int]) -> tuple[list[float], float]:
+    cand_id, s = task
     w = _WORKER
-    plan = w["plans"].get(cand_id, ((cand_id,),))[plan_index]
-    d = Draft(
+    draw_seed = _conditioned_seed("rollout", cand_id, s)
+    baseline = Draft(
         w["players"], w["rep"], w["vor"], w["board"], wire=w["stream"], noise=w["noise"],
-        rng=random.Random(f"rollout-{w['seed']}-{s}"),
-        opponents=w["opponents"],
-        targets=_target_map(plan), noise_from=w["i_my"] + 1,
+        rng=random.Random(draw_seed), opponents=w["opponents"],
     )
-    d.run()
-    return _final_roster_value(d)
+    baseline.run()
+    baseline_value = _final_roster_value(baseline)
+    values = []
+    for plan in w["plans"].get(cand_id, ((cand_id,),)):
+        d = Draft(
+            w["players"], w["rep"], w["vor"], w["board"], wire=w["stream"],
+            noise=w["noise"], rng=random.Random(draw_seed), opponents=w["opponents"],
+            targets=_target_map(plan),
+        )
+        d.run()
+        values.append(_final_roster_value(d))
+    return values, baseline_value
 
 
 def _best_option_value(draft: Draft) -> float:
@@ -147,16 +190,17 @@ def _best_option_value(draft: Draft) -> float:
 
 
 def _option_playout(task: tuple[int, int]) -> float:
-    """Force one candidate and measure my best option at the following pick."""
+    """Condition on one candidate, take him, and price my following option."""
     cand_id, s = task
     w = _WORKER
     i_my = w["i_my"]
     assert i_my is not None
+    draw_seed = _conditioned_seed("option", cand_id, s)
     d = Draft(
         w["players"], w["rep"], w["vor"], w["board"], wire=w["stream"], noise=w["noise"],
-        rng=random.Random(f"option-{w['seed']}-{s}"),
+        rng=random.Random(draw_seed),
         opponents=w["opponents"],
-        forced={i_my: w["by_id"][cand_id]}, noise_from=i_my + 1,
+        forced={i_my: w["by_id"][cand_id]},
     )
     i_next = d.next_pick[i_my]
     assert i_next is not None
@@ -246,6 +290,18 @@ def candidate_survival(
     return out
 
 
+def conditional_survival(
+    survival: dict[int, dict[int, float]],
+    player_id: int,
+    first_pick: int,
+    pick_no: int,
+) -> float:
+    """Survival to a later pick, given that the player reached the first one."""
+    observations = survival[player_id]
+    at_first = observations[first_pick]
+    return min(1.0, observations[pick_no] / at_first) if at_first else 0.0
+
+
 def four_pick_lookahead(
     players: list[Player],
     rep: dict[str, dict[str, float]],
@@ -254,15 +310,17 @@ def four_pick_lookahead(
     candidates: list[Player],
     survival_by_candidate: dict[int, dict[int, float]],
     opponents: dict[int, OpponentStrategy],
+    noise: float,
+    seed: int,
     lookahead_picks: int = LOOKAHEAD_PICKS,
 ) -> dict | None:
     """Choose one target plan per first-pick candidate across my next four held picks.
 
     Candidate survival supplies the market timing signal the old two-pick policy discarded.
-    A small beam proposes sequences by survival-weighted marginal lineup gain; every prefix
-    is also retained, so resuming the ordinary policy is an explicit option at turns two,
-    three, and four. The best deterministic plan of each length advances; `rollout` applies
-    opponent noise and chooses the winning plan for each first candidate.
+    A small beam proposes sequences by survival-weighted marginal lineup gain; targets
+    below the survival floor are removed at each turn. Every prefix is also retained, so
+    resuming the ordinary policy is an explicit option at turns two, three, and four. One
+    conditional playout screens each plan before `rollout` applies the full simulation.
     """
     if not board.my_picks or not candidates:
         return None
@@ -270,10 +328,9 @@ def four_pick_lookahead(
     first_index = board.pick_nos.index(pick_nos[0])
     vor = compute_vor(players, rep)
 
-    # Rebuild the exact deterministic state where the pending decision occurs. The live
-    # board can be several opponent picks away from my pick.
+    # Generate from the live board. Opponents between now and my pick are uncertain, and
+    # candidate_survival decides which of these current options remain worth planning for.
     state = Draft(players, rep, vor, board, wire=stream, opponents=opponents)
-    state.run(stop_before=first_index)
     roster = state.rosters[board.my_slot - 1]
     off = state.off_pool[board.my_slot - 1]
     picks_left = state.picks_left[board.my_slot - 1]
@@ -294,11 +351,9 @@ def four_pick_lookahead(
         return value
 
     def available_probability(player_id: int, pick_no: int) -> float:
-        observations = survival_by_candidate[player_id]
-        at_first = observations[pick_nos[0]]
-        # Plans are conditional on the first candidate actually being on the board when
-        # the decision is made, so later survival is conditioned on reaching that pick.
-        return min(1.0, observations[pick_no] / at_first) if at_first else 0.0
+        return conditional_survival(
+            survival_by_candidate, player_id, pick_nos[0], pick_no
+        )
 
     def legal_after(plan: tuple[int, ...], depth: int) -> list[int]:
         future_roster = roster + [by_id[player_id] for player_id in plan]
@@ -311,6 +366,8 @@ def four_pick_lookahead(
                 for player_id in remaining
                 if by_id[player_id].position in positions
                 and (not rookies_only or by_id[player_id].is_rookie)
+                and available_probability(player_id, pick_nos[depth])
+                >= CANDIDATE_SURVIVAL_FLOOR
             ]
             if legal:
                 return legal
@@ -341,7 +398,7 @@ def four_pick_lookahead(
     with multiprocessing.Pool(
         _worker_pool_size(),
         initializer=_init_worker,
-        initargs=(players, rep, board, stream, 0.0, 0, opponents, vor, first_index),
+        initargs=(players, rep, board, stream, noise, seed, opponents, vor, first_index),
     ) as pool:
         final_values = pool.map(_plan_playout, all_plans)
 
@@ -359,12 +416,12 @@ def four_pick_lookahead(
             if not at_length:
                 continue
             at_length.sort(key=lambda row: (-row[0], -row[1], row[2]))
-            final_value, heuristic_gain, plan = at_length[0]
+            screen_value, heuristic_gain, plan = at_length[0]
             finalists.append(
                 {
                     "target_ids": list(plan),
                     "heuristic_gain": heuristic_gain,
-                    "deterministic_ev": final_value,
+                    "screen_ev": screen_value,
                 }
             )
         screened[first.player_id] = {
@@ -393,11 +450,10 @@ def option_redraw(
 ) -> dict | None:
     """Empirical next-pick option value for each candidate at my first pending pick.
 
-    Each branch plays deterministically up to my pick, forces its candidate, then applies
-    opponent noise only until my following pick. The result is the marginal value of the
-    best player actually left there. This deliberately replaces the global-rank survival
-    shortcut for the decision in front of me: roster-aware opponents can attack a position
-    long before a globally low-ranked player would appear to be at risk.
+    Each branch redraws opponents before my pick until its candidate survives, forces the
+    candidate, then continues the same noisy path to my following pick. The result is the
+    conditional marginal value of the best player actually left there. This deliberately
+    replaces the global-rank survival shortcut for the decision in front of me.
     """
     if not board.my_picks or not candidates:
         return None
@@ -463,6 +519,12 @@ def _replay_pick(
     return forced
 
 
+def _available_in_deterministic_draft(draft: Draft, pick_no: int, player: Player) -> bool:
+    """Whether the noiseless path still has the player on the board at my pick."""
+    taken_at = draft.pick_of.get(player.player_id)
+    return taken_at is None or taken_at >= pick_no
+
+
 def apply_option_redraw(
     draft: Draft,
     redrawn: dict | None,
@@ -485,8 +547,13 @@ def apply_option_redraw(
         for now, _, cand in draft.my_decisions[pick_no]
     ]
     detail.sort(key=lambda t: (-(t[0] + t[1]), t[2].player_id))
+    take = next(
+        cand
+        for _, _, cand in detail
+        if _available_in_deterministic_draft(draft, pick_no, cand)
+    )
     return _replay_pick(
-        draft, pick_no, detail[0][2], detail,
+        draft, pick_no, take, detail,
         players, rep, board, stream, opponents,
     )
 
@@ -505,20 +572,12 @@ def rollout(
 ) -> dict | None:
     """Full-horizon EV for each four-pick plan at my next pick.
 
-    `four_pick_lookahead` supplies the best deterministic target plan of each length for
-    every first-pick candidate. A target is exercised if he survives; otherwise that turn
-    falls back to the ordinary two-pick policy. After the fourth held pick the ordinary
-    policy resumes. Each finalist is played out `sims` times and priced by the final roster
-    objective; the highest-EV length represents that first candidate.
-
-    Everything up to my pick plays deterministically (`noise_from`), so all playouts of
-    all candidates branch from the same board state — the one `my_decisions` drew its
-    candidates from. Playout s uses the same seed for every candidate (common random
-    numbers), so `edge` — a candidate's mean paired advantage over the base policy's
-    choice — mostly cancels the opponents' noise, and `se` is the standard error of that
-    paired difference. `take_id` only overrides the base choice when its edge clears
-    2 standard errors; below that the ordering is Monte Carlo noise, not signal, and
-    flip-flopping the recommendation between refreshes would be worse than keeping it.
+    `four_pick_lookahead` supplies one screened target plan of each length for every
+    first-pick candidate. Each playout redraws the opponents before my pick until that
+    candidate survives, then compares the target plan with the ordinary policy on the
+    same path. Later targets still fall back if an opponent gets there first. `take_id`
+    only considers candidates available on the noiseless path and only overrides the
+    ordinary choice when its conditional edge clears 2 standard errors.
     """
     if not board.my_picks or not candidates:
         return None
@@ -534,12 +593,7 @@ def rollout(
         )
         for cand in candidates
     }
-    tasks = [
-        (cand.player_id, plan_index, s)
-        for cand in candidates
-        for plan_index in range(len(plans[cand.player_id]))
-        for s in range(sims)
-    ]
+    tasks = [(cand.player_id, s) for cand in candidates for s in range(sims)]
     with multiprocessing.Pool(
         _worker_pool_size(),
         initializer=_init_worker,
@@ -547,33 +601,45 @@ def rollout(
     ) as pool:
         flat = pool.map(_rollout_playout, tasks)
     values: dict[int, list[float]] = {}
+    baselines: dict[int, list[float]] = {}
     selected_plans: dict[int, dict] = {}
-    cursor = 0
-    for cand in candidates:
+    for i, cand in enumerate(candidates):
+        runs = flat[i * sims : (i + 1) * sims]
         finalists = (lookahead or {}).get("plans", {}).get(cand.player_id, {}).get(
             "finalists", [{"target_ids": [cand.player_id]}]
         )
         choices = []
-        for finalist in finalists:
-            samples = flat[cursor : cursor + sims]
-            cursor += sims
+        for plan_index, finalist in enumerate(finalists):
+            samples = [plan_values[plan_index] for plan_values, _ in runs]
             choices.append((sum(samples) / sims, tuple(finalist["target_ids"]), samples, finalist))
         choices.sort(key=lambda row: (-row[0], len(row[1]), row[1]))
         _, _, values[cand.player_id], selected_plans[cand.player_id] = choices[0]
+        baselines[cand.player_id] = [baseline for _, baseline in runs]
 
-    base = candidates[0]  # my_decisions is sorted by the base policy's score, best first
+    deterministic = Draft(players, rep, vor, board, wire=stream, opponents=opponents)
+    deterministic.run(stop_before=i_my)
+    eligible = [cand for cand in candidates if cand.player_id not in deterministic.taken]
+    assert eligible, "no rollout candidate is available on the deterministic path"
+    base = eligible[0]  # candidates remain sorted by the ordinary two-pick policy
     stats: dict[int, dict[str, float]] = {}
     for cand in candidates:
-        diffs = [a - b for a, b in zip(values[cand.player_id], values[base.player_id])]
-        edge = sum(diffs) / sims
-        var = sum((x - edge) ** 2 for x in diffs) / (sims - 1) if sims > 1 else 0.0
+        diffs = [
+            value - baseline
+            for value, baseline in zip(values[cand.player_id], baselines[cand.player_id])
+        ]
+        edge = 0.0 if cand.player_id == base.player_id else sum(diffs) / sims
+        var = (
+            0.0
+            if cand.player_id == base.player_id or sims <= 1
+            else sum((x - edge) ** 2 for x in diffs) / (sims - 1)
+        )
         stats[cand.player_id] = {
             "ev": sum(values[cand.player_id]) / sims,
             "edge": edge,
             "se": math.sqrt(var / sims),
         }
     take_id = base.player_id
-    for cand in candidates:
+    for cand in eligible:
         s = stats[cand.player_id]
         if s["edge"] > 2 * s["se"] and s["edge"] > stats[take_id]["edge"]:
             take_id = cand.player_id

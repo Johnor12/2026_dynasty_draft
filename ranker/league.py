@@ -60,6 +60,9 @@ LOOKAHEAD_PER_POS = 2
 # each horizon/position ordering. This is enough to retain useful interior tradeoffs such
 # as a balanced veteran sitting behind the year-1 and years-2-3 extremes.
 FIRST_PICK_PER_POS = 3
+# A live-board candidate or later target must survive to that decision in at least one
+# redraw out of twenty. Rarer paths are noise, not useful draft choices.
+CANDIDATE_SURVIVAL_FLOOR = 0.05
 # The live decision plans targets across this many of my held picks before the ordinary
 # two-pick policy resumes. Four reaches across both sides of the next snake turn here.
 LOOKAHEAD_PICKS = 4
