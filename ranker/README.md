@@ -48,11 +48,15 @@ wire levels -> expected lineup value -> simulated draft -> starter counts + wire
 ```
 
 The map is discrete and can alternate between neighboring league shapes, so convergence
-detects a repeated state and averages levels over that cycle. For each legal positional
-composition, the expected-lineup solver orders players by their points when active. A
-deeper player contributes with the exact probability that too few higher teammates are
-available. One always-available waiver body can fill one job at each position; it is not
-an unlimited scalar. The best composition wins, making value monotone when a projection
+detects a repeated state and averages levels over that cycle. The expected-lineup solver
+values the weekly re-optimized lineup: the starter composition is re-chosen per
+availability draw, so a flex seat vacated at one position is refilled by the best
+remaining body at any flex position. It is exact and closed-form — dedicated slots via a
+per-position Bernoulli cascade ordered by points when active, the FLEX/superflex seats
+via layer-cake integrals of the pooled cross-position marginal count (at most one QB,
+the superflex) — and `--selftest` checks it against brute-force enumeration of every
+availability subset. One always-available waiver body can fill one job at each position;
+it is not an unlimited scalar. Expectation-of-max keeps value monotone when a projection
 improves or a player is added. Years 2–3 use their own projections and lineup, with no
 second growth bonus.
 

@@ -365,10 +365,12 @@ def build_payload(
             ),
             "unavailable_rate": UNAVAILABLE_RATE,
             "depth_note": (
-                "For each legal positional composition, players are ordered by points "
-                "when active. A deeper player contributes when fewer than the required "
-                "number of higher teammates are available; that probability is calculated "
-                "exactly from unavailable_rate. The highest-value legal composition wins. "
+                "The lineup is re-optimized per availability draw: dedicated slots take "
+                "each position's best available bodies (a deeper body contributes with "
+                "the exact probability it is called on, from unavailable_rate), and the "
+                "FLEX/superflex seats take the best leftovers pooled across positions, "
+                "at most one of them a QB. Computed in closed form as "
+                "expectation-of-weekly-max, not one locked seasonal composition. "
                 "Years 2-3 receive no extra growth bonus because their projection and "
                 "separately solved lineup already contain growth."
             ),

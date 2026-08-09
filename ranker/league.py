@@ -46,8 +46,9 @@ SLOT_ELIGIBLE = {
 # --- strategy knobs ---------------------------------------------------------------
 
 # Chance a player is unavailable when a lineup job must be filled. The expected-lineup
-# solver applies these position-wide assumptions to the whole depth chart: a backup's
-# contribution is the exact probability that too few higher-ranked teammates are active.
+# solver applies these position-wide assumptions to the whole depth chart: the weekly
+# lineup is re-optimized across positions, and a body's contribution is the exact
+# probability that the re-optimized lineup calls on it.
 # Projections already express growth, so years 2-3 use the same availability model rather
 # than receiving a second, separate growth bonus.
 UNAVAILABLE_RATE = {"QB": 0.08, "RB": 0.20, "WR": 0.12, "TE": 0.10}

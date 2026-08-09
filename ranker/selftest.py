@@ -19,7 +19,9 @@ from .league import (
     OPPONENT_DEPTH_TARGETS,
     POSITIONS,
     ROUNDS,
+    STARTING_SLOTS,
     TEAMS,
+    UNAVAILABLE_RATE,
     TOTAL_PICKS,
     draft_order,
     pick_label,
@@ -343,6 +345,75 @@ def lineup_selftest(players: list[Player]) -> list[str]:
     zero_wire = {"QB": 100.0, "RB": 0.0, "WR": 0.0, "TE": 0.0}
     empty = expected_lineup_value([], zero_wire, "yr1")
     check(abs(empty - 100.0) < 1e-9, "one wire QB filled more than one lineup slot")
+
+    # The closed-form weekly-reopt value against literal brute force: every availability
+    # subset, weighted exactly, each solved by enumerating all legal compositions.
+    def legal_compositions() -> list[dict[str, int]]:
+        total = sum(STARTING_SLOTS.values())
+        out = []
+        for qb in range(DEDICATED_SLOTS["QB"], DEDICATED_SLOTS["QB"] + 2):
+            for rb in range(DEDICATED_SLOTS["RB"], DEDICATED_SLOTS["RB"] + 4):
+                for wr in range(DEDICATED_SLOTS["WR"], DEDICATED_SLOTS["WR"] + 4):
+                    for te in range(DEDICATED_SLOTS["TE"], DEDICATED_SLOTS["TE"] + 4):
+                        counts = {"QB": qb, "RB": rb, "WR": wr, "TE": te}
+                        if sum(counts.values()) != total:
+                            continue
+                        qb_extra = qb - DEDICATED_SLOTS["QB"]
+                        non_qb_extra = sum(
+                            counts[p] - DEDICATED_SLOTS[p] for p in ("RB", "WR", "TE")
+                        )
+                        if qb_extra <= STARTING_SLOTS["SF"] and non_qb_extra <= (
+                            STARTING_SLOTS["FLEX"] + STARTING_SLOTS["SF"] - qb_extra
+                        ):
+                            out.append(counts)
+        return out
+
+    def brute_weekly_value(roster: list[Player], wires: dict[str, float]) -> float:
+        comps = legal_compositions()
+        bodies = []
+        for p in roster:
+            if p.points_yr1 > 0:
+                rate = 1.0 - UNAVAILABLE_RATE[p.position]
+                bodies.append((p.position, p.points_yr1 / rate, rate))
+        for pos in POSITIONS:
+            if wires[pos] > 0:
+                bodies.append((pos, wires[pos], 1.0))
+        total = 0.0
+        for mask in range(1 << len(bodies)):
+            prob = 1.0
+            avail: dict[str, list[float]] = {pos: [] for pos in POSITIONS}
+            for i, (pos, w, rate) in enumerate(bodies):
+                if mask >> i & 1:
+                    prob *= rate
+                    avail[pos].append(w)
+                else:
+                    prob *= 1.0 - rate
+            for pos in POSITIONS:
+                avail[pos].sort(reverse=True)
+            total += prob * max(
+                sum(sum(avail[pos][: c[pos]]) for pos in POSITIONS) for c in comps
+            )
+        return total
+
+    brute_roster = [
+        player(900030, "BF QB1", "QB", 300, 0),
+        player(900031, "BF QB2", "QB", 280, 0),
+        player(900032, "BF RB1", "RB", 240, 0),
+        player(900033, "BF RB2", "RB", 220, 0),
+        player(900034, "BF RB3", "RB", 190, 0),
+        player(900035, "BF RB4", "RB", 180, 0),
+        player(900036, "BF WR1", "WR", 230, 0),
+        player(900037, "BF WR2", "WR", 200, 0),
+        player(900038, "BF TE1", "TE", 190, 0),
+        player(900039, "BF TE2", "TE", 185, 0),
+    ]
+    brute_wire = {"QB": 13.0, "RB": 45.0, "WR": 96.0, "TE": 92.0}
+    brute = brute_weekly_value(brute_roster, brute_wire)
+    closed = expected_lineup_value(brute_roster, brute_wire, "yr1")
+    check(
+        abs(brute - closed) < 1e-9,
+        f"weekly-reopt closed form {closed:.6f} != brute force {brute:.6f}",
+    )
 
     base = [
         player(900010, "Base QB", "QB", 327, 531),

@@ -2,15 +2,23 @@
 
 The provider's cumulative projections are split into year 1 and years 2-3. A roster is
 valued separately in both horizons, then the results are added. Within one horizon the
-solver considers every legal positional composition of the ten starting slots.
+objective is the expectation, over position-wide Bernoulli availability, of the best
+legal lineup each week: the composition is re-chosen per availability draw, so a flex
+job vacated by an unavailable RB can be refilled by the best remaining body at any flex
+position. (The previous solver locked one composition per horizon and let only
+same-position depth cover its jobs — max-of-expectations instead of
+expectation-of-max — which overvalued depth behind many locked slots.)
 
-For a composition that starts ``c`` players at a position, players are ordered by their
-points when active. The first ``c`` receive their full projection. Every deeper player
-receives his projection times the probability that fewer than ``c`` higher-ranked
-teammates are available. Those probabilities come from the position-wide unavailable
-rates in ``league.py`` and are calculated exactly with a small Bernoulli distribution.
-The best waiver player at the position is inserted once as an always-available body, so
-one free agent can fill one lineup job, never several simultaneous holes.
+The weekly optimum decomposes exactly: each position fills its dedicated slots with its
+best available bodies, then the FLEX+SF seats go to the best pooled leftovers, of which
+at most one (the superflex) may be a QB. With F flex seats and one superflex that is
+    dedicated tops  +  top-F pooled non-QB marginals  +  max(next marginal, backup QB).
+Each expectation is computed in closed form: the dedicated term by a small Bernoulli
+cascade per position, the pooled terms by layer-cake integrals of the marginal-count
+distribution over value thresholds (positions are independent, so the pooled count is a
+tiny convolution). The best waiver player at each position is inserted once as an
+always-available body, so one free agent can fill one lineup job, never several
+simultaneous holes.
 
 This is one objective with one set of units: expected lineup points. There is no role
 threshold and no separate bench bonus. A better projection can retain every role a worse
@@ -91,34 +99,12 @@ def insert_sorted(seq: list[Player], p: Player, h: str) -> list[Player]:
 
 # --- expected lineup solver -------------------------------------------------------
 
-
-def _starter_compositions() -> tuple[dict[str, int], ...]:
-    """All position counts that can legally occupy the ten starting slots."""
-    total = sum(STARTING_SLOTS.values())
-    out: list[dict[str, int]] = []
-    for qb in range(DEDICATED_SLOTS["QB"], DEDICATED_SLOTS["QB"] + 2):
-        for rb in range(DEDICATED_SLOTS["RB"], DEDICATED_SLOTS["RB"] + 4):
-            for wr in range(DEDICATED_SLOTS["WR"], DEDICATED_SLOTS["WR"] + 4):
-                for te in range(DEDICATED_SLOTS["TE"], DEDICATED_SLOTS["TE"] + 4):
-                    counts = {"QB": qb, "RB": rb, "WR": wr, "TE": te}
-                    if sum(counts.values()) != total:
-                        continue
-                    qb_extra = qb - DEDICATED_SLOTS["QB"]
-                    non_qb_extra = sum(
-                        counts[pos] - DEDICATED_SLOTS[pos] for pos in ("RB", "WR", "TE")
-                    )
-                    if qb_extra <= STARTING_SLOTS["SF"] and non_qb_extra <= (
-                        STARTING_SLOTS["FLEX"] + STARTING_SLOTS["SF"] - qb_extra
-                    ):
-                        out.append(counts)
-    return tuple(out)
-
-
-_STARTER_COMPOSITIONS = _starter_compositions()
-_MAX_STARTERS = {
-    pos: max(composition[pos] for composition in _STARTER_COMPOSITIONS)
-    for pos in POSITIONS
-}
+# The position-flexible starting seats beyond the dedicated slots. The max(m, q)
+# closed form and the unrolled integrand in `_extra_expected_value` assume exactly
+# one superflex seat and two flex seats.
+_FLEX_SLOTS = STARTING_SLOTS["FLEX"]
+_EXTRA_SLOTS = _FLEX_SLOTS + STARTING_SLOTS["SF"]
+assert STARTING_SLOTS["SF"] == 1 and _FLEX_SLOTS == 2
 
 
 @lru_cache(maxsize=32_768)
@@ -175,26 +161,135 @@ def position_expected_value(
     )[starter_count]
 
 
+@lru_cache(maxsize=1024)
+def _binomial_pmf(k: int, p: float) -> tuple[float, ...]:
+    """P(j of k iid bodies are available), j = 0..k."""
+    pmf = [1.0]
+    for _ in range(k):
+        nxt = [0.0] * (len(pmf) + 1)
+        for j, prob in enumerate(pmf):
+            nxt[j] += prob * (1.0 - p)
+            nxt[j + 1] += prob * p
+        pmf = nxt
+    return tuple(pmf)
+
+
+@lru_cache(maxsize=32_768)
+def _extra_count_table(
+    projections: tuple[tuple[int, float], ...],
+    wire_points: float,
+    unavailable: float,
+    dedicated: int,
+    cap: int,
+) -> tuple[tuple[float, ...], tuple[tuple[float, ...], ...]]:
+    """Piecewise law of this position's marginal-body count above a value threshold.
+
+    A marginal body is an available body ranked below the position's top-`dedicated`
+    available ones — what a flex seat could use. Only bodies sorted at index >=
+    `dedicated` can ever be marginal, so the law changes only at their values.
+    Returns (breaks, rows), breaks ascending: rows[i] applies for thresholds in
+    [breaks[i-1] (or 0), breaks[i]) and gives P(count = 0..cap), last cell >= cap.
+    Past the last break the count is surely zero (omitted).
+    """
+    available = 1.0 - unavailable
+    ws = [points / available for _, points in projections if points > 0]
+    ws.append(wire_points)  # the unique always-available wire body
+    ws.sort(reverse=True)
+    breaks = sorted({w for w in ws[dedicated:] if w > 0})
+    wire_w = wire_points
+    rows = []
+    for b in breaks:
+        players_above = sum(1 for w in ws if w >= b) - (1 if wire_w >= b else 0)
+        wire_above = 1 if wire_w >= b else 0
+        row = [0.0] * (cap + 1)
+        for j, prob in enumerate(_binomial_pmf(players_above, available)):
+            row[min(max(j + wire_above - dedicated, 0), cap)] += prob
+        rows.append(tuple(row))
+    return tuple(breaks), tuple(rows)
+
+
+@lru_cache(maxsize=65_536)
+def _extra_expected_value(
+    qb_table: tuple,
+    flex_tables: tuple[tuple, ...],
+) -> float:
+    """E[points from the FLEX+SF seats], by layer-cake integrals over thresholds.
+
+    Weekly, those seats take the top-F pooled non-QB marginals plus the better of the
+    next marginal and the backup QB (the single superflex seat). With N(>t) the pooled
+    marginal count — independent across positions, so a small capped convolution — and
+    F_q(t) = P(no QB marginal above t):
+        E[top-F sum]        = integral of E[min(F, N(>t))]
+        E[max(next, qb)]    = integral of 1 - P(N(>t) <= F) * F_q(t)
+    Both integrands are piecewise constant between body values and zero past the last.
+    The convolution is unrolled for this league's F = 2: only pooled cells 0-2 are
+    needed, since E[min(2, N)] = p1 + 2(1 - p0 - p1) and P(N <= 2) = p0 + p1 + p2.
+    """
+    qb_brks, qb_rows = qb_table
+    (a_brks, a_rows), (b_brks, b_rows), (c_brks, c_rows) = flex_tables
+    all_breaks = sorted({*qb_brks, *a_brks, *b_brks, *c_brks})
+    nq, na, nb, nc = len(qb_brks), len(a_brks), len(b_brks), len(c_brks)
+    iq = ia = ib = ic = 0
+    one = (1.0, 0.0, 0.0, 0.0)
+    total = 0.0
+    prev = 0.0
+    for x in all_breaks:
+        while iq < nq and qb_brks[iq] < x:
+            iq += 1
+        while ia < na and a_brks[ia] < x:
+            ia += 1
+        while ib < nb and b_brks[ib] < x:
+            ib += 1
+        while ic < nc and c_brks[ic] < x:
+            ic += 1
+        f_q = qb_rows[iq][0] if iq < nq else 1.0
+        a0, a1, a2, _ = a_rows[ia] if ia < na else one
+        b0, b1, b2, _ = b_rows[ib] if ib < nb else one
+        c0, c1, c2, _ = c_rows[ic] if ic < nc else one
+        t0 = a0 * b0
+        t1 = a0 * b1 + a1 * b0
+        t2 = a0 * b2 + a1 * b1 + a2 * b0
+        p0 = t0 * c0
+        p1 = t0 * c1 + t1 * c0
+        p2 = t0 * c2 + t1 * c1 + t2 * c0
+        total += (x - prev) * (2.0 - 2.0 * p0 - p1 + 1.0 - (p0 + p1 + p2) * f_q)
+        prev = x
+    return total
+
+
+def _position_tables(
+    projections: tuple[tuple[int, float], ...], wire_points: float, pos: str
+) -> tuple[float, tuple]:
+    """A position's two closed-form pieces: dedicated-slot value and marginal law."""
+    dedicated = DEDICATED_SLOTS[pos]
+    unavailable = UNAVAILABLE_RATE[pos]
+    ded_value = _position_expected_values(
+        projections, wire_points, unavailable, dedicated
+    )[dedicated]
+    cap = 1 if pos == "QB" else _EXTRA_SLOTS
+    table = _extra_count_table(projections, wire_points, unavailable, dedicated, cap)
+    return ded_value, table
+
+
 def expected_lineup_value(
     roster: list[Player],
     wire: dict[str, float],
     h: str,
 ) -> float:
-    """Highest expected lineup value across every legal starter composition."""
+    """Expected best weekly lineup over availability draws, in closed form."""
     by_pos = {pos: [] for pos in POSITIONS}
     for player in roster:
         by_pos[player.position].append(player)
-    values = {}
+    total = 0.0
+    tables = {}
     for pos in POSITIONS:
-        position_projections = tuple(
+        projections = tuple(
             sorted((p.player_id, horizon_points(p, h)) for p in by_pos[pos])
         )
-        values[pos] = _position_expected_values(
-            position_projections, wire[pos], UNAVAILABLE_RATE[pos], _MAX_STARTERS[pos]
-        )
-    return max(
-        sum(values[pos][counts[pos]] for pos in POSITIONS)
-        for counts in _STARTER_COMPOSITIONS
+        ded_value, tables[pos] = _position_tables(projections, wire[pos], pos)
+        total += ded_value
+    return total + _extra_expected_value(
+        tables["QB"], (tables["RB"], tables["WR"], tables["TE"])
     )
 
 
@@ -262,18 +357,14 @@ def team_values_with_candidates(
             )
             for pos in POSITIONS
         }
-        base_position_values = {
-            pos: _position_expected_values(
-                point_rows[pos],
-                wire[h][pos],
-                UNAVAILABLE_RATE[pos],
-                _MAX_STARTERS[pos],
+        ded = {}
+        tables = {}
+        for pos in POSITIONS:
+            ded[pos], tables[pos] = _position_tables(
+                point_rows[pos], wire[h][pos], pos
             )
-            for pos in POSITIONS
-        }
-        baseline += max(
-            sum(base_position_values[pos][counts[pos]] for pos in POSITIONS)
-            for counts in _STARTER_COMPOSITIONS
+        baseline += sum(ded.values()) + _extra_expected_value(
+            tables["QB"], (tables["RB"], tables["WR"], tables["TE"])
         )
         for candidate in candidates:
             pos = candidate.position
@@ -283,22 +374,14 @@ def team_values_with_candidates(
                     + ((candidate.player_id, horizon_points(candidate, h)),)
                 )
             )
-            candidate_position_values = _position_expected_values(
-                candidate_rows,
-                wire[h][pos],
-                UNAVAILABLE_RATE[pos],
-                _MAX_STARTERS[pos],
-            )
-            values[candidate.player_id] += max(
-                sum(
-                    (
-                        candidate_position_values
-                        if position == pos
-                        else base_position_values[position]
-                    )[counts[position]]
-                    for position in POSITIONS
+            cded, ctable = _position_tables(candidate_rows, wire[h][pos], pos)
+            merged = {**tables, pos: ctable}
+            values[candidate.player_id] += (
+                sum(ded[p] for p in POSITIONS if p != pos)
+                + cded
+                + _extra_expected_value(
+                    merged["QB"], (merged["RB"], merged["WR"], merged["TE"])
                 )
-                for counts in _STARTER_COMPOSITIONS
             )
     return baseline, values
 
