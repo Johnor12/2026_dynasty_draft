@@ -1,13 +1,13 @@
 {
   "source": "https://api.sleeper.app/v1/draft/1388293618208374784",
-  "fetched_at": "2026-08-09T02:26:48+00:00",
+  "fetched_at": "2026-08-09T12:14:56+00:00",
   "draft_id": "1388293618208374784",
   "league_id": "1388293617071714304",
   "league_name": "Dudes",
   "season": "2026",
-  "status": "paused",
+  "status": "drafting",
   "started_at": "2026-08-04T13:02:55+00:00",
-  "last_picked_at": "2026-08-09T02:22:38+00:00",
+  "last_picked_at": "2026-08-09T11:00:00+00:00",
   "format": {
     "type": "snake",
     "teams": 10,
@@ -16,16 +16,16 @@
     "scoring_type": "dynasty_2qb"
   },
   "pick_count": 290,
-  "picks_made": 131,
-  "picks_pending": 159,
+  "picks_made": 133,
+  "picks_pending": 157,
   "on_the_clock": {
-    "pick_no": 132,
+    "pick_no": 134,
     "round": 14,
-    "pick_in_round": 2,
-    "draft_slot": 2,
-    "user_id": "1127785716420898816",
-    "username": "johnor",
-    "slot": "14.02"
+    "pick_in_round": 4,
+    "draft_slot": 4,
+    "user_id": "735592932748435456",
+    "username": "bwood637",
+    "slot": "14.04"
   },
   "me": {
     "username": "johnor",
@@ -34,19 +34,19 @@
     "roster_id": 2
   },
   "my_next_pick": {
-    "pick_no": 132,
-    "round": 14,
-    "pick_in_round": 2,
+    "pick_no": 149,
+    "round": 15,
+    "pick_in_round": 9,
     "draft_slot": 2,
     "user_id": "1127785716420898816",
     "username": "johnor",
-    "slot": "14.02",
-    "picks_away": 0
+    "slot": "15.09",
+    "picks_away": 15
   },
   "board_derivation": {
     "method": "snake, order reverses at round 3; traded picks applied",
-    "checked_against_made_picks": 131,
-    "slot_and_roster_agree": 131,
+    "checked_against_made_picks": 133,
+    "slot_and_roster_agree": 133,
     "rounds_exercised": [
       1,
       2,
@@ -2495,12 +2495,12 @@
       "user_id": "1127785716420898816",
       "username": "johnor",
       "is_mine": true,
-      "status": "pending",
-      "sleeper_id": null,
-      "name": null,
-      "position": null,
-      "team": null,
-      "is_keeper": null
+      "status": "made",
+      "sleeper_id": "9753",
+      "name": "Zach Charbonnet",
+      "position": "RB",
+      "team": "SEA",
+      "is_keeper": false
     },
     {
       "pick_no": 133,
@@ -2511,12 +2511,12 @@
       "user_id": "865368720548196352",
       "username": "jedmxk",
       "is_mine": false,
-      "status": "pending",
-      "sleeper_id": null,
-      "name": null,
-      "position": null,
-      "team": null,
-      "is_keeper": null
+      "status": "made",
+      "sleeper_id": "12530",
+      "name": "Travis Hunter",
+      "position": "WR",
+      "team": "JAX",
+      "is_keeper": false
     },
     {
       "pick_no": 134,
