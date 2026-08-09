@@ -1,13 +1,13 @@
 {
   "source": "https://api.sleeper.app/v1/draft/1388293618208374784",
-  "fetched_at": "2026-08-09T12:14:56+00:00",
+  "fetched_at": "2026-08-09T14:04:06+00:00",
   "draft_id": "1388293618208374784",
   "league_id": "1388293617071714304",
   "league_name": "Dudes",
   "season": "2026",
   "status": "drafting",
   "started_at": "2026-08-04T13:02:55+00:00",
-  "last_picked_at": "2026-08-09T11:00:00+00:00",
+  "last_picked_at": "2026-08-09T13:43:22+00:00",
   "format": {
     "type": "snake",
     "teams": 10,
@@ -16,16 +16,16 @@
     "scoring_type": "dynasty_2qb"
   },
   "pick_count": 290,
-  "picks_made": 133,
-  "picks_pending": 157,
+  "picks_made": 135,
+  "picks_pending": 155,
   "on_the_clock": {
-    "pick_no": 134,
+    "pick_no": 136,
     "round": 14,
-    "pick_in_round": 4,
-    "draft_slot": 4,
-    "user_id": "735592932748435456",
-    "username": "bwood637",
-    "slot": "14.04"
+    "pick_in_round": 6,
+    "draft_slot": 6,
+    "user_id": "1114302275305979904",
+    "username": "samlemonskoff",
+    "slot": "14.06"
   },
   "me": {
     "username": "johnor",
@@ -41,12 +41,12 @@
     "user_id": "1127785716420898816",
     "username": "johnor",
     "slot": "15.09",
-    "picks_away": 15
+    "picks_away": 13
   },
   "board_derivation": {
     "method": "snake, order reverses at round 3; traded picks applied",
-    "checked_against_made_picks": 133,
-    "slot_and_roster_agree": 133,
+    "checked_against_made_picks": 135,
+    "slot_and_roster_agree": 135,
     "rounds_exercised": [
       1,
       2,
@@ -2527,12 +2527,12 @@
       "user_id": "735592932748435456",
       "username": "bwood637",
       "is_mine": false,
-      "status": "pending",
-      "sleeper_id": null,
-      "name": null,
-      "position": null,
-      "team": null,
-      "is_keeper": null
+      "status": "made",
+      "sleeper_id": "8132",
+      "name": "Tyler Allgeier",
+      "position": "RB",
+      "team": "ARI",
+      "is_keeper": false
     },
     {
       "pick_no": 135,
@@ -2543,12 +2543,12 @@
       "user_id": "870397485556875264",
       "username": "dirtydole",
       "is_mine": false,
-      "status": "pending",
-      "sleeper_id": null,
-      "name": null,
-      "position": null,
-      "team": null,
-      "is_keeper": null
+      "status": "made",
+      "sleeper_id": "10222",
+      "name": "Jayden Reed",
+      "position": "WR",
+      "team": "GB",
+      "is_keeper": false
     },
     {
       "pick_no": 136,
