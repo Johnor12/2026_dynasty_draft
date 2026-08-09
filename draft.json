@@ -1,13 +1,13 @@
 {
   "source": "https://api.sleeper.app/v1/draft/1388293618208374784",
-  "fetched_at": "2026-08-09T02:06:16+00:00",
+  "fetched_at": "2026-08-09T02:26:48+00:00",
   "draft_id": "1388293618208374784",
   "league_id": "1388293617071714304",
   "league_name": "Dudes",
   "season": "2026",
   "status": "paused",
   "started_at": "2026-08-04T13:02:55+00:00",
-  "last_picked_at": "2026-08-09T02:02:18+00:00",
+  "last_picked_at": "2026-08-09T02:22:38+00:00",
   "format": {
     "type": "snake",
     "teams": 10,
@@ -16,16 +16,16 @@
     "scoring_type": "dynasty_2qb"
   },
   "pick_count": 290,
-  "picks_made": 128,
-  "picks_pending": 162,
+  "picks_made": 131,
+  "picks_pending": 159,
   "on_the_clock": {
-    "pick_no": 129,
-    "round": 13,
-    "pick_in_round": 9,
+    "pick_no": 132,
+    "round": 14,
+    "pick_in_round": 2,
     "draft_slot": 2,
-    "user_id": "751220778036551680",
-    "username": "nedjh2",
-    "slot": "13.09"
+    "user_id": "1127785716420898816",
+    "username": "johnor",
+    "slot": "14.02"
   },
   "me": {
     "username": "johnor",
@@ -41,12 +41,12 @@
     "user_id": "1127785716420898816",
     "username": "johnor",
     "slot": "14.02",
-    "picks_away": 3
+    "picks_away": 0
   },
   "board_derivation": {
     "method": "snake, order reverses at round 3; traded picks applied",
-    "checked_against_made_picks": 128,
-    "slot_and_roster_agree": 128,
+    "checked_against_made_picks": 131,
+    "slot_and_roster_agree": 131,
     "rounds_exercised": [
       1,
       2,
@@ -60,7 +60,8 @@
       10,
       11,
       12,
-      13
+      13,
+      14
     ],
     "mismatches": []
   },
@@ -2446,12 +2447,12 @@
       "user_id": "751220778036551680",
       "username": "nedjh2",
       "is_mine": false,
-      "status": "pending",
-      "sleeper_id": null,
-      "name": null,
-      "position": null,
-      "team": null,
-      "is_keeper": null
+      "status": "made",
+      "sleeper_id": "2216",
+      "name": "Mike Evans",
+      "position": "WR",
+      "team": "SF",
+      "is_keeper": false
     },
     {
       "pick_no": 130,
@@ -2462,12 +2463,12 @@
       "user_id": "1388546393752240128",
       "username": "AndNic31",
       "is_mine": false,
-      "status": "pending",
-      "sleeper_id": null,
-      "name": null,
-      "position": null,
-      "team": null,
-      "is_keeper": null
+      "status": "made",
+      "sleeper_id": "9500",
+      "name": "Josh Downs",
+      "position": "WR",
+      "team": "IND",
+      "is_keeper": false
     },
     {
       "pick_no": 131,
@@ -2478,12 +2479,12 @@
       "user_id": "1388546393752240128",
       "username": "AndNic31",
       "is_mine": false,
-      "status": "pending",
-      "sleeper_id": null,
-      "name": null,
-      "position": null,
-      "team": null,
-      "is_keeper": null
+      "status": "made",
+      "sleeper_id": "6819",
+      "name": "Michael Pittman",
+      "position": "WR",
+      "team": "PIT",
+      "is_keeper": false
     },
     {
       "pick_no": 132,
