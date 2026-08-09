@@ -1,13 +1,13 @@
 {
   "source": "https://api.sleeper.app/v1/draft/1388293618208374784",
-  "fetched_at": "2026-08-09T20:01:58+00:00",
+  "fetched_at": "2026-08-09T22:37:58+00:00",
   "draft_id": "1388293618208374784",
   "league_id": "1388293617071714304",
   "league_name": "Dudes",
   "season": "2026",
   "status": "drafting",
   "started_at": "2026-08-04T13:02:55+00:00",
-  "last_picked_at": "2026-08-09T19:59:03+00:00",
+  "last_picked_at": "2026-08-09T22:24:22+00:00",
   "format": {
     "type": "snake",
     "teams": 10,
@@ -16,16 +16,16 @@
     "scoring_type": "dynasty_2qb"
   },
   "pick_count": 290,
-  "picks_made": 148,
-  "picks_pending": 142,
+  "picks_made": 153,
+  "picks_pending": 137,
   "on_the_clock": {
-    "pick_no": 149,
-    "round": 15,
-    "pick_in_round": 9,
-    "draft_slot": 2,
-    "user_id": "1127785716420898816",
-    "username": "johnor",
-    "slot": "15.09"
+    "pick_no": 154,
+    "round": 16,
+    "pick_in_round": 4,
+    "draft_slot": 4,
+    "user_id": "735592932748435456",
+    "username": "bwood637",
+    "slot": "16.04"
   },
   "me": {
     "username": "johnor",
@@ -34,19 +34,19 @@
     "roster_id": 2
   },
   "my_next_pick": {
-    "pick_no": 149,
-    "round": 15,
-    "pick_in_round": 9,
-    "draft_slot": 2,
+    "pick_no": 160,
+    "round": 16,
+    "pick_in_round": 10,
+    "draft_slot": 10,
     "user_id": "1127785716420898816",
     "username": "johnor",
-    "slot": "15.09",
-    "picks_away": 0
+    "slot": "16.10",
+    "picks_away": 6
   },
   "board_derivation": {
     "method": "snake, order reverses at round 3; traded picks applied",
-    "checked_against_made_picks": 148,
-    "slot_and_roster_agree": 148,
+    "checked_against_made_picks": 153,
+    "slot_and_roster_agree": 153,
     "rounds_exercised": [
       1,
       2,
@@ -62,7 +62,8 @@
       12,
       13,
       14,
-      15
+      15,
+      16
     ],
     "mismatches": []
   },
@@ -2775,12 +2776,12 @@
       "user_id": "1127785716420898816",
       "username": "johnor",
       "is_mine": true,
-      "status": "pending",
-      "sleeper_id": null,
-      "name": null,
-      "position": null,
-      "team": null,
-      "is_keeper": null
+      "status": "made",
+      "sleeper_id": "1466",
+      "name": "Travis Kelce",
+      "position": "TE",
+      "team": "KC",
+      "is_keeper": false
     },
     {
       "pick_no": 150,
@@ -2791,12 +2792,12 @@
       "user_id": "1388546393752240128",
       "username": "AndNic31",
       "is_mine": false,
-      "status": "pending",
-      "sleeper_id": null,
-      "name": null,
-      "position": null,
-      "team": null,
-      "is_keeper": null
+      "status": "made",
+      "sleeper_id": "4037",
+      "name": "Chris Godwin",
+      "position": "WR",
+      "team": "TB",
+      "is_keeper": false
     },
     {
       "pick_no": 151,
@@ -2807,12 +2808,12 @@
       "user_id": "1388546393752240128",
       "username": "AndNic31",
       "is_mine": false,
-      "status": "pending",
-      "sleeper_id": null,
-      "name": null,
-      "position": null,
-      "team": null,
-      "is_keeper": null
+      "status": "made",
+      "sleeper_id": "9225",
+      "name": "Tank Bigsby",
+      "position": "RB",
+      "team": "PHI",
+      "is_keeper": false
     },
     {
       "pick_no": 152,
@@ -2823,12 +2824,12 @@
       "user_id": "751220778036551680",
       "username": "nedjh2",
       "is_mine": false,
-      "status": "pending",
-      "sleeper_id": null,
-      "name": null,
-      "position": null,
-      "team": null,
-      "is_keeper": null
+      "status": "made",
+      "sleeper_id": "3257",
+      "name": "Jacoby Brissett",
+      "position": "QB",
+      "team": "ARI",
+      "is_keeper": false
     },
     {
       "pick_no": 153,
@@ -2839,12 +2840,12 @@
       "user_id": "865368720548196352",
       "username": "jedmxk",
       "is_mine": false,
-      "status": "pending",
-      "sleeper_id": null,
-      "name": null,
-      "position": null,
-      "team": null,
-      "is_keeper": null
+      "status": "made",
+      "sleeper_id": "11559",
+      "name": "Michael Penix",
+      "position": "QB",
+      "team": "ATL",
+      "is_keeper": false
     },
     {
       "pick_no": 154,
