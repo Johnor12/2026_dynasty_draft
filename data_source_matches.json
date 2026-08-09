@@ -1,10 +1,10 @@
 {
-  "generated_at": "2026-08-09T14:04:06+00:00",
+  "generated_at": "2026-08-09T20:01:59+00:00",
   "draft": {
     "draft_id": "1388293618208374784",
-    "draft_fetched_at": "2026-08-09T14:04:06+00:00",
+    "draft_fetched_at": "2026-08-09T20:01:58+00:00",
     "draft_started_at": "2026-08-04T13:02:55+00:00",
-    "picks_analyzed": 135
+    "picks_analyzed": 148
   },
   "ranking_snapshot": {
     "generated_at": "2026-08-06T17:51:17+00:00",
@@ -2274,7 +2274,7 @@
     {
       "roster_id": 5,
       "username": "UGrizz14",
-      "pick_count": 13,
+      "pick_count": 15,
       "picks": [
         {
           "pick_no": 7,
@@ -2353,362 +2353,61 @@
           "round": 13,
           "name": "Romeo Doubs",
           "position": "WR"
+        },
+        {
+          "pick_no": 137,
+          "round": 14,
+          "name": "Rhamondre Stevenson",
+          "position": "RB"
+        },
+        {
+          "pick_no": 144,
+          "round": 15,
+          "name": "Geno Smith",
+          "position": "QB"
         }
       ],
       "inferred_source": {
-        "source_id": "dynastynerds",
-        "source_name": "Dynasty Nerds",
-        "fit_score": 68.3,
-        "picks": 13,
-        "matched_picks": 13,
-        "coverage": 1.0,
-        "mean_availability_rank": 5.15,
-        "median_availability_rank": 3,
-        "top_available_rate": 0.231,
-        "top_3_available_rate": 0.615,
-        "mean_log2_loss": 1.647
-      },
-      "runner_up": {
         "source_id": "draftsharks_adp",
         "source_name": "DraftSharks superflex ADP",
-        "fit_score": 67.6,
-        "picks": 13,
-        "matched_picks": 13,
+        "fit_score": 64.0,
+        "picks": 15,
+        "matched_picks": 15,
         "coverage": 1.0,
-        "mean_availability_rank": 5.08,
+        "mean_availability_rank": 7.4,
         "median_availability_rank": 3,
-        "top_available_rate": 0.231,
-        "top_3_available_rate": 0.538,
-        "mean_log2_loss": 1.693
+        "top_available_rate": 0.2,
+        "top_3_available_rate": 0.533,
+        "mean_log2_loss": 1.933
+      },
+      "runner_up": {
+        "source_id": "dynastynerds",
+        "source_name": "Dynasty Nerds",
+        "fit_score": 62.0,
+        "picks": 15,
+        "matched_picks": 15,
+        "coverage": 1.0,
+        "mean_availability_rank": 9.27,
+        "median_availability_rank": 3,
+        "top_available_rate": 0.2,
+        "top_3_available_rate": 0.533,
+        "mean_log2_loss": 2.067
       },
       "confidence": "weak",
-      "score_gap": 0.7,
+      "score_gap": 2.0,
       "provider_scores": [
-        {
-          "source_id": "dynastynerds",
-          "source_name": "Dynasty Nerds",
-          "fit_score": 68.3,
-          "picks": 13,
-          "matched_picks": 13,
-          "coverage": 1.0,
-          "mean_availability_rank": 5.15,
-          "median_availability_rank": 3,
-          "top_available_rate": 0.231,
-          "top_3_available_rate": 0.615,
-          "mean_log2_loss": 1.647,
-          "evidence": [
-            {
-              "pick_no": 7,
-              "round": 1,
-              "player": "Jonathan Taylor",
-              "position": "RB",
-              "matched": true,
-              "overall_rank": 33,
-              "availability_rank": 27,
-              "skipped_count": 26,
-              "higher_ranked_available": [
-                {
-                  "name": "Drake Maye",
-                  "position": "QB",
-                  "overall_rank": 3
-                },
-                {
-                  "name": "Jaxon Smith-Njigba",
-                  "position": "WR",
-                  "overall_rank": 6
-                },
-                {
-                  "name": "Brock Bowers",
-                  "position": "TE",
-                  "overall_rank": 7
-                },
-                {
-                  "name": "Caleb Williams",
-                  "position": "QB",
-                  "overall_rank": 9
-                },
-                {
-                  "name": "Jayden Daniels",
-                  "position": "QB",
-                  "overall_rank": 10
-                }
-              ]
-            },
-            {
-              "pick_no": 14,
-              "round": 2,
-              "player": "Justin Jefferson",
-              "position": "WR",
-              "matched": true,
-              "overall_rank": 14,
-              "availability_rank": 2,
-              "skipped_count": 1,
-              "higher_ranked_available": [
-                {
-                  "name": "Jayden Daniels",
-                  "position": "QB",
-                  "overall_rank": 10
-                }
-              ]
-            },
-            {
-              "pick_no": 24,
-              "round": 3,
-              "player": "Drake London",
-              "position": "WR",
-              "matched": true,
-              "overall_rank": 25,
-              "availability_rank": 3,
-              "skipped_count": 2,
-              "higher_ranked_available": [
-                {
-                  "name": "Jaxson Dart",
-                  "position": "QB",
-                  "overall_rank": 21
-                },
-                {
-                  "name": "Patrick Mahomes",
-                  "position": "QB",
-                  "overall_rank": 23
-                }
-              ]
-            },
-            {
-              "pick_no": 37,
-              "round": 4,
-              "player": "Tyler Warren",
-              "position": "TE",
-              "matched": true,
-              "overall_rank": 32,
-              "availability_rank": 3,
-              "skipped_count": 2,
-              "higher_ranked_available": [
-                {
-                  "name": "Emeka Egbuka",
-                  "position": "WR",
-                  "overall_rank": 30
-                },
-                {
-                  "name": "Garrett Wilson",
-                  "position": "WR",
-                  "overall_rank": 31
-                }
-              ]
-            },
-            {
-              "pick_no": 44,
-              "round": 5,
-              "player": "Chris Olave",
-              "position": "WR",
-              "matched": true,
-              "overall_rank": 46,
-              "availability_rank": 6,
-              "skipped_count": 5,
-              "higher_ranked_available": [
-                {
-                  "name": "Emeka Egbuka",
-                  "position": "WR",
-                  "overall_rank": 30
-                },
-                {
-                  "name": "Garrett Wilson",
-                  "position": "WR",
-                  "overall_rank": 31
-                },
-                {
-                  "name": "Breece Hall",
-                  "position": "RB",
-                  "overall_rank": 39
-                },
-                {
-                  "name": "Jordan Love",
-                  "position": "QB",
-                  "overall_rank": 41
-                },
-                {
-                  "name": "Quinshon Judkins",
-                  "position": "RB",
-                  "overall_rank": 42
-                }
-              ]
-            },
-            {
-              "pick_no": 57,
-              "round": 6,
-              "player": "Saquon Barkley",
-              "position": "RB",
-              "matched": true,
-              "overall_rank": 63,
-              "availability_rank": 10,
-              "skipped_count": 9,
-              "higher_ranked_available": [
-                {
-                  "name": "Jordan Love",
-                  "position": "QB",
-                  "overall_rank": 41
-                },
-                {
-                  "name": "Fernando Mendoza",
-                  "position": "QB",
-                  "overall_rank": 47
-                },
-                {
-                  "name": "Rome Odunze",
-                  "position": "WR",
-                  "overall_rank": 48
-                },
-                {
-                  "name": "Marvin Harrison",
-                  "position": "WR",
-                  "overall_rank": 52
-                },
-                {
-                  "name": "Kyle Pitts",
-                  "position": "TE",
-                  "overall_rank": 54
-                }
-              ]
-            },
-            {
-              "pick_no": 64,
-              "round": 7,
-              "player": "Jordan Love",
-              "position": "QB",
-              "matched": true,
-              "overall_rank": 41,
-              "availability_rank": 1,
-              "skipped_count": 0,
-              "higher_ranked_available": []
-            },
-            {
-              "pick_no": 77,
-              "round": 8,
-              "player": "Travis Etienne",
-              "position": "RB",
-              "matched": true,
-              "overall_rank": 76,
-              "availability_rank": 3,
-              "skipped_count": 2,
-              "higher_ranked_available": [
-                {
-                  "name": "Jared Goff",
-                  "position": "QB",
-                  "overall_rank": 59
-                },
-                {
-                  "name": "Baker Mayfield",
-                  "position": "QB",
-                  "overall_rank": 60
-                }
-              ]
-            },
-            {
-              "pick_no": 84,
-              "round": 9,
-              "player": "Baker Mayfield",
-              "position": "QB",
-              "matched": true,
-              "overall_rank": 60,
-              "availability_rank": 1,
-              "skipped_count": 0,
-              "higher_ranked_available": []
-            },
-            {
-              "pick_no": 97,
-              "round": 10,
-              "player": "Jordan Addison",
-              "position": "WR",
-              "matched": true,
-              "overall_rank": 87,
-              "availability_rank": 2,
-              "skipped_count": 1,
-              "higher_ranked_available": [
-                {
-                  "name": "Sam Darnold",
-                  "position": "QB",
-                  "overall_rank": 79
-                }
-              ]
-            },
-            {
-              "pick_no": 104,
-              "round": 11,
-              "player": "Oronde Gadsden",
-              "position": "TE",
-              "matched": true,
-              "overall_rank": 91,
-              "availability_rank": 4,
-              "skipped_count": 3,
-              "higher_ranked_available": [
-                {
-                  "name": "Sam Darnold",
-                  "position": "QB",
-                  "overall_rank": 79
-                },
-                {
-                  "name": "Omar Cooper",
-                  "position": "WR",
-                  "overall_rank": 88
-                },
-                {
-                  "name": "Malik Willis",
-                  "position": "QB",
-                  "overall_rank": 90
-                }
-              ]
-            },
-            {
-              "pick_no": 117,
-              "round": 12,
-              "player": "Omar Cooper",
-              "position": "WR",
-              "matched": true,
-              "overall_rank": 88,
-              "availability_rank": 1,
-              "skipped_count": 0,
-              "higher_ranked_available": []
-            },
-            {
-              "pick_no": 124,
-              "round": 13,
-              "player": "Romeo Doubs",
-              "position": "WR",
-              "matched": true,
-              "overall_rank": 117,
-              "availability_rank": 4,
-              "skipped_count": 3,
-              "higher_ranked_available": [
-                {
-                  "name": "Malik Willis",
-                  "position": "QB",
-                  "overall_rank": 90
-                },
-                {
-                  "name": "Jayden Reed",
-                  "position": "WR",
-                  "overall_rank": 105
-                },
-                {
-                  "name": "Michael Pittman",
-                  "position": "WR",
-                  "overall_rank": 112
-                }
-              ]
-            }
-          ]
-        },
         {
           "source_id": "draftsharks_adp",
           "source_name": "DraftSharks superflex ADP",
-          "fit_score": 67.6,
-          "picks": 13,
-          "matched_picks": 13,
+          "fit_score": 64.0,
+          "picks": 15,
+          "matched_picks": 15,
           "coverage": 1.0,
-          "mean_availability_rank": 5.08,
+          "mean_availability_rank": 7.4,
           "median_availability_rank": 3,
-          "top_available_rate": 0.231,
-          "top_3_available_rate": 0.538,
-          "mean_log2_loss": 1.693,
+          "top_available_rate": 0.2,
+          "top_3_available_rate": 0.533,
+          "mean_log2_loss": 1.933,
           "evidence": [
             {
               "pick_no": 7,
@@ -3017,21 +2716,467 @@
                   "overall_rank": 119
                 }
               ]
+            },
+            {
+              "pick_no": 137,
+              "round": 14,
+              "player": "Rhamondre Stevenson",
+              "position": "RB",
+              "matched": true,
+              "overall_rank": 133,
+              "availability_rank": 3,
+              "skipped_count": 2,
+              "higher_ranked_available": [
+                {
+                  "name": "Courtland Sutton",
+                  "position": "WR",
+                  "overall_rank": 123
+                },
+                {
+                  "name": "Jakobi Meyers",
+                  "position": "WR",
+                  "overall_rank": 127
+                }
+              ]
+            },
+            {
+              "pick_no": 144,
+              "round": 15,
+              "player": "Geno Smith",
+              "position": "QB",
+              "matched": true,
+              "overall_rank": 184,
+              "availability_rank": 42,
+              "skipped_count": 41,
+              "higher_ranked_available": [
+                {
+                  "name": "Courtland Sutton",
+                  "position": "WR",
+                  "overall_rank": 123
+                },
+                {
+                  "name": "Jakobi Meyers",
+                  "position": "WR",
+                  "overall_rank": 127
+                },
+                {
+                  "name": "Chris Bell",
+                  "position": "WR",
+                  "overall_rank": 134
+                },
+                {
+                  "name": "Mason Taylor",
+                  "position": "TE",
+                  "overall_rank": 136
+                },
+                {
+                  "name": "Jalen Coker",
+                  "position": "WR",
+                  "overall_rank": 137
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "source_id": "dynastynerds",
+          "source_name": "Dynasty Nerds",
+          "fit_score": 62.0,
+          "picks": 15,
+          "matched_picks": 15,
+          "coverage": 1.0,
+          "mean_availability_rank": 9.27,
+          "median_availability_rank": 3,
+          "top_available_rate": 0.2,
+          "top_3_available_rate": 0.533,
+          "mean_log2_loss": 2.067,
+          "evidence": [
+            {
+              "pick_no": 7,
+              "round": 1,
+              "player": "Jonathan Taylor",
+              "position": "RB",
+              "matched": true,
+              "overall_rank": 33,
+              "availability_rank": 27,
+              "skipped_count": 26,
+              "higher_ranked_available": [
+                {
+                  "name": "Drake Maye",
+                  "position": "QB",
+                  "overall_rank": 3
+                },
+                {
+                  "name": "Jaxon Smith-Njigba",
+                  "position": "WR",
+                  "overall_rank": 6
+                },
+                {
+                  "name": "Brock Bowers",
+                  "position": "TE",
+                  "overall_rank": 7
+                },
+                {
+                  "name": "Caleb Williams",
+                  "position": "QB",
+                  "overall_rank": 9
+                },
+                {
+                  "name": "Jayden Daniels",
+                  "position": "QB",
+                  "overall_rank": 10
+                }
+              ]
+            },
+            {
+              "pick_no": 14,
+              "round": 2,
+              "player": "Justin Jefferson",
+              "position": "WR",
+              "matched": true,
+              "overall_rank": 14,
+              "availability_rank": 2,
+              "skipped_count": 1,
+              "higher_ranked_available": [
+                {
+                  "name": "Jayden Daniels",
+                  "position": "QB",
+                  "overall_rank": 10
+                }
+              ]
+            },
+            {
+              "pick_no": 24,
+              "round": 3,
+              "player": "Drake London",
+              "position": "WR",
+              "matched": true,
+              "overall_rank": 25,
+              "availability_rank": 3,
+              "skipped_count": 2,
+              "higher_ranked_available": [
+                {
+                  "name": "Jaxson Dart",
+                  "position": "QB",
+                  "overall_rank": 21
+                },
+                {
+                  "name": "Patrick Mahomes",
+                  "position": "QB",
+                  "overall_rank": 23
+                }
+              ]
+            },
+            {
+              "pick_no": 37,
+              "round": 4,
+              "player": "Tyler Warren",
+              "position": "TE",
+              "matched": true,
+              "overall_rank": 32,
+              "availability_rank": 3,
+              "skipped_count": 2,
+              "higher_ranked_available": [
+                {
+                  "name": "Emeka Egbuka",
+                  "position": "WR",
+                  "overall_rank": 30
+                },
+                {
+                  "name": "Garrett Wilson",
+                  "position": "WR",
+                  "overall_rank": 31
+                }
+              ]
+            },
+            {
+              "pick_no": 44,
+              "round": 5,
+              "player": "Chris Olave",
+              "position": "WR",
+              "matched": true,
+              "overall_rank": 46,
+              "availability_rank": 6,
+              "skipped_count": 5,
+              "higher_ranked_available": [
+                {
+                  "name": "Emeka Egbuka",
+                  "position": "WR",
+                  "overall_rank": 30
+                },
+                {
+                  "name": "Garrett Wilson",
+                  "position": "WR",
+                  "overall_rank": 31
+                },
+                {
+                  "name": "Breece Hall",
+                  "position": "RB",
+                  "overall_rank": 39
+                },
+                {
+                  "name": "Jordan Love",
+                  "position": "QB",
+                  "overall_rank": 41
+                },
+                {
+                  "name": "Quinshon Judkins",
+                  "position": "RB",
+                  "overall_rank": 42
+                }
+              ]
+            },
+            {
+              "pick_no": 57,
+              "round": 6,
+              "player": "Saquon Barkley",
+              "position": "RB",
+              "matched": true,
+              "overall_rank": 63,
+              "availability_rank": 10,
+              "skipped_count": 9,
+              "higher_ranked_available": [
+                {
+                  "name": "Jordan Love",
+                  "position": "QB",
+                  "overall_rank": 41
+                },
+                {
+                  "name": "Fernando Mendoza",
+                  "position": "QB",
+                  "overall_rank": 47
+                },
+                {
+                  "name": "Rome Odunze",
+                  "position": "WR",
+                  "overall_rank": 48
+                },
+                {
+                  "name": "Marvin Harrison",
+                  "position": "WR",
+                  "overall_rank": 52
+                },
+                {
+                  "name": "Kyle Pitts",
+                  "position": "TE",
+                  "overall_rank": 54
+                }
+              ]
+            },
+            {
+              "pick_no": 64,
+              "round": 7,
+              "player": "Jordan Love",
+              "position": "QB",
+              "matched": true,
+              "overall_rank": 41,
+              "availability_rank": 1,
+              "skipped_count": 0,
+              "higher_ranked_available": []
+            },
+            {
+              "pick_no": 77,
+              "round": 8,
+              "player": "Travis Etienne",
+              "position": "RB",
+              "matched": true,
+              "overall_rank": 76,
+              "availability_rank": 3,
+              "skipped_count": 2,
+              "higher_ranked_available": [
+                {
+                  "name": "Jared Goff",
+                  "position": "QB",
+                  "overall_rank": 59
+                },
+                {
+                  "name": "Baker Mayfield",
+                  "position": "QB",
+                  "overall_rank": 60
+                }
+              ]
+            },
+            {
+              "pick_no": 84,
+              "round": 9,
+              "player": "Baker Mayfield",
+              "position": "QB",
+              "matched": true,
+              "overall_rank": 60,
+              "availability_rank": 1,
+              "skipped_count": 0,
+              "higher_ranked_available": []
+            },
+            {
+              "pick_no": 97,
+              "round": 10,
+              "player": "Jordan Addison",
+              "position": "WR",
+              "matched": true,
+              "overall_rank": 87,
+              "availability_rank": 2,
+              "skipped_count": 1,
+              "higher_ranked_available": [
+                {
+                  "name": "Sam Darnold",
+                  "position": "QB",
+                  "overall_rank": 79
+                }
+              ]
+            },
+            {
+              "pick_no": 104,
+              "round": 11,
+              "player": "Oronde Gadsden",
+              "position": "TE",
+              "matched": true,
+              "overall_rank": 91,
+              "availability_rank": 4,
+              "skipped_count": 3,
+              "higher_ranked_available": [
+                {
+                  "name": "Sam Darnold",
+                  "position": "QB",
+                  "overall_rank": 79
+                },
+                {
+                  "name": "Omar Cooper",
+                  "position": "WR",
+                  "overall_rank": 88
+                },
+                {
+                  "name": "Malik Willis",
+                  "position": "QB",
+                  "overall_rank": 90
+                }
+              ]
+            },
+            {
+              "pick_no": 117,
+              "round": 12,
+              "player": "Omar Cooper",
+              "position": "WR",
+              "matched": true,
+              "overall_rank": 88,
+              "availability_rank": 1,
+              "skipped_count": 0,
+              "higher_ranked_available": []
+            },
+            {
+              "pick_no": 124,
+              "round": 13,
+              "player": "Romeo Doubs",
+              "position": "WR",
+              "matched": true,
+              "overall_rank": 117,
+              "availability_rank": 4,
+              "skipped_count": 3,
+              "higher_ranked_available": [
+                {
+                  "name": "Malik Willis",
+                  "position": "QB",
+                  "overall_rank": 90
+                },
+                {
+                  "name": "Jayden Reed",
+                  "position": "WR",
+                  "overall_rank": 105
+                },
+                {
+                  "name": "Michael Pittman",
+                  "position": "WR",
+                  "overall_rank": 112
+                }
+              ]
+            },
+            {
+              "pick_no": 137,
+              "round": 14,
+              "player": "Rhamondre Stevenson",
+              "position": "RB",
+              "matched": true,
+              "overall_rank": 144,
+              "availability_rank": 13,
+              "skipped_count": 12,
+              "higher_ranked_available": [
+                {
+                  "name": "Chris Godwin",
+                  "position": "WR",
+                  "overall_rank": 125
+                },
+                {
+                  "name": "Germie Bernard",
+                  "position": "WR",
+                  "overall_rank": 126
+                },
+                {
+                  "name": "Antonio Williams",
+                  "position": "WR",
+                  "overall_rank": 127
+                },
+                {
+                  "name": "Chris Bell",
+                  "position": "WR",
+                  "overall_rank": 130
+                },
+                {
+                  "name": "Jakobi Meyers",
+                  "position": "WR",
+                  "overall_rank": 131
+                }
+              ]
+            },
+            {
+              "pick_no": 144,
+              "round": 15,
+              "player": "Geno Smith",
+              "position": "QB",
+              "matched": true,
+              "overall_rank": 202,
+              "availability_rank": 59,
+              "skipped_count": 58,
+              "higher_ranked_available": [
+                {
+                  "name": "Chris Godwin",
+                  "position": "WR",
+                  "overall_rank": 125
+                },
+                {
+                  "name": "Germie Bernard",
+                  "position": "WR",
+                  "overall_rank": 126
+                },
+                {
+                  "name": "Antonio Williams",
+                  "position": "WR",
+                  "overall_rank": 127
+                },
+                {
+                  "name": "Chris Bell",
+                  "position": "WR",
+                  "overall_rank": 130
+                },
+                {
+                  "name": "Jakobi Meyers",
+                  "position": "WR",
+                  "overall_rank": 131
+                }
+              ]
             }
           ]
         },
         {
           "source_id": "keeptradecut",
           "source_name": "KeepTradeCut",
-          "fit_score": 64.8,
-          "picks": 13,
-          "matched_picks": 13,
+          "fit_score": 59.3,
+          "picks": 15,
+          "matched_picks": 15,
           "coverage": 1.0,
-          "mean_availability_rank": 6.31,
-          "median_availability_rank": 3,
-          "top_available_rate": 0.231,
-          "top_3_available_rate": 0.538,
-          "mean_log2_loss": 1.875,
+          "mean_availability_rank": 12.27,
+          "median_availability_rank": 4,
+          "top_available_rate": 0.2,
+          "top_3_available_rate": 0.467,
+          "mean_log2_loss": 2.262,
           "evidence": [
             {
               "pick_no": 7,
@@ -3350,21 +3495,95 @@
                   "overall_rank": 121
                 }
               ]
+            },
+            {
+              "pick_no": 137,
+              "round": 14,
+              "player": "Rhamondre Stevenson",
+              "position": "RB",
+              "matched": true,
+              "overall_rank": 140,
+              "availability_rank": 8,
+              "skipped_count": 7,
+              "higher_ranked_available": [
+                {
+                  "name": "Chigoziem Okonkwo",
+                  "position": "TE",
+                  "overall_rank": 128
+                },
+                {
+                  "name": "Terrance Ferguson",
+                  "position": "TE",
+                  "overall_rank": 129
+                },
+                {
+                  "name": "AJ Barner",
+                  "position": "TE",
+                  "overall_rank": 130
+                },
+                {
+                  "name": "Jalen Coker",
+                  "position": "WR",
+                  "overall_rank": 134
+                },
+                {
+                  "name": "J.K. Dobbins",
+                  "position": "RB",
+                  "overall_rank": 137
+                }
+              ]
+            },
+            {
+              "pick_no": 144,
+              "round": 15,
+              "player": "Geno Smith",
+              "position": "QB",
+              "matched": true,
+              "overall_rank": 237,
+              "availability_rank": 94,
+              "skipped_count": 93,
+              "higher_ranked_available": [
+                {
+                  "name": "Chigoziem Okonkwo",
+                  "position": "TE",
+                  "overall_rank": 128
+                },
+                {
+                  "name": "Terrance Ferguson",
+                  "position": "TE",
+                  "overall_rank": 129
+                },
+                {
+                  "name": "Jalen Coker",
+                  "position": "WR",
+                  "overall_rank": 134
+                },
+                {
+                  "name": "Courtland Sutton",
+                  "position": "WR",
+                  "overall_rank": 138
+                },
+                {
+                  "name": "Antonio Williams",
+                  "position": "WR",
+                  "overall_rank": 142
+                }
+              ]
             }
           ]
         },
         {
           "source_id": "fantasycalc",
           "source_name": "FantasyCalc",
-          "fit_score": 57.6,
-          "picks": 13,
-          "matched_picks": 13,
+          "fit_score": 56.4,
+          "picks": 15,
+          "matched_picks": 15,
           "coverage": 1.0,
-          "mean_availability_rank": 8.46,
+          "mean_availability_rank": 9.07,
           "median_availability_rank": 5,
-          "top_available_rate": 0.154,
-          "top_3_available_rate": 0.308,
-          "mean_log2_loss": 2.386,
+          "top_available_rate": 0.133,
+          "top_3_available_rate": 0.333,
+          "mean_log2_loss": 2.475,
           "evidence": [
             {
               "pick_no": 7,
@@ -3734,21 +3953,80 @@
                   "overall_rank": 116
                 }
               ]
+            },
+            {
+              "pick_no": 137,
+              "round": 14,
+              "player": "Rhamondre Stevenson",
+              "position": "RB",
+              "matched": true,
+              "overall_rank": 132,
+              "availability_rank": 3,
+              "skipped_count": 2,
+              "higher_ranked_available": [
+                {
+                  "name": "Shedeur Sanders",
+                  "position": "QB",
+                  "overall_rank": 129
+                },
+                {
+                  "name": "Kenny Gainwell",
+                  "position": "RB",
+                  "overall_rank": 131
+                }
+              ]
+            },
+            {
+              "pick_no": 144,
+              "round": 15,
+              "player": "Geno Smith",
+              "position": "QB",
+              "matched": true,
+              "overall_rank": 165,
+              "availability_rank": 23,
+              "skipped_count": 22,
+              "higher_ranked_available": [
+                {
+                  "name": "Shedeur Sanders",
+                  "position": "QB",
+                  "overall_rank": 129
+                },
+                {
+                  "name": "J.J. McCarthy",
+                  "position": "QB",
+                  "overall_rank": 133
+                },
+                {
+                  "name": "Chris Godwin",
+                  "position": "WR",
+                  "overall_rank": 136
+                },
+                {
+                  "name": "Tua Tagovailoa",
+                  "position": "QB",
+                  "overall_rank": 137
+                },
+                {
+                  "name": "Courtland Sutton",
+                  "position": "WR",
+                  "overall_rank": 138
+                }
+              ]
             }
           ]
         },
         {
           "source_id": "fantasypros",
           "source_name": "FantasyPros ECR",
-          "fit_score": 57.1,
-          "picks": 13,
-          "matched_picks": 13,
+          "fit_score": 53.7,
+          "picks": 15,
+          "matched_picks": 15,
           "coverage": 1.0,
-          "mean_availability_rank": 8.77,
-          "median_availability_rank": 5,
-          "top_available_rate": 0.154,
-          "top_3_available_rate": 0.308,
-          "mean_log2_loss": 2.424,
+          "mean_availability_rank": 12.93,
+          "median_availability_rank": 6,
+          "top_available_rate": 0.133,
+          "top_3_available_rate": 0.267,
+          "mean_log2_loss": 2.687,
           "evidence": [
             {
               "pick_no": 7,
@@ -4118,6 +4396,80 @@
                   "overall_rank": 114
                 }
               ]
+            },
+            {
+              "pick_no": 137,
+              "round": 14,
+              "player": "Rhamondre Stevenson",
+              "position": "RB",
+              "matched": true,
+              "overall_rank": 135,
+              "availability_rank": 6,
+              "skipped_count": 5,
+              "higher_ranked_available": [
+                {
+                  "name": "Courtland Sutton",
+                  "position": "WR",
+                  "overall_rank": 114
+                },
+                {
+                  "name": "Jakobi Meyers",
+                  "position": "WR",
+                  "overall_rank": 123
+                },
+                {
+                  "name": "Chris Godwin Jr.",
+                  "position": "WR",
+                  "overall_rank": 126
+                },
+                {
+                  "name": "Antonio Williams",
+                  "position": "WR",
+                  "overall_rank": 129
+                },
+                {
+                  "name": "Jalen Coker",
+                  "position": "WR",
+                  "overall_rank": 130
+                }
+              ]
+            },
+            {
+              "pick_no": 144,
+              "round": 15,
+              "player": "Geno Smith",
+              "position": "QB",
+              "matched": true,
+              "overall_rank": 217,
+              "availability_rank": 74,
+              "skipped_count": 73,
+              "higher_ranked_available": [
+                {
+                  "name": "Courtland Sutton",
+                  "position": "WR",
+                  "overall_rank": 114
+                },
+                {
+                  "name": "Jakobi Meyers",
+                  "position": "WR",
+                  "overall_rank": 123
+                },
+                {
+                  "name": "Chris Godwin Jr.",
+                  "position": "WR",
+                  "overall_rank": 126
+                },
+                {
+                  "name": "Antonio Williams",
+                  "position": "WR",
+                  "overall_rank": 129
+                },
+                {
+                  "name": "Jalen Coker",
+                  "position": "WR",
+                  "overall_rank": 130
+                }
+              ]
             }
           ]
         }
@@ -4126,7 +4478,7 @@
     {
       "roster_id": 7,
       "username": "bwood637",
-      "pick_count": 14,
+      "pick_count": 15,
       "picks": [
         {
           "pick_no": 4,
@@ -4211,49 +4563,55 @@
           "round": 14,
           "name": "Tyler Allgeier",
           "position": "RB"
+        },
+        {
+          "pick_no": 147,
+          "round": 15,
+          "name": "Courtland Sutton",
+          "position": "WR"
         }
       ],
       "inferred_source": {
         "source_id": "draftsharks_adp",
         "source_name": "DraftSharks superflex ADP",
-        "fit_score": 71.0,
-        "picks": 14,
-        "matched_picks": 14,
+        "fit_score": 72.7,
+        "picks": 15,
+        "matched_picks": 15,
         "coverage": 1.0,
-        "mean_availability_rank": 3.36,
-        "median_availability_rank": 3.0,
-        "top_available_rate": 0.143,
-        "top_3_available_rate": 0.714,
-        "mean_log2_loss": 1.481
+        "mean_availability_rank": 3.2,
+        "median_availability_rank": 3,
+        "top_available_rate": 0.2,
+        "top_3_available_rate": 0.733,
+        "mean_log2_loss": 1.382
       },
       "runner_up": {
         "source_id": "fantasycalc",
         "source_name": "FantasyCalc",
         "fit_score": 58.9,
-        "picks": 14,
-        "matched_picks": 14,
+        "picks": 15,
+        "matched_picks": 15,
         "coverage": 1.0,
-        "mean_availability_rank": 9.36,
-        "median_availability_rank": 3.5,
-        "top_available_rate": 0.214,
-        "top_3_available_rate": 0.5,
-        "mean_log2_loss": 2.289
+        "mean_availability_rank": 9.07,
+        "median_availability_rank": 4,
+        "top_available_rate": 0.2,
+        "top_3_available_rate": 0.467,
+        "mean_log2_loss": 2.291
       },
       "confidence": "strong",
-      "score_gap": 12.1,
+      "score_gap": 13.8,
       "provider_scores": [
         {
           "source_id": "draftsharks_adp",
           "source_name": "DraftSharks superflex ADP",
-          "fit_score": 71.0,
-          "picks": 14,
-          "matched_picks": 14,
+          "fit_score": 72.7,
+          "picks": 15,
+          "matched_picks": 15,
           "coverage": 1.0,
-          "mean_availability_rank": 3.36,
-          "median_availability_rank": 3.0,
-          "top_available_rate": 0.143,
-          "top_3_available_rate": 0.714,
-          "mean_log2_loss": 1.481,
+          "mean_availability_rank": 3.2,
+          "median_availability_rank": 3,
+          "top_available_rate": 0.2,
+          "top_3_available_rate": 0.733,
+          "mean_log2_loss": 1.382,
           "evidence": [
             {
               "pick_no": 4,
@@ -4570,6 +4928,17 @@
               "availability_rank": 1,
               "skipped_count": 0,
               "higher_ranked_available": []
+            },
+            {
+              "pick_no": 147,
+              "round": 15,
+              "player": "Courtland Sutton",
+              "position": "WR",
+              "matched": true,
+              "overall_rank": 123,
+              "availability_rank": 1,
+              "skipped_count": 0,
+              "higher_ranked_available": []
             }
           ]
         },
@@ -4577,14 +4946,14 @@
           "source_id": "fantasycalc",
           "source_name": "FantasyCalc",
           "fit_score": 58.9,
-          "picks": 14,
-          "matched_picks": 14,
+          "picks": 15,
+          "matched_picks": 15,
           "coverage": 1.0,
-          "mean_availability_rank": 9.36,
-          "median_availability_rank": 3.5,
-          "top_available_rate": 0.214,
-          "top_3_available_rate": 0.5,
-          "mean_log2_loss": 2.289,
+          "mean_availability_rank": 9.07,
+          "median_availability_rank": 4,
+          "top_available_rate": 0.2,
+          "top_3_available_rate": 0.467,
+          "mean_log2_loss": 2.291,
           "evidence": [
             {
               "pick_no": 4,
@@ -4950,21 +5319,53 @@
                   "overall_rank": 133
                 }
               ]
+            },
+            {
+              "pick_no": 147,
+              "round": 15,
+              "player": "Courtland Sutton",
+              "position": "WR",
+              "matched": true,
+              "overall_rank": 138,
+              "availability_rank": 5,
+              "skipped_count": 4,
+              "higher_ranked_available": [
+                {
+                  "name": "Shedeur Sanders",
+                  "position": "QB",
+                  "overall_rank": 129
+                },
+                {
+                  "name": "J.J. McCarthy",
+                  "position": "QB",
+                  "overall_rank": 133
+                },
+                {
+                  "name": "Chris Godwin",
+                  "position": "WR",
+                  "overall_rank": 136
+                },
+                {
+                  "name": "Tua Tagovailoa",
+                  "position": "QB",
+                  "overall_rank": 137
+                }
+              ]
             }
           ]
         },
         {
           "source_id": "keeptradecut",
           "source_name": "KeepTradeCut",
-          "fit_score": 56.5,
-          "picks": 14,
-          "matched_picks": 14,
+          "fit_score": 57.3,
+          "picks": 15,
+          "matched_picks": 15,
           "coverage": 1.0,
-          "mean_availability_rank": 8.71,
-          "median_availability_rank": 4.0,
+          "mean_availability_rank": 8.33,
+          "median_availability_rank": 4,
           "top_available_rate": 0.0,
-          "top_3_available_rate": 0.429,
-          "mean_log2_loss": 2.468,
+          "top_3_available_rate": 0.467,
+          "mean_log2_loss": 2.409,
           "evidence": [
             {
               "pick_no": 4,
@@ -5358,21 +5759,43 @@
                   "overall_rank": 133
                 }
               ]
+            },
+            {
+              "pick_no": 147,
+              "round": 15,
+              "player": "Courtland Sutton",
+              "position": "WR",
+              "matched": true,
+              "overall_rank": 138,
+              "availability_rank": 3,
+              "skipped_count": 2,
+              "higher_ranked_available": [
+                {
+                  "name": "Chigoziem Okonkwo",
+                  "position": "TE",
+                  "overall_rank": 128
+                },
+                {
+                  "name": "Terrance Ferguson",
+                  "position": "TE",
+                  "overall_rank": 129
+                }
+              ]
             }
           ]
         },
         {
           "source_id": "fantasypros",
           "source_name": "FantasyPros ECR",
-          "fit_score": 51.4,
-          "picks": 14,
-          "matched_picks": 14,
+          "fit_score": 53.7,
+          "picks": 15,
+          "matched_picks": 15,
           "coverage": 1.0,
-          "mean_availability_rank": 11.43,
-          "median_availability_rank": 7.0,
-          "top_available_rate": 0.143,
-          "top_3_available_rate": 0.143,
-          "mean_log2_loss": 2.882,
+          "mean_availability_rank": 10.73,
+          "median_availability_rank": 6,
+          "top_available_rate": 0.2,
+          "top_3_available_rate": 0.2,
+          "mean_log2_loss": 2.689,
           "evidence": [
             {
               "pick_no": 4,
@@ -5824,21 +6247,32 @@
                   "overall_rank": 129
                 }
               ]
+            },
+            {
+              "pick_no": 147,
+              "round": 15,
+              "player": "Courtland Sutton",
+              "position": "WR",
+              "matched": true,
+              "overall_rank": 114,
+              "availability_rank": 1,
+              "skipped_count": 0,
+              "higher_ranked_available": []
             }
           ]
         },
         {
           "source_id": "dynastynerds",
           "source_name": "Dynasty Nerds",
-          "fit_score": 51.2,
-          "picks": 14,
-          "matched_picks": 14,
+          "fit_score": 51.4,
+          "picks": 15,
+          "matched_picks": 15,
           "coverage": 1.0,
-          "mean_availability_rank": 10.86,
-          "median_availability_rank": 7.0,
+          "mean_availability_rank": 10.53,
+          "median_availability_rank": 7,
           "top_available_rate": 0.0,
-          "top_3_available_rate": 0.214,
-          "mean_log2_loss": 2.901,
+          "top_3_available_rate": 0.2,
+          "mean_log2_loss": 2.88,
           "evidence": [
             {
               "pick_no": 4,
@@ -6287,6 +6721,43 @@
                   "overall_rank": 127
                 }
               ]
+            },
+            {
+              "pick_no": 147,
+              "round": 15,
+              "player": "Courtland Sutton",
+              "position": "WR",
+              "matched": true,
+              "overall_rank": 137,
+              "availability_rank": 6,
+              "skipped_count": 5,
+              "higher_ranked_available": [
+                {
+                  "name": "Chris Godwin",
+                  "position": "WR",
+                  "overall_rank": 125
+                },
+                {
+                  "name": "Germie Bernard",
+                  "position": "WR",
+                  "overall_rank": 126
+                },
+                {
+                  "name": "Antonio Williams",
+                  "position": "WR",
+                  "overall_rank": 127
+                },
+                {
+                  "name": "Chris Bell",
+                  "position": "WR",
+                  "overall_rank": 130
+                },
+                {
+                  "name": "Jakobi Meyers",
+                  "position": "WR",
+                  "overall_rank": 131
+                }
+              ]
             }
           ]
         }
@@ -6295,7 +6766,7 @@
     {
       "roster_id": 4,
       "username": "dccb31",
-      "pick_count": 13,
+      "pick_count": 15,
       "picks": [
         {
           "pick_no": 9,
@@ -6374,49 +6845,61 @@
           "round": 13,
           "name": "Jonah Coleman",
           "position": "RB"
+        },
+        {
+          "pick_no": 139,
+          "round": 14,
+          "name": "Nicholas Singleton",
+          "position": "RB"
+        },
+        {
+          "pick_no": 142,
+          "round": 15,
+          "name": "AJ Barner",
+          "position": "TE"
         }
       ],
       "inferred_source": {
         "source_id": "keeptradecut",
         "source_name": "KeepTradeCut",
-        "fit_score": 65.9,
-        "picks": 13,
-        "matched_picks": 13,
+        "fit_score": 64.0,
+        "picks": 15,
+        "matched_picks": 15,
         "coverage": 1.0,
-        "mean_availability_rank": 5.38,
+        "mean_availability_rank": 5.87,
         "median_availability_rank": 3,
-        "top_available_rate": 0.154,
-        "top_3_available_rate": 0.615,
-        "mean_log2_loss": 1.805
+        "top_available_rate": 0.133,
+        "top_3_available_rate": 0.6,
+        "mean_log2_loss": 1.93
       },
       "runner_up": {
         "source_id": "dynastynerds",
         "source_name": "Dynasty Nerds",
-        "fit_score": 64.2,
-        "picks": 13,
-        "matched_picks": 13,
+        "fit_score": 58.9,
+        "picks": 15,
+        "matched_picks": 15,
         "coverage": 1.0,
-        "mean_availability_rank": 5.46,
-        "median_availability_rank": 5,
-        "top_available_rate": 0.231,
-        "top_3_available_rate": 0.462,
-        "mean_log2_loss": 1.92
+        "mean_availability_rank": 8.67,
+        "median_availability_rank": 6,
+        "top_available_rate": 0.2,
+        "top_3_available_rate": 0.4,
+        "mean_log2_loss": 2.288
       },
-      "confidence": "weak",
-      "score_gap": 1.7,
+      "confidence": "moderate",
+      "score_gap": 5.1,
       "provider_scores": [
         {
           "source_id": "keeptradecut",
           "source_name": "KeepTradeCut",
-          "fit_score": 65.9,
-          "picks": 13,
-          "matched_picks": 13,
+          "fit_score": 64.0,
+          "picks": 15,
+          "matched_picks": 15,
           "coverage": 1.0,
-          "mean_availability_rank": 5.38,
+          "mean_availability_rank": 5.87,
           "median_availability_rank": 3,
-          "top_available_rate": 0.154,
-          "top_3_available_rate": 0.615,
-          "mean_log2_loss": 1.805,
+          "top_available_rate": 0.133,
+          "top_3_available_rate": 0.6,
+          "mean_log2_loss": 1.93,
           "evidence": [
             {
               "pick_no": 9,
@@ -6726,21 +7209,80 @@
                   "overall_rank": 121
                 }
               ]
+            },
+            {
+              "pick_no": 139,
+              "round": 14,
+              "player": "Nicholas Singleton",
+              "position": "RB",
+              "matched": true,
+              "overall_rank": 151,
+              "availability_rank": 15,
+              "skipped_count": 14,
+              "higher_ranked_available": [
+                {
+                  "name": "Chigoziem Okonkwo",
+                  "position": "TE",
+                  "overall_rank": 128
+                },
+                {
+                  "name": "Terrance Ferguson",
+                  "position": "TE",
+                  "overall_rank": 129
+                },
+                {
+                  "name": "AJ Barner",
+                  "position": "TE",
+                  "overall_rank": 130
+                },
+                {
+                  "name": "Jalen Coker",
+                  "position": "WR",
+                  "overall_rank": 134
+                },
+                {
+                  "name": "Courtland Sutton",
+                  "position": "WR",
+                  "overall_rank": 138
+                }
+              ]
+            },
+            {
+              "pick_no": 142,
+              "round": 15,
+              "player": "AJ Barner",
+              "position": "TE",
+              "matched": true,
+              "overall_rank": 130,
+              "availability_rank": 3,
+              "skipped_count": 2,
+              "higher_ranked_available": [
+                {
+                  "name": "Chigoziem Okonkwo",
+                  "position": "TE",
+                  "overall_rank": 128
+                },
+                {
+                  "name": "Terrance Ferguson",
+                  "position": "TE",
+                  "overall_rank": 129
+                }
+              ]
             }
           ]
         },
         {
           "source_id": "dynastynerds",
           "source_name": "Dynasty Nerds",
-          "fit_score": 64.2,
-          "picks": 13,
-          "matched_picks": 13,
+          "fit_score": 58.9,
+          "picks": 15,
+          "matched_picks": 15,
           "coverage": 1.0,
-          "mean_availability_rank": 5.46,
-          "median_availability_rank": 5,
-          "top_available_rate": 0.231,
-          "top_3_available_rate": 0.462,
-          "mean_log2_loss": 1.92,
+          "mean_availability_rank": 8.67,
+          "median_availability_rank": 6,
+          "top_available_rate": 0.2,
+          "top_3_available_rate": 0.4,
+          "mean_log2_loss": 2.288,
           "evidence": [
             {
               "pick_no": 9,
@@ -7089,21 +7631,95 @@
                   "overall_rank": 118
                 }
               ]
+            },
+            {
+              "pick_no": 139,
+              "round": 14,
+              "player": "Nicholas Singleton",
+              "position": "RB",
+              "matched": true,
+              "overall_rank": 151,
+              "availability_rank": 15,
+              "skipped_count": 14,
+              "higher_ranked_available": [
+                {
+                  "name": "Chris Godwin",
+                  "position": "WR",
+                  "overall_rank": 125
+                },
+                {
+                  "name": "Germie Bernard",
+                  "position": "WR",
+                  "overall_rank": 126
+                },
+                {
+                  "name": "Antonio Williams",
+                  "position": "WR",
+                  "overall_rank": 127
+                },
+                {
+                  "name": "Chris Bell",
+                  "position": "WR",
+                  "overall_rank": 130
+                },
+                {
+                  "name": "Jakobi Meyers",
+                  "position": "WR",
+                  "overall_rank": 131
+                }
+              ]
+            },
+            {
+              "pick_no": 142,
+              "round": 15,
+              "player": "AJ Barner",
+              "position": "TE",
+              "matched": true,
+              "overall_rank": 185,
+              "availability_rank": 44,
+              "skipped_count": 43,
+              "higher_ranked_available": [
+                {
+                  "name": "Chris Godwin",
+                  "position": "WR",
+                  "overall_rank": 125
+                },
+                {
+                  "name": "Germie Bernard",
+                  "position": "WR",
+                  "overall_rank": 126
+                },
+                {
+                  "name": "Antonio Williams",
+                  "position": "WR",
+                  "overall_rank": 127
+                },
+                {
+                  "name": "Chris Bell",
+                  "position": "WR",
+                  "overall_rank": 130
+                },
+                {
+                  "name": "Jakobi Meyers",
+                  "position": "WR",
+                  "overall_rank": 131
+                }
+              ]
             }
           ]
         },
         {
           "source_id": "fantasycalc",
           "source_name": "FantasyCalc",
-          "fit_score": 60.0,
-          "picks": 13,
-          "matched_picks": 13,
+          "fit_score": 57.6,
+          "picks": 15,
+          "matched_picks": 15,
           "coverage": 1.0,
-          "mean_availability_rank": 6.77,
+          "mean_availability_rank": 7.47,
           "median_availability_rank": 4,
-          "top_available_rate": 0.077,
-          "top_3_available_rate": 0.308,
-          "mean_log2_loss": 2.209,
+          "top_available_rate": 0.067,
+          "top_3_available_rate": 0.267,
+          "mean_log2_loss": 2.387,
           "evidence": [
             {
               "pick_no": 9,
@@ -7459,21 +8075,95 @@
                   "overall_rank": 116
                 }
               ]
+            },
+            {
+              "pick_no": 139,
+              "round": 14,
+              "player": "Nicholas Singleton",
+              "position": "RB",
+              "matched": true,
+              "overall_rank": 141,
+              "availability_rank": 9,
+              "skipped_count": 8,
+              "higher_ranked_available": [
+                {
+                  "name": "Shedeur Sanders",
+                  "position": "QB",
+                  "overall_rank": 129
+                },
+                {
+                  "name": "Kenny Gainwell",
+                  "position": "RB",
+                  "overall_rank": 131
+                },
+                {
+                  "name": "J.J. McCarthy",
+                  "position": "QB",
+                  "overall_rank": 133
+                },
+                {
+                  "name": "Chris Godwin",
+                  "position": "WR",
+                  "overall_rank": 136
+                },
+                {
+                  "name": "Tua Tagovailoa",
+                  "position": "QB",
+                  "overall_rank": 137
+                }
+              ]
+            },
+            {
+              "pick_no": 142,
+              "round": 15,
+              "player": "AJ Barner",
+              "position": "TE",
+              "matched": true,
+              "overall_rank": 153,
+              "availability_rank": 15,
+              "skipped_count": 14,
+              "higher_ranked_available": [
+                {
+                  "name": "Shedeur Sanders",
+                  "position": "QB",
+                  "overall_rank": 129
+                },
+                {
+                  "name": "J.J. McCarthy",
+                  "position": "QB",
+                  "overall_rank": 133
+                },
+                {
+                  "name": "Chris Godwin",
+                  "position": "WR",
+                  "overall_rank": 136
+                },
+                {
+                  "name": "Tua Tagovailoa",
+                  "position": "QB",
+                  "overall_rank": 137
+                },
+                {
+                  "name": "Courtland Sutton",
+                  "position": "WR",
+                  "overall_rank": 138
+                }
+              ]
             }
           ]
         },
         {
           "source_id": "draftsharks_adp",
           "source_name": "DraftSharks superflex ADP",
-          "fit_score": 53.0,
-          "picks": 13,
-          "matched_picks": 13,
+          "fit_score": 51.3,
+          "picks": 15,
+          "matched_picks": 15,
           "coverage": 1.0,
-          "mean_availability_rank": 7.92,
-          "median_availability_rank": 8,
+          "mean_availability_rank": 8.8,
+          "median_availability_rank": 10,
           "top_available_rate": 0.0,
-          "top_3_available_rate": 0.154,
-          "mean_log2_loss": 2.744,
+          "top_3_available_rate": 0.133,
+          "mean_log2_loss": 2.887,
           "evidence": [
             {
               "pick_no": 9,
@@ -7900,21 +8590,95 @@
                   "overall_rank": 119
                 }
               ]
+            },
+            {
+              "pick_no": 139,
+              "round": 14,
+              "player": "Nicholas Singleton",
+              "position": "RB",
+              "matched": true,
+              "overall_rank": 152,
+              "availability_rank": 18,
+              "skipped_count": 17,
+              "higher_ranked_available": [
+                {
+                  "name": "Courtland Sutton",
+                  "position": "WR",
+                  "overall_rank": 123
+                },
+                {
+                  "name": "Jakobi Meyers",
+                  "position": "WR",
+                  "overall_rank": 127
+                },
+                {
+                  "name": "Chris Bell",
+                  "position": "WR",
+                  "overall_rank": 134
+                },
+                {
+                  "name": "Mason Taylor",
+                  "position": "TE",
+                  "overall_rank": 136
+                },
+                {
+                  "name": "Jalen Coker",
+                  "position": "WR",
+                  "overall_rank": 137
+                }
+              ]
+            },
+            {
+              "pick_no": 142,
+              "round": 15,
+              "player": "AJ Barner",
+              "position": "TE",
+              "matched": true,
+              "overall_rank": 145,
+              "availability_rank": 11,
+              "skipped_count": 10,
+              "higher_ranked_available": [
+                {
+                  "name": "Courtland Sutton",
+                  "position": "WR",
+                  "overall_rank": 123
+                },
+                {
+                  "name": "Jakobi Meyers",
+                  "position": "WR",
+                  "overall_rank": 127
+                },
+                {
+                  "name": "Chris Bell",
+                  "position": "WR",
+                  "overall_rank": 134
+                },
+                {
+                  "name": "Mason Taylor",
+                  "position": "TE",
+                  "overall_rank": 136
+                },
+                {
+                  "name": "Jalen Coker",
+                  "position": "WR",
+                  "overall_rank": 137
+                }
+              ]
             }
           ]
         },
         {
           "source_id": "fantasypros",
           "source_name": "FantasyPros ECR",
-          "fit_score": 50.3,
-          "picks": 13,
-          "matched_picks": 13,
+          "fit_score": 48.6,
+          "picks": 15,
+          "matched_picks": 15,
           "coverage": 1.0,
-          "mean_availability_rank": 11.69,
+          "mean_availability_rank": 12.73,
           "median_availability_rank": 12,
-          "top_available_rate": 0.154,
-          "top_3_available_rate": 0.231,
-          "mean_log2_loss": 2.975,
+          "top_available_rate": 0.133,
+          "top_3_available_rate": 0.2,
+          "mean_log2_loss": 3.124,
           "evidence": [
             {
               "pick_no": 9,
@@ -8324,6 +9088,80 @@
                   "overall_rank": 114
                 }
               ]
+            },
+            {
+              "pick_no": 139,
+              "round": 14,
+              "player": "Nicholas Singleton",
+              "position": "RB",
+              "matched": true,
+              "overall_rank": 167,
+              "availability_rank": 29,
+              "skipped_count": 28,
+              "higher_ranked_available": [
+                {
+                  "name": "Courtland Sutton",
+                  "position": "WR",
+                  "overall_rank": 114
+                },
+                {
+                  "name": "Jakobi Meyers",
+                  "position": "WR",
+                  "overall_rank": 123
+                },
+                {
+                  "name": "Chris Godwin Jr.",
+                  "position": "WR",
+                  "overall_rank": 126
+                },
+                {
+                  "name": "Antonio Williams",
+                  "position": "WR",
+                  "overall_rank": 129
+                },
+                {
+                  "name": "Jalen Coker",
+                  "position": "WR",
+                  "overall_rank": 130
+                }
+              ]
+            },
+            {
+              "pick_no": 142,
+              "round": 15,
+              "player": "AJ Barner",
+              "position": "TE",
+              "matched": true,
+              "overall_rank": 146,
+              "availability_rank": 10,
+              "skipped_count": 9,
+              "higher_ranked_available": [
+                {
+                  "name": "Courtland Sutton",
+                  "position": "WR",
+                  "overall_rank": 114
+                },
+                {
+                  "name": "Jakobi Meyers",
+                  "position": "WR",
+                  "overall_rank": 123
+                },
+                {
+                  "name": "Chris Godwin Jr.",
+                  "position": "WR",
+                  "overall_rank": 126
+                },
+                {
+                  "name": "Antonio Williams",
+                  "position": "WR",
+                  "overall_rank": 129
+                },
+                {
+                  "name": "Jalen Coker",
+                  "position": "WR",
+                  "overall_rank": 130
+                }
+              ]
             }
           ]
         }
@@ -8332,7 +9170,7 @@
     {
       "roster_id": 9,
       "username": "dirtydole",
-      "pick_count": 14,
+      "pick_count": 15,
       "picks": [
         {
           "pick_no": 5,
@@ -8417,49 +9255,55 @@
           "round": 14,
           "name": "Jayden Reed",
           "position": "WR"
+        },
+        {
+          "pick_no": 146,
+          "round": 15,
+          "name": "Jalen Coker",
+          "position": "WR"
         }
       ],
       "inferred_source": {
         "source_id": "keeptradecut",
         "source_name": "KeepTradeCut",
         "fit_score": 68.9,
-        "picks": 14,
-        "matched_picks": 14,
+        "picks": 15,
+        "matched_picks": 15,
         "coverage": 1.0,
-        "mean_availability_rank": 5.79,
-        "median_availability_rank": 2.5,
-        "top_available_rate": 0.429,
-        "top_3_available_rate": 0.571,
-        "mean_log2_loss": 1.615
+        "mean_availability_rank": 5.6,
+        "median_availability_rank": 3,
+        "top_available_rate": 0.4,
+        "top_3_available_rate": 0.6,
+        "mean_log2_loss": 1.613
       },
       "runner_up": {
         "source_id": "fantasycalc",
         "source_name": "FantasyCalc",
-        "fit_score": 67.3,
-        "picks": 14,
-        "matched_picks": 14,
+        "fit_score": 66.0,
+        "picks": 15,
+        "matched_picks": 15,
         "coverage": 1.0,
-        "mean_availability_rank": 4.43,
-        "median_availability_rank": 4.0,
-        "top_available_rate": 0.286,
-        "top_3_available_rate": 0.429,
-        "mean_log2_loss": 1.713
+        "mean_availability_rank": 4.67,
+        "median_availability_rank": 4,
+        "top_available_rate": 0.267,
+        "top_3_available_rate": 0.4,
+        "mean_log2_loss": 1.799
       },
       "confidence": "weak",
-      "score_gap": 1.6,
+      "score_gap": 2.9,
       "provider_scores": [
         {
           "source_id": "keeptradecut",
           "source_name": "KeepTradeCut",
           "fit_score": 68.9,
-          "picks": 14,
-          "matched_picks": 14,
+          "picks": 15,
+          "matched_picks": 15,
           "coverage": 1.0,
-          "mean_availability_rank": 5.79,
-          "median_availability_rank": 2.5,
-          "top_available_rate": 0.429,
-          "top_3_available_rate": 0.571,
-          "mean_log2_loss": 1.615,
+          "mean_availability_rank": 5.6,
+          "median_availability_rank": 3,
+          "top_available_rate": 0.4,
+          "top_3_available_rate": 0.6,
+          "mean_log2_loss": 1.613,
           "evidence": [
             {
               "pick_no": 5,
@@ -8777,21 +9621,43 @@
               "availability_rank": 1,
               "skipped_count": 0,
               "higher_ranked_available": []
+            },
+            {
+              "pick_no": 146,
+              "round": 15,
+              "player": "Jalen Coker",
+              "position": "WR",
+              "matched": true,
+              "overall_rank": 134,
+              "availability_rank": 3,
+              "skipped_count": 2,
+              "higher_ranked_available": [
+                {
+                  "name": "Chigoziem Okonkwo",
+                  "position": "TE",
+                  "overall_rank": 128
+                },
+                {
+                  "name": "Terrance Ferguson",
+                  "position": "TE",
+                  "overall_rank": 129
+                }
+              ]
             }
           ]
         },
         {
           "source_id": "fantasycalc",
           "source_name": "FantasyCalc",
-          "fit_score": 67.3,
-          "picks": 14,
-          "matched_picks": 14,
+          "fit_score": 66.0,
+          "picks": 15,
+          "matched_picks": 15,
           "coverage": 1.0,
-          "mean_availability_rank": 4.43,
-          "median_availability_rank": 4.0,
-          "top_available_rate": 0.286,
-          "top_3_available_rate": 0.429,
-          "mean_log2_loss": 1.713,
+          "mean_availability_rank": 4.67,
+          "median_availability_rank": 4,
+          "top_available_rate": 0.267,
+          "top_3_available_rate": 0.4,
+          "mean_log2_loss": 1.799,
           "evidence": [
             {
               "pick_no": 5,
@@ -9146,21 +10012,58 @@
               "availability_rank": 1,
               "skipped_count": 0,
               "higher_ranked_available": []
+            },
+            {
+              "pick_no": 146,
+              "round": 15,
+              "player": "Jalen Coker",
+              "position": "WR",
+              "matched": true,
+              "overall_rank": 144,
+              "availability_rank": 8,
+              "skipped_count": 7,
+              "higher_ranked_available": [
+                {
+                  "name": "Shedeur Sanders",
+                  "position": "QB",
+                  "overall_rank": 129
+                },
+                {
+                  "name": "J.J. McCarthy",
+                  "position": "QB",
+                  "overall_rank": 133
+                },
+                {
+                  "name": "Chris Godwin",
+                  "position": "WR",
+                  "overall_rank": 136
+                },
+                {
+                  "name": "Tua Tagovailoa",
+                  "position": "QB",
+                  "overall_rank": 137
+                },
+                {
+                  "name": "Courtland Sutton",
+                  "position": "WR",
+                  "overall_rank": 138
+                }
+              ]
             }
           ]
         },
         {
           "source_id": "fantasypros",
           "source_name": "FantasyPros ECR",
-          "fit_score": 64.6,
-          "picks": 14,
-          "matched_picks": 14,
+          "fit_score": 64.2,
+          "picks": 15,
+          "matched_picks": 15,
           "coverage": 1.0,
-          "mean_availability_rank": 6.36,
-          "median_availability_rank": 3.0,
-          "top_available_rate": 0.214,
-          "top_3_available_rate": 0.571,
-          "mean_log2_loss": 1.889,
+          "mean_availability_rank": 6.27,
+          "median_availability_rank": 3,
+          "top_available_rate": 0.2,
+          "top_3_available_rate": 0.533,
+          "mean_log2_loss": 1.918,
           "evidence": [
             {
               "pick_no": 5,
@@ -9506,405 +10409,53 @@
                   "overall_rank": 114
                 }
               ]
-            }
-          ]
-        },
-        {
-          "source_id": "dynastynerds",
-          "source_name": "Dynasty Nerds",
-          "fit_score": 62.4,
-          "picks": 14,
-          "matched_picks": 14,
-          "coverage": 1.0,
-          "mean_availability_rank": 6.93,
-          "median_availability_rank": 5.0,
-          "top_available_rate": 0.286,
-          "top_3_available_rate": 0.429,
-          "mean_log2_loss": 2.044,
-          "evidence": [
+            },
             {
-              "pick_no": 5,
-              "round": 1,
-              "player": "Puka Nacua",
+              "pick_no": 146,
+              "round": 15,
+              "player": "Jalen Coker",
               "position": "WR",
               "matched": true,
-              "overall_rank": 8,
+              "overall_rank": 130,
               "availability_rank": 5,
               "skipped_count": 4,
               "higher_ranked_available": [
                 {
-                  "name": "Josh Allen",
-                  "position": "QB",
-                  "overall_rank": 1
-                },
-                {
-                  "name": "Drake Maye",
-                  "position": "QB",
-                  "overall_rank": 3
-                },
-                {
-                  "name": "Jaxon Smith-Njigba",
+                  "name": "Courtland Sutton",
                   "position": "WR",
-                  "overall_rank": 6
+                  "overall_rank": 114
                 },
                 {
-                  "name": "Brock Bowers",
-                  "position": "TE",
-                  "overall_rank": 7
+                  "name": "Jakobi Meyers",
+                  "position": "WR",
+                  "overall_rank": 123
+                },
+                {
+                  "name": "Chris Godwin Jr.",
+                  "position": "WR",
+                  "overall_rank": 126
+                },
+                {
+                  "name": "Antonio Williams",
+                  "position": "WR",
+                  "overall_rank": 129
                 }
               ]
-            },
-            {
-              "pick_no": 16,
-              "round": 2,
-              "player": "Lamar Jackson",
-              "position": "QB",
-              "matched": true,
-              "overall_rank": 24,
-              "availability_rank": 10,
-              "skipped_count": 9,
-              "higher_ranked_available": [
-                {
-                  "name": "CeeDee Lamb",
-                  "position": "WR",
-                  "overall_rank": 15
-                },
-                {
-                  "name": "De'Von Achane",
-                  "position": "RB",
-                  "overall_rank": 16
-                },
-                {
-                  "name": "Malik Nabers",
-                  "position": "WR",
-                  "overall_rank": 17
-                },
-                {
-                  "name": "Joe Burrow",
-                  "position": "QB",
-                  "overall_rank": 18
-                },
-                {
-                  "name": "Jeremiyah Love",
-                  "position": "RB",
-                  "overall_rank": 19
-                }
-              ]
-            },
-            {
-              "pick_no": 26,
-              "round": 3,
-              "player": "Colston Loveland",
-              "position": "TE",
-              "matched": true,
-              "overall_rank": 26,
-              "availability_rank": 3,
-              "skipped_count": 2,
-              "higher_ranked_available": [
-                {
-                  "name": "Jaxson Dart",
-                  "position": "QB",
-                  "overall_rank": 21
-                },
-                {
-                  "name": "Patrick Mahomes",
-                  "position": "QB",
-                  "overall_rank": 23
-                }
-              ]
-            },
-            {
-              "pick_no": 35,
-              "round": 4,
-              "player": "Jalen Hurts",
-              "position": "QB",
-              "matched": true,
-              "overall_rank": 27,
-              "availability_rank": 1,
-              "skipped_count": 0,
-              "higher_ranked_available": []
-            },
-            {
-              "pick_no": 52,
-              "round": 6,
-              "player": "Breece Hall",
-              "position": "RB",
-              "matched": true,
-              "overall_rank": 39,
-              "availability_rank": 1,
-              "skipped_count": 0,
-              "higher_ranked_available": []
-            },
-            {
-              "pick_no": 55,
-              "round": 6,
-              "player": "A.J. Brown",
-              "position": "WR",
-              "matched": true,
-              "overall_rank": 61,
-              "availability_rank": 10,
-              "skipped_count": 9,
-              "higher_ranked_available": [
-                {
-                  "name": "Jordan Love",
-                  "position": "QB",
-                  "overall_rank": 41
-                },
-                {
-                  "name": "Fernando Mendoza",
-                  "position": "QB",
-                  "overall_rank": 47
-                },
-                {
-                  "name": "Rome Odunze",
-                  "position": "WR",
-                  "overall_rank": 48
-                },
-                {
-                  "name": "Marvin Harrison",
-                  "position": "WR",
-                  "overall_rank": 52
-                },
-                {
-                  "name": "Kyle Pitts",
-                  "position": "TE",
-                  "overall_rank": 54
-                }
-              ]
-            },
-            {
-              "pick_no": 63,
-              "round": 7,
-              "player": "DeVonta Smith",
-              "position": "WR",
-              "matched": true,
-              "overall_rank": 65,
-              "availability_rank": 9,
-              "skipped_count": 8,
-              "higher_ranked_available": [
-                {
-                  "name": "Jordan Love",
-                  "position": "QB",
-                  "overall_rank": 41
-                },
-                {
-                  "name": "Fernando Mendoza",
-                  "position": "QB",
-                  "overall_rank": 47
-                },
-                {
-                  "name": "Rome Odunze",
-                  "position": "WR",
-                  "overall_rank": 48
-                },
-                {
-                  "name": "Marvin Harrison",
-                  "position": "WR",
-                  "overall_rank": 52
-                },
-                {
-                  "name": "Brian Thomas",
-                  "position": "WR",
-                  "overall_rank": 56
-                }
-              ]
-            },
-            {
-              "pick_no": 72,
-              "round": 8,
-              "player": "Tee Higgins",
-              "position": "WR",
-              "matched": true,
-              "overall_rank": 64,
-              "availability_rank": 5,
-              "skipped_count": 4,
-              "higher_ranked_available": [
-                {
-                  "name": "Fernando Mendoza",
-                  "position": "QB",
-                  "overall_rank": 47
-                },
-                {
-                  "name": "Marvin Harrison",
-                  "position": "WR",
-                  "overall_rank": 52
-                },
-                {
-                  "name": "Jared Goff",
-                  "position": "QB",
-                  "overall_rank": 59
-                },
-                {
-                  "name": "Baker Mayfield",
-                  "position": "QB",
-                  "overall_rank": 60
-                }
-              ]
-            },
-            {
-              "pick_no": 86,
-              "round": 9,
-              "player": "Bhayshul Tuten",
-              "position": "RB",
-              "matched": true,
-              "overall_rank": 84,
-              "availability_rank": 3,
-              "skipped_count": 2,
-              "higher_ranked_available": [
-                {
-                  "name": "Sam Darnold",
-                  "position": "QB",
-                  "overall_rank": 79
-                },
-                {
-                  "name": "Kyler Murray",
-                  "position": "QB",
-                  "overall_rank": 81
-                }
-              ]
-            },
-            {
-              "pick_no": 95,
-              "round": 10,
-              "player": "Terry McLaurin",
-              "position": "WR",
-              "matched": true,
-              "overall_rank": 104,
-              "availability_rank": 14,
-              "skipped_count": 13,
-              "higher_ranked_available": [
-                {
-                  "name": "Sam Darnold",
-                  "position": "QB",
-                  "overall_rank": 79
-                },
-                {
-                  "name": "Jordan Addison",
-                  "position": "WR",
-                  "overall_rank": 87
-                },
-                {
-                  "name": "Omar Cooper",
-                  "position": "WR",
-                  "overall_rank": 88
-                },
-                {
-                  "name": "Malik Willis",
-                  "position": "QB",
-                  "overall_rank": 90
-                },
-                {
-                  "name": "Oronde Gadsden II",
-                  "position": "TE",
-                  "overall_rank": 91
-                }
-              ]
-            },
-            {
-              "pick_no": 106,
-              "round": 11,
-              "player": "Jaylen Warren",
-              "position": "RB",
-              "matched": true,
-              "overall_rank": 132,
-              "availability_rank": 29,
-              "skipped_count": 28,
-              "higher_ranked_available": [
-                {
-                  "name": "Omar Cooper",
-                  "position": "WR",
-                  "overall_rank": 88
-                },
-                {
-                  "name": "Malik Willis",
-                  "position": "QB",
-                  "overall_rank": 90
-                },
-                {
-                  "name": "Eli Stowers",
-                  "position": "TE",
-                  "overall_rank": 92
-                },
-                {
-                  "name": "Dalton Kincaid",
-                  "position": "TE",
-                  "overall_rank": 93
-                },
-                {
-                  "name": "Ricky Pearsall",
-                  "position": "WR",
-                  "overall_rank": 95
-                }
-              ]
-            },
-            {
-              "pick_no": 115,
-              "round": 12,
-              "player": "Wan'Dale Robinson",
-              "position": "WR",
-              "matched": true,
-              "overall_rank": 108,
-              "availability_rank": 5,
-              "skipped_count": 4,
-              "higher_ranked_available": [
-                {
-                  "name": "Omar Cooper",
-                  "position": "WR",
-                  "overall_rank": 88
-                },
-                {
-                  "name": "Malik Willis",
-                  "position": "QB",
-                  "overall_rank": 90
-                },
-                {
-                  "name": "Ricky Pearsall",
-                  "position": "WR",
-                  "overall_rank": 95
-                },
-                {
-                  "name": "Jayden Reed",
-                  "position": "WR",
-                  "overall_rank": 105
-                }
-              ]
-            },
-            {
-              "pick_no": 126,
-              "round": 13,
-              "player": "Malik Willis",
-              "position": "QB",
-              "matched": true,
-              "overall_rank": 90,
-              "availability_rank": 1,
-              "skipped_count": 0,
-              "higher_ranked_available": []
-            },
-            {
-              "pick_no": 135,
-              "round": 14,
-              "player": "Jayden Reed",
-              "position": "WR",
-              "matched": true,
-              "overall_rank": 105,
-              "availability_rank": 1,
-              "skipped_count": 0,
-              "higher_ranked_available": []
             }
           ]
         },
         {
           "source_id": "draftsharks_adp",
           "source_name": "DraftSharks superflex ADP",
-          "fit_score": 60.9,
-          "picks": 14,
-          "matched_picks": 14,
+          "fit_score": 60.8,
+          "picks": 15,
+          "matched_picks": 15,
           "coverage": 1.0,
-          "mean_availability_rank": 6.36,
-          "median_availability_rank": 4.0,
-          "top_available_rate": 0.143,
-          "top_3_available_rate": 0.5,
-          "mean_log2_loss": 2.144,
+          "mean_availability_rank": 6.27,
+          "median_availability_rank": 5,
+          "top_available_rate": 0.133,
+          "top_3_available_rate": 0.467,
+          "mean_log2_loss": 2.156,
           "evidence": [
             {
               "pick_no": 5,
@@ -10279,6 +10830,459 @@
                   "name": "Chris Bell",
                   "position": "WR",
                   "overall_rank": 134
+                }
+              ]
+            },
+            {
+              "pick_no": 146,
+              "round": 15,
+              "player": "Jalen Coker",
+              "position": "WR",
+              "matched": true,
+              "overall_rank": 137,
+              "availability_rank": 5,
+              "skipped_count": 4,
+              "higher_ranked_available": [
+                {
+                  "name": "Courtland Sutton",
+                  "position": "WR",
+                  "overall_rank": 123
+                },
+                {
+                  "name": "Jakobi Meyers",
+                  "position": "WR",
+                  "overall_rank": 127
+                },
+                {
+                  "name": "Chris Bell",
+                  "position": "WR",
+                  "overall_rank": 134
+                },
+                {
+                  "name": "Mason Taylor",
+                  "position": "TE",
+                  "overall_rank": 136
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "source_id": "dynastynerds",
+          "source_name": "Dynasty Nerds",
+          "fit_score": 60.1,
+          "picks": 15,
+          "matched_picks": 15,
+          "coverage": 1.0,
+          "mean_availability_rank": 7.87,
+          "median_availability_rank": 5,
+          "top_available_rate": 0.267,
+          "top_3_available_rate": 0.4,
+          "mean_log2_loss": 2.2,
+          "evidence": [
+            {
+              "pick_no": 5,
+              "round": 1,
+              "player": "Puka Nacua",
+              "position": "WR",
+              "matched": true,
+              "overall_rank": 8,
+              "availability_rank": 5,
+              "skipped_count": 4,
+              "higher_ranked_available": [
+                {
+                  "name": "Josh Allen",
+                  "position": "QB",
+                  "overall_rank": 1
+                },
+                {
+                  "name": "Drake Maye",
+                  "position": "QB",
+                  "overall_rank": 3
+                },
+                {
+                  "name": "Jaxon Smith-Njigba",
+                  "position": "WR",
+                  "overall_rank": 6
+                },
+                {
+                  "name": "Brock Bowers",
+                  "position": "TE",
+                  "overall_rank": 7
+                }
+              ]
+            },
+            {
+              "pick_no": 16,
+              "round": 2,
+              "player": "Lamar Jackson",
+              "position": "QB",
+              "matched": true,
+              "overall_rank": 24,
+              "availability_rank": 10,
+              "skipped_count": 9,
+              "higher_ranked_available": [
+                {
+                  "name": "CeeDee Lamb",
+                  "position": "WR",
+                  "overall_rank": 15
+                },
+                {
+                  "name": "De'Von Achane",
+                  "position": "RB",
+                  "overall_rank": 16
+                },
+                {
+                  "name": "Malik Nabers",
+                  "position": "WR",
+                  "overall_rank": 17
+                },
+                {
+                  "name": "Joe Burrow",
+                  "position": "QB",
+                  "overall_rank": 18
+                },
+                {
+                  "name": "Jeremiyah Love",
+                  "position": "RB",
+                  "overall_rank": 19
+                }
+              ]
+            },
+            {
+              "pick_no": 26,
+              "round": 3,
+              "player": "Colston Loveland",
+              "position": "TE",
+              "matched": true,
+              "overall_rank": 26,
+              "availability_rank": 3,
+              "skipped_count": 2,
+              "higher_ranked_available": [
+                {
+                  "name": "Jaxson Dart",
+                  "position": "QB",
+                  "overall_rank": 21
+                },
+                {
+                  "name": "Patrick Mahomes",
+                  "position": "QB",
+                  "overall_rank": 23
+                }
+              ]
+            },
+            {
+              "pick_no": 35,
+              "round": 4,
+              "player": "Jalen Hurts",
+              "position": "QB",
+              "matched": true,
+              "overall_rank": 27,
+              "availability_rank": 1,
+              "skipped_count": 0,
+              "higher_ranked_available": []
+            },
+            {
+              "pick_no": 52,
+              "round": 6,
+              "player": "Breece Hall",
+              "position": "RB",
+              "matched": true,
+              "overall_rank": 39,
+              "availability_rank": 1,
+              "skipped_count": 0,
+              "higher_ranked_available": []
+            },
+            {
+              "pick_no": 55,
+              "round": 6,
+              "player": "A.J. Brown",
+              "position": "WR",
+              "matched": true,
+              "overall_rank": 61,
+              "availability_rank": 10,
+              "skipped_count": 9,
+              "higher_ranked_available": [
+                {
+                  "name": "Jordan Love",
+                  "position": "QB",
+                  "overall_rank": 41
+                },
+                {
+                  "name": "Fernando Mendoza",
+                  "position": "QB",
+                  "overall_rank": 47
+                },
+                {
+                  "name": "Rome Odunze",
+                  "position": "WR",
+                  "overall_rank": 48
+                },
+                {
+                  "name": "Marvin Harrison",
+                  "position": "WR",
+                  "overall_rank": 52
+                },
+                {
+                  "name": "Kyle Pitts",
+                  "position": "TE",
+                  "overall_rank": 54
+                }
+              ]
+            },
+            {
+              "pick_no": 63,
+              "round": 7,
+              "player": "DeVonta Smith",
+              "position": "WR",
+              "matched": true,
+              "overall_rank": 65,
+              "availability_rank": 9,
+              "skipped_count": 8,
+              "higher_ranked_available": [
+                {
+                  "name": "Jordan Love",
+                  "position": "QB",
+                  "overall_rank": 41
+                },
+                {
+                  "name": "Fernando Mendoza",
+                  "position": "QB",
+                  "overall_rank": 47
+                },
+                {
+                  "name": "Rome Odunze",
+                  "position": "WR",
+                  "overall_rank": 48
+                },
+                {
+                  "name": "Marvin Harrison",
+                  "position": "WR",
+                  "overall_rank": 52
+                },
+                {
+                  "name": "Brian Thomas",
+                  "position": "WR",
+                  "overall_rank": 56
+                }
+              ]
+            },
+            {
+              "pick_no": 72,
+              "round": 8,
+              "player": "Tee Higgins",
+              "position": "WR",
+              "matched": true,
+              "overall_rank": 64,
+              "availability_rank": 5,
+              "skipped_count": 4,
+              "higher_ranked_available": [
+                {
+                  "name": "Fernando Mendoza",
+                  "position": "QB",
+                  "overall_rank": 47
+                },
+                {
+                  "name": "Marvin Harrison",
+                  "position": "WR",
+                  "overall_rank": 52
+                },
+                {
+                  "name": "Jared Goff",
+                  "position": "QB",
+                  "overall_rank": 59
+                },
+                {
+                  "name": "Baker Mayfield",
+                  "position": "QB",
+                  "overall_rank": 60
+                }
+              ]
+            },
+            {
+              "pick_no": 86,
+              "round": 9,
+              "player": "Bhayshul Tuten",
+              "position": "RB",
+              "matched": true,
+              "overall_rank": 84,
+              "availability_rank": 3,
+              "skipped_count": 2,
+              "higher_ranked_available": [
+                {
+                  "name": "Sam Darnold",
+                  "position": "QB",
+                  "overall_rank": 79
+                },
+                {
+                  "name": "Kyler Murray",
+                  "position": "QB",
+                  "overall_rank": 81
+                }
+              ]
+            },
+            {
+              "pick_no": 95,
+              "round": 10,
+              "player": "Terry McLaurin",
+              "position": "WR",
+              "matched": true,
+              "overall_rank": 104,
+              "availability_rank": 14,
+              "skipped_count": 13,
+              "higher_ranked_available": [
+                {
+                  "name": "Sam Darnold",
+                  "position": "QB",
+                  "overall_rank": 79
+                },
+                {
+                  "name": "Jordan Addison",
+                  "position": "WR",
+                  "overall_rank": 87
+                },
+                {
+                  "name": "Omar Cooper",
+                  "position": "WR",
+                  "overall_rank": 88
+                },
+                {
+                  "name": "Malik Willis",
+                  "position": "QB",
+                  "overall_rank": 90
+                },
+                {
+                  "name": "Oronde Gadsden II",
+                  "position": "TE",
+                  "overall_rank": 91
+                }
+              ]
+            },
+            {
+              "pick_no": 106,
+              "round": 11,
+              "player": "Jaylen Warren",
+              "position": "RB",
+              "matched": true,
+              "overall_rank": 132,
+              "availability_rank": 29,
+              "skipped_count": 28,
+              "higher_ranked_available": [
+                {
+                  "name": "Omar Cooper",
+                  "position": "WR",
+                  "overall_rank": 88
+                },
+                {
+                  "name": "Malik Willis",
+                  "position": "QB",
+                  "overall_rank": 90
+                },
+                {
+                  "name": "Eli Stowers",
+                  "position": "TE",
+                  "overall_rank": 92
+                },
+                {
+                  "name": "Dalton Kincaid",
+                  "position": "TE",
+                  "overall_rank": 93
+                },
+                {
+                  "name": "Ricky Pearsall",
+                  "position": "WR",
+                  "overall_rank": 95
+                }
+              ]
+            },
+            {
+              "pick_no": 115,
+              "round": 12,
+              "player": "Wan'Dale Robinson",
+              "position": "WR",
+              "matched": true,
+              "overall_rank": 108,
+              "availability_rank": 5,
+              "skipped_count": 4,
+              "higher_ranked_available": [
+                {
+                  "name": "Omar Cooper",
+                  "position": "WR",
+                  "overall_rank": 88
+                },
+                {
+                  "name": "Malik Willis",
+                  "position": "QB",
+                  "overall_rank": 90
+                },
+                {
+                  "name": "Ricky Pearsall",
+                  "position": "WR",
+                  "overall_rank": 95
+                },
+                {
+                  "name": "Jayden Reed",
+                  "position": "WR",
+                  "overall_rank": 105
+                }
+              ]
+            },
+            {
+              "pick_no": 126,
+              "round": 13,
+              "player": "Malik Willis",
+              "position": "QB",
+              "matched": true,
+              "overall_rank": 90,
+              "availability_rank": 1,
+              "skipped_count": 0,
+              "higher_ranked_available": []
+            },
+            {
+              "pick_no": 135,
+              "round": 14,
+              "player": "Jayden Reed",
+              "position": "WR",
+              "matched": true,
+              "overall_rank": 105,
+              "availability_rank": 1,
+              "skipped_count": 0,
+              "higher_ranked_available": []
+            },
+            {
+              "pick_no": 146,
+              "round": 15,
+              "player": "Jalen Coker",
+              "position": "WR",
+              "matched": true,
+              "overall_rank": 161,
+              "availability_rank": 21,
+              "skipped_count": 20,
+              "higher_ranked_available": [
+                {
+                  "name": "Chris Godwin",
+                  "position": "WR",
+                  "overall_rank": 125
+                },
+                {
+                  "name": "Germie Bernard",
+                  "position": "WR",
+                  "overall_rank": 126
+                },
+                {
+                  "name": "Antonio Williams",
+                  "position": "WR",
+                  "overall_rank": 127
+                },
+                {
+                  "name": "Chris Bell",
+                  "position": "WR",
+                  "overall_rank": 130
+                },
+                {
+                  "name": "Jakobi Meyers",
+                  "position": "WR",
+                  "overall_rank": 131
                 }
               ]
             }
@@ -14838,7 +15842,7 @@
     {
       "roster_id": 1,
       "username": "justinmfftt",
-      "pick_count": 13,
+      "pick_count": 16,
       "picks": [
         {
           "pick_no": 8,
@@ -14917,49 +15921,67 @@
           "round": 13,
           "name": "De'Zhaun Stribling",
           "position": "WR"
+        },
+        {
+          "pick_no": 138,
+          "round": 14,
+          "name": "J.K. Dobbins",
+          "position": "RB"
+        },
+        {
+          "pick_no": 143,
+          "round": 15,
+          "name": "Jordan Mason",
+          "position": "RB"
+        },
+        {
+          "pick_no": 148,
+          "round": 15,
+          "name": "Chig Okonkwo",
+          "position": "TE"
         }
       ],
       "inferred_source": {
         "source_id": "keeptradecut",
         "source_name": "KeepTradeCut",
-        "fit_score": 74.1,
-        "picks": 13,
-        "matched_picks": 13,
+        "fit_score": 71.2,
+        "picks": 16,
+        "matched_picks": 16,
         "coverage": 1.0,
-        "mean_availability_rank": 3.77,
-        "median_availability_rank": 3,
-        "top_available_rate": 0.462,
-        "top_3_available_rate": 0.615,
-        "mean_log2_loss": 1.296
+        "mean_availability_rank": 4.75,
+        "median_availability_rank": 3.0,
+        "top_available_rate": 0.438,
+        "top_3_available_rate": 0.562,
+        "mean_log2_loss": 1.473
       },
       "runner_up": {
         "source_id": "fantasycalc",
         "source_name": "FantasyCalc",
-        "fit_score": 64.1,
-        "picks": 13,
-        "matched_picks": 13,
+        "fit_score": 61.8,
+        "picks": 16,
+        "matched_picks": 16,
         "coverage": 1.0,
-        "mean_availability_rank": 5.38,
-        "median_availability_rank": 4,
-        "top_available_rate": 0.231,
-        "top_3_available_rate": 0.385,
-        "mean_log2_loss": 1.923
+        "mean_availability_rank": 5.94,
+        "median_availability_rank": 4.5,
+        "top_available_rate": 0.188,
+        "top_3_available_rate": 0.312,
+        "mean_log2_loss": 2.083
       },
       "confidence": "moderate",
-      "score_gap": 10.0,
+      "score_gap": 9.4,
       "provider_scores": [
         {
           "source_id": "keeptradecut",
           "source_name": "KeepTradeCut",
-          "fit_score": 74.1,
-          "picks": 13,
-          "matched_picks": 13,
+          "fit_score": 71.2,
+          "picks": 16,
+          "matched_picks": 16,
           "coverage": 1.0,
-          "mean_availability_rank": 3.77,
-          "median_availability_rank": 3,
-          "top_available_rate": 0.462,
-          "top_3_available_rate": 0.615,
-          "mean_log2_loss": 1.296,
+          "mean_availability_rank": 4.75,
+          "median_availability_rank": 3.0,
+          "top_available_rate": 0.438,
+          "top_3_available_rate": 0.562,
+          "mean_log2_loss": 1.473,
           "evidence": [
             {
               "pick_no": 8,
@@ -15235,21 +16257,101 @@
                   "overall_rank": 121
                 }
               ]
+            },
+            {
+              "pick_no": 138,
+              "round": 14,
+              "player": "J.K. Dobbins",
+              "position": "RB",
+              "matched": true,
+              "overall_rank": 137,
+              "availability_rank": 5,
+              "skipped_count": 4,
+              "higher_ranked_available": [
+                {
+                  "name": "Chigoziem Okonkwo",
+                  "position": "TE",
+                  "overall_rank": 128
+                },
+                {
+                  "name": "Terrance Ferguson",
+                  "position": "TE",
+                  "overall_rank": 129
+                },
+                {
+                  "name": "AJ Barner",
+                  "position": "TE",
+                  "overall_rank": 130
+                },
+                {
+                  "name": "Jalen Coker",
+                  "position": "WR",
+                  "overall_rank": 134
+                }
+              ]
+            },
+            {
+              "pick_no": 143,
+              "round": 15,
+              "player": "Jordan Mason",
+              "position": "RB",
+              "matched": true,
+              "overall_rank": 161,
+              "availability_rank": 21,
+              "skipped_count": 20,
+              "higher_ranked_available": [
+                {
+                  "name": "Chigoziem Okonkwo",
+                  "position": "TE",
+                  "overall_rank": 128
+                },
+                {
+                  "name": "Terrance Ferguson",
+                  "position": "TE",
+                  "overall_rank": 129
+                },
+                {
+                  "name": "Jalen Coker",
+                  "position": "WR",
+                  "overall_rank": 134
+                },
+                {
+                  "name": "Courtland Sutton",
+                  "position": "WR",
+                  "overall_rank": 138
+                },
+                {
+                  "name": "Antonio Williams",
+                  "position": "WR",
+                  "overall_rank": 142
+                }
+              ]
+            },
+            {
+              "pick_no": 148,
+              "round": 15,
+              "player": "Chig Okonkwo",
+              "position": "TE",
+              "matched": true,
+              "overall_rank": 128,
+              "availability_rank": 1,
+              "skipped_count": 0,
+              "higher_ranked_available": []
             }
           ]
         },
         {
           "source_id": "fantasycalc",
           "source_name": "FantasyCalc",
-          "fit_score": 64.1,
-          "picks": 13,
-          "matched_picks": 13,
+          "fit_score": 61.8,
+          "picks": 16,
+          "matched_picks": 16,
           "coverage": 1.0,
-          "mean_availability_rank": 5.38,
-          "median_availability_rank": 4,
-          "top_available_rate": 0.231,
-          "top_3_available_rate": 0.385,
-          "mean_log2_loss": 1.923,
+          "mean_availability_rank": 5.94,
+          "median_availability_rank": 4.5,
+          "top_available_rate": 0.188,
+          "top_3_available_rate": 0.312,
+          "mean_log2_loss": 2.083,
           "evidence": [
             {
               "pick_no": 8,
@@ -15593,21 +16695,117 @@
                   "overall_rank": 116
                 }
               ]
+            },
+            {
+              "pick_no": 138,
+              "round": 14,
+              "player": "J.K. Dobbins",
+              "position": "RB",
+              "matched": true,
+              "overall_rank": 135,
+              "availability_rank": 4,
+              "skipped_count": 3,
+              "higher_ranked_available": [
+                {
+                  "name": "Shedeur Sanders",
+                  "position": "QB",
+                  "overall_rank": 129
+                },
+                {
+                  "name": "Kenny Gainwell",
+                  "position": "RB",
+                  "overall_rank": 131
+                },
+                {
+                  "name": "J.J. McCarthy",
+                  "position": "QB",
+                  "overall_rank": 133
+                }
+              ]
+            },
+            {
+              "pick_no": 143,
+              "round": 15,
+              "player": "Jordan Mason",
+              "position": "RB",
+              "matched": true,
+              "overall_rank": 155,
+              "availability_rank": 16,
+              "skipped_count": 15,
+              "higher_ranked_available": [
+                {
+                  "name": "Shedeur Sanders",
+                  "position": "QB",
+                  "overall_rank": 129
+                },
+                {
+                  "name": "J.J. McCarthy",
+                  "position": "QB",
+                  "overall_rank": 133
+                },
+                {
+                  "name": "Chris Godwin",
+                  "position": "WR",
+                  "overall_rank": 136
+                },
+                {
+                  "name": "Tua Tagovailoa",
+                  "position": "QB",
+                  "overall_rank": 137
+                },
+                {
+                  "name": "Courtland Sutton",
+                  "position": "WR",
+                  "overall_rank": 138
+                }
+              ]
+            },
+            {
+              "pick_no": 148,
+              "round": 15,
+              "player": "Chig Okonkwo",
+              "position": "TE",
+              "matched": true,
+              "overall_rank": 139,
+              "availability_rank": 5,
+              "skipped_count": 4,
+              "higher_ranked_available": [
+                {
+                  "name": "Shedeur Sanders",
+                  "position": "QB",
+                  "overall_rank": 129
+                },
+                {
+                  "name": "J.J. McCarthy",
+                  "position": "QB",
+                  "overall_rank": 133
+                },
+                {
+                  "name": "Chris Godwin",
+                  "position": "WR",
+                  "overall_rank": 136
+                },
+                {
+                  "name": "Tua Tagovailoa",
+                  "position": "QB",
+                  "overall_rank": 137
+                }
+              ]
             }
           ]
         },
         {
           "source_id": "dynastynerds",
           "source_name": "Dynasty Nerds",
-          "fit_score": 61.3,
-          "picks": 13,
-          "matched_picks": 13,
+          "fit_score": 56.8,
+          "picks": 16,
+          "matched_picks": 16,
           "coverage": 1.0,
-          "mean_availability_rank": 6.54,
-          "median_availability_rank": 4,
-          "top_available_rate": 0.077,
-          "top_3_available_rate": 0.462,
-          "mean_log2_loss": 2.12,
+          "mean_availability_rank": 8.69,
+          "median_availability_rank": 6.0,
+          "top_available_rate": 0.062,
+          "top_3_available_rate": 0.375,
+          "mean_log2_loss": 2.451,
           "evidence": [
             {
               "pick_no": 8,
@@ -15958,21 +17156,132 @@
                   "overall_rank": 118
                 }
               ]
+            },
+            {
+              "pick_no": 138,
+              "round": 14,
+              "player": "J.K. Dobbins",
+              "position": "RB",
+              "matched": true,
+              "overall_rank": 135,
+              "availability_rank": 6,
+              "skipped_count": 5,
+              "higher_ranked_available": [
+                {
+                  "name": "Chris Godwin",
+                  "position": "WR",
+                  "overall_rank": 125
+                },
+                {
+                  "name": "Germie Bernard",
+                  "position": "WR",
+                  "overall_rank": 126
+                },
+                {
+                  "name": "Antonio Williams",
+                  "position": "WR",
+                  "overall_rank": 127
+                },
+                {
+                  "name": "Chris Bell",
+                  "position": "WR",
+                  "overall_rank": 130
+                },
+                {
+                  "name": "Jakobi Meyers",
+                  "position": "WR",
+                  "overall_rank": 131
+                }
+              ]
+            },
+            {
+              "pick_no": 143,
+              "round": 15,
+              "player": "Jordan Mason",
+              "position": "RB",
+              "matched": true,
+              "overall_rank": 171,
+              "availability_rank": 30,
+              "skipped_count": 29,
+              "higher_ranked_available": [
+                {
+                  "name": "Chris Godwin",
+                  "position": "WR",
+                  "overall_rank": 125
+                },
+                {
+                  "name": "Germie Bernard",
+                  "position": "WR",
+                  "overall_rank": 126
+                },
+                {
+                  "name": "Antonio Williams",
+                  "position": "WR",
+                  "overall_rank": 127
+                },
+                {
+                  "name": "Chris Bell",
+                  "position": "WR",
+                  "overall_rank": 130
+                },
+                {
+                  "name": "Jakobi Meyers",
+                  "position": "WR",
+                  "overall_rank": 131
+                }
+              ]
+            },
+            {
+              "pick_no": 148,
+              "round": 15,
+              "player": "Chig Okonkwo",
+              "position": "TE",
+              "matched": true,
+              "overall_rank": 158,
+              "availability_rank": 18,
+              "skipped_count": 17,
+              "higher_ranked_available": [
+                {
+                  "name": "Chris Godwin",
+                  "position": "WR",
+                  "overall_rank": 125
+                },
+                {
+                  "name": "Germie Bernard",
+                  "position": "WR",
+                  "overall_rank": 126
+                },
+                {
+                  "name": "Antonio Williams",
+                  "position": "WR",
+                  "overall_rank": 127
+                },
+                {
+                  "name": "Chris Bell",
+                  "position": "WR",
+                  "overall_rank": 130
+                },
+                {
+                  "name": "Jakobi Meyers",
+                  "position": "WR",
+                  "overall_rank": 131
+                }
+              ]
             }
           ]
         },
         {
           "source_id": "draftsharks_adp",
           "source_name": "DraftSharks superflex ADP",
-          "fit_score": 54.3,
-          "picks": 13,
-          "matched_picks": 13,
+          "fit_score": 50.3,
+          "picks": 16,
+          "matched_picks": 16,
           "coverage": 1.0,
-          "mean_availability_rank": 21.0,
-          "median_availability_rank": 5,
-          "top_available_rate": 0.077,
-          "top_3_available_rate": 0.462,
-          "mean_log2_loss": 2.643,
+          "mean_availability_rank": 21.5,
+          "median_availability_rank": 6.5,
+          "top_available_rate": 0.062,
+          "top_3_available_rate": 0.375,
+          "mean_log2_loss": 2.97,
           "evidence": [
             {
               "pick_no": 8,
@@ -16323,21 +17632,132 @@
                   "overall_rank": 119
                 }
               ]
+            },
+            {
+              "pick_no": 138,
+              "round": 14,
+              "player": "J.K. Dobbins",
+              "position": "RB",
+              "matched": true,
+              "overall_rank": 143,
+              "availability_rank": 10,
+              "skipped_count": 9,
+              "higher_ranked_available": [
+                {
+                  "name": "Courtland Sutton",
+                  "position": "WR",
+                  "overall_rank": 123
+                },
+                {
+                  "name": "Jakobi Meyers",
+                  "position": "WR",
+                  "overall_rank": 127
+                },
+                {
+                  "name": "Chris Bell",
+                  "position": "WR",
+                  "overall_rank": 134
+                },
+                {
+                  "name": "Mason Taylor",
+                  "position": "TE",
+                  "overall_rank": 136
+                },
+                {
+                  "name": "Jalen Coker",
+                  "position": "WR",
+                  "overall_rank": 137
+                }
+              ]
+            },
+            {
+              "pick_no": 143,
+              "round": 15,
+              "player": "Jordan Mason",
+              "position": "RB",
+              "matched": true,
+              "overall_rank": 168,
+              "availability_rank": 27,
+              "skipped_count": 26,
+              "higher_ranked_available": [
+                {
+                  "name": "Courtland Sutton",
+                  "position": "WR",
+                  "overall_rank": 123
+                },
+                {
+                  "name": "Jakobi Meyers",
+                  "position": "WR",
+                  "overall_rank": 127
+                },
+                {
+                  "name": "Chris Bell",
+                  "position": "WR",
+                  "overall_rank": 134
+                },
+                {
+                  "name": "Mason Taylor",
+                  "position": "TE",
+                  "overall_rank": 136
+                },
+                {
+                  "name": "Jalen Coker",
+                  "position": "WR",
+                  "overall_rank": 137
+                }
+              ]
+            },
+            {
+              "pick_no": 148,
+              "round": 15,
+              "player": "Chig Okonkwo",
+              "position": "TE",
+              "matched": true,
+              "overall_rank": 179,
+              "availability_rank": 34,
+              "skipped_count": 33,
+              "higher_ranked_available": [
+                {
+                  "name": "Jakobi Meyers",
+                  "position": "WR",
+                  "overall_rank": 127
+                },
+                {
+                  "name": "Chris Bell",
+                  "position": "WR",
+                  "overall_rank": 134
+                },
+                {
+                  "name": "Mason Taylor",
+                  "position": "TE",
+                  "overall_rank": 136
+                },
+                {
+                  "name": "Germie Bernard",
+                  "position": "WR",
+                  "overall_rank": 139
+                },
+                {
+                  "name": "Chris Godwin",
+                  "position": "WR",
+                  "overall_rank": 140
+                }
+              ]
             }
           ]
         },
         {
           "source_id": "fantasypros",
           "source_name": "FantasyPros ECR",
-          "fit_score": 51.2,
-          "picks": 13,
-          "matched_picks": 13,
+          "fit_score": 49.7,
+          "picks": 16,
+          "matched_picks": 16,
           "coverage": 1.0,
-          "mean_availability_rank": 11.0,
-          "median_availability_rank": 8,
+          "mean_availability_rank": 11.62,
+          "median_availability_rank": 8.5,
           "top_available_rate": 0.0,
-          "top_3_available_rate": 0.308,
-          "mean_log2_loss": 2.894,
+          "top_3_available_rate": 0.25,
+          "mean_log2_loss": 3.023,
           "evidence": [
             {
               "pick_no": 8,
@@ -16739,6 +18159,112 @@
                   "overall_rank": 114
                 }
               ]
+            },
+            {
+              "pick_no": 138,
+              "round": 14,
+              "player": "J.K. Dobbins",
+              "position": "RB",
+              "matched": true,
+              "overall_rank": 151,
+              "availability_rank": 15,
+              "skipped_count": 14,
+              "higher_ranked_available": [
+                {
+                  "name": "Courtland Sutton",
+                  "position": "WR",
+                  "overall_rank": 114
+                },
+                {
+                  "name": "Jakobi Meyers",
+                  "position": "WR",
+                  "overall_rank": 123
+                },
+                {
+                  "name": "Chris Godwin Jr.",
+                  "position": "WR",
+                  "overall_rank": 126
+                },
+                {
+                  "name": "Antonio Williams",
+                  "position": "WR",
+                  "overall_rank": 129
+                },
+                {
+                  "name": "Jalen Coker",
+                  "position": "WR",
+                  "overall_rank": 130
+                }
+              ]
+            },
+            {
+              "pick_no": 143,
+              "round": 15,
+              "player": "Jordan Mason",
+              "position": "RB",
+              "matched": true,
+              "overall_rank": 164,
+              "availability_rank": 23,
+              "skipped_count": 22,
+              "higher_ranked_available": [
+                {
+                  "name": "Courtland Sutton",
+                  "position": "WR",
+                  "overall_rank": 114
+                },
+                {
+                  "name": "Jakobi Meyers",
+                  "position": "WR",
+                  "overall_rank": 123
+                },
+                {
+                  "name": "Chris Godwin Jr.",
+                  "position": "WR",
+                  "overall_rank": 126
+                },
+                {
+                  "name": "Antonio Williams",
+                  "position": "WR",
+                  "overall_rank": 129
+                },
+                {
+                  "name": "Jalen Coker",
+                  "position": "WR",
+                  "overall_rank": 130
+                }
+              ]
+            },
+            {
+              "pick_no": 148,
+              "round": 15,
+              "player": "Chig Okonkwo",
+              "position": "TE",
+              "matched": true,
+              "overall_rank": 138,
+              "availability_rank": 5,
+              "skipped_count": 4,
+              "higher_ranked_available": [
+                {
+                  "name": "Jakobi Meyers",
+                  "position": "WR",
+                  "overall_rank": 123
+                },
+                {
+                  "name": "Chris Godwin Jr.",
+                  "position": "WR",
+                  "overall_rank": 126
+                },
+                {
+                  "name": "Antonio Williams",
+                  "position": "WR",
+                  "overall_rank": 129
+                },
+                {
+                  "name": "Khalil Shakir",
+                  "position": "WR",
+                  "overall_rank": 136
+                }
+              ]
             }
           ]
         }
@@ -16747,7 +18273,7 @@
     {
       "roster_id": 3,
       "username": "nedjh2",
-      "pick_count": 13,
+      "pick_count": 15,
       "picks": [
         {
           "pick_no": 10,
@@ -16826,49 +18352,458 @@
           "round": 13,
           "name": "Mike Evans",
           "position": "WR"
+        },
+        {
+          "pick_no": 140,
+          "round": 14,
+          "name": "Kenny Gainwell",
+          "position": "RB"
+        },
+        {
+          "pick_no": 141,
+          "round": 15,
+          "name": "Jacory Croskey-Merritt",
+          "position": "RB"
         }
       ],
       "inferred_source": {
-        "source_id": "keeptradecut",
-        "source_name": "KeepTradeCut",
-        "fit_score": 64.0,
-        "picks": 13,
-        "matched_picks": 13,
-        "coverage": 1.0,
-        "mean_availability_rank": 4.77,
-        "median_availability_rank": 4,
-        "top_available_rate": 0.154,
-        "top_3_available_rate": 0.385,
-        "mean_log2_loss": 1.932
-      },
-      "runner_up": {
         "source_id": "fantasycalc",
         "source_name": "FantasyCalc",
-        "fit_score": 62.2,
-        "picks": 13,
-        "matched_picks": 13,
+        "fit_score": 62.5,
+        "picks": 15,
+        "matched_picks": 15,
         "coverage": 1.0,
-        "mean_availability_rank": 7.08,
+        "mean_availability_rank": 6.73,
         "median_availability_rank": 3,
-        "top_available_rate": 0.231,
-        "top_3_available_rate": 0.538,
-        "mean_log2_loss": 2.053
+        "top_available_rate": 0.2,
+        "top_3_available_rate": 0.533,
+        "mean_log2_loss": 2.033
+      },
+      "runner_up": {
+        "source_id": "keeptradecut",
+        "source_name": "KeepTradeCut",
+        "fit_score": 61.4,
+        "picks": 15,
+        "matched_picks": 15,
+        "coverage": 1.0,
+        "mean_availability_rank": 5.6,
+        "median_availability_rank": 5,
+        "top_available_rate": 0.133,
+        "top_3_available_rate": 0.333,
+        "mean_log2_loss": 2.114
       },
       "confidence": "weak",
-      "score_gap": 1.8,
+      "score_gap": 1.1,
       "provider_scores": [
+        {
+          "source_id": "fantasycalc",
+          "source_name": "FantasyCalc",
+          "fit_score": 62.5,
+          "picks": 15,
+          "matched_picks": 15,
+          "coverage": 1.0,
+          "mean_availability_rank": 6.73,
+          "median_availability_rank": 3,
+          "top_available_rate": 0.2,
+          "top_3_available_rate": 0.533,
+          "mean_log2_loss": 2.033,
+          "evidence": [
+            {
+              "pick_no": 10,
+              "round": 1,
+              "player": "Drake Maye",
+              "position": "QB",
+              "matched": true,
+              "overall_rank": 6,
+              "availability_rank": 1,
+              "skipped_count": 0,
+              "higher_ranked_available": []
+            },
+            {
+              "pick_no": 11,
+              "round": 2,
+              "player": "Amon-Ra St. Brown",
+              "position": "WR",
+              "matched": true,
+              "overall_rank": 9,
+              "availability_rank": 1,
+              "skipped_count": 0,
+              "higher_ranked_available": []
+            },
+            {
+              "pick_no": 21,
+              "round": 3,
+              "player": "Joe Burrow",
+              "position": "QB",
+              "matched": true,
+              "overall_rank": 16,
+              "availability_rank": 1,
+              "skipped_count": 0,
+              "higher_ranked_available": []
+            },
+            {
+              "pick_no": 40,
+              "round": 4,
+              "player": "Chase Brown",
+              "position": "RB",
+              "matched": true,
+              "overall_rank": 41,
+              "availability_rank": 3,
+              "skipped_count": 2,
+              "higher_ranked_available": [
+                {
+                  "name": "Emeka Egbuka",
+                  "position": "WR",
+                  "overall_rank": 32
+                },
+                {
+                  "name": "Carnell Tate",
+                  "position": "WR",
+                  "overall_rank": 34
+                }
+              ]
+            },
+            {
+              "pick_no": 41,
+              "round": 5,
+              "player": "Luther Burden",
+              "position": "WR",
+              "matched": true,
+              "overall_rank": 50,
+              "availability_rank": 10,
+              "skipped_count": 9,
+              "higher_ranked_available": [
+                {
+                  "name": "Emeka Egbuka",
+                  "position": "WR",
+                  "overall_rank": 32
+                },
+                {
+                  "name": "Carnell Tate",
+                  "position": "WR",
+                  "overall_rank": 34
+                },
+                {
+                  "name": "Dak Prescott",
+                  "position": "QB",
+                  "overall_rank": 43
+                },
+                {
+                  "name": "Fernando Mendoza",
+                  "position": "QB",
+                  "overall_rank": 44
+                },
+                {
+                  "name": "Garrett Wilson",
+                  "position": "WR",
+                  "overall_rank": 45
+                }
+              ]
+            },
+            {
+              "pick_no": 60,
+              "round": 6,
+              "player": "Kyren Williams",
+              "position": "RB",
+              "matched": true,
+              "overall_rank": 68,
+              "availability_rank": 11,
+              "skipped_count": 10,
+              "higher_ranked_available": [
+                {
+                  "name": "Fernando Mendoza",
+                  "position": "QB",
+                  "overall_rank": 44
+                },
+                {
+                  "name": "Jordan Love",
+                  "position": "QB",
+                  "overall_rank": 46
+                },
+                {
+                  "name": "DeVonta Smith",
+                  "position": "WR",
+                  "overall_rank": 54
+                },
+                {
+                  "name": "Cam Ward",
+                  "position": "QB",
+                  "overall_rank": 56
+                },
+                {
+                  "name": "Cam Skattebo",
+                  "position": "RB",
+                  "overall_rank": 60
+                }
+              ]
+            },
+            {
+              "pick_no": 61,
+              "round": 7,
+              "player": "Kyle Pitts",
+              "position": "TE",
+              "matched": true,
+              "overall_rank": 81,
+              "availability_rank": 21,
+              "skipped_count": 20,
+              "higher_ranked_available": [
+                {
+                  "name": "Fernando Mendoza",
+                  "position": "QB",
+                  "overall_rank": 44
+                },
+                {
+                  "name": "Jordan Love",
+                  "position": "QB",
+                  "overall_rank": 46
+                },
+                {
+                  "name": "DeVonta Smith",
+                  "position": "WR",
+                  "overall_rank": 54
+                },
+                {
+                  "name": "Cam Ward",
+                  "position": "QB",
+                  "overall_rank": 56
+                },
+                {
+                  "name": "Cam Skattebo",
+                  "position": "RB",
+                  "overall_rank": 60
+                }
+              ]
+            },
+            {
+              "pick_no": 71,
+              "round": 8,
+              "player": "Cam Skattebo",
+              "position": "RB",
+              "matched": true,
+              "overall_rank": 60,
+              "availability_rank": 2,
+              "skipped_count": 1,
+              "higher_ranked_available": [
+                {
+                  "name": "Fernando Mendoza",
+                  "position": "QB",
+                  "overall_rank": 44
+                }
+              ]
+            },
+            {
+              "pick_no": 81,
+              "round": 9,
+              "player": "Christian Watson",
+              "position": "WR",
+              "matched": true,
+              "overall_rank": 94,
+              "availability_rank": 15,
+              "skipped_count": 14,
+              "higher_ranked_available": [
+                {
+                  "name": "Jared Goff",
+                  "position": "QB",
+                  "overall_rank": 61
+                },
+                {
+                  "name": "Tyler Shough",
+                  "position": "QB",
+                  "overall_rank": 64
+                },
+                {
+                  "name": "Baker Mayfield",
+                  "position": "QB",
+                  "overall_rank": 67
+                },
+                {
+                  "name": "Derrick Henry",
+                  "position": "RB",
+                  "overall_rank": 74
+                },
+                {
+                  "name": "Kyler Murray",
+                  "position": "QB",
+                  "overall_rank": 78
+                }
+              ]
+            },
+            {
+              "pick_no": 100,
+              "round": 10,
+              "player": "Parker Washington",
+              "position": "WR",
+              "matched": true,
+              "overall_rank": 89,
+              "availability_rank": 2,
+              "skipped_count": 1,
+              "higher_ranked_available": [
+                {
+                  "name": "Sam Darnold",
+                  "position": "QB",
+                  "overall_rank": 84
+                }
+              ]
+            },
+            {
+              "pick_no": 110,
+              "round": 11,
+              "player": "Dalton Kincaid",
+              "position": "TE",
+              "matched": true,
+              "overall_rank": 120,
+              "availability_rank": 13,
+              "skipped_count": 12,
+              "higher_ranked_available": [
+                {
+                  "name": "Daniel Jones",
+                  "position": "QB",
+                  "overall_rank": 92
+                },
+                {
+                  "name": "Malik Willis",
+                  "position": "QB",
+                  "overall_rank": 95
+                },
+                {
+                  "name": "Josh Downs",
+                  "position": "WR",
+                  "overall_rank": 97
+                },
+                {
+                  "name": "Davante Adams",
+                  "position": "WR",
+                  "overall_rank": 99
+                },
+                {
+                  "name": "Mike Evans",
+                  "position": "WR",
+                  "overall_rank": 101
+                }
+              ]
+            },
+            {
+              "pick_no": 120,
+              "round": 12,
+              "player": "Jayden Higgins",
+              "position": "WR",
+              "matched": true,
+              "overall_rank": 127,
+              "availability_rank": 10,
+              "skipped_count": 9,
+              "higher_ranked_available": [
+                {
+                  "name": "Malik Willis",
+                  "position": "QB",
+                  "overall_rank": 95
+                },
+                {
+                  "name": "Josh Downs",
+                  "position": "WR",
+                  "overall_rank": 97
+                },
+                {
+                  "name": "Mike Evans",
+                  "position": "WR",
+                  "overall_rank": 101
+                },
+                {
+                  "name": "Blake Corum",
+                  "position": "RB",
+                  "overall_rank": 115
+                },
+                {
+                  "name": "Michael Pittman",
+                  "position": "WR",
+                  "overall_rank": 116
+                }
+              ]
+            },
+            {
+              "pick_no": 129,
+              "round": 13,
+              "player": "Mike Evans",
+              "position": "WR",
+              "matched": true,
+              "overall_rank": 101,
+              "availability_rank": 2,
+              "skipped_count": 1,
+              "higher_ranked_available": [
+                {
+                  "name": "Josh Downs",
+                  "position": "WR",
+                  "overall_rank": 97
+                }
+              ]
+            },
+            {
+              "pick_no": 140,
+              "round": 14,
+              "player": "Kenny Gainwell",
+              "position": "RB",
+              "matched": true,
+              "overall_rank": 131,
+              "availability_rank": 2,
+              "skipped_count": 1,
+              "higher_ranked_available": [
+                {
+                  "name": "Shedeur Sanders",
+                  "position": "QB",
+                  "overall_rank": 129
+                }
+              ]
+            },
+            {
+              "pick_no": 141,
+              "round": 15,
+              "player": "Jacory Croskey-Merritt",
+              "position": "RB",
+              "matched": true,
+              "overall_rank": 140,
+              "availability_rank": 7,
+              "skipped_count": 6,
+              "higher_ranked_available": [
+                {
+                  "name": "Shedeur Sanders",
+                  "position": "QB",
+                  "overall_rank": 129
+                },
+                {
+                  "name": "J.J. McCarthy",
+                  "position": "QB",
+                  "overall_rank": 133
+                },
+                {
+                  "name": "Chris Godwin",
+                  "position": "WR",
+                  "overall_rank": 136
+                },
+                {
+                  "name": "Tua Tagovailoa",
+                  "position": "QB",
+                  "overall_rank": 137
+                },
+                {
+                  "name": "Courtland Sutton",
+                  "position": "WR",
+                  "overall_rank": 138
+                }
+              ]
+            }
+          ]
+        },
         {
           "source_id": "keeptradecut",
           "source_name": "KeepTradeCut",
-          "fit_score": 64.0,
-          "picks": 13,
-          "matched_picks": 13,
+          "fit_score": 61.4,
+          "picks": 15,
+          "matched_picks": 15,
           "coverage": 1.0,
-          "mean_availability_rank": 4.77,
-          "median_availability_rank": 4,
-          "top_available_rate": 0.154,
-          "top_3_available_rate": 0.385,
-          "mean_log2_loss": 1.932,
+          "mean_availability_rank": 5.6,
+          "median_availability_rank": 5,
+          "top_available_rate": 0.133,
+          "top_3_available_rate": 0.333,
+          "mean_log2_loss": 2.114,
           "evidence": [
             {
               "pick_no": 10,
@@ -17223,347 +19158,78 @@
                   "overall_rank": 124
                 }
               ]
-            }
-          ]
-        },
-        {
-          "source_id": "fantasycalc",
-          "source_name": "FantasyCalc",
-          "fit_score": 62.2,
-          "picks": 13,
-          "matched_picks": 13,
-          "coverage": 1.0,
-          "mean_availability_rank": 7.08,
-          "median_availability_rank": 3,
-          "top_available_rate": 0.231,
-          "top_3_available_rate": 0.538,
-          "mean_log2_loss": 2.053,
-          "evidence": [
-            {
-              "pick_no": 10,
-              "round": 1,
-              "player": "Drake Maye",
-              "position": "QB",
-              "matched": true,
-              "overall_rank": 6,
-              "availability_rank": 1,
-              "skipped_count": 0,
-              "higher_ranked_available": []
             },
             {
-              "pick_no": 11,
-              "round": 2,
-              "player": "Amon-Ra St. Brown",
-              "position": "WR",
-              "matched": true,
-              "overall_rank": 9,
-              "availability_rank": 1,
-              "skipped_count": 0,
-              "higher_ranked_available": []
-            },
-            {
-              "pick_no": 21,
-              "round": 3,
-              "player": "Joe Burrow",
-              "position": "QB",
-              "matched": true,
-              "overall_rank": 16,
-              "availability_rank": 1,
-              "skipped_count": 0,
-              "higher_ranked_available": []
-            },
-            {
-              "pick_no": 40,
-              "round": 4,
-              "player": "Chase Brown",
+              "pick_no": 140,
+              "round": 14,
+              "player": "Kenny Gainwell",
               "position": "RB",
               "matched": true,
-              "overall_rank": 41,
-              "availability_rank": 3,
-              "skipped_count": 2,
+              "overall_rank": 153,
+              "availability_rank": 16,
+              "skipped_count": 15,
               "higher_ranked_available": [
                 {
-                  "name": "Emeka Egbuka",
-                  "position": "WR",
-                  "overall_rank": 32
+                  "name": "Chigoziem Okonkwo",
+                  "position": "TE",
+                  "overall_rank": 128
                 },
                 {
-                  "name": "Carnell Tate",
+                  "name": "Terrance Ferguson",
+                  "position": "TE",
+                  "overall_rank": 129
+                },
+                {
+                  "name": "AJ Barner",
+                  "position": "TE",
+                  "overall_rank": 130
+                },
+                {
+                  "name": "Jalen Coker",
                   "position": "WR",
-                  "overall_rank": 34
+                  "overall_rank": 134
+                },
+                {
+                  "name": "Courtland Sutton",
+                  "position": "WR",
+                  "overall_rank": 138
                 }
               ]
             },
             {
-              "pick_no": 41,
-              "round": 5,
-              "player": "Luther Burden",
-              "position": "WR",
-              "matched": true,
-              "overall_rank": 50,
-              "availability_rank": 10,
-              "skipped_count": 9,
-              "higher_ranked_available": [
-                {
-                  "name": "Emeka Egbuka",
-                  "position": "WR",
-                  "overall_rank": 32
-                },
-                {
-                  "name": "Carnell Tate",
-                  "position": "WR",
-                  "overall_rank": 34
-                },
-                {
-                  "name": "Dak Prescott",
-                  "position": "QB",
-                  "overall_rank": 43
-                },
-                {
-                  "name": "Fernando Mendoza",
-                  "position": "QB",
-                  "overall_rank": 44
-                },
-                {
-                  "name": "Garrett Wilson",
-                  "position": "WR",
-                  "overall_rank": 45
-                }
-              ]
-            },
-            {
-              "pick_no": 60,
-              "round": 6,
-              "player": "Kyren Williams",
+              "pick_no": 141,
+              "round": 15,
+              "player": "Jacory Croskey-Merritt",
               "position": "RB",
               "matched": true,
-              "overall_rank": 68,
-              "availability_rank": 11,
-              "skipped_count": 10,
+              "overall_rank": 139,
+              "availability_rank": 6,
+              "skipped_count": 5,
               "higher_ranked_available": [
                 {
-                  "name": "Fernando Mendoza",
-                  "position": "QB",
-                  "overall_rank": 44
+                  "name": "Chigoziem Okonkwo",
+                  "position": "TE",
+                  "overall_rank": 128
                 },
                 {
-                  "name": "Jordan Love",
-                  "position": "QB",
-                  "overall_rank": 46
+                  "name": "Terrance Ferguson",
+                  "position": "TE",
+                  "overall_rank": 129
                 },
                 {
-                  "name": "DeVonta Smith",
+                  "name": "AJ Barner",
+                  "position": "TE",
+                  "overall_rank": 130
+                },
+                {
+                  "name": "Jalen Coker",
                   "position": "WR",
-                  "overall_rank": 54
+                  "overall_rank": 134
                 },
                 {
-                  "name": "Cam Ward",
-                  "position": "QB",
-                  "overall_rank": 56
-                },
-                {
-                  "name": "Cam Skattebo",
-                  "position": "RB",
-                  "overall_rank": 60
-                }
-              ]
-            },
-            {
-              "pick_no": 61,
-              "round": 7,
-              "player": "Kyle Pitts",
-              "position": "TE",
-              "matched": true,
-              "overall_rank": 81,
-              "availability_rank": 21,
-              "skipped_count": 20,
-              "higher_ranked_available": [
-                {
-                  "name": "Fernando Mendoza",
-                  "position": "QB",
-                  "overall_rank": 44
-                },
-                {
-                  "name": "Jordan Love",
-                  "position": "QB",
-                  "overall_rank": 46
-                },
-                {
-                  "name": "DeVonta Smith",
+                  "name": "Courtland Sutton",
                   "position": "WR",
-                  "overall_rank": 54
-                },
-                {
-                  "name": "Cam Ward",
-                  "position": "QB",
-                  "overall_rank": 56
-                },
-                {
-                  "name": "Cam Skattebo",
-                  "position": "RB",
-                  "overall_rank": 60
-                }
-              ]
-            },
-            {
-              "pick_no": 71,
-              "round": 8,
-              "player": "Cam Skattebo",
-              "position": "RB",
-              "matched": true,
-              "overall_rank": 60,
-              "availability_rank": 2,
-              "skipped_count": 1,
-              "higher_ranked_available": [
-                {
-                  "name": "Fernando Mendoza",
-                  "position": "QB",
-                  "overall_rank": 44
-                }
-              ]
-            },
-            {
-              "pick_no": 81,
-              "round": 9,
-              "player": "Christian Watson",
-              "position": "WR",
-              "matched": true,
-              "overall_rank": 94,
-              "availability_rank": 15,
-              "skipped_count": 14,
-              "higher_ranked_available": [
-                {
-                  "name": "Jared Goff",
-                  "position": "QB",
-                  "overall_rank": 61
-                },
-                {
-                  "name": "Tyler Shough",
-                  "position": "QB",
-                  "overall_rank": 64
-                },
-                {
-                  "name": "Baker Mayfield",
-                  "position": "QB",
-                  "overall_rank": 67
-                },
-                {
-                  "name": "Derrick Henry",
-                  "position": "RB",
-                  "overall_rank": 74
-                },
-                {
-                  "name": "Kyler Murray",
-                  "position": "QB",
-                  "overall_rank": 78
-                }
-              ]
-            },
-            {
-              "pick_no": 100,
-              "round": 10,
-              "player": "Parker Washington",
-              "position": "WR",
-              "matched": true,
-              "overall_rank": 89,
-              "availability_rank": 2,
-              "skipped_count": 1,
-              "higher_ranked_available": [
-                {
-                  "name": "Sam Darnold",
-                  "position": "QB",
-                  "overall_rank": 84
-                }
-              ]
-            },
-            {
-              "pick_no": 110,
-              "round": 11,
-              "player": "Dalton Kincaid",
-              "position": "TE",
-              "matched": true,
-              "overall_rank": 120,
-              "availability_rank": 13,
-              "skipped_count": 12,
-              "higher_ranked_available": [
-                {
-                  "name": "Daniel Jones",
-                  "position": "QB",
-                  "overall_rank": 92
-                },
-                {
-                  "name": "Malik Willis",
-                  "position": "QB",
-                  "overall_rank": 95
-                },
-                {
-                  "name": "Josh Downs",
-                  "position": "WR",
-                  "overall_rank": 97
-                },
-                {
-                  "name": "Davante Adams",
-                  "position": "WR",
-                  "overall_rank": 99
-                },
-                {
-                  "name": "Mike Evans",
-                  "position": "WR",
-                  "overall_rank": 101
-                }
-              ]
-            },
-            {
-              "pick_no": 120,
-              "round": 12,
-              "player": "Jayden Higgins",
-              "position": "WR",
-              "matched": true,
-              "overall_rank": 127,
-              "availability_rank": 10,
-              "skipped_count": 9,
-              "higher_ranked_available": [
-                {
-                  "name": "Malik Willis",
-                  "position": "QB",
-                  "overall_rank": 95
-                },
-                {
-                  "name": "Josh Downs",
-                  "position": "WR",
-                  "overall_rank": 97
-                },
-                {
-                  "name": "Mike Evans",
-                  "position": "WR",
-                  "overall_rank": 101
-                },
-                {
-                  "name": "Blake Corum",
-                  "position": "RB",
-                  "overall_rank": 115
-                },
-                {
-                  "name": "Michael Pittman",
-                  "position": "WR",
-                  "overall_rank": 116
-                }
-              ]
-            },
-            {
-              "pick_no": 129,
-              "round": 13,
-              "player": "Mike Evans",
-              "position": "WR",
-              "matched": true,
-              "overall_rank": 101,
-              "availability_rank": 2,
-              "skipped_count": 1,
-              "higher_ranked_available": [
-                {
-                  "name": "Josh Downs",
-                  "position": "WR",
-                  "overall_rank": 97
+                  "overall_rank": 138
                 }
               ]
             }
@@ -17572,15 +19238,15 @@
         {
           "source_id": "fantasypros",
           "source_name": "FantasyPros ECR",
-          "fit_score": 58.6,
-          "picks": 13,
-          "matched_picks": 13,
+          "fit_score": 56.0,
+          "picks": 15,
+          "matched_picks": 15,
           "coverage": 1.0,
-          "mean_availability_rank": 7.08,
-          "median_availability_rank": 6,
-          "top_available_rate": 0.154,
-          "top_3_available_rate": 0.385,
-          "mean_log2_loss": 2.313,
+          "mean_availability_rank": 8.0,
+          "median_availability_rank": 7,
+          "top_available_rate": 0.133,
+          "top_3_available_rate": 0.333,
+          "mean_log2_loss": 2.507,
           "evidence": [
             {
               "pick_no": 10,
@@ -17955,21 +19621,95 @@
                   "overall_rank": 106
                 }
               ]
+            },
+            {
+              "pick_no": 140,
+              "round": 14,
+              "player": "Kenny Gainwell",
+              "position": "RB",
+              "matched": true,
+              "overall_rank": 147,
+              "availability_rank": 11,
+              "skipped_count": 10,
+              "higher_ranked_available": [
+                {
+                  "name": "Courtland Sutton",
+                  "position": "WR",
+                  "overall_rank": 114
+                },
+                {
+                  "name": "Jakobi Meyers",
+                  "position": "WR",
+                  "overall_rank": 123
+                },
+                {
+                  "name": "Chris Godwin Jr.",
+                  "position": "WR",
+                  "overall_rank": 126
+                },
+                {
+                  "name": "Antonio Williams",
+                  "position": "WR",
+                  "overall_rank": 129
+                },
+                {
+                  "name": "Jalen Coker",
+                  "position": "WR",
+                  "overall_rank": 130
+                }
+              ]
+            },
+            {
+              "pick_no": 141,
+              "round": 15,
+              "player": "Jacory Croskey-Merritt",
+              "position": "RB",
+              "matched": true,
+              "overall_rank": 155,
+              "availability_rank": 17,
+              "skipped_count": 16,
+              "higher_ranked_available": [
+                {
+                  "name": "Courtland Sutton",
+                  "position": "WR",
+                  "overall_rank": 114
+                },
+                {
+                  "name": "Jakobi Meyers",
+                  "position": "WR",
+                  "overall_rank": 123
+                },
+                {
+                  "name": "Chris Godwin Jr.",
+                  "position": "WR",
+                  "overall_rank": 126
+                },
+                {
+                  "name": "Antonio Williams",
+                  "position": "WR",
+                  "overall_rank": 129
+                },
+                {
+                  "name": "Jalen Coker",
+                  "position": "WR",
+                  "overall_rank": 130
+                }
+              ]
             }
           ]
         },
         {
           "source_id": "draftsharks_adp",
           "source_name": "DraftSharks superflex ADP",
-          "fit_score": 56.5,
-          "picks": 13,
-          "matched_picks": 13,
+          "fit_score": 54.4,
+          "picks": 15,
+          "matched_picks": 15,
           "coverage": 1.0,
-          "mean_availability_rank": 8.08,
-          "median_availability_rank": 5,
-          "top_available_rate": 0.154,
-          "top_3_available_rate": 0.231,
-          "mean_log2_loss": 2.469,
+          "mean_availability_rank": 8.73,
+          "median_availability_rank": 8,
+          "top_available_rate": 0.133,
+          "top_3_available_rate": 0.2,
+          "mean_log2_loss": 2.633,
           "evidence": [
             {
               "pick_no": 10,
@@ -18354,21 +20094,95 @@
                   "overall_rank": 118
                 }
               ]
+            },
+            {
+              "pick_no": 140,
+              "round": 14,
+              "player": "Kenny Gainwell",
+              "position": "RB",
+              "matched": true,
+              "overall_rank": 147,
+              "availability_rank": 13,
+              "skipped_count": 12,
+              "higher_ranked_available": [
+                {
+                  "name": "Courtland Sutton",
+                  "position": "WR",
+                  "overall_rank": 123
+                },
+                {
+                  "name": "Jakobi Meyers",
+                  "position": "WR",
+                  "overall_rank": 127
+                },
+                {
+                  "name": "Chris Bell",
+                  "position": "WR",
+                  "overall_rank": 134
+                },
+                {
+                  "name": "Mason Taylor",
+                  "position": "TE",
+                  "overall_rank": 136
+                },
+                {
+                  "name": "Jalen Coker",
+                  "position": "WR",
+                  "overall_rank": 137
+                }
+              ]
+            },
+            {
+              "pick_no": 141,
+              "round": 15,
+              "player": "Jacory Croskey-Merritt",
+              "position": "RB",
+              "matched": true,
+              "overall_rank": 148,
+              "availability_rank": 13,
+              "skipped_count": 12,
+              "higher_ranked_available": [
+                {
+                  "name": "Courtland Sutton",
+                  "position": "WR",
+                  "overall_rank": 123
+                },
+                {
+                  "name": "Jakobi Meyers",
+                  "position": "WR",
+                  "overall_rank": 127
+                },
+                {
+                  "name": "Chris Bell",
+                  "position": "WR",
+                  "overall_rank": 134
+                },
+                {
+                  "name": "Mason Taylor",
+                  "position": "TE",
+                  "overall_rank": 136
+                },
+                {
+                  "name": "Jalen Coker",
+                  "position": "WR",
+                  "overall_rank": 137
+                }
+              ]
             }
           ]
         },
         {
           "source_id": "dynastynerds",
           "source_name": "Dynasty Nerds",
-          "fit_score": 54.9,
-          "picks": 13,
-          "matched_picks": 13,
+          "fit_score": 51.7,
+          "picks": 15,
+          "matched_picks": 15,
           "coverage": 1.0,
-          "mean_availability_rank": 9.62,
-          "median_availability_rank": 5,
-          "top_available_rate": 0.154,
-          "top_3_available_rate": 0.154,
-          "mean_log2_loss": 2.598,
+          "mean_availability_rank": 11.47,
+          "median_availability_rank": 6,
+          "top_available_rate": 0.133,
+          "top_3_available_rate": 0.133,
+          "mean_log2_loss": 2.859,
           "evidence": [
             {
               "pick_no": 10,
@@ -18758,6 +20572,80 @@
                   "overall_rank": 125
                 }
               ]
+            },
+            {
+              "pick_no": 140,
+              "round": 14,
+              "player": "Kenny Gainwell",
+              "position": "RB",
+              "matched": true,
+              "overall_rank": 163,
+              "availability_rank": 24,
+              "skipped_count": 23,
+              "higher_ranked_available": [
+                {
+                  "name": "Chris Godwin",
+                  "position": "WR",
+                  "overall_rank": 125
+                },
+                {
+                  "name": "Germie Bernard",
+                  "position": "WR",
+                  "overall_rank": 126
+                },
+                {
+                  "name": "Antonio Williams",
+                  "position": "WR",
+                  "overall_rank": 127
+                },
+                {
+                  "name": "Chris Bell",
+                  "position": "WR",
+                  "overall_rank": 130
+                },
+                {
+                  "name": "Jakobi Meyers",
+                  "position": "WR",
+                  "overall_rank": 131
+                }
+              ]
+            },
+            {
+              "pick_no": 141,
+              "round": 15,
+              "player": "Jacory Croskey-Merritt",
+              "position": "RB",
+              "matched": true,
+              "overall_rank": 162,
+              "availability_rank": 23,
+              "skipped_count": 22,
+              "higher_ranked_available": [
+                {
+                  "name": "Chris Godwin",
+                  "position": "WR",
+                  "overall_rank": 125
+                },
+                {
+                  "name": "Germie Bernard",
+                  "position": "WR",
+                  "overall_rank": 126
+                },
+                {
+                  "name": "Antonio Williams",
+                  "position": "WR",
+                  "overall_rank": 127
+                },
+                {
+                  "name": "Chris Bell",
+                  "position": "WR",
+                  "overall_rank": 130
+                },
+                {
+                  "name": "Jakobi Meyers",
+                  "position": "WR",
+                  "overall_rank": 131
+                }
+              ]
             }
           ]
         }
@@ -18766,7 +20654,7 @@
     {
       "roster_id": 10,
       "username": "samlemonskoff",
-      "pick_count": 13,
+      "pick_count": 15,
       "picks": [
         {
           "pick_no": 6,
@@ -18845,49 +20733,61 @@
           "round": 13,
           "name": "Xavier Worthy",
           "position": "WR"
+        },
+        {
+          "pick_no": 136,
+          "round": 14,
+          "name": "Mark Andrews",
+          "position": "TE"
+        },
+        {
+          "pick_no": 145,
+          "round": 15,
+          "name": "Woody Marks",
+          "position": "RB"
         }
       ],
       "inferred_source": {
         "source_id": "keeptradecut",
         "source_name": "KeepTradeCut",
-        "fit_score": 69.7,
-        "picks": 13,
-        "matched_picks": 13,
+        "fit_score": 66.3,
+        "picks": 15,
+        "matched_picks": 15,
         "coverage": 1.0,
-        "mean_availability_rank": 4.85,
-        "median_availability_rank": 3,
-        "top_available_rate": 0.385,
-        "top_3_available_rate": 0.538,
-        "mean_log2_loss": 1.56
+        "mean_availability_rank": 5.87,
+        "median_availability_rank": 4,
+        "top_available_rate": 0.333,
+        "top_3_available_rate": 0.467,
+        "mean_log2_loss": 1.778
       },
       "runner_up": {
         "source_id": "draftsharks_adp",
         "source_name": "DraftSharks superflex ADP",
-        "fit_score": 67.7,
-        "picks": 13,
-        "matched_picks": 13,
+        "fit_score": 63.5,
+        "picks": 15,
+        "matched_picks": 15,
         "coverage": 1.0,
-        "mean_availability_rank": 5.23,
-        "median_availability_rank": 3,
-        "top_available_rate": 0.385,
-        "top_3_available_rate": 0.538,
-        "mean_log2_loss": 1.687
+        "mean_availability_rank": 6.53,
+        "median_availability_rank": 4,
+        "top_available_rate": 0.333,
+        "top_3_available_rate": 0.467,
+        "mean_log2_loss": 1.966
       },
       "confidence": "weak",
-      "score_gap": 2.0,
+      "score_gap": 2.8,
       "provider_scores": [
         {
           "source_id": "keeptradecut",
           "source_name": "KeepTradeCut",
-          "fit_score": 69.7,
-          "picks": 13,
-          "matched_picks": 13,
+          "fit_score": 66.3,
+          "picks": 15,
+          "matched_picks": 15,
           "coverage": 1.0,
-          "mean_availability_rank": 4.85,
-          "median_availability_rank": 3,
-          "top_available_rate": 0.385,
-          "top_3_available_rate": 0.538,
-          "mean_log2_loss": 1.56,
+          "mean_availability_rank": 5.87,
+          "median_availability_rank": 4,
+          "top_available_rate": 0.333,
+          "top_3_available_rate": 0.467,
+          "mean_log2_loss": 1.778,
           "evidence": [
             {
               "pick_no": 6,
@@ -19194,21 +21094,85 @@
                   "overall_rank": 115
                 }
               ]
+            },
+            {
+              "pick_no": 136,
+              "round": 14,
+              "player": "Mark Andrews",
+              "position": "TE",
+              "matched": true,
+              "overall_rank": 133,
+              "availability_rank": 4,
+              "skipped_count": 3,
+              "higher_ranked_available": [
+                {
+                  "name": "Chigoziem Okonkwo",
+                  "position": "TE",
+                  "overall_rank": 128
+                },
+                {
+                  "name": "Terrance Ferguson",
+                  "position": "TE",
+                  "overall_rank": 129
+                },
+                {
+                  "name": "AJ Barner",
+                  "position": "TE",
+                  "overall_rank": 130
+                }
+              ]
+            },
+            {
+              "pick_no": 145,
+              "round": 15,
+              "player": "Woody Marks",
+              "position": "RB",
+              "matched": true,
+              "overall_rank": 163,
+              "availability_rank": 21,
+              "skipped_count": 20,
+              "higher_ranked_available": [
+                {
+                  "name": "Chigoziem Okonkwo",
+                  "position": "TE",
+                  "overall_rank": 128
+                },
+                {
+                  "name": "Terrance Ferguson",
+                  "position": "TE",
+                  "overall_rank": 129
+                },
+                {
+                  "name": "Jalen Coker",
+                  "position": "WR",
+                  "overall_rank": 134
+                },
+                {
+                  "name": "Courtland Sutton",
+                  "position": "WR",
+                  "overall_rank": 138
+                },
+                {
+                  "name": "Antonio Williams",
+                  "position": "WR",
+                  "overall_rank": 142
+                }
+              ]
             }
           ]
         },
         {
           "source_id": "draftsharks_adp",
           "source_name": "DraftSharks superflex ADP",
-          "fit_score": 67.7,
-          "picks": 13,
-          "matched_picks": 13,
+          "fit_score": 63.5,
+          "picks": 15,
+          "matched_picks": 15,
           "coverage": 1.0,
-          "mean_availability_rank": 5.23,
-          "median_availability_rank": 3,
-          "top_available_rate": 0.385,
-          "top_3_available_rate": 0.538,
-          "mean_log2_loss": 1.687,
+          "mean_availability_rank": 6.53,
+          "median_availability_rank": 4,
+          "top_available_rate": 0.333,
+          "top_3_available_rate": 0.467,
+          "mean_log2_loss": 1.966,
           "evidence": [
             {
               "pick_no": 6,
@@ -19520,331 +21484,78 @@
                   "overall_rank": 119
                 }
               ]
-            }
-          ]
-        },
-        {
-          "source_id": "fantasycalc",
-          "source_name": "FantasyCalc",
-          "fit_score": 66.7,
-          "picks": 13,
-          "matched_picks": 13,
-          "coverage": 1.0,
-          "mean_availability_rank": 5.69,
-          "median_availability_rank": 4,
-          "top_available_rate": 0.308,
-          "top_3_available_rate": 0.462,
-          "mean_log2_loss": 1.753,
-          "evidence": [
-            {
-              "pick_no": 6,
-              "round": 1,
-              "player": "Josh Allen",
-              "position": "QB",
-              "matched": true,
-              "overall_rank": 2,
-              "availability_rank": 1,
-              "skipped_count": 0,
-              "higher_ranked_available": []
             },
             {
-              "pick_no": 15,
-              "round": 2,
-              "player": "Jayden Daniels",
-              "position": "QB",
-              "matched": true,
-              "overall_rank": 12,
-              "availability_rank": 2,
-              "skipped_count": 1,
-              "higher_ranked_available": [
-                {
-                  "name": "Lamar Jackson",
-                  "position": "QB",
-                  "overall_rank": 10
-                }
-              ]
-            },
-            {
-              "pick_no": 25,
-              "round": 3,
-              "player": "James Cook",
-              "position": "RB",
-              "matched": true,
-              "overall_rank": 29,
-              "availability_rank": 5,
-              "skipped_count": 4,
-              "higher_ranked_available": [
-                {
-                  "name": "Patrick Mahomes",
-                  "position": "QB",
-                  "overall_rank": 24
-                },
-                {
-                  "name": "Jalen Hurts",
-                  "position": "QB",
-                  "overall_rank": 26
-                },
-                {
-                  "name": "Trevor Lawrence",
-                  "position": "QB",
-                  "overall_rank": 27
-                },
-                {
-                  "name": "Jaxson Dart",
-                  "position": "QB",
-                  "overall_rank": 28
-                }
-              ]
-            },
-            {
-              "pick_no": 36,
-              "round": 4,
-              "player": "Kenneth Walker",
-              "position": "RB",
-              "matched": true,
-              "overall_rank": 39,
-              "availability_rank": 5,
-              "skipped_count": 4,
-              "higher_ranked_available": [
-                {
-                  "name": "Emeka Egbuka",
-                  "position": "WR",
-                  "overall_rank": 32
-                },
-                {
-                  "name": "Carnell Tate",
-                  "position": "WR",
-                  "overall_rank": 34
-                },
-                {
-                  "name": "Brock Purdy",
-                  "position": "QB",
-                  "overall_rank": 36
-                },
-                {
-                  "name": "Tyler Warren",
-                  "position": "TE",
-                  "overall_rank": 37
-                }
-              ]
-            },
-            {
-              "pick_no": 45,
-              "round": 5,
-              "player": "Emeka Egbuka",
-              "position": "WR",
-              "matched": true,
-              "overall_rank": 32,
-              "availability_rank": 1,
-              "skipped_count": 0,
-              "higher_ranked_available": []
-            },
-            {
-              "pick_no": 56,
-              "round": 6,
-              "player": "Sam LaPorta",
+              "pick_no": 136,
+              "round": 14,
+              "player": "Mark Andrews",
               "position": "TE",
               "matched": true,
-              "overall_rank": 76,
+              "overall_rank": 153,
               "availability_rank": 21,
               "skipped_count": 20,
               "higher_ranked_available": [
                 {
-                  "name": "Fernando Mendoza",
-                  "position": "QB",
-                  "overall_rank": 44
-                },
-                {
-                  "name": "Jordan Love",
-                  "position": "QB",
-                  "overall_rank": 46
-                },
-                {
-                  "name": "Saquon Barkley",
-                  "position": "RB",
-                  "overall_rank": 49
-                },
-                {
-                  "name": "DeVonta Smith",
+                  "name": "Courtland Sutton",
                   "position": "WR",
-                  "overall_rank": 54
+                  "overall_rank": 123
                 },
                 {
-                  "name": "Cam Ward",
-                  "position": "QB",
-                  "overall_rank": 56
-                }
-              ]
-            },
-            {
-              "pick_no": 65,
-              "round": 7,
-              "player": "Rome Odunze",
-              "position": "WR",
-              "matched": true,
-              "overall_rank": 62,
-              "availability_rank": 4,
-              "skipped_count": 3,
-              "higher_ranked_available": [
-                {
-                  "name": "Fernando Mendoza",
-                  "position": "QB",
-                  "overall_rank": 44
+                  "name": "Jakobi Meyers",
+                  "position": "WR",
+                  "overall_rank": 127
                 },
                 {
-                  "name": "Cam Skattebo",
+                  "name": "Rhamondre Stevenson",
                   "position": "RB",
-                  "overall_rank": 60
+                  "overall_rank": 133
                 },
                 {
-                  "name": "Jared Goff",
-                  "position": "QB",
-                  "overall_rank": 61
+                  "name": "Chris Bell",
+                  "position": "WR",
+                  "overall_rank": 134
+                },
+                {
+                  "name": "Mason Taylor",
+                  "position": "TE",
+                  "overall_rank": 136
                 }
               ]
             },
             {
-              "pick_no": 76,
-              "round": 8,
-              "player": "Marvin Harrison",
-              "position": "WR",
-              "matched": true,
-              "overall_rank": 72,
-              "availability_rank": 4,
-              "skipped_count": 3,
-              "higher_ranked_available": [
-                {
-                  "name": "Jared Goff",
-                  "position": "QB",
-                  "overall_rank": 61
-                },
-                {
-                  "name": "Tyler Shough",
-                  "position": "QB",
-                  "overall_rank": 64
-                },
-                {
-                  "name": "Baker Mayfield",
-                  "position": "QB",
-                  "overall_rank": 67
-                }
-              ]
-            },
-            {
-              "pick_no": 85,
-              "round": 9,
-              "player": "Derrick Henry",
+              "pick_no": 145,
+              "round": 15,
+              "player": "Woody Marks",
               "position": "RB",
               "matched": true,
-              "overall_rank": 74,
-              "availability_rank": 1,
-              "skipped_count": 0,
-              "higher_ranked_available": []
-            },
-            {
-              "pick_no": 96,
-              "round": 10,
-              "player": "DK Metcalf",
-              "position": "WR",
-              "matched": true,
-              "overall_rank": 111,
-              "availability_rank": 18,
-              "skipped_count": 17,
+              "overall_rank": 142,
+              "availability_rank": 9,
+              "skipped_count": 8,
               "higher_ranked_available": [
                 {
-                  "name": "Sam Darnold",
-                  "position": "QB",
-                  "overall_rank": 84
-                },
-                {
-                  "name": "Parker Washington",
+                  "name": "Courtland Sutton",
                   "position": "WR",
-                  "overall_rank": 89
+                  "overall_rank": 123
                 },
                 {
-                  "name": "David Montgomery",
-                  "position": "RB",
-                  "overall_rank": 91
-                },
-                {
-                  "name": "Daniel Jones",
-                  "position": "QB",
-                  "overall_rank": 92
-                },
-                {
-                  "name": "Malik Willis",
-                  "position": "QB",
-                  "overall_rank": 95
-                }
-              ]
-            },
-            {
-              "pick_no": 105,
-              "round": 11,
-              "player": "Sam Darnold",
-              "position": "QB",
-              "matched": true,
-              "overall_rank": 84,
-              "availability_rank": 1,
-              "skipped_count": 0,
-              "higher_ranked_available": []
-            },
-            {
-              "pick_no": 116,
-              "round": 12,
-              "player": "Davante Adams",
-              "position": "WR",
-              "matched": true,
-              "overall_rank": 99,
-              "availability_rank": 3,
-              "skipped_count": 2,
-              "higher_ranked_available": [
-                {
-                  "name": "Malik Willis",
-                  "position": "QB",
-                  "overall_rank": 95
-                },
-                {
-                  "name": "Josh Downs",
+                  "name": "Jakobi Meyers",
                   "position": "WR",
-                  "overall_rank": 97
-                }
-              ]
-            },
-            {
-              "pick_no": 125,
-              "round": 13,
-              "player": "Xavier Worthy",
-              "position": "WR",
-              "matched": true,
-              "overall_rank": 124,
-              "availability_rank": 8,
-              "skipped_count": 7,
-              "higher_ranked_available": [
-                {
-                  "name": "Malik Willis",
-                  "position": "QB",
-                  "overall_rank": 95
+                  "overall_rank": 127
                 },
                 {
-                  "name": "Josh Downs",
+                  "name": "Chris Bell",
                   "position": "WR",
-                  "overall_rank": 97
+                  "overall_rank": 134
                 },
                 {
-                  "name": "Mike Evans",
+                  "name": "Mason Taylor",
+                  "position": "TE",
+                  "overall_rank": 136
+                },
+                {
+                  "name": "Jalen Coker",
                   "position": "WR",
-                  "overall_rank": 101
-                },
-                {
-                  "name": "Blake Corum",
-                  "position": "RB",
-                  "overall_rank": 115
-                },
-                {
-                  "name": "Michael Pittman",
-                  "position": "WR",
-                  "overall_rank": 116
+                  "overall_rank": 137
                 }
               ]
             }
@@ -19853,15 +21564,15 @@
         {
           "source_id": "dynastynerds",
           "source_name": "Dynasty Nerds",
-          "fit_score": 62.4,
-          "picks": 13,
-          "matched_picks": 13,
+          "fit_score": 62.3,
+          "picks": 15,
+          "matched_picks": 15,
           "coverage": 1.0,
-          "mean_availability_rank": 7.85,
+          "mean_availability_rank": 8.07,
           "median_availability_rank": 7,
-          "top_available_rate": 0.385,
-          "top_3_available_rate": 0.462,
-          "mean_log2_loss": 2.044,
+          "top_available_rate": 0.4,
+          "top_3_available_rate": 0.467,
+          "mean_log2_loss": 2.049,
           "evidence": [
             {
               "pick_no": 6,
@@ -20193,21 +21904,470 @@
                   "overall_rank": 124
                 }
               ]
+            },
+            {
+              "pick_no": 136,
+              "round": 14,
+              "player": "Mark Andrews",
+              "position": "TE",
+              "matched": true,
+              "overall_rank": 124,
+              "availability_rank": 1,
+              "skipped_count": 0,
+              "higher_ranked_available": []
+            },
+            {
+              "pick_no": 145,
+              "round": 15,
+              "player": "Woody Marks",
+              "position": "RB",
+              "matched": true,
+              "overall_rank": 155,
+              "availability_rank": 18,
+              "skipped_count": 17,
+              "higher_ranked_available": [
+                {
+                  "name": "Chris Godwin",
+                  "position": "WR",
+                  "overall_rank": 125
+                },
+                {
+                  "name": "Germie Bernard",
+                  "position": "WR",
+                  "overall_rank": 126
+                },
+                {
+                  "name": "Antonio Williams",
+                  "position": "WR",
+                  "overall_rank": 127
+                },
+                {
+                  "name": "Chris Bell",
+                  "position": "WR",
+                  "overall_rank": 130
+                },
+                {
+                  "name": "Jakobi Meyers",
+                  "position": "WR",
+                  "overall_rank": 131
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "source_id": "fantasycalc",
+          "source_name": "FantasyCalc",
+          "fit_score": 62.0,
+          "picks": 15,
+          "matched_picks": 15,
+          "coverage": 1.0,
+          "mean_availability_rank": 7.4,
+          "median_availability_rank": 4,
+          "top_available_rate": 0.267,
+          "top_3_available_rate": 0.4,
+          "mean_log2_loss": 2.068,
+          "evidence": [
+            {
+              "pick_no": 6,
+              "round": 1,
+              "player": "Josh Allen",
+              "position": "QB",
+              "matched": true,
+              "overall_rank": 2,
+              "availability_rank": 1,
+              "skipped_count": 0,
+              "higher_ranked_available": []
+            },
+            {
+              "pick_no": 15,
+              "round": 2,
+              "player": "Jayden Daniels",
+              "position": "QB",
+              "matched": true,
+              "overall_rank": 12,
+              "availability_rank": 2,
+              "skipped_count": 1,
+              "higher_ranked_available": [
+                {
+                  "name": "Lamar Jackson",
+                  "position": "QB",
+                  "overall_rank": 10
+                }
+              ]
+            },
+            {
+              "pick_no": 25,
+              "round": 3,
+              "player": "James Cook",
+              "position": "RB",
+              "matched": true,
+              "overall_rank": 29,
+              "availability_rank": 5,
+              "skipped_count": 4,
+              "higher_ranked_available": [
+                {
+                  "name": "Patrick Mahomes",
+                  "position": "QB",
+                  "overall_rank": 24
+                },
+                {
+                  "name": "Jalen Hurts",
+                  "position": "QB",
+                  "overall_rank": 26
+                },
+                {
+                  "name": "Trevor Lawrence",
+                  "position": "QB",
+                  "overall_rank": 27
+                },
+                {
+                  "name": "Jaxson Dart",
+                  "position": "QB",
+                  "overall_rank": 28
+                }
+              ]
+            },
+            {
+              "pick_no": 36,
+              "round": 4,
+              "player": "Kenneth Walker",
+              "position": "RB",
+              "matched": true,
+              "overall_rank": 39,
+              "availability_rank": 5,
+              "skipped_count": 4,
+              "higher_ranked_available": [
+                {
+                  "name": "Emeka Egbuka",
+                  "position": "WR",
+                  "overall_rank": 32
+                },
+                {
+                  "name": "Carnell Tate",
+                  "position": "WR",
+                  "overall_rank": 34
+                },
+                {
+                  "name": "Brock Purdy",
+                  "position": "QB",
+                  "overall_rank": 36
+                },
+                {
+                  "name": "Tyler Warren",
+                  "position": "TE",
+                  "overall_rank": 37
+                }
+              ]
+            },
+            {
+              "pick_no": 45,
+              "round": 5,
+              "player": "Emeka Egbuka",
+              "position": "WR",
+              "matched": true,
+              "overall_rank": 32,
+              "availability_rank": 1,
+              "skipped_count": 0,
+              "higher_ranked_available": []
+            },
+            {
+              "pick_no": 56,
+              "round": 6,
+              "player": "Sam LaPorta",
+              "position": "TE",
+              "matched": true,
+              "overall_rank": 76,
+              "availability_rank": 21,
+              "skipped_count": 20,
+              "higher_ranked_available": [
+                {
+                  "name": "Fernando Mendoza",
+                  "position": "QB",
+                  "overall_rank": 44
+                },
+                {
+                  "name": "Jordan Love",
+                  "position": "QB",
+                  "overall_rank": 46
+                },
+                {
+                  "name": "Saquon Barkley",
+                  "position": "RB",
+                  "overall_rank": 49
+                },
+                {
+                  "name": "DeVonta Smith",
+                  "position": "WR",
+                  "overall_rank": 54
+                },
+                {
+                  "name": "Cam Ward",
+                  "position": "QB",
+                  "overall_rank": 56
+                }
+              ]
+            },
+            {
+              "pick_no": 65,
+              "round": 7,
+              "player": "Rome Odunze",
+              "position": "WR",
+              "matched": true,
+              "overall_rank": 62,
+              "availability_rank": 4,
+              "skipped_count": 3,
+              "higher_ranked_available": [
+                {
+                  "name": "Fernando Mendoza",
+                  "position": "QB",
+                  "overall_rank": 44
+                },
+                {
+                  "name": "Cam Skattebo",
+                  "position": "RB",
+                  "overall_rank": 60
+                },
+                {
+                  "name": "Jared Goff",
+                  "position": "QB",
+                  "overall_rank": 61
+                }
+              ]
+            },
+            {
+              "pick_no": 76,
+              "round": 8,
+              "player": "Marvin Harrison",
+              "position": "WR",
+              "matched": true,
+              "overall_rank": 72,
+              "availability_rank": 4,
+              "skipped_count": 3,
+              "higher_ranked_available": [
+                {
+                  "name": "Jared Goff",
+                  "position": "QB",
+                  "overall_rank": 61
+                },
+                {
+                  "name": "Tyler Shough",
+                  "position": "QB",
+                  "overall_rank": 64
+                },
+                {
+                  "name": "Baker Mayfield",
+                  "position": "QB",
+                  "overall_rank": 67
+                }
+              ]
+            },
+            {
+              "pick_no": 85,
+              "round": 9,
+              "player": "Derrick Henry",
+              "position": "RB",
+              "matched": true,
+              "overall_rank": 74,
+              "availability_rank": 1,
+              "skipped_count": 0,
+              "higher_ranked_available": []
+            },
+            {
+              "pick_no": 96,
+              "round": 10,
+              "player": "DK Metcalf",
+              "position": "WR",
+              "matched": true,
+              "overall_rank": 111,
+              "availability_rank": 18,
+              "skipped_count": 17,
+              "higher_ranked_available": [
+                {
+                  "name": "Sam Darnold",
+                  "position": "QB",
+                  "overall_rank": 84
+                },
+                {
+                  "name": "Parker Washington",
+                  "position": "WR",
+                  "overall_rank": 89
+                },
+                {
+                  "name": "David Montgomery",
+                  "position": "RB",
+                  "overall_rank": 91
+                },
+                {
+                  "name": "Daniel Jones",
+                  "position": "QB",
+                  "overall_rank": 92
+                },
+                {
+                  "name": "Malik Willis",
+                  "position": "QB",
+                  "overall_rank": 95
+                }
+              ]
+            },
+            {
+              "pick_no": 105,
+              "round": 11,
+              "player": "Sam Darnold",
+              "position": "QB",
+              "matched": true,
+              "overall_rank": 84,
+              "availability_rank": 1,
+              "skipped_count": 0,
+              "higher_ranked_available": []
+            },
+            {
+              "pick_no": 116,
+              "round": 12,
+              "player": "Davante Adams",
+              "position": "WR",
+              "matched": true,
+              "overall_rank": 99,
+              "availability_rank": 3,
+              "skipped_count": 2,
+              "higher_ranked_available": [
+                {
+                  "name": "Malik Willis",
+                  "position": "QB",
+                  "overall_rank": 95
+                },
+                {
+                  "name": "Josh Downs",
+                  "position": "WR",
+                  "overall_rank": 97
+                }
+              ]
+            },
+            {
+              "pick_no": 125,
+              "round": 13,
+              "player": "Xavier Worthy",
+              "position": "WR",
+              "matched": true,
+              "overall_rank": 124,
+              "availability_rank": 8,
+              "skipped_count": 7,
+              "higher_ranked_available": [
+                {
+                  "name": "Malik Willis",
+                  "position": "QB",
+                  "overall_rank": 95
+                },
+                {
+                  "name": "Josh Downs",
+                  "position": "WR",
+                  "overall_rank": 97
+                },
+                {
+                  "name": "Mike Evans",
+                  "position": "WR",
+                  "overall_rank": 101
+                },
+                {
+                  "name": "Blake Corum",
+                  "position": "RB",
+                  "overall_rank": 115
+                },
+                {
+                  "name": "Michael Pittman",
+                  "position": "WR",
+                  "overall_rank": 116
+                }
+              ]
+            },
+            {
+              "pick_no": 136,
+              "round": 14,
+              "player": "Mark Andrews",
+              "position": "TE",
+              "matched": true,
+              "overall_rank": 142,
+              "availability_rank": 12,
+              "skipped_count": 11,
+              "higher_ranked_available": [
+                {
+                  "name": "Shedeur Sanders",
+                  "position": "QB",
+                  "overall_rank": 129
+                },
+                {
+                  "name": "Kenny Gainwell",
+                  "position": "RB",
+                  "overall_rank": 131
+                },
+                {
+                  "name": "Rhamondre Stevenson",
+                  "position": "RB",
+                  "overall_rank": 132
+                },
+                {
+                  "name": "J.J. McCarthy",
+                  "position": "QB",
+                  "overall_rank": 133
+                },
+                {
+                  "name": "J.K. Dobbins",
+                  "position": "RB",
+                  "overall_rank": 135
+                }
+              ]
+            },
+            {
+              "pick_no": 145,
+              "round": 15,
+              "player": "Woody Marks",
+              "position": "RB",
+              "matched": true,
+              "overall_rank": 169,
+              "availability_rank": 25,
+              "skipped_count": 24,
+              "higher_ranked_available": [
+                {
+                  "name": "Shedeur Sanders",
+                  "position": "QB",
+                  "overall_rank": 129
+                },
+                {
+                  "name": "J.J. McCarthy",
+                  "position": "QB",
+                  "overall_rank": 133
+                },
+                {
+                  "name": "Chris Godwin",
+                  "position": "WR",
+                  "overall_rank": 136
+                },
+                {
+                  "name": "Tua Tagovailoa",
+                  "position": "QB",
+                  "overall_rank": 137
+                },
+                {
+                  "name": "Courtland Sutton",
+                  "position": "WR",
+                  "overall_rank": 138
+                }
+              ]
             }
           ]
         },
         {
           "source_id": "fantasypros",
           "source_name": "FantasyPros ECR",
-          "fit_score": 62.1,
-          "picks": 13,
-          "matched_picks": 13,
+          "fit_score": 58.9,
+          "picks": 15,
+          "matched_picks": 15,
           "coverage": 1.0,
-          "mean_availability_rank": 5.77,
-          "median_availability_rank": 5,
-          "top_available_rate": 0.231,
-          "top_3_available_rate": 0.308,
-          "mean_log2_loss": 2.059,
+          "mean_availability_rank": 7.0,
+          "median_availability_rank": 6,
+          "top_available_rate": 0.2,
+          "top_3_available_rate": 0.267,
+          "mean_log2_loss": 2.289,
           "evidence": [
             {
               "pick_no": 6,
@@ -20574,6 +22734,80 @@
                   "name": "Courtland Sutton",
                   "position": "WR",
                   "overall_rank": 114
+                }
+              ]
+            },
+            {
+              "pick_no": 136,
+              "round": 14,
+              "player": "Mark Andrews",
+              "position": "TE",
+              "matched": true,
+              "overall_rank": 139,
+              "availability_rank": 9,
+              "skipped_count": 8,
+              "higher_ranked_available": [
+                {
+                  "name": "Courtland Sutton",
+                  "position": "WR",
+                  "overall_rank": 114
+                },
+                {
+                  "name": "Jakobi Meyers",
+                  "position": "WR",
+                  "overall_rank": 123
+                },
+                {
+                  "name": "Chris Godwin Jr.",
+                  "position": "WR",
+                  "overall_rank": 126
+                },
+                {
+                  "name": "Antonio Williams",
+                  "position": "WR",
+                  "overall_rank": 129
+                },
+                {
+                  "name": "Jalen Coker",
+                  "position": "WR",
+                  "overall_rank": 130
+                }
+              ]
+            },
+            {
+              "pick_no": 145,
+              "round": 15,
+              "player": "Woody Marks",
+              "position": "RB",
+              "matched": true,
+              "overall_rank": 162,
+              "availability_rank": 21,
+              "skipped_count": 20,
+              "higher_ranked_available": [
+                {
+                  "name": "Courtland Sutton",
+                  "position": "WR",
+                  "overall_rank": 114
+                },
+                {
+                  "name": "Jakobi Meyers",
+                  "position": "WR",
+                  "overall_rank": 123
+                },
+                {
+                  "name": "Chris Godwin Jr.",
+                  "position": "WR",
+                  "overall_rank": 126
+                },
+                {
+                  "name": "Antonio Williams",
+                  "position": "WR",
+                  "overall_rank": 129
+                },
+                {
+                  "name": "Jalen Coker",
+                  "position": "WR",
+                  "overall_rank": 130
                 }
               ]
             }

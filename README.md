@@ -1,6 +1,6 @@
 # 2026 dynasty fantasy draft
 
-A stdlib-only toolkit for a 10-team superflex dynasty startup draft. Independent
+A toolkit for a 10-team superflex dynasty startup draft. Independent
 processes publish stable JSON artifacts at the repository root; the ranker consumes
 those artifacts and the static dashboard renders the result.
 
@@ -19,8 +19,7 @@ These are project assumptions, not runtime configuration. Ranker constants live 
 
 ## Setup
 
-[uv](https://docs.astral.sh/uv/) pins Python 3.12. The project intentionally has no
-third-party runtime dependencies.
+[uv](https://docs.astral.sh/uv/) pins Python 3.12.
 
 ```bash
 uv sync
@@ -35,7 +34,7 @@ directories, so their documented direct invocations also work from inside the pi
 ```text
 pool_pipeline/ ───────────────> pool.json ──────────┐
                                                    │
-draft_pipeline/ ──────────────> draft.json ─────────┼─> rank_vor.py ─> rankings.json
+draft_pipeline/ ──────────────> draft.json ─────────┼─> rank.py ────> rankings.json
                                                    │
 data_source_investigator/ ────> data_source_matches.json
                          └────> data/rankings.json ─┘
@@ -69,11 +68,11 @@ meet through their published JSON contracts rather than shared orchestration.
 
 The ranker values a roster as expected optimal lineup points in separate year-one and
 years-2–3 horizons. Position-wide availability determines when depth is called on, and
-one unique final waiver body per position supplies the fallback. Marginal-starter VOR is
-reported separately rather than mixed into bench utility. Personal and opponent strategies
-are intentionally separate: my slot uses the projection-based roster objective, while each
-opponent follows its inferred external board with roster-balance adjustments and fitted
-choice noise. Opponent picks never use personal projections or VOR.
+one unique final waiver body per position supplies the fallback. Marginal-starter levels
+are reported as league diagnostics rather than mixed into bench utility. Personal and
+opponent strategies are intentionally separate: my slot uses the projection-based roster
+objective, while each opponent follows its inferred external board with roster-balance
+adjustments and fitted choice noise. Opponent picks never use my projections or board.
 
 ## Common workflows
 
@@ -102,7 +101,7 @@ offline pool or fetch provider boards.
 Run offline checks:
 
 ```bash
-uv run rank_vor.py --selftest
+uv run rank.py --selftest
 uv run draft_pipeline/fetch_draft.py --selftest
 uv run data_source_investigator/investigate.py --selftest
 uv run evaluate_opponents.py

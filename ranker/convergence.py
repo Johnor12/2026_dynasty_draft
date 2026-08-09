@@ -12,7 +12,6 @@ from .simulation import Draft
 from .value import (
     HORIZONS,
     apportion,
-    compute_vor,
     pos_by_horizon,
     replacement_from_draft,
     seed_replacement,
@@ -51,9 +50,10 @@ def converge(
     alternates between neighbouring league shapes (e.g. 20 vs 21 RBs starting) and the
     average across it is the honest answer. The cycle is reported rather than hidden.
 
-    Two levels come out of each draft: the marginal-starter level that reports VOR, and
-    the wire level that supplies one unique fallback body per position inside expected
-    lineup value. They answer different questions and are reported separately.
+    Two levels come out of each draft: the marginal-starter level, reported as a league
+    diagnostic, and the wire level that supplies one unique fallback body per position
+    inside expected lineup value. They answer different questions and are reported
+    separately.
 
     Every draft here starts from `board`, so on a live board the fixed point is over the
     rosters this league will actually finish with. The measurement is still league-wide and
@@ -78,9 +78,8 @@ def converge(
     cycle_start: int | None = None
 
     for it in range(1, MAX_ITERS + 1):
-        vor = compute_vor(players, rep)
         draft = Draft(
-            players, rep, vor, board, wire=stream,
+            players, rep, board, wire=stream,
             opponents=opponents,
         )
         draft.run()
@@ -143,9 +142,8 @@ def converge(
 
     # Final deterministic draft at the settled levels, so sim_pick, my_decisions and the
     # reported replacement levels describe one and the same draft.
-    vor = compute_vor(players, rep)
     draft = Draft(
-        players, rep, vor, board, wire=stream,
+        players, rep, board, wire=stream,
         opponents=opponents,
     )
     draft.run()

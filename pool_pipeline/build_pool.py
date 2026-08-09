@@ -36,8 +36,8 @@ Points are the only value columns kept — the 3-year total the ranker sorts on,
 bench upside off the years-2-3 pace). 3D value is deliberately not carried over: it
 is a provider-scaled ordinal (best player pinned at 100, ~half the league negative)
 that already bakes in someone else's roster assumptions, is not in points, and so
-cannot be differenced against a replacement level — which is all ``rank_vor.py`` does
-with the pool.
+cannot enter a points-based expected-lineup value — which is how ``rank.py`` prices
+the pool.
 
 **ADP** is the superflex ADP, copied. All four superflex scoring styles are identical
 here (the source's ADP responds only to 1QB vs superflex), so there is no TE-premium

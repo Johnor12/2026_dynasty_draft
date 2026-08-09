@@ -9,7 +9,7 @@ Three stages, in order:
 
 Everything the build reads and every intermediate it writes lives in this folder;
 the one file it publishes is ``pool.json`` at the repo root, which is what
-``rank_vor.py`` consumes.
+``rank.py`` consumes.
 
 Stage 1 is the faithful record of what the provider published and is never narrowed;
 stage 2 is the narrow, draft-ready view. Keeping them separate is what makes stage 2
@@ -27,7 +27,7 @@ instead, since there the dump is the whole point of the run.
 All four scripts remain usable as standalone CLIs — this only fixes the order and stops
 on the first failure.
 
-Ranking (`rank_vor.py`) is deliberately not a stage here: it consumes pool.json, takes a
+Ranking (`rank.py`) is deliberately not a stage here: it consumes pool.json, takes a
 simulation seed and strategy knobs, and is re-run far more often than the data is rebuilt.
 
 Usage:

@@ -35,7 +35,6 @@ from .pool import Player
 from .rankings import my_next_picks
 from .simulation import Draft
 from .value import (
-    compute_vor,
     expected_lineup_value,
     position_expected_value,
     seed_replacement,
@@ -77,12 +76,11 @@ def opponent_selftest(players: list[Player]) -> list[str]:
     fails: list[str] = []
     board = fresh_board()
     rep = seed_replacement(players)
-    vor = compute_vor(players, rep)
-    # Put the lowest-VOR player first on every external board. An opponent must take him;
-    # my optimizer must not, demonstrating that candidate generation is separated too.
-    external = sorted(players, key=lambda p: (vor[p.player_id], p.player_id))
+    # Put the lowest-projected player first on every external board. An opponent must take
+    # him; my optimizer must not, demonstrating that candidate generation is separated too.
+    external = sorted(players, key=lambda p: (p.points, p.player_id))
     opponents = synthetic_opponents(players, board, external)
-    draft = Draft(players, rep, vor, board, opponents=opponents)
+    draft = Draft(players, rep, board, opponents=opponents)
     opponent_take = draft.choose_opponent(0, 1)
     my_take = draft.choose(1, board.my_slot)
     if opponent_take != external[0]:
@@ -106,7 +104,6 @@ def opponent_selftest(players: list[Player]) -> list[str]:
     close = Draft(
         players,
         rep,
-        vor,
         board,
         opponents=synthetic_opponents(players, board, close_order),
     )
@@ -117,7 +114,6 @@ def opponent_selftest(players: list[Player]) -> list[str]:
     value = Draft(
         players,
         rep,
-        vor,
         board,
         opponents=synthetic_opponents(players, board, value_order),
     )
@@ -133,7 +129,6 @@ def opponent_selftest(players: list[Player]) -> list[str]:
     depth = Draft(
         players,
         rep,
-        vor,
         board,
         opponents=synthetic_opponents(players, board, depth_order),
     )
@@ -145,7 +140,6 @@ def opponent_selftest(players: list[Player]) -> list[str]:
     depth_value = Draft(
         players,
         rep,
-        vor,
         board,
         opponents=synthetic_opponents(players, board, depth_value_order),
     )
@@ -177,10 +171,9 @@ def planning_selftest(players: list[Player]) -> list[str]:
     fails: list[str] = []
     board = fresh_board()
     rep = seed_replacement(players)
-    vor = compute_vor(players, rep)
     opponents = synthetic_opponents(players, board)
     first_index = board.pick_nos.index(board.my_picks[0])
-    state = Draft(players, rep, vor, board, opponents=opponents)
+    state = Draft(players, rep, board, opponents=opponents)
     narrow = state.score_my_candidates(first_index)
     broad = state.score_my_candidates(first_index, per_pos=FIRST_PICK_PER_POS)
     if len(broad) <= len(narrow):
@@ -191,7 +184,7 @@ def planning_selftest(players: list[Player]) -> list[str]:
     contested = broad[0][2]
     external = [contested] + [p for p in players if p.player_id != contested.player_id]
     opponents = synthetic_opponents(players, board, external)
-    deterministic = Draft(players, rep, vor, board, opponents=opponents)
+    deterministic = Draft(players, rep, board, opponents=opponents)
     deterministic.run()
     if deterministic.pick_of.get(contested.player_id) != 1:
         fails.append("planning: synthetic opponent did not take the contested candidate")
@@ -267,7 +260,6 @@ def planning_selftest(players: list[Player]) -> list[str]:
     deep_state = Draft(
         players,
         rep,
-        vor,
         deep_board,
         opponents=synthetic_opponents(players, deep_board),
     )
@@ -288,7 +280,6 @@ def planning_selftest(players: list[Player]) -> list[str]:
     planned = Draft(
         players,
         rep,
-        vor,
         board,
         opponents=opponents,
         targets={my_indices[0]: first_target, my_indices[1]: second_target},
@@ -570,8 +561,7 @@ def board_selftest(players: list[Player]) -> list[str]:
     check(len(board.off_pool[0]) == 1, "an unrankable pick was not held as a roster spot")
     check(board.picks_left[0] == ROUNDS - 1, "an unrankable pick did not cost its team a pick")
     rep = seed_replacement(players)
-    vor = compute_vor(players, rep)
-    draft = Draft(players, rep, vor, board, opponents=synthetic_opponents(players, board))
+    draft = Draft(players, rep, board, opponents=synthetic_opponents(players, board))
     owed = sum(DEDICATED_SLOTS.values()) - 1  # the QB is answered, six mandatory spots left
     with_qb = draft.candidates([], picks_left=owed, off=board.off_pool[0])
     without = draft.candidates([], picks_left=owed, off=[])
@@ -587,13 +577,13 @@ def board_selftest(players: list[Player]) -> list[str]:
     # Resuming: every made pick survives, every pending pick is played exactly once.
     board, _ = load_board(synthetic_draft(players, made=57), players, "synthetic")
     opponents = synthetic_opponents(players, board)
-    partial = Draft(players, rep, compute_vor(players, rep), board, opponents=opponents)
+    partial = Draft(players, rep, board, opponents=opponents)
     partial.run(stop_before=5)
     check(
         set(partial.pick_of.values()) == set(board.pick_nos[:5]),
         "a short redraw did not stop immediately before its requested pick index",
     )
-    draft = Draft(players, rep, compute_vor(players, rep), board, opponents=opponents)
+    draft = Draft(players, rep, board, opponents=opponents)
     draft.run()
     check(
         len(draft.taken) == len(board.taken) + len(board.order),

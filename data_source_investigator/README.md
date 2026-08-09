@@ -9,7 +9,7 @@ uv run data_source_investigator/pipeline.py --report
 uv run data_source_investigator/pipeline.py --only investigate  # reuse the snapshots
 uv run data_source_investigator/investigate.py --selftest
 uv run evaluate_opponents.py  # forward replay, 100 prediction draws per opponent pick
-uv run refresh.py --report  # refresh the draft, VOR board, and evaluation only
+uv run refresh.py --report  # refresh the draft, ranking board, and evaluation only
 uv run serve.py  # open http://127.0.0.1:8123/data_source_investigator/
 ```
 
@@ -34,7 +34,7 @@ have changed since an earlier draft pick.
 The ranker consumes the closest source as each opponent's player order and
 `mean_log2_loss` as that manager's adherence estimate. Personal and opponent strategies
 remain separate: the opponent picker never translates the source order into personal
-projections or VOR. It checks that the report's draft id and ranking-snapshot timestamp
+projections or board value. It checks that the report's draft id and ranking-snapshot timestamp
 match its other inputs, so `refresh.py` always runs this investigation after fetching the
 draft and before simulating the remaining picks.
 

@@ -127,13 +127,13 @@ def validate(
             have = sum(1 for p in roster if p.position == pos)
             have += sum(1 for o in off if o.get("position") == pos)
             check(have >= need, f"slot {i} has {have} {pos}, needs {need}")
-    vors = [r["vor"] for r in rows]
-    check(vors == sorted(vors, reverse=True), "rows are not sorted by VOR descending")
+    gains = [r["lineup_gain"] for r in rows]
+    check(gains == sorted(gains, reverse=True), "rows are not sorted by lineup gain descending")
     source_ids = {strategy.source_id for strategy in draft.opponents.values()}
     check(len(source_ids) >= 2, f"opponents use only {len(source_ids)} distinct source board(s)")
     check(
         any(row["opponent_rank_delta"] != 0 for row in rows),
-        "opponent consensus order does not diverge from my VOR order",
+        "opponent consensus order does not diverge from my board order",
     )
     want_rows = len(players) - len(board.taken)
     check(

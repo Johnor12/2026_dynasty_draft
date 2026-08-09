@@ -221,8 +221,9 @@ def build_payload(
                 "next_pick_ev is E[value of the best player still there at my following "
                 "pick] if I take him now. No positional roster-size heuristic adjusts "
                 "either value. The pick "
-                "maximizes their sum, so it can disagree with vor_rank — it sees my roster "
-                "and who will keep, which vor does not. At my first pending pick, each "
+                "maximizes their sum, so it can disagree with the board's static "
+                "lineup_gain order — the lookahead prices what my following pick keeps, "
+                "which a single-pick gain does not. At my first pending pick, each "
                 "next_pick_ev redraws the pre-pick opponents until that candidate survives, "
                 "takes him, and measures the best marginal option actually left at my "
                 "following turn; "
@@ -261,9 +262,11 @@ def build_payload(
             "picks": my_next_picks(draft, board, rollout, survival),
         },
         "rankings_note": (
-            "Undrafted players only, ranked over each other. `vor` is a points quantity "
-            "and does not depend on who is gone; the rank columns are renumbered over "
-            "the rows emitted here."
+            "Undrafted players only, ranked by `lineup_gain` — the decision metric the "
+            "pick engine maximizes (before lookahead): the player's marginal "
+            "expected-lineup value on my current roster at the converged wire levels. "
+            "Roster-aware, so it shrinks where my roster is already deep. The rank "
+            "columns are renumbered over the rows emitted here."
             if board.live
             else "The whole pool, from an empty board: no live draft was read."
         ),
@@ -272,8 +275,8 @@ def build_payload(
             "how": (
                 "Each opponent orders legal available players by the provider board most "
                 "associated with its completed picks in data_source_matches.json. Opponent "
-                "valuation never reads personal projections, replacement levels, team "
-                "value, or VOR. A position's source rank receives a soft boost in "
+                "valuation never reads personal projections, replacement levels, or team "
+                "value. A position's source rank receives a soft boost in "
                 "proportion to its unfilled dedicated starters and a compounding penalty "
                 "beyond its comfortable depth; the deterministic draft takes the best "
                 "adjusted rank, and Monte Carlo draws around that preference."
@@ -297,13 +300,13 @@ def build_payload(
             "coverage": (
                 "A provider's normalized players come first. Any pool player it does not "
                 "rank is appended in DraftSharks ADP order so all 290 picks remain possible; "
-                "the fallback is still an external opponent board, never personal VOR."
+                "the fallback is still an external opponent board, never my personal board."
             ),
             "delta": (
                 "opponent_consensus_rank averages the nine managers' complete source "
                 "orders, counting a source once per associated manager, then re-ranks the "
-                "available pool. opponent_rank_delta is opponent_consensus_rank - vor_rank; "
-                "positive identifies players my VOR process values earlier than the modeled "
+                "available pool. opponent_rank_delta is opponent_consensus_rank - rank; "
+                "positive identifies players my board values earlier than the modeled "
                 "field. Monte Carlo availability determines whether that gap is exploitable."
             ),
             "divergence": {
@@ -323,8 +326,9 @@ def build_payload(
                 "the (S+1)-th best player at a position by those points, where S is how "
                 "many players at that position hold a starting slot across all 10 teams "
                 "in the simulated draft when lineups are set on that horizon. This is the "
-                "marginal starter of that period. `levels` is the horizon sum, so "
-                "vor = points_3yr - levels[pos]; the split is in levels_by_horizon."
+                "marginal starter of that period, reported as a league diagnostic — it "
+                "does not price the board. `levels` is the horizon sum; the split is in "
+                "levels_by_horizon."
             ),
             "levels": {k: round(v, 1) for k, v in _sum_levels(rep).items()},
             "levels_by_horizon": {
@@ -348,9 +352,9 @@ def build_payload(
             "wire_note": (
                 "The best player at each position left undrafted — the post-draft free "
                 "agent baseline, per horizon (the best year-1 add and the best years-2-3 "
-                "stash can differ). `vor_vs_wire` measures against their horizon sum. "
-                "Inside roster valuation, each position contributes this body once as an "
-                "always-available fallback; it cannot fill two simultaneous lineup jobs."
+                "stash can differ). Inside roster valuation, each position contributes "
+                "this body once as an always-available fallback; it cannot fill two "
+                "simultaneous lineup jobs."
             ),
             "convergence": history,
         },
@@ -393,7 +397,7 @@ def build_payload(
                 "from the noiseless draft; sim_adp, p_drafted and "
                 "p_available_at_my_picks are from these redraws and measure the other nine "
                 "teams' demand only — my own "
-                "simulated picks are the VOR policy under evaluation, not opponent demand. "
+                "simulated picks are the policy under evaluation, not opponent demand. "
                 "p_available_at_my_picks is a Kaplan-Meier estimate (an opponent take is "
                 "the event, my own take censors the redraw); "
                 "my_next_picks.p_available_if_i_pass is the assumption-free counterfactual "

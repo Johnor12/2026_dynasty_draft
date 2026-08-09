@@ -1,14 +1,14 @@
 # Ranker
 
-`rank_vor.py` consumes `pool.json`, `draft.json`, normalized provider boards, and
+`rank.py` consumes `pool.json`, `draft.json`, normalized provider boards, and
 `data_source_matches.json`, then publishes `rankings.json`.
 
 ```bash
-uv run rank_vor.py
-uv run rank_vor.py --report
-uv run rank_vor.py --no-draft
-uv run rank_vor.py --draft other.json
-uv run rank_vor.py --selftest
+uv run rank.py
+uv run rank.py --report
+uv run rank.py --no-draft
+uv run rank.py --draft other.json
+uv run rank.py --selftest
 ```
 
 A live board is the simulation's starting state, not a post-processing filter. Made picks
@@ -34,9 +34,11 @@ undrafted players only.
 ## Value model
 
 The pool is split into year 1 and years 2–3 because a lineup is fielded each season.
-Replacement is solved separately for both horizons. At each horizon it is the next player
-after all simulated starters at that position; flexible starting slots determine their
-position mix from actual roster value rather than a hardcoded positional count.
+Replacement is solved separately for both horizons and reported as a league diagnostic.
+At each horizon it is the next player after all simulated starters at that position;
+flexible starting slots determine their position mix from actual roster value rather
+than a hardcoded positional count. The board itself is ranked by `lineup_gain`, each
+player's marginal expected-lineup value on my current roster.
 
 The final waiver bodies affect my expected-lineup choices, and those choices affect who
 remains undrafted. This creates a fixed point:
@@ -64,7 +66,7 @@ The depth targets sum to 25, so the last four spots remain source-driven rather 
 forcing every opponent into one exact roster shape. These are preferences, not draft
 limits: a large enough source-rank gap can still justify another player at a deep position.
 Observed `mean_log2_loss` calibrates randomness around that preference. Missing provider
-players are appended in DraftSharks ADP order; opponents never fall back to personal VOR.
+players are appended in DraftSharks ADP order; opponents never fall back to my board.
 
 My simulated pick policy does not use those targets or any other positional roster-size
 heuristic. Positional depth is priced only by projected expected-lineup value, so a roster
@@ -83,9 +85,10 @@ saturate every host CPU; this changes elapsed time, not the simulations or their
 
 ## Output contract
 
-`rankings.json.rankings` contains VOR, horizon splits, projected and simulated pick
-fields, opponent consensus deltas, and availability estimates for each undrafted player.
-`my_next_picks` is the roster-aware recommendation and can intentionally disagree with
-headline VOR. `example_draft` contains structured final-roster records for dashboard
+`rankings.json.rankings` is ranked by the roster-aware `lineup_gain` decision metric and
+contains projected and simulated pick fields, opponent consensus deltas, and
+availability estimates for each undrafted player.
+`my_next_picks` is the full recommendation and can intentionally disagree with the
+static board order. `example_draft` contains structured final-roster records for dashboard
 lineup comparison. `validation.problems` is empty on success; any problem makes the CLI
 exit nonzero.

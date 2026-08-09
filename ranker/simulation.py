@@ -37,7 +37,7 @@ from .value import (
 
 
 class Fenwick:
-    """Availability counter over the VOR-sorted pool, for O(log n) 'how many better'."""
+    """Availability counter over the consensus-sorted pool, for O(log n) 'how many better'."""
 
     __slots__ = ("n", "tree")
 
@@ -63,7 +63,7 @@ class Fenwick:
 def survival(better_available: int, gap: int) -> float:
     """P(a player is still there `gap` picks later), given how many rank above him.
 
-    If drafters followed the VOR order exactly he lasts iff more than `gap` players rank
+    If drafters followed the consensus order exactly he lasts iff more than `gap` players rank
     above him. Softened into a logistic because they follow their own roster needs, not a
     single global list.
     """
@@ -87,7 +87,6 @@ class Draft:
         self,
         players: list[Player],
         rep: dict[str, dict[str, float]],
-        vor: dict[int, float],
         board: Board,
         wire: dict[str, dict[str, float]] | None = None,
         noise: float = 0.0,
@@ -100,7 +99,6 @@ class Draft:
     ) -> None:
         self.players = players
         self.rep = rep
-        self.vor = vor
         # Before a completed draft exists to identify its unique waiver bodies, use the
         # marginal starters as the iteration-0 fallback. Convergence replaces these with
         # the best final undrafted player at each position and horizon.

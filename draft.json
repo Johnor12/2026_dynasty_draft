@@ -1,13 +1,13 @@
 {
   "source": "https://api.sleeper.app/v1/draft/1388293618208374784",
-  "fetched_at": "2026-08-09T18:05:56+00:00",
+  "fetched_at": "2026-08-09T20:01:58+00:00",
   "draft_id": "1388293618208374784",
   "league_id": "1388293617071714304",
   "league_name": "Dudes",
   "season": "2026",
   "status": "drafting",
   "started_at": "2026-08-04T13:02:55+00:00",
-  "last_picked_at": "2026-08-09T17:57:21+00:00",
+  "last_picked_at": "2026-08-09T19:59:03+00:00",
   "format": {
     "type": "snake",
     "teams": 10,
@@ -16,16 +16,16 @@
     "scoring_type": "dynasty_2qb"
   },
   "pick_count": 290,
-  "picks_made": 145,
-  "picks_pending": 145,
+  "picks_made": 148,
+  "picks_pending": 142,
   "on_the_clock": {
-    "pick_no": 146,
+    "pick_no": 149,
     "round": 15,
-    "pick_in_round": 6,
-    "draft_slot": 5,
-    "user_id": "870397485556875264",
-    "username": "dirtydole",
-    "slot": "15.06"
+    "pick_in_round": 9,
+    "draft_slot": 2,
+    "user_id": "1127785716420898816",
+    "username": "johnor",
+    "slot": "15.09"
   },
   "me": {
     "username": "johnor",
@@ -41,12 +41,12 @@
     "user_id": "1127785716420898816",
     "username": "johnor",
     "slot": "15.09",
-    "picks_away": 3
+    "picks_away": 0
   },
   "board_derivation": {
     "method": "snake, order reverses at round 3; traded picks applied",
-    "checked_against_made_picks": 145,
-    "slot_and_roster_agree": 145,
+    "checked_against_made_picks": 148,
+    "slot_and_roster_agree": 148,
     "rounds_exercised": [
       1,
       2,
@@ -351,6 +351,13 @@
       "roster_id": 6,
       "owner_id": 3,
       "previous_owner_id": 6
+    },
+    {
+      "round": 15,
+      "season": "2026",
+      "roster_id": 8,
+      "owner_id": 1,
+      "previous_owner_id": 8
     },
     {
       "round": 5,
@@ -2720,12 +2727,12 @@
       "user_id": "870397485556875264",
       "username": "dirtydole",
       "is_mine": false,
-      "status": "pending",
-      "sleeper_id": null,
-      "name": null,
-      "position": null,
-      "team": null,
-      "is_keeper": null
+      "status": "made",
+      "sleeper_id": "11646",
+      "name": "Jalen Coker",
+      "position": "WR",
+      "team": "CAR",
+      "is_keeper": false
     },
     {
       "pick_no": 147,
@@ -2736,28 +2743,28 @@
       "user_id": "735592932748435456",
       "username": "bwood637",
       "is_mine": false,
-      "status": "pending",
-      "sleeper_id": null,
-      "name": null,
-      "position": null,
-      "team": null,
-      "is_keeper": null
+      "status": "made",
+      "sleeper_id": "5045",
+      "name": "Courtland Sutton",
+      "position": "WR",
+      "team": "DEN",
+      "is_keeper": false
     },
     {
       "pick_no": 148,
       "round": 15,
       "pick_in_round": 8,
       "draft_slot": 3,
-      "roster_id": 8,
-      "user_id": "865368720548196352",
-      "username": "jedmxk",
+      "roster_id": 1,
+      "user_id": "1128025586577879040",
+      "username": "justinmfftt",
       "is_mine": false,
-      "status": "pending",
-      "sleeper_id": null,
-      "name": null,
-      "position": null,
-      "team": null,
-      "is_keeper": null
+      "status": "made",
+      "sleeper_id": "8210",
+      "name": "Chig Okonkwo",
+      "position": "TE",
+      "team": "WAS",
+      "is_keeper": false
     },
     {
       "pick_no": 149,

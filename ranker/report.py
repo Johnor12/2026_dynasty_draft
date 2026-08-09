@@ -82,8 +82,8 @@ def report_summary(
         )
     for r in top:
         print(
-            f"  {r['vor_rank']:>3}. {r['name']:<{width}}  {r['position']}"
-            f"{r['positional_vor_rank']:<3} vor {r['vor']:>7.1f}"
+            f"  {r['rank']:>3}. {r['name']:<{width}}  {r['position']}"
+            f"{r['positional_rank']:<3} gain {r['lineup_gain']:>6.1f}"
             f"  pts {r['points_3yr']:>5}  sim {r['sim_pick_label'] or '--':>6}"
             f"  provider adp {r['provider_adp'] or float('nan'):>5}",
             file=sys.stderr,

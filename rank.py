@@ -1,21 +1,22 @@
 #!/usr/bin/env python3
-"""Value over replacement for this league, with an optimal-drafter draft simulation.
+"""Roster-aware draft board for this league, with an optimal-drafter draft simulation.
 
-    uv run rank_vor.py                     # pool + draft + source artifacts -> rankings.json
-    uv run rank_vor.py --report            # + board, convergence and recommendation on stderr
-    uv run rank_vor.py --no-draft          # ignore the live board, rank the whole pool
-    uv run rank_vor.py --selftest          # verify solver, opponents, and board loader
+    uv run rank.py                         # pool + draft + source artifacts -> rankings.json
+    uv run rank.py --report                # + board, convergence and recommendation on stderr
+    uv run rank.py --no-draft              # ignore the live board, rank the whole pool
+    uv run rank.py --selftest              # verify solver, opponents, and board loader
 
 Scope is this league and nothing else; the league constants and strategy knobs live in
 ranker/league.py. The value inputs are `points_3yr` and `points_1yr` from `pool.json` —
 points in this league's scoring, split into two horizons: year 1 and years 2-3 (see
-ranker/pool.py for why the provider's 3D value is deliberately unused). Lineups and VOR
-are measured per horizon, so a 69-point injury year cannot hide inside a healthy 3-year
+ranker/pool.py for why the provider's 3D value is deliberately unused). Lineups are
+valued per horizon, so a 69-point injury year cannot hide inside a healthy 3-year
 sum. The method, in one breath: how many players start at each position is an *outcome*
-of how the league drafts, so
-per-horizon replacement levels are measured from the converged draft, while my roster is
-valued as expected optimal lineup points under position-wide availability with one unique
-waiver fallback per position (`ranker/value.py`). `draft.json` — the live board — is the
+of how the league drafts, so per-horizon wire and marginal-starter levels are measured
+from the converged draft (the wire feeds valuation; the marginal starters are reported
+as league diagnostics), while my roster is valued as expected optimal lineup points
+under position-wide availability with one unique waiver fallback per position
+(`ranker/value.py`). `draft.json` — the live board — is the
 simulation's starting state, not a filter (ranker/board.py). Only my slot uses the
 projection-based roster objective. Every opponent uses the external provider board most
 associated with its prior picks, loaded from the data-source investigator; unfilled
@@ -24,22 +25,20 @@ Carlo choice noise. A compounding soft-depth preference keeps opponents' late ro
 shapes plausible without imposing position limits. My slot's choices contain no
 positional roster-size heuristic.
 
-The output's headline `vor` remains a board statistic and sums the horizons: (year-1
-points minus the year-1 marginal-starter level) + (years-2-3 points minus that level) —
-"how many points over three years does this player add versus the best guy any team could
-have had at his position without spending a starting-caliber pick, period by period"
-(`vor_yr1` and `vor_yr23` carry the split). The `my_next_picks`
-block is the direct answer to "who should I draft next" — unlike `vor`, it sees my roster
-and opponent demand. Its first decision searches target plans across my next four held
-picks, then plays each first-candidate plan out to the end of the draft
+The board's headline `lineup_gain` is the decision metric itself: the player's marginal
+expected-lineup value on my current roster at the converged wire levels, so it shrinks
+at positions my roster already covers. The `my_next_picks` block is the direct answer to
+"who should I draft next" — on top of that same gain it prices opponent demand and what
+my following picks keep. Its first decision searches target plans across my next four
+held picks, then plays each first-candidate plan out to the end of the draft
 (`ranker/planning.py`). Rank columns are renumbered over the undrafted
 players actually emitted.
 
-A caveat the data imposes, not the model: QB replacement lands around QB20-21 = ~820
-points, which compresses elite QB value hard (Josh Allen is ~+225). That follows from the
-provider projecting backup and rookie QBs at starter-grade volume. If those are not
-credible, QB replacement is overstated and every elite QB is underrated here. The lever
-is the projections, not the ranking method.
+A caveat the data imposes, not the model: the provider projects backup and rookie QBs at
+starter-grade volume (the marginal starter lands around QB20-21 = ~820 points over three
+years), which compresses elite QB value hard. If those depth projections are not
+credible, deep QBs are overrated and every elite QB is underrated here. The lever is the
+projections, not the ranking method.
 
 Python stdlib only. Deterministic: every tie breaks on player_id and the RNG is seeded.
 """
@@ -250,7 +249,7 @@ def main(argv: list[str] | None = None) -> int:
     picks = monte_carlo(
         players, rep, board, stream, args.sims, args.noise, args.seed, opponents
     )
-    rows = build_rankings(players, rep, stream, draft, picks, args.sims, board)
+    rows = build_rankings(players, stream, draft, picks, args.sims, board)
 
     problems = board_problems + validate(rows, players, rep, counts, draft, board, history)
     payload = build_payload(

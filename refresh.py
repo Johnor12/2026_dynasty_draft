@@ -8,7 +8,7 @@ the first failure:
     2. data_source_investigator/investigate.py
                                         existing source rankings + draft.json
                                         -> data_source_matches.json
-    3. rank_vor.py                     pool + draft + source matches/rankings
+    3. rank.py                         pool + draft + source matches/rankings
                                         -> rankings.json
 
 The pool pipeline and the investigator's source fetch/build stages are deliberately not
@@ -18,7 +18,7 @@ investigation precedes ranking because each simulated opponent consumes its late
 
 Each step is a separate ``uv run``, not an import. All run with the repo root as their
 working directory, so their own default paths apply and this works from anywhere
-(``rank_vor.py`` resolves ``pool.json`` and ``draft.json`` from the shell's cwd, not from
+(``rank.py`` resolves ``pool.json`` and ``draft.json`` from the shell's cwd, not from
 the script).
 
 Usage:
@@ -48,7 +48,7 @@ def main(argv: list[str] | None = None) -> int:
     steps = [
         ("draft", ["draft_pipeline/fetch_draft.py", *report]),
         ("investigate", ["data_source_investigator/investigate.py", *report]),
-        ("rank", ["rank_vor.py", *report]),
+        ("rank", ["rank.py", *report]),
     ]
 
     for number, (name, command) in enumerate(steps, start=1):

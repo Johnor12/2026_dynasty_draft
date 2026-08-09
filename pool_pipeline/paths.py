@@ -2,7 +2,7 @@
 """Where every file in the pool build lives.
 
 This pipeline is a folder of scripts with one published artifact: ``pool.json`` at
-the repo root, which is what the ranker (``rank_vor.py``) reads. Everything else —
+the repo root, which is what the ranker (``rank.py``) reads. Everything else —
 the 8 MB provider html, the 2.5 MB faithful parse of it, the 14 MB Sleeper dump — is
 working material and stays inside ``pool_pipeline/data/``.
 

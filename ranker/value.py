@@ -16,7 +16,7 @@ This is one objective with one set of units: expected lineup points. There is no
 threshold and no separate bench bonus. A better projection can retain every role a worse
 projection could fill, which makes roster value monotone when a player improves, is
 replaced by a better same-position player, or is simply added. Marginal-starter levels
-remain the board's VOR baseline; they are not mixed into roster utility.
+are reported as league diagnostics; they are not mixed into roster utility.
 """
 
 from __future__ import annotations
@@ -301,14 +301,6 @@ def team_values_with_candidates(
                 for counts in _STARTER_COMPOSITIONS
             )
     return baseline, values
-
-
-def compute_vor(players: list[Player], rep: dict[str, dict[str, float]]) -> dict[int, float]:
-    """Sum over horizons of (horizon points - that horizon's replacement level)."""
-    return {
-        p.player_id: sum(horizon_points(p, h) - rep[h][p.position] for h in HORIZONS)
-        for p in players
-    }
 
 
 def upside_points(p: Player) -> float:

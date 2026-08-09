@@ -18,7 +18,7 @@ from .league import CANDIDATE_SURVIVAL_FLOOR, FIRST_PICK_PER_POS, LOOKAHEAD_PICK
 from .opponents import OpponentStrategy
 from .pool import Player, by_position
 from .simulation import Draft
-from .value import compute_vor, sorted_by_horizon, team_value, wire_replacement
+from .value import sorted_by_horizon, team_value, wire_replacement
 
 
 def broaden_first_pick(
@@ -34,9 +34,7 @@ def broaden_first_pick(
         return draft
     pick_no = board.my_picks[0]
     pick_index = board.pick_nos.index(pick_no)
-    state = Draft(
-        players, rep, compute_vor(players, rep), board, wire=stream, opponents=opponents
-    )
+    state = Draft(players, rep, board, wire=stream, opponents=opponents)
     draft.my_decisions[pick_no] = state.score_my_candidates(
         pick_index, per_pos=FIRST_PICK_PER_POS
     )
@@ -72,11 +70,11 @@ _FOUR_PICK_BEAM = 16
 
 
 def _init_worker(
-    players, rep, board, stream, noise, seed, opponents, vor, i_my, plans=None
+    players, rep, board, stream, noise, seed, opponents, i_my, plans=None
 ) -> None:
     _WORKER.update(
         players=players, rep=rep, board=board, stream=stream, noise=noise, seed=seed,
-        opponents=opponents, vor=vor, i_my=i_my, plans=plans or {},
+        opponents=opponents, i_my=i_my, plans=plans or {},
         by_id={p.player_id: p for p in players},
     )
 
@@ -99,7 +97,7 @@ def _conditioned_seed(kind: str, cand_id: int, sample: int) -> str:
     for attempt in range(10_000):
         draw_seed = f"{kind}-{w['seed']}-{sample}-{attempt}"
         probe = Draft(
-            w["players"], w["rep"], w["vor"], w["board"], wire=w["stream"],
+            w["players"], w["rep"], w["board"], wire=w["stream"],
             noise=w["noise"], rng=random.Random(draw_seed), opponents=w["opponents"],
         )
         probe.run(stop_before=w["i_my"])
@@ -119,7 +117,7 @@ def _plan_playout(plan: tuple[int, ...]) -> float:
     w = _WORKER
     draw_seed = _conditioned_seed("screen", plan[0], 0)
     d = Draft(
-        w["players"], w["rep"], w["vor"], w["board"], wire=w["stream"],
+        w["players"], w["rep"], w["board"], wire=w["stream"],
         noise=w["noise"], rng=random.Random(draw_seed), opponents=w["opponents"],
         targets=_target_map(plan),
     )
@@ -139,7 +137,7 @@ def _mc_draft(s: int) -> dict[int, tuple[int, bool]]:
     """
     w = _WORKER
     d = Draft(
-        w["players"], w["rep"], w["vor"], w["board"], wire=w["stream"], noise=w["noise"],
+        w["players"], w["rep"], w["board"], wire=w["stream"], noise=w["noise"],
         rng=random.Random(w["seed"] + s),
         opponents=w["opponents"],
     )
@@ -153,7 +151,7 @@ def _rollout_playout(task: tuple[int, int]) -> tuple[list[float], float]:
     w = _WORKER
     draw_seed = _conditioned_seed("rollout", cand_id, s)
     baseline = Draft(
-        w["players"], w["rep"], w["vor"], w["board"], wire=w["stream"], noise=w["noise"],
+        w["players"], w["rep"], w["board"], wire=w["stream"], noise=w["noise"],
         rng=random.Random(draw_seed), opponents=w["opponents"],
     )
     baseline.run()
@@ -161,7 +159,7 @@ def _rollout_playout(task: tuple[int, int]) -> tuple[list[float], float]:
     values = []
     for plan in w["plans"].get(cand_id, ((cand_id,),)):
         d = Draft(
-            w["players"], w["rep"], w["vor"], w["board"], wire=w["stream"],
+            w["players"], w["rep"], w["board"], wire=w["stream"],
             noise=w["noise"], rng=random.Random(draw_seed), opponents=w["opponents"],
             targets=_target_map(plan),
         )
@@ -198,7 +196,7 @@ def _option_playout(task: tuple[int, int]) -> float:
     assert i_my is not None
     draw_seed = _conditioned_seed("option", cand_id, s)
     d = Draft(
-        w["players"], w["rep"], w["vor"], w["board"], wire=w["stream"], noise=w["noise"],
+        w["players"], w["rep"], w["board"], wire=w["stream"], noise=w["noise"],
         rng=random.Random(draw_seed),
         opponents=w["opponents"],
         forced={i_my: w["by_id"][cand_id]},
@@ -226,12 +224,11 @@ def monte_carlo(
     `candidate_survival` is the assumption-free counterfactual, priced only for the
     players where the decision actually needs it.
     """
-    vor = compute_vor(players, rep)
     picks: dict[int, list[tuple[int, bool]]] = {p.player_id: [] for p in players}
     with multiprocessing.Pool(
         _worker_pool_size(),
         initializer=_init_worker,
-        initargs=(players, rep, board, stream, noise, seed, opponents, vor, None),
+        initargs=(players, rep, board, stream, noise, seed, opponents, None),
     ) as pool:
         for pick_of in pool.map(_mc_draft, range(sims)):
             for pid, (pick, mine) in pick_of.items():
@@ -243,7 +240,7 @@ def _survival_draft(task: tuple[int, int]) -> int | None:
     cand_id, s = task
     w = _WORKER
     d = Draft(
-        w["players"], w["rep"], w["vor"], w["board"], wire=w["stream"], noise=w["noise"],
+        w["players"], w["rep"], w["board"], wire=w["stream"], noise=w["noise"],
         rng=random.Random(w["seed"] + s),
         opponents=w["opponents"], my_ban=cand_id,
     )
@@ -273,12 +270,11 @@ def candidate_survival(
     """
     if not board.my_picks or not candidates:
         return {}
-    vor = compute_vor(players, rep)
     tasks = [(cand.player_id, s) for cand in candidates for s in range(sims)]
     with multiprocessing.Pool(
         _worker_pool_size(),
         initializer=_init_worker,
-        initargs=(players, rep, board, stream, noise, seed, opponents, vor, None),
+        initargs=(players, rep, board, stream, noise, seed, opponents, None),
     ) as pool:
         flat = pool.map(_survival_draft, tasks)
     out: dict[int, dict[int, float]] = {}
@@ -327,11 +323,10 @@ def four_pick_lookahead(
         return None
     pick_nos = board.my_picks[:lookahead_picks]
     first_index = board.pick_nos.index(pick_nos[0])
-    vor = compute_vor(players, rep)
 
     # Generate from the live board. Opponents between now and my pick are uncertain, and
     # candidate_survival decides which of these current options remain worth planning for.
-    state = Draft(players, rep, vor, board, wire=stream, opponents=opponents)
+    state = Draft(players, rep, board, wire=stream, opponents=opponents)
     roster = state.rosters[board.my_slot - 1]
     off = state.off_pool[board.my_slot - 1]
     picks_left = state.picks_left[board.my_slot - 1]
@@ -399,7 +394,7 @@ def four_pick_lookahead(
     with multiprocessing.Pool(
         _worker_pool_size(),
         initializer=_init_worker,
-        initargs=(players, rep, board, stream, noise, seed, opponents, vor, first_index),
+        initargs=(players, rep, board, stream, noise, seed, opponents, first_index),
     ) as pool:
         final_values = pool.map(_plan_playout, all_plans)
 
@@ -471,12 +466,11 @@ def option_redraw(
             "stats": {cand.player_id: {"ev": 0.0} for cand in candidates},
         }
 
-    vor = compute_vor(players, rep)
     tasks = [(cand.player_id, s) for cand in candidates for s in range(sims)]
     with multiprocessing.Pool(
         _worker_pool_size(),
         initializer=_init_worker,
-        initargs=(players, rep, board, stream, noise, seed, opponents, vor, i_my),
+        initargs=(players, rep, board, stream, noise, seed, opponents, i_my),
     ) as pool:
         flat = pool.map(_option_playout, tasks)
     return {
@@ -508,9 +502,8 @@ def _replay_pick(
     if actual_id == take.player_id and not targets:
         draft.my_decisions[pick_no] = detail
         return draft
-    vor = compute_vor(players, rep)
     forced = Draft(
-        players, rep, vor, board, wire=stream,
+        players, rep, board, wire=stream,
         opponents=opponents,
         forced=None if targets else {board.pick_nos.index(pick_no): take},
         targets=targets,
@@ -630,7 +623,6 @@ def rollout(
         return None
     pick_no = board.my_picks[0]
     i_my = board.pick_nos.index(pick_no)
-    vor = compute_vor(players, rep)
     plans = {
         cand.player_id: tuple(
             tuple(finalist["target_ids"])
@@ -644,7 +636,7 @@ def rollout(
     with multiprocessing.Pool(
         _worker_pool_size(),
         initializer=_init_worker,
-        initargs=(players, rep, board, stream, noise, seed, opponents, vor, i_my, plans),
+        initargs=(players, rep, board, stream, noise, seed, opponents, i_my, plans),
     ) as pool:
         flat = pool.map(_rollout_playout, tasks)
     values: dict[int, list[float]] = {}

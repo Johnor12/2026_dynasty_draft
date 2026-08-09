@@ -4,7 +4,7 @@ Each opponent uses the provider board that best fits their picks in
 ``data_source_matches.json``. Provider ranks are joined to the pool by Sleeper id, then
 by conservative name variants when a normalized source row lacks that id. A provider's
 uncovered tail follows DraftSharks ADP so every mandatory pick remains possible without
-ever falling back to this ranker's projections or VOR.
+ever falling back to this ranker's projections or board.
 """
 
 from __future__ import annotations
@@ -137,7 +137,7 @@ def build_opponent_strategies(
     matches: dict,
     rankings: dict,
 ) -> dict[int, OpponentStrategy]:
-    """Build one complete, non-VOR player order for every opposing draft slot."""
+    """Build one complete external player order for every opposing draft slot."""
 
     draft_id = draft.get("draft_id")
     if matches.get("draft", {}).get("draft_id") != draft_id:

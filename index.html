@@ -103,8 +103,8 @@
   .recommendation { margin-left: auto; color: var(--ink-2); font-size: 12.5px; }
   .recommendation strong { color: var(--accent); font-size: 14px; }
   .pick-table-wrap { overflow-x: auto; }
-  .pick-table { min-width: 1040px; }
-  .pick-table.has-rollout { min-width: 1160px; }
+  .pick-table { min-width: 980px; }
+  .pick-table.has-rollout { min-width: 1100px; }
   .pick-table tbody tr.recommended td { background: var(--accent-soft); }
   .pick-table tbody tr.recommended td:first-child { box-shadow: inset 3px 0 0 var(--accent); }
   .player-main { font-weight: 650; }
@@ -283,8 +283,8 @@
               <th class="num">Years 2–3<br>/ year</th>
               <th class="num">Trend<br>/ year</th>
               <th class="num">3-year<br>total</th>
-              <th class="num">VOR</th>
-              <th class="num" title="Opponent consensus rank minus your VOR rank">Field Δ</th>
+              <th class="num" title="Marginal expected-lineup value if added to your roster now — the metric the pick recommendations maximize">Lineup gain</th>
+              <th class="num" title="Opponent consensus rank minus your board rank">Field Δ</th>
               <th id="availHead">Chance at next pick</th>
             </tr>
           </thead>
@@ -592,7 +592,7 @@ function renderNextPicks(d, byId) {
             isTake ? [" ", h("span", { class: "chip take" }, "TAKE")] : null),
           h("div", { class: "player-meta" }, stats
             ? [
-                `board #${stats.vor_rank}`,
+                `board #${stats.rank}`,
                 `field #${stats.opponent_consensus_rank}`,
                 `Δ ${signed(stats.opponent_rank_delta)}`,
                 stats.team,
@@ -602,7 +602,6 @@ function renderNextPicks(d, byId) {
         h("td", { class: "num" }, fmt(stats?.points_1yr)),
         h("td", { class: "num" }, fmt(futurePerYear(stats))),
         h("td", { class: `num ${trendClass(trend)}` }, signed(trend)),
-        h("td", { class: "num" }, fmt(stats?.vor)),
         h("td", { class: "num" }, fmt(candidate.value_now)),
         h("td", { class: "num" }, fmt(candidate.next_pick_ev)),
         h("td", { class: "num score-main" }, fmt(candidate.score)),
@@ -628,7 +627,6 @@ function renderNextPicks(d, byId) {
           h("thead", {}, h("tr", {},
             h("th", {}, "Player"), h("th", { class: "num" }, "Year 1"),
             h("th", { class: "num" }, "Years 2–3 / yr"), h("th", { class: "num" }, "Trend / yr"),
-            h("th", { class: "num", title: "Three-year points above the period-specific marginal starter" }, "VOR"),
             h("th", { class: "num", title: "Marginal expected-lineup value added to your roster" }, "Lineup gain"),
             h("th", { class: "num", title: "Expected value of your best option at the following pick" }, "Next-pick option"),
             h("th", { class: "num", title: "Ordinary-policy diagnostic; this does not rank the first card" }, "Two-pick total"),
@@ -662,10 +660,10 @@ function renderBoard(d, state) {
   const pickOrder = remainingPickOrder(d);
   document.getElementById("availHead").textContent = nextPick ? `Chance at ${nextPick}` : "Availability";
   document.getElementById("boardHint").textContent = nextPick
-    ? `Undrafted players ranked by three-year VOR. Chance at ${nextPick} is the estimated probability no opponent takes the player first, from ${d.monte_carlo.sims} simulated drafts.`
-    : "Undrafted players ranked by three-year VOR.";
+    ? `Undrafted players ranked by lineup gain. Chance at ${nextPick} is the estimated probability no opponent takes the player first, from ${d.monte_carlo.sims} simulated drafts.`
+    : "Undrafted players ranked by lineup gain.";
   document.getElementById("boardNote").textContent =
-    "Year 1 and Years 2–3 / year are raw projected fantasy points in this league's scoring. Trend is the later annual pace minus Year 1. VOR subtracts the position's period-specific marginal starter over all three years. Field Δ is opponent consensus rank minus VOR rank, so positive means your process values the player earlier than the modeled field. The recommendation tables also account for your roster and who may survive. Best-available odds use a Kaplan–Meier opponent-demand estimate; use the pass-on-him odds in the first recommendation table for the candidates that matter most.";
+    "Year 1 and Years 2–3 / year are raw projected fantasy points in this league's scoring. Trend is the later annual pace minus Year 1. Lineup gain — the board's ranking metric — is what the pick recommendations actually maximize (before availability lookahead): the player's marginal expected-lineup value added to your current roster, waiver fallbacks included. It shrinks at positions where your roster is already strong. Field Δ is opponent consensus rank minus board rank, so positive means your process values the player earlier than the modeled field. The recommendation tables also account for who may survive. Best-available odds use a Kaplan–Meier opponent-demand estimate; use the pass-on-him odds in the first recommendation table for the candidates that matter most.";
 
   let rows = d.rankings;
   if (state.position !== "ALL") rows = rows.filter(row => row.position === state.position);
@@ -675,17 +673,17 @@ function renderBoard(d, state) {
     const available = nextPick ? pAvailAt(row, nextPick, pickOrder) : null;
     const trend = trendPerYear(row);
     return h("tr", {},
-      h("td", { class: "num rank" }, row.vor_rank),
+      h("td", { class: "num rank" }, row.rank),
       h("td", {}, h("span", { class: "pname" }, row.name),
         row.is_rookie ? [" ", h("span", { class: "chip rookie" }, "R")] : null,
         row.team ? h("span", { class: "team" }, row.team) : null),
-      h("td", {}, h("span", { class: `chip pos ${row.position}` }, `${row.position}${row.positional_vor_rank}`)),
+      h("td", {}, h("span", { class: `chip pos ${row.position}` }, `${row.position}${row.positional_rank}`)),
       h("td", { class: "num" }, fmt(row.age)),
       h("td", { class: "num" }, fmt(row.points_1yr)),
       h("td", { class: "num" }, fmt(futurePerYear(row))),
       h("td", { class: `num ${trendClass(trend)}` }, signed(trend)),
       h("td", { class: "num" }, fmt(row.points_3yr)),
-      h("td", { class: "num" }, fmt(row.vor)),
+      h("td", { class: "num" }, fmt(row.lineup_gain)),
       h("td", {
         class: `num ${trendClass(row.opponent_rank_delta)}`,
         title: `Modeled field rank ${row.opponent_consensus_rank}`,

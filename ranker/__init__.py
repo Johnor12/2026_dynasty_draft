@@ -1,1 +1,1 @@
-"""Value-over-replacement ranking for this league. Entry point: rank_vor.py at the root."""
+"""Roster-aware draft board for this league. Entry point: rank.py at the root."""

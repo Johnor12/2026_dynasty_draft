@@ -8,7 +8,7 @@ from .board import Board
 from .league import LOOKAHEAD_PICKS, POSITIONS, pick_label
 from .pool import Player
 from .simulation import Draft
-from .value import HORIZONS, compute_vor, horizon_points, upside_points
+from .value import HORIZONS, team_values_with_candidates, upside_points
 
 
 def _sum_levels(levels: dict[str, dict[str, float]]) -> dict[str, float]:
@@ -18,7 +18,6 @@ def _sum_levels(levels: dict[str, dict[str, float]]) -> dict[str, float]:
 
 def build_rankings(
     players: list[Player],
-    rep: dict[str, dict[str, float]],
     wire: dict[str, dict[str, float]],
     draft: Draft,
     picks: dict[int, list[int]],
@@ -29,9 +28,9 @@ def build_rankings(
 
     Drafted players are dropped rather than flagged — they cannot be picked, and leaving
     them in would put a name at rank 1 that is not available. Their points still shape the
-    replacement levels every row is measured against, which happens in `converge`. All
-    rank columns are renumbered over what is emitted, so they read as positions on the
-    remaining board rather than as gapped survivors of the preseason one.
+    converged wire levels every row's lineup gain is measured with, which happens in
+    `converge`. All rank columns are renumbered over what is emitted, so they read as
+    positions on the remaining board rather than as gapped survivors of the preseason one.
 
     Two simulations are reported per player, and they answer different questions:
       * `sim_pick` is from the single deterministic draft, no noise.
@@ -47,10 +46,16 @@ def build_rankings(
         policies belongs.
     """
     my_picks = board.my_picks
-    vor = compute_vor(players, rep)
-    rep_sum, wire_sum = _sum_levels(rep), _sum_levels(wire)
     available = board.available(players)
-    ranked = sorted(available, key=lambda p: (-vor[p.player_id], p.player_id))
+    # The board's one metric and sort key — what the pick engine actually maximizes
+    # (before lookahead): the player's marginal expected-lineup value on my current
+    # roster at the converged wire levels. Matches value_now for the first pending
+    # pick's candidates; roster-aware, so it shrinks where my roster is already deep.
+    base, with_candidate = team_values_with_candidates(
+        board.rosters[board.my_slot - 1], wire, available
+    )
+    gain = {pid: value - base for pid, value in with_candidate.items()}
+    ranked = sorted(available, key=lambda p: (-gain[p.player_id], p.player_id))
     opponent_rank = {
         p.player_id: i
         for i, p in enumerate(
@@ -102,11 +107,11 @@ def build_rankings(
         )
         rows.append(
             {
-                "vor_rank": i,
+                "rank": i,
                 "player_id": p.player_id,
                 "name": p.name,
                 "position": p.position,
-                "positional_vor_rank": pos_rank[p.position],
+                "positional_rank": pos_rank[p.position],
                 "team": p.team,
                 "age": p.age,
                 "bye_week": p.bye_week,
@@ -117,13 +122,7 @@ def build_rankings(
                 # Equal to points_3yr for a flat scorer; the gap is the provider's
                 # implied growth. See value.upside_points.
                 "upside_points": round(upside_points(p), 1),
-                # Sum of the per-horizon levels, so vor = points_3yr - replacement_points
-                # stays verifiable from this row; the split is in vor_yr1 / vor_yr23.
-                "replacement_points": round(rep_sum[p.position], 1),
-                "vor": round(vor[p.player_id], 1),
-                "vor_yr1": round(horizon_points(p, "yr1") - rep["yr1"][p.position], 1),
-                "vor_yr23": round(horizon_points(p, "yr23") - rep["yr23"][p.position], 1),
-                "vor_vs_wire": round(p.points - wire_sum[p.position], 1),
+                "lineup_gain": round(gain[p.player_id], 1),
                 "sim_pick": sim_pick,
                 "sim_pick_label": pick_label(sim_pick) if sim_pick else None,
                 "sim_adp": round(mean, 1) if mean is not None else None,
@@ -133,7 +132,7 @@ def build_rankings(
                 "p_available_at_my_picks": avail,
                 "provider_adp": p.provider_adp,
                 "opponent_consensus_rank": opponent_rank[p.player_id],
-                # Positive means my VOR board values him earlier than the average of the
+                # Positive means my board values him earlier than the average of the
                 # nine slot-specific provider boards actually used in the simulations.
                 "opponent_rank_delta": opponent_rank[p.player_id] - i,
             }
