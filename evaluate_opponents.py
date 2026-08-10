@@ -32,7 +32,7 @@ from ranker.league import NOISE, SEED  # noqa: E402
 from ranker.opponents import build_opponent_strategies  # noqa: E402
 from ranker.pool import Player, load_pool  # noqa: E402
 from ranker.simulation import Draft  # noqa: E402
-from ranker.value import seed_replacement  # noqa: E402
+from ranker.value import seed_wire  # noqa: E402
 
 TRIALS = 100
 POOL = REPO_ROOT / "pool.json"
@@ -68,7 +68,7 @@ def preference_order(model: Draft, slot: int) -> list[Player]:
 def evaluate(
     players: list[Player], draft: dict, rankings: dict, seed: int = SEED
 ) -> list[dict]:
-    rep = seed_replacement(players)
+    wire = seed_wire(players)
     by_sleeper = {str(player.sleeper_id): player for player in players}
     results = []
 
@@ -94,7 +94,7 @@ def evaluate(
         strategy = opponents[slot]
         model = Draft(
             players,
-            rep,
+            wire,
             board,
             noise=NOISE,
             rng=random.Random(seed + actual["pick_no"]),

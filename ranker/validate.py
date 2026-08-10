@@ -29,8 +29,7 @@ from .value import HORIZONS, horizon_points, pos_by_horizon, starting_positions
 def validate(
     rows: list[dict],
     players: list[Player],
-    rep: dict[str, dict[str, float]],
-    counts: dict[str, dict[str, int]],
+    stream: dict[str, dict[str, float]],
     draft: Draft,
     board: Board,
     history: dict,
@@ -84,12 +83,6 @@ def validate(
                 f"({len(want)} picks) even though no picks were traded",
             )
 
-    for h in HORIZONS:
-        check(
-            sum(counts[h].values()) == TEAMS * sum(STARTING_SLOTS.values()),
-            f"{h} starters sum to {sum(counts[h].values())}, "
-            f"want {TEAMS * sum(STARTING_SLOTS.values())}",
-        )
     want_taken = sum(len(r) for r in board.rosters) + len(board.order)
     check(
         len(draft.taken) == want_taken,
@@ -144,22 +137,22 @@ def validate(
         not (board.taken & {r["player_id"] for r in rows}),
         "a player already drafted in draft.json is on the emitted board",
     )
-    # The reported level is a mean over the limit cycle, so the invariant that actually
-    # holds is that it lies inside the range the cycle spanned — not that it coincides with
-    # any single draft's level, which a long cycle can genuinely straddle.
+    # The reported wire level is a mean over the limit cycle, so the invariant that
+    # actually holds is that it lies inside the range the cycle spanned — not that it
+    # coincides with any single draft's level, which a long cycle can genuinely straddle.
     pos_h = pos_by_horizon(players)
     for h in HORIZONS:
         for k in POSITIONS:
-            lo, hi = history["cycle_replacement_range"][h][k]
+            lo, hi = history["cycle_wire_range"][h][k]
             check(
-                lo - 1e-6 <= rep[h][k] <= hi + 1e-6,
-                f"{h} {k} replacement {rep[h][k]:.1f} outside its cycle range [{lo}, {hi}]",
+                lo - 1e-6 <= stream[h][k] <= hi + 1e-6,
+                f"{h} {k} wire {stream[h][k]:.1f} outside its cycle range [{lo}, {hi}]",
             )
             check(
                 horizon_points(pos_h[h][k][-1], h)
-                <= rep[h][k]
+                <= stream[h][k]
                 <= horizon_points(pos_h[h][k][0], h),
-                f"{h} {k} replacement {rep[h][k]:.1f} outside the {k} pool range",
+                f"{h} {k} wire {stream[h][k]:.1f} outside the {k} pool range",
             )
     check(
         history["iterations_run"] < MAX_ITERS,

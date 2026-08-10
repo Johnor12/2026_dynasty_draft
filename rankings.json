@@ -2,7 +2,7 @@
   "generated_from": "pool.json",
   "scoring_scheme": "half_ppr_te_premium_superflex",
   "value_input": "pool.json points_3yr + points_1yr (half_ppr_te_premium_superflex)",
-  "value_note": "Projected points in this league's scheme, split into two horizons — year 1 (points_1yr) and years 2-3 (points_3yr - points_1yr) — because lineups are fielded per season. Roster value is the best expected legal lineup in each horizon, including the probability that deeper players are called on when higher teammates are unavailable and one unique waiver body per position. Draftsharks' 3D value is deliberately unused: it is a provider-scaled ordinal, not points, so it cannot be differenced against a replacement level.",
+  "value_note": "Projected points in this league's scheme, split into two horizons — year 1 (points_1yr) and years 2-3 (points_3yr - points_1yr) — because lineups are fielded per season. Roster value is the best expected legal lineup in each horizon, including the probability that deeper players are called on when higher teammates are unavailable and one unique waiver body per position. Draftsharks' 3D value is deliberately unused: it is a provider-scaled ordinal, not points, so it cannot enter a points-denominated lineup objective.",
   "league": {
     "teams": 10,
     "starting_slots": {
@@ -6140,7 +6140,7 @@
   "rankings_note": "Undrafted players only, ranked by `lineup_gain` — the decision metric the pick engine maximizes (before lookahead): the player's marginal expected-lineup value on my current roster at the converged wire levels. Roster-aware, so it shrinks where my roster is already deep. The rank columns are renumbered over the rows emitted here.",
   "opponent_model": {
     "who": "the other nine teams; my slot alone uses projections and roster value",
-    "how": "Each opponent orders legal available players by the provider board most associated with its completed picks in data_source_matches.json. Opponent valuation never reads personal projections, replacement levels, or team value. A position's source rank receives a soft boost in proportion to its unfilled dedicated starters and a compounding penalty beyond its comfortable depth; the deterministic draft takes the best adjusted rank, and Monte Carlo draws around that preference.",
+    "how": "Each opponent orders legal available players by the provider board most associated with its completed picks in data_source_matches.json. Opponent valuation never reads personal projections, wire levels, or team value. A position's source rank receives a soft boost in proportion to its unfilled dedicated starters and a compounding penalty beyond its comfortable depth; the deterministic draft takes the best adjusted rank, and Monte Carlo draws around that preference.",
     "depth_preference": {
       "targets": {
         "QB": 3,
@@ -6279,87 +6279,15 @@
       }
     ]
   },
-  "replacement": {
-    "definition": "Per horizon (yr1 = year 1, yr23 = years 2-3): that horizon's points of the (S+1)-th best player at a position by those points, where S is how many players at that position hold a starting slot across all 10 teams in the simulated draft when lineups are set on that horizon. This is the marginal starter of that period, reported as a league diagnostic — it does not price the board. `levels` is the horizon sum; the split is in levels_by_horizon.",
+  "wire": {
+    "definition": "The best player at each position left undrafted in the converged simulated draft — the post-draft free agent baseline, per horizon (yr1 = year 1, yr23 = years 2-3; the best year-1 add and the best years-2-3 stash can differ). Inside roster valuation, each position contributes this body once as an always-available fallback; it cannot fill two simultaneous lineup jobs. `levels` is the horizon sum; the split is in levels_by_horizon.",
     "levels": {
-      "QB": 809.0,
-      "RB": 373.0,
-      "WR": 439.0,
-      "TE": 426.0
-    },
-    "levels_by_horizon": {
-      "yr1": {
-        "QB": 278.0,
-        "RB": 167.0,
-        "WR": 161.0,
-        "TE": 153.0
-      },
-      "yr23": {
-        "QB": 531.0,
-        "RB": 206.0,
-        "WR": 278.0,
-        "TE": 273.0
-      }
-    },
-    "starters_by_position": {
-      "yr1": {
-        "QB": 20,
-        "RB": 27,
-        "WR": 38,
-        "TE": 15
-      },
-      "yr23": {
-        "QB": 20,
-        "RB": 20,
-        "WR": 45,
-        "TE": 15
-      }
-    },
-    "marginal_starter": {
-      "yr1": {
-        "QB": {
-          "rank": "QB21",
-          "player": "C.J. Stroud"
-        },
-        "RB": {
-          "rank": "RB28",
-          "player": "Tony Pollard"
-        },
-        "WR": {
-          "rank": "WR39",
-          "player": "Jordyn Tyson"
-        },
-        "TE": {
-          "rank": "TE16",
-          "player": "Hunter Henry"
-        }
-      },
-      "yr23": {
-        "QB": {
-          "rank": "QB21",
-          "player": "Baker Mayfield"
-        },
-        "RB": {
-          "rank": "RB21",
-          "player": "Tank Bigsby"
-        },
-        "WR": {
-          "rank": "WR46",
-          "player": "Tre Harris"
-        },
-        "TE": {
-          "rank": "TE16",
-          "player": "Theo Johnson"
-        }
-      }
-    },
-    "wire_levels": {
       "QB": 359.0,
       "RB": 241.0,
       "WR": 359.0,
       "TE": 317.0
     },
-    "wire_levels_by_horizon": {
+    "levels_by_horizon": {
       "yr1": {
         "QB": 14.0,
         "RB": 78.0,
@@ -6373,61 +6301,46 @@
         "TE": 209.0
       }
     },
-    "wire_note": "The best player at each position left undrafted — the post-draft free agent baseline, per horizon (the best year-1 add and the best years-2-3 stash can differ). Inside roster valuation, each position contributes this body once as an always-available fallback; it cannot fill two simultaneous lineup jobs.",
     "convergence": {
       "method": "undamped iteration to a limit cycle, averaged over the cycle",
       "cycle_length": 1,
       "cycle_first_seen_at_iteration": 2,
       "iterations_run": 3,
-      "starters_in_final_draft": {
-        "yr1": {
-          "QB": 20,
-          "RB": 27,
-          "WR": 38,
-          "TE": 15
-        },
-        "yr23": {
-          "QB": 20,
-          "RB": 20,
-          "WR": 45,
-          "TE": 15
-        }
-      },
-      "cycle_replacement_range": {
+      "cycle_wire_range": {
         "yr1": {
           "QB": [
-            278.0,
-            278.0
+            14.0,
+            14.0
           ],
           "RB": [
-            167.0,
-            167.0
+            78.0,
+            78.0
           ],
           "WR": [
-            161.0,
-            161.0
+            96.0,
+            96.0
           ],
           "TE": [
-            153.0,
-            153.0
+            108.0,
+            108.0
           ]
         },
         "yr23": {
           "QB": [
-            531.0,
-            531.0
+            345.0,
+            345.0
           ],
           "RB": [
-            206.0,
-            206.0
+            163.0,
+            163.0
           ],
           "WR": [
-            278.0,
-            278.0
+            263.0,
+            263.0
           ],
           "TE": [
-            273.0,
-            273.0
+            209.0,
+            209.0
           ]
         }
       },
@@ -6435,7 +6348,7 @@
         {
           "iteration": 0,
           "source": "slot_assignment",
-          "replacement": {
+          "wire": {
             "yr1": {
               "QB": 278.0,
               "RB": 161.0,
@@ -6453,96 +6366,54 @@
         {
           "iteration": 1,
           "source": "draft_simulation",
-          "starters_by_position": {
+          "observed_wire": {
             "yr1": {
-              "QB": 20,
-              "RB": 27,
-              "WR": 38,
-              "TE": 15
+              "QB": 14.0,
+              "RB": 77.0,
+              "WR": 96.0,
+              "TE": 108.0
             },
             "yr23": {
-              "QB": 20,
-              "RB": 20,
-              "WR": 45,
-              "TE": 15
-            }
-          },
-          "observed_replacement": {
-            "yr1": {
-              "QB": 278.0,
-              "RB": 167.0,
-              "WR": 161.0,
-              "TE": 153.0
-            },
-            "yr23": {
-              "QB": 531.0,
-              "RB": 206.0,
-              "WR": 278.0,
-              "TE": 273.0
+              "QB": 345.0,
+              "RB": 163.0,
+              "WR": 263.0,
+              "TE": 227.0
             }
           }
         },
         {
           "iteration": 2,
           "source": "draft_simulation",
-          "starters_by_position": {
+          "observed_wire": {
             "yr1": {
-              "QB": 20,
-              "RB": 27,
-              "WR": 38,
-              "TE": 15
+              "QB": 14.0,
+              "RB": 78.0,
+              "WR": 96.0,
+              "TE": 108.0
             },
             "yr23": {
-              "QB": 20,
-              "RB": 20,
-              "WR": 45,
-              "TE": 15
-            }
-          },
-          "observed_replacement": {
-            "yr1": {
-              "QB": 278.0,
-              "RB": 167.0,
-              "WR": 161.0,
-              "TE": 153.0
-            },
-            "yr23": {
-              "QB": 531.0,
-              "RB": 206.0,
-              "WR": 278.0,
-              "TE": 273.0
+              "QB": 345.0,
+              "RB": 163.0,
+              "WR": 263.0,
+              "TE": 209.0
             }
           }
         },
         {
           "iteration": 3,
           "source": "draft_simulation",
-          "starters_by_position": {
+          "observed_wire": {
             "yr1": {
-              "QB": 20,
-              "RB": 27,
-              "WR": 38,
-              "TE": 15
+              "QB": 14.0,
+              "RB": 78.0,
+              "WR": 96.0,
+              "TE": 108.0
             },
             "yr23": {
-              "QB": 20,
-              "RB": 20,
-              "WR": 45,
-              "TE": 15
-            }
-          },
-          "observed_replacement": {
-            "yr1": {
-              "QB": 278.0,
-              "RB": 167.0,
-              "WR": 161.0,
-              "TE": 153.0
-            },
-            "yr23": {
-              "QB": 531.0,
-              "RB": 206.0,
-              "WR": 278.0,
-              "TE": 273.0
+              "QB": 345.0,
+              "RB": 163.0,
+              "WR": 263.0,
+              "TE": 209.0
             }
           }
         }

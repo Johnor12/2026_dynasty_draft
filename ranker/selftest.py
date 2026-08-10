@@ -39,7 +39,7 @@ from .simulation import Draft
 from .value import (
     expected_lineup_value,
     position_expected_value,
-    seed_replacement,
+    seed_wire,
     sorted_by_horizon,
     team_value,
 )
@@ -77,12 +77,12 @@ def opponent_selftest(players: list[Player]) -> list[str]:
     """Opponent source order stays personal-value-independent and bends toward balance."""
     fails: list[str] = []
     board = fresh_board()
-    rep = seed_replacement(players)
+    wire = seed_wire(players)
     # Put the lowest-projected player first on every external board. An opponent must take
     # him; my optimizer must not, demonstrating that candidate generation is separated too.
     external = sorted(players, key=lambda p: (p.points, p.player_id))
     opponents = synthetic_opponents(players, board, external)
-    draft = Draft(players, rep, board, opponents=opponents)
+    draft = Draft(players, wire, board, opponents=opponents)
     opponent_take = draft.choose_opponent(0, 1)
     my_take = draft.choose(1, board.my_slot)
     if opponent_take != external[0]:
@@ -105,7 +105,7 @@ def opponent_selftest(players: list[Player]) -> list[str]:
     close_order = complete([wrs[3], rb])
     close = Draft(
         players,
-        rep,
+        wire,
         board,
         opponents=synthetic_opponents(players, board, close_order),
     )
@@ -115,7 +115,7 @@ def opponent_selftest(players: list[Player]) -> list[str]:
     value_order = complete([wrs[3], wrs[4], wrs[5], rb])
     value = Draft(
         players,
-        rep,
+        wire,
         board,
         opponents=synthetic_opponents(players, board, value_order),
     )
@@ -130,7 +130,7 @@ def opponent_selftest(players: list[Player]) -> list[str]:
     depth_order = complete([wrs[OPPONENT_DEPTH_TARGETS["WR"]], rb])
     depth = Draft(
         players,
-        rep,
+        wire,
         board,
         opponents=synthetic_opponents(players, board, depth_order),
     )
@@ -141,7 +141,7 @@ def opponent_selftest(players: list[Player]) -> list[str]:
     depth_value_order = complete(wrs[start : start + 6] + [rb])
     depth_value = Draft(
         players,
-        rep,
+        wire,
         board,
         opponents=synthetic_opponents(players, board, depth_value_order),
     )
@@ -172,10 +172,10 @@ def planning_selftest(players: list[Player]) -> list[str]:
     """My policy uses lineup value, survival-gates live choices, and falls back safely."""
     fails: list[str] = []
     board = fresh_board()
-    rep = seed_replacement(players)
+    wire = seed_wire(players)
     opponents = synthetic_opponents(players, board)
     first_index = board.pick_nos.index(board.my_picks[0])
-    state = Draft(players, rep, board, opponents=opponents)
+    state = Draft(players, wire, board, opponents=opponents)
     narrow = state.score_my_candidates(first_index)
     broad = state.score_my_candidates(first_index, per_pos=FIRST_PICK_PER_POS)
     if len(broad) <= len(narrow):
@@ -186,11 +186,11 @@ def planning_selftest(players: list[Player]) -> list[str]:
     contested = broad[0][2]
     external = [contested] + [p for p in players if p.player_id != contested.player_id]
     opponents = synthetic_opponents(players, board, external)
-    deterministic = Draft(players, rep, board, opponents=opponents)
+    deterministic = Draft(players, wire, board, opponents=opponents)
     deterministic.run()
     if deterministic.pick_of.get(contested.player_id) != 1:
         fails.append("planning: synthetic opponent did not take the contested candidate")
-    broaden_first_pick(deterministic, players, rep, board, rep, opponents)
+    broaden_first_pick(deterministic, players, board, wire, opponents)
     detail = deterministic.my_decisions[board.my_picks[0]]
     if contested.player_id not in {candidate.player_id for _, _, candidate in detail}:
         fails.append("planning: deterministic pre-pick path erased a live candidate")
@@ -261,7 +261,7 @@ def planning_selftest(players: list[Player]) -> list[str]:
     deep_board.picks_left[deep_board.my_slot - 1] -= len(deep_roster)
     deep_state = Draft(
         players,
-        rep,
+        wire,
         deep_board,
         opponents=synthetic_opponents(players, deep_board),
     )
@@ -281,7 +281,7 @@ def planning_selftest(players: list[Player]) -> list[str]:
     my_indices = [i for i, slot in enumerate(board.order) if slot == board.my_slot]
     planned = Draft(
         players,
-        rep,
+        wire,
         board,
         opponents=opponents,
         targets={my_indices[0]: first_target, my_indices[1]: second_target},
@@ -631,8 +631,8 @@ def board_selftest(players: list[Player]) -> list[str]:
     check(not board.taken, "an unrankable pick took a pool player off the board")
     check(len(board.off_pool[0]) == 1, "an unrankable pick was not held as a roster spot")
     check(board.picks_left[0] == ROUNDS - 1, "an unrankable pick did not cost its team a pick")
-    rep = seed_replacement(players)
-    draft = Draft(players, rep, board, opponents=synthetic_opponents(players, board))
+    wire = seed_wire(players)
+    draft = Draft(players, wire, board, opponents=synthetic_opponents(players, board))
     owed = sum(DEDICATED_SLOTS.values()) - 1  # the QB is answered, six mandatory spots left
     with_qb = draft.candidates([], picks_left=owed, off=board.off_pool[0])
     without = draft.candidates([], picks_left=owed, off=[])
@@ -648,13 +648,13 @@ def board_selftest(players: list[Player]) -> list[str]:
     # Resuming: every made pick survives, every pending pick is played exactly once.
     board, _ = load_board(synthetic_draft(players, made=57), players, "synthetic")
     opponents = synthetic_opponents(players, board)
-    partial = Draft(players, rep, board, opponents=opponents)
+    partial = Draft(players, wire, board, opponents=opponents)
     partial.run(stop_before=5)
     check(
         set(partial.pick_of.values()) == set(board.pick_nos[:5]),
         "a short redraw did not stop immediately before its requested pick index",
     )
-    draft = Draft(players, rep, board, opponents=opponents)
+    draft = Draft(players, wire, board, opponents=opponents)
     draft.run()
     check(
         len(draft.taken) == len(board.taken) + len(board.order),

@@ -1,4 +1,4 @@
-"""Expected lineup points and replacement-level measurement.
+"""Expected lineup points and wire-level measurement.
 
 The provider's cumulative projections are split into year 1 and years 2-3. A roster is
 valued separately in both horizons, then the results are added. Within one horizon the
@@ -23,13 +23,11 @@ simultaneous holes.
 This is one objective with one set of units: expected lineup points. There is no role
 threshold and no separate bench bonus. A better projection can retain every role a worse
 projection could fill, which makes roster value monotone when a player improves, is
-replaced by a better same-position player, or is simply added. Marginal-starter levels
-are reported as league diagnostics; they are not mixed into roster utility.
+replaced by a better same-position player, or is simply added.
 """
 
 from __future__ import annotations
 
-import math
 from functools import lru_cache
 
 from .league import (
@@ -43,8 +41,8 @@ from .league import (
 from .pool import Player, by_position
 
 # The two value horizons the provider's cumulative projections can distinguish:
-# year 1, and years 2-3 as one block. Every level dict in the ranker — replacement,
-# and wire — is keyed by horizon first, position second.
+# year 1, and years 2-3 as one block. Every wire-level dict in the ranker is keyed by
+# horizon first, position second.
 HORIZONS = ("yr1", "yr23")
 
 
@@ -296,11 +294,8 @@ def expected_lineup_value(
 def starting_positions(roster: list[Player], h: str) -> list[str]:
     """Which positions fill the 10 slots when a team must field everyone it can, per horizon.
 
-    No surplus gate here: a team starts its best available body every week even when that
-    body is below replacement. This is the measurement used for replacement levels, so
-    gating it would undercount starters and bias replacement upward. The horizon decides
-    the pecking order into the flex slots, so year-1 and years-2-3 starter counts can
-    genuinely differ.
+    The horizon decides the pecking order into the flex slots. Validation uses this to
+    check every simulated roster can field a full lineup.
     """
     caps = dict(STARTING_SLOTS)
     out: list[str] = []
@@ -396,23 +391,7 @@ def upside_points(p: Player) -> float:
     return 1.5 * (p.points - p.points_1yr)
 
 
-# --- replacement levels -----------------------------------------------------------
-
-
-def apportion(means: dict[str, float], total: int) -> dict[str, int]:
-    """Round fractional starter counts to integers that still sum to `total`.
-
-    Averaging a limit cycle gives fractions like 20.5 RB starters. Rounding each position
-    independently does not preserve the sum — it reported 101 starters for a 100-slot
-    league — so allocate floors first and hand out the remainder to the largest fractional
-    parts (Hare/largest-remainder).
-    """
-    floors = {k: int(math.floor(v)) for k, v in means.items()}
-    leftover = total - sum(floors.values())
-    order = sorted(means, key=lambda k: (-(means[k] - floors[k]), k))
-    for k in order[: max(leftover, 0)]:
-        floors[k] += 1
-    return floors
+# --- wire levels --------------------------------------------------------------------
 
 
 def _rep_at_rank(pos_players: list[Player], rank: int, h: str) -> float:
@@ -423,13 +402,14 @@ def _rep_at_rank(pos_players: list[Player], rank: int, h: str) -> float:
     return horizon_points(pos_players[min(max(rank, 1), len(pos_players)) - 1], h)
 
 
-def seed_replacement(players: list[Player]) -> dict[str, dict[str, float]]:
-    """Iteration-0 replacement from pure slot counting, no draft behaviour assumed.
+def seed_wire(players: list[Player]) -> dict[str, dict[str, float]]:
+    """Iteration-0 wire levels from pure slot counting, no draft behaviour assumed.
 
     Per horizon: assign the top of the pool to the league's 100 starting slots the way a
     perfectly efficient market would — dedicated slots by that horizon's positional rank,
     then the 20 flex slots and 10 superflex slots to the best players still eligible —
-    and take the best player at each position who did not earn a slot.
+    and take the best player at each position who did not earn a slot. Convergence
+    replaces this with the best player actually left undrafted (`wire_replacement`).
     """
     pos_h = pos_by_horizon(players)
     out: dict[str, dict[str, float]] = {}
@@ -446,42 +426,16 @@ def seed_replacement(players: list[Player]) -> dict[str, dict[str, float]]:
     return out
 
 
-def replacement_from_draft(
-    rosters: list[list[Player]], pos_h: dict[str, dict[str, list[Player]]]
-) -> tuple[dict[str, dict[str, float]], dict[str, dict[str, int]]]:
-    """Replacement = the best player at each position who is not starting-caliber, per horizon.
-
-    For each horizon, count how many players at each position hold a starting slot across
-    all 10 simulated teams when lineups are set on that horizon's points; the next best
-    player at that position by those points is the replacement level.
-    """
-    rep: dict[str, dict[str, float]] = {}
-    counts: dict[str, dict[str, int]] = {}
-    for h in HORIZONS:
-        c = {p: 0 for p in POSITIONS}
-        for roster in rosters:
-            for position in starting_positions(roster, h):
-                c[position] += 1
-        counts[h] = c
-        rep[h] = {k: _rep_at_rank(pos_h[h][k], c[k] + 1, h) for k in POSITIONS}
-    return rep, counts
-
-
 def wire_replacement(
     taken: set[int], pos: dict[str, list[Player]]
 ) -> dict[str, dict[str, float]]:
     """The best player at each position actually left undrafted, per horizon.
 
-    Distinct from the starting-caliber baseline above, and much lower: 290 of 350 pool
-    players get rostered, so the wire is picked clean. 29 QBs go in the simulated draft
-    against 20 QB starting slots, which means QB21 (the marginal starter) is somebody's
-    backup, not a free add. Both numbers are reported because they answer different
-    questions — `replacement.levels` asks "how much better is he than the worst player
-    good enough to start in this league", `replacement.wire_levels` asks "how much better
-    is he than what I could sign for nothing after the draft". The former is the
-    conventional VBD baseline and the board's sort key. The latter contributes one unique,
-    always-available body per position to expected lineup value. The best year-1 add and
-    the best years-2-3 stash can be different players, so each horizon takes its own max.
+    Far below starting caliber: 290 of 350 pool players get rostered, so the wire is
+    picked clean. It answers "how much better is he than what I could sign for nothing
+    after the draft", and contributes one unique, always-available body per position to
+    expected lineup value. The best year-1 add and the best years-2-3 stash can be
+    different players, so each horizon takes its own max.
     """
     out: dict[str, dict[str, float]] = {h: {} for h in HORIZONS}
     for position, players in pos.items():

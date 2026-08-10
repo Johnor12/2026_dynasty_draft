@@ -11,12 +11,11 @@ ranker/league.py. The value inputs are `points_3yr` and `points_1yr` from `pool.
 points in this league's scoring, split into two horizons: year 1 and years 2-3 (see
 ranker/pool.py for why the provider's 3D value is deliberately unused). Lineups are
 valued per horizon, so a 69-point injury year cannot hide inside a healthy 3-year
-sum. The method, in one breath: how many players start at each position is an *outcome*
-of how the league drafts, so per-horizon wire and marginal-starter levels are measured
-from the converged draft (the wire feeds valuation; the marginal starters are reported
-as league diagnostics), while my roster is valued as expected optimal lineup points
-under position-wide availability with one unique waiver fallback per position
-(`ranker/value.py`). `draft.json` — the live board — is the
+sum. The method, in one breath: what the waiver wire holds after the draft is an
+*outcome* of how the league drafts, so per-horizon wire levels are measured from the
+converged draft and feed valuation, while my roster is valued as expected optimal
+lineup points under position-wide availability with one unique waiver fallback per
+position (`ranker/value.py`). `draft.json` — the live board — is the
 simulation's starting state, not a filter (ranker/board.py). Only my slot uses the
 projection-based roster objective. Every opponent uses the external provider board most
 associated with its prior picks, loaded from the data-source investigator; unfilled
@@ -35,7 +34,7 @@ held picks, then plays each first-candidate plan out to the end of the draft
 players actually emitted.
 
 A caveat the data imposes, not the model: the provider projects backup and rookie QBs at
-starter-grade volume (the marginal starter lands around QB20-21 = ~820 points over three
+starter-grade volume (the QB20-21 range lands around ~820 points over three
 years), which compresses elite QB value hard. If those depth projections are not
 credible, deep QBs are overrated and every elite QB is underrated here. The lever is the
 projections, not the ranking method.
@@ -173,12 +172,10 @@ def main(argv: list[str] | None = None) -> int:
                 f"loss {strategy.mean_log2_loss:.3f}",
                 file=sys.stderr,
             )
-        print("converging replacement levels:", file=sys.stderr)
+        print("converging wire levels:", file=sys.stderr)
 
-    rep, stream, counts, draft, history = converge(
-        players, board, args.report, opponents
-    )
-    draft = broaden_first_pick(draft, players, rep, board, stream, opponents)
+    stream, draft, history = converge(players, board, args.report, opponents)
+    draft = broaden_first_pick(draft, players, board, stream, opponents)
 
     candidates = (
         [c for _, _, c in draft.my_decisions.get(board.my_picks[0], [])]
@@ -192,7 +189,7 @@ def main(argv: list[str] | None = None) -> int:
             file=sys.stderr,
         )
     survival = candidate_survival(
-        players, rep, board, stream, candidates,
+        players, board, stream, candidates,
         args.sims, args.noise, args.seed, opponents,
     )
     draft = apply_survival_floor(draft, board, survival)
@@ -208,11 +205,11 @@ def main(argv: list[str] | None = None) -> int:
             file=sys.stderr,
         )
     options = option_redraw(
-        players, rep, board, stream, candidates,
+        players, board, stream, candidates,
         args.sims, args.noise, args.seed, opponents,
     )
     draft = apply_option_redraw(
-        draft, options, players, rep, board, stream, opponents
+        draft, options, players, board, stream, opponents
     )
     candidates = (
         [c for _, _, c in draft.my_decisions.get(board.my_picks[0], [])]
@@ -225,7 +222,7 @@ def main(argv: list[str] | None = None) -> int:
             file=sys.stderr,
         )
     lookahead = four_pick_lookahead(
-        players, rep, board, stream, candidates, survival, opponents,
+        players, board, stream, candidates, survival, opponents,
         args.noise, args.seed,
     )
     if args.report and candidates:
@@ -235,10 +232,10 @@ def main(argv: list[str] | None = None) -> int:
             file=sys.stderr,
         )
     rolled = rollout(
-        players, rep, board, stream, candidates,
+        players, board, stream, candidates,
         ROLLOUT_SIMS, args.noise, args.seed, opponents, lookahead,
     )
-    draft = apply_rollout(draft, rolled, players, rep, board, stream, opponents)
+    draft = apply_rollout(draft, rolled, players, board, stream, opponents)
 
     if args.report:
         print(
@@ -247,19 +244,19 @@ def main(argv: list[str] | None = None) -> int:
             file=sys.stderr,
         )
     picks = monte_carlo(
-        players, rep, board, stream, args.sims, args.noise, args.seed, opponents
+        players, board, stream, args.sims, args.noise, args.seed, opponents
     )
     rows = build_rankings(players, stream, draft, picks, args.sims, board)
 
-    problems = board_problems + validate(rows, players, rep, counts, draft, board, history)
+    problems = board_problems + validate(rows, players, stream, draft, board, history)
     payload = build_payload(
-        players, pool_meta, board, rep, stream, counts, draft, history, rows, problems,
+        players, pool_meta, board, stream, draft, history, rows, problems,
         args.sims, args.noise, args.seed, opponents, options, rolled, survival,
     )
     args.output.write_text(json.dumps(payload, indent=2, ensure_ascii=False) + "\n")
 
     if args.report:
-        report_summary(rows, rep, counts, draft, board, rolled, survival)
+        report_summary(rows, draft, board, rolled, survival)
     if problems:
         print(f"\n{len(problems)} VALIDATION PROBLEM(S):", file=sys.stderr)
         for p in problems:

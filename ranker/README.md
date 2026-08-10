@@ -21,9 +21,9 @@ undrafted players only.
 - `pool.py`: pool document to `Player` objects
 - `board.py`: live `draft.json` to the immutable starting state
 - `opponents.py`: inferred provider boards to complete opponent strategies
-- `value.py`: horizon points, expected lineup value, and replacement measurement
+- `value.py`: horizon points, expected lineup value, and wire measurement
 - `simulation.py`: one deterministic draft state and pick policies
-- `convergence.py`: replacement-level fixed point
+- `convergence.py`: wire-level fixed point
 - `planning.py`: Monte Carlo availability, candidate survival, lookahead, and rollouts
 - `rankings.py`: ranking rows and serialized next-pick recommendations
 - `output.py`: top-level `rankings.json` payload
@@ -34,17 +34,14 @@ undrafted players only.
 ## Value model
 
 The pool is split into year 1 and years 2–3 because a lineup is fielded each season.
-Replacement is solved separately for both horizons and reported as a league diagnostic.
-At each horizon it is the next player after all simulated starters at that position;
-flexible starting slots determine their position mix from actual roster value rather
-than a hardcoded positional count. The board itself is ranked by `lineup_gain`, each
-player's marginal expected-lineup value on my current roster.
+The board is ranked by `lineup_gain`, each player's marginal expected-lineup value on
+my current roster at the converged wire levels.
 
 The final waiver bodies affect my expected-lineup choices, and those choices affect who
 remains undrafted. This creates a fixed point:
 
 ```text
-wire levels -> expected lineup value -> simulated draft -> starter counts + wire levels
+wire levels -> expected lineup value -> simulated draft -> wire levels
 ```
 
 The map is discrete and can alternate between neighboring league shapes, so convergence

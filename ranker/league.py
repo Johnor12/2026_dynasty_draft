@@ -25,9 +25,9 @@ ROSTER_SLOTS = NON_TAXI_SLOTS + TAXI_SLOTS  # 29
 ROUNDS = ROSTER_SLOTS
 TOTAL_PICKS = TEAMS * ROUNDS  # 290
 
-# Most restrictive slot first. Replacement level is non-decreasing along each chain
-# (a dedicated slot is always the cheapest place to put a player), which is what lets the
-# greedy lineup solver be exact; --selftest checks that against brute force.
+# Most restrictive slot first: a dedicated slot is always the cheapest place to put a
+# player, which is what lets the greedy lineup solver be exact; --selftest checks that
+# against brute force.
 SLOT_CHAIN = {
     "QB": ("QB", "SF"),
     "RB": ("RB", "FLEX", "SF"),
@@ -79,8 +79,8 @@ OPPONENT_DEPTH_PENALTY = 2.0
 # mean log-rank loss before roster-balance adjustments, while 0 removes random variation.
 NOISE = 1.0
 # Cap on fixed-point iterations before a cycle must have closed. Per-horizon levels
-# doubled the state (8 starter counts + 8 wire levels), so exact recurrence takes
-# longer than the 24 the single-horizon state needed.
+# doubled the state (8 wire levels), so exact recurrence takes longer than the 24 the
+# single-horizon state needed.
 MAX_ITERS = 80
 SIMS = 200
 ROLLOUT_SIMS = 100  # full-draft playouts per candidate at my next pick (planning.rollout)

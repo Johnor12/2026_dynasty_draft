@@ -28,7 +28,7 @@ from .opponents import OpponentStrategy
 from .pool import Player
 from .rankings import _sum_levels, my_next_picks
 from .simulation import Draft
-from .value import HORIZONS, pos_by_horizon
+from .value import HORIZONS
 
 
 def team_names(board: Board) -> dict[int, str | None]:
@@ -156,9 +156,7 @@ def build_payload(
     players: list[Player],
     pool_meta: dict,
     board: Board,
-    rep: dict[str, dict[str, float]],
     stream: dict[str, dict[str, float]],
-    counts: dict[str, dict[str, int]],
     draft: Draft,
     history: dict,
     rows: list[dict],
@@ -171,7 +169,6 @@ def build_payload(
     rollout: dict | None = None,
     survival: dict[int, dict[int, float]] | None = None,
 ) -> dict:
-    pos_h = pos_by_horizon(players)
     return {
         "generated_from": pool_meta["source_file"],
         "scoring_scheme": SCHEME,
@@ -183,8 +180,8 @@ def build_payload(
             "horizon, including the probability that deeper players are called on when "
             "higher teammates are unavailable and one unique waiver body per position. "
             "Draftsharks' 3D value is deliberately unused: it is a "
-            "provider-scaled ordinal, not points, so it cannot be differenced against a "
-            "replacement level."
+            "provider-scaled ordinal, not points, so it cannot enter a "
+            "points-denominated lineup objective."
         ),
         "league": {
             "teams": TEAMS,
@@ -275,7 +272,7 @@ def build_payload(
             "how": (
                 "Each opponent orders legal available players by the provider board most "
                 "associated with its completed picks in data_source_matches.json. Opponent "
-                "valuation never reads personal projections, replacement levels, or team "
+                "valuation never reads personal projections, wire levels, or team "
                 "value. A position's source rank receives a soft boost in "
                 "proportion to its unfilled dedicated starters and a compounding penalty "
                 "beyond its comfortable depth; the deterministic draft takes the best "
@@ -320,42 +317,20 @@ def build_payload(
             },
             "strategies": [opponents[slot].public() for slot in sorted(opponents)],
         },
-        "replacement": {
+        "wire": {
             "definition": (
-                "Per horizon (yr1 = year 1, yr23 = years 2-3): that horizon's points of "
-                "the (S+1)-th best player at a position by those points, where S is how "
-                "many players at that position hold a starting slot across all 10 teams "
-                "in the simulated draft when lineups are set on that horizon. This is the "
-                "marginal starter of that period, reported as a league diagnostic — it "
-                "does not price the board. `levels` is the horizon sum; the split is in "
-                "levels_by_horizon."
+                "The best player at each position left undrafted in the converged "
+                "simulated draft — the post-draft free agent baseline, per horizon "
+                "(yr1 = year 1, yr23 = years 2-3; the best year-1 add and the best "
+                "years-2-3 stash can differ). Inside roster valuation, each position "
+                "contributes this body once as an always-available fallback; it cannot "
+                "fill two simultaneous lineup jobs. `levels` is the horizon sum; the "
+                "split is in levels_by_horizon."
             ),
-            "levels": {k: round(v, 1) for k, v in _sum_levels(rep).items()},
+            "levels": {k: round(v, 1) for k, v in _sum_levels(stream).items()},
             "levels_by_horizon": {
-                h: {k: round(v, 1) for k, v in rep[h].items()} for h in HORIZONS
-            },
-            "starters_by_position": counts,
-            "marginal_starter": {
-                h: {
-                    k: {
-                        "rank": f"{k}{counts[h][k] + 1}",
-                        "player": pos_h[h][k][min(counts[h][k], len(pos_h[h][k]) - 1)].name,
-                    }
-                    for k in POSITIONS
-                }
-                for h in HORIZONS
-            },
-            "wire_levels": {k: round(v, 1) for k, v in _sum_levels(stream).items()},
-            "wire_levels_by_horizon": {
                 h: {k: round(v, 1) for k, v in stream[h].items()} for h in HORIZONS
             },
-            "wire_note": (
-                "The best player at each position left undrafted — the post-draft free "
-                "agent baseline, per horizon (the best year-1 add and the best years-2-3 "
-                "stash can differ). Inside roster valuation, each position contributes "
-                "this body once as an always-available fallback; it cannot fill two "
-                "simultaneous lineup jobs."
-            ),
             "convergence": history,
         },
         "strategy": {

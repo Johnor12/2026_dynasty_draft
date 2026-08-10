@@ -1,7 +1,7 @@
 """Deterministic draft state and pick policies.
 
 `Draft` resumes an immutable live board, applies roster legality, values my slot, and
-uses each opponent's inferred provider order. Fixed-point replacement convergence is in
+uses each opponent's inferred provider order. Fixed-point wire convergence is in
 `convergence.py`; stochastic redraws and deeper plans are in `planning.py`.
 """
 
@@ -86,9 +86,8 @@ class Draft:
     def __init__(
         self,
         players: list[Player],
-        rep: dict[str, dict[str, float]],
+        wire: dict[str, dict[str, float]],
         board: Board,
-        wire: dict[str, dict[str, float]] | None = None,
         noise: float = 0.0,
         rng: random.Random | None = None,
         opponents: dict[int, OpponentStrategy] | None = None,
@@ -98,11 +97,7 @@ class Draft:
         my_ban: int | None = None,
     ) -> None:
         self.players = players
-        self.rep = rep
-        # Before a completed draft exists to identify its unique waiver bodies, use the
-        # marginal starters as the iteration-0 fallback. Convergence replaces these with
-        # the best final undrafted player at each position and horizon.
-        self.wire = rep if wire is None else wire
+        self.wire = wire
         self.board = board
         self.order = board.order
         self.pick_nos = board.pick_nos

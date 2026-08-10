@@ -8,12 +8,11 @@ will happen — which is where traded picks enter, since a pick's owner there is
 that will actually use it, not the slot that originally held it. `rankings.json` then
 covers the undrafted players only, because a drafted player is not a decision any more.
 
-Nothing about the method changes on a live board. The fixed point still measures
-replacement over whole final rosters — made picks plus simulated ones — so replacement
-levels are levels for this league, not for the remainder of it, and they are still
-measured against the whole pool (the marginal starter at a position may well be a player
-already drafted). With no picks made the board is the static snake and the output is
-identical to `--no-draft`; `--selftest` checks exactly that.
+Nothing about the method changes on a live board. The fixed point still measures the
+wire over whole final rosters — made picks plus simulated ones — so wire levels are
+levels for this league, not for the remainder of it. With no picks made the board is
+the static snake and the output is identical to `--no-draft`; `--selftest` checks
+exactly that.
 
 Two facts about a live board this cannot value:
 

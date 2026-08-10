@@ -5,11 +5,10 @@ from __future__ import annotations
 import sys
 
 from .board import Board
-from .league import POSITIONS, TEAMS, TOTAL_PICKS, pick_label
+from .league import TEAMS, TOTAL_PICKS, pick_label
 from .output import team_names
 from .rankings import my_next_picks
 from .simulation import Draft
-from .value import HORIZONS
 
 
 def report_board(board: Board) -> None:
@@ -65,14 +64,12 @@ def report_board(board: Board) -> None:
 
 def report_summary(
     rows: list[dict],
-    rep: dict[str, dict[str, float]],
-    counts: dict[str, dict[str, int]],
     draft: Draft,
     board: Board,
     rollout: dict | None = None,
     survival: dict[int, dict[int, float]] | None = None,
 ) -> None:
-    """Top of the board, the recommendation, and the levels, on stderr."""
+    """Top of the board and the recommendation, on stderr."""
     top = rows[:12]
     if top:
         width = max(len(r["name"]) for r in top)
@@ -128,9 +125,3 @@ def report_summary(
                 f"  {first['pick']} last even-odds pick if I pass: " + ", ".join(parts),
                 file=sys.stderr,
             )
-    for h in HORIZONS:
-        print(
-            f"\nreplacement {h}: "
-            + ", ".join(f"{k}{counts[h][k] + 1} = {rep[h][k]:.0f}" for k in POSITIONS),
-            file=sys.stderr,
-        )

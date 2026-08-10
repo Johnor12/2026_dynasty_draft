@@ -56,7 +56,7 @@ opponent source matches to the live board.
 - [Draft pipeline](draft_pipeline/README.md): Sleeper API to the complete live board
 - [Data-source investigator](data_source_investigator/README.md): normalize provider
   boards and infer opponent strategies
-- [Ranker](ranker/README.md): replacement-level solver, opponent simulation, planning,
+- [Ranker](ranker/README.md): wire-level solver, opponent simulation, planning,
   and output contracts
 - `index.html`: dependency-free dashboard for `rankings.json`
 - `data_source_investigator/index.html`: source-fit and pick-evidence dashboard
@@ -68,8 +68,7 @@ meet through their published JSON contracts rather than shared orchestration.
 
 The ranker values a roster as expected optimal lineup points in separate year-one and
 years-2–3 horizons. Position-wide availability determines when depth is called on, and
-one unique final waiver body per position supplies the fallback. Marginal-starter levels
-are reported as league diagnostics rather than mixed into bench utility. Personal and
+one unique final waiver body per position supplies the fallback. Personal and
 opponent strategies are intentionally separate: my slot uses the projection-based roster
 objective, while each opponent follows its inferred external board with roster-balance
 adjustments and fitted choice noise. Opponent picks never use my projections or board.

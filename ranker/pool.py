@@ -5,9 +5,9 @@ premium, which is this league's scoring — and `points_1yr`, whose gap against 
 the provider's implied growth. The ranker values the horizons separately.
 Draftsharks' 3D value is ignored entirely and
 is not even carried into the pool: it is a provider-scaled ordinal that already bakes in
-someone else's roster assumptions, and it is not in points, so it cannot be differenced
-against a replacement level. Kickers and IDP are already dropped upstream because the
-roster has no slot for them.
+someone else's roster assumptions, and it is not in points, so it cannot enter a
+points-denominated lineup objective. Kickers and IDP are already dropped upstream
+because the roster has no slot for them.
 """
 
 from __future__ import annotations
