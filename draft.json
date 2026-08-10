@@ -1,13 +1,13 @@
 {
   "source": "https://api.sleeper.app/v1/draft/1388293618208374784",
-  "fetched_at": "2026-08-10T13:34:39+00:00",
+  "fetched_at": "2026-08-10T14:56:05+00:00",
   "draft_id": "1388293618208374784",
   "league_id": "1388293617071714304",
   "league_name": "Dudes",
   "season": "2026",
   "status": "drafting",
   "started_at": "2026-08-04T13:02:55+00:00",
-  "last_picked_at": "2026-08-10T13:32:18+00:00",
+  "last_picked_at": "2026-08-10T14:32:49+00:00",
   "format": {
     "type": "snake",
     "teams": 10,
@@ -16,16 +16,16 @@
     "scoring_type": "dynasty_2qb"
   },
   "pick_count": 290,
-  "picks_made": 160,
-  "picks_pending": 130,
+  "picks_made": 162,
+  "picks_pending": 128,
   "on_the_clock": {
-    "pick_no": 161,
+    "pick_no": 163,
     "round": 17,
-    "pick_in_round": 1,
-    "draft_slot": 10,
-    "user_id": "751220778036551680",
-    "username": "nedjh2",
-    "slot": "17.01"
+    "pick_in_round": 3,
+    "draft_slot": 8,
+    "user_id": "1127785716420898816",
+    "username": "johnor",
+    "slot": "17.03"
   },
   "me": {
     "username": "johnor",
@@ -41,12 +41,12 @@
     "user_id": "1127785716420898816",
     "username": "johnor",
     "slot": "17.03",
-    "picks_away": 2
+    "picks_away": 0
   },
   "board_derivation": {
     "method": "snake, order reverses at round 3; traded picks applied",
-    "checked_against_made_picks": 160,
-    "slot_and_roster_agree": 160,
+    "checked_against_made_picks": 162,
+    "slot_and_roster_agree": 162,
     "rounds_exercised": [
       1,
       2,
@@ -63,7 +63,8 @@
       13,
       14,
       15,
-      16
+      16,
+      17
     ],
     "mismatches": []
   },
@@ -2968,12 +2969,12 @@
       "user_id": "751220778036551680",
       "username": "nedjh2",
       "is_mine": false,
-      "status": "pending",
-      "sleeper_id": null,
-      "name": null,
-      "position": null,
-      "team": null,
-      "is_keeper": null
+      "status": "made",
+      "sleeper_id": "13301",
+      "name": "Antonio Williams",
+      "position": "WR",
+      "team": "WAS",
+      "is_keeper": false
     },
     {
       "pick_no": 162,
@@ -2984,12 +2985,12 @@
       "user_id": "207916077173182464",
       "username": "dccb31",
       "is_mine": false,
-      "status": "pending",
-      "sleeper_id": null,
-      "name": null,
-      "position": null,
-      "team": null,
-      "is_keeper": null
+      "status": "made",
+      "sleeper_id": "13311",
+      "name": "Chris Bell",
+      "position": "WR",
+      "team": "MIA",
+      "is_keeper": false
     },
     {
       "pick_no": 163,
