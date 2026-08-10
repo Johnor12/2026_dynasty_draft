@@ -1,13 +1,13 @@
 {
   "source": "https://api.sleeper.app/v1/draft/1388293618208374784",
-  "fetched_at": "2026-08-10T02:19:30+00:00",
+  "fetched_at": "2026-08-10T12:21:53+00:00",
   "draft_id": "1388293618208374784",
   "league_id": "1388293617071714304",
   "league_name": "Dudes",
   "season": "2026",
   "status": "paused",
   "started_at": "2026-08-04T13:02:55+00:00",
-  "last_picked_at": "2026-08-10T02:12:57+00:00",
+  "last_picked_at": "2026-08-10T10:47:57+00:00",
   "format": {
     "type": "snake",
     "teams": 10,
@@ -16,16 +16,16 @@
     "scoring_type": "dynasty_2qb"
   },
   "pick_count": 290,
-  "picks_made": 156,
-  "picks_pending": 134,
+  "picks_made": 158,
+  "picks_pending": 132,
   "on_the_clock": {
-    "pick_no": 157,
+    "pick_no": 159,
     "round": 16,
-    "pick_in_round": 7,
-    "draft_slot": 7,
-    "user_id": "1128381875430596608",
-    "username": "UGrizz14",
-    "slot": "16.07"
+    "pick_in_round": 9,
+    "draft_slot": 9,
+    "user_id": "207916077173182464",
+    "username": "dccb31",
+    "slot": "16.09"
   },
   "me": {
     "username": "johnor",
@@ -41,12 +41,12 @@
     "user_id": "1127785716420898816",
     "username": "johnor",
     "slot": "16.10",
-    "picks_away": 3
+    "picks_away": 1
   },
   "board_derivation": {
     "method": "snake, order reverses at round 3; traded picks applied",
-    "checked_against_made_picks": 156,
-    "slot_and_roster_agree": 156,
+    "checked_against_made_picks": 158,
+    "slot_and_roster_agree": 158,
     "rounds_exercised": [
       1,
       2,
@@ -2904,12 +2904,12 @@
       "user_id": "1128381875430596608",
       "username": "UGrizz14",
       "is_mine": false,
-      "status": "pending",
-      "sleeper_id": null,
-      "name": null,
-      "position": null,
-      "team": null,
-      "is_keeper": null
+      "status": "made",
+      "sleeper_id": "13274",
+      "name": "Germie Bernard",
+      "position": "WR",
+      "team": "PIT",
+      "is_keeper": false
     },
     {
       "pick_no": 158,
@@ -2920,12 +2920,12 @@
       "user_id": "1128025586577879040",
       "username": "justinmfftt",
       "is_mine": false,
-      "status": "pending",
-      "sleeper_id": null,
-      "name": null,
-      "position": null,
-      "team": null,
-      "is_keeper": null
+      "status": "made",
+      "sleeper_id": "8136",
+      "name": "Rachaad White",
+      "position": "RB",
+      "team": "WAS",
+      "is_keeper": false
     },
     {
       "pick_no": 159,
