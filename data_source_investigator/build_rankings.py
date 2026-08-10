@@ -20,7 +20,13 @@ from pathlib import Path
 
 import paths
 from identity import PlayerResolver
-from providers import PARSERS, draftsharks_adp, parse_manual, validate
+from providers import (
+    PARSERS,
+    draftsharks_adp,
+    drop_ambiguous_identities,
+    parse_manual,
+    validate,
+)
 
 def write_json(path: Path, payload: dict, indent: int) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
@@ -70,6 +76,12 @@ def main(argv: list[str] | None = None) -> int:
             failures.append(f"{source_id}: {exc}")
             continue
         rows.sort(key=lambda row: row["rank"])
+        rows, ambiguous = drop_ambiguous_identities(rows)
+        if ambiguous:
+            print(
+                f"{source_id}: dropped unjoinable duplicate names: {', '.join(ambiguous)}",
+                file=sys.stderr,
+            )
         problems = validate(source_id, rows)
         if problems:
             failures.extend(problems)
@@ -99,6 +111,12 @@ def main(argv: list[str] | None = None) -> int:
         try:
             rows = parse_manual(source_path)
             rows.sort(key=lambda row: row["rank"])
+            rows, ambiguous = drop_ambiguous_identities(rows)
+            if ambiguous:
+                print(
+                    f"{source_id}: dropped unjoinable duplicate names: {', '.join(ambiguous)}",
+                    file=sys.stderr,
+                )
             problems = validate(source_id, rows)
             if problems:
                 failures.extend(problems)

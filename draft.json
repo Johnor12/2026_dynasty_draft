@@ -1,13 +1,13 @@
 {
   "source": "https://api.sleeper.app/v1/draft/1388293618208374784",
-  "fetched_at": "2026-08-10T00:32:56+00:00",
+  "fetched_at": "2026-08-10T02:19:30+00:00",
   "draft_id": "1388293618208374784",
   "league_id": "1388293617071714304",
   "league_name": "Dudes",
   "season": "2026",
-  "status": "drafting",
+  "status": "paused",
   "started_at": "2026-08-04T13:02:55+00:00",
-  "last_picked_at": "2026-08-10T00:24:21+00:00",
+  "last_picked_at": "2026-08-10T02:12:57+00:00",
   "format": {
     "type": "snake",
     "teams": 10,
@@ -16,16 +16,16 @@
     "scoring_type": "dynasty_2qb"
   },
   "pick_count": 290,
-  "picks_made": 155,
-  "picks_pending": 135,
+  "picks_made": 156,
+  "picks_pending": 134,
   "on_the_clock": {
-    "pick_no": 156,
+    "pick_no": 157,
     "round": 16,
-    "pick_in_round": 6,
-    "draft_slot": 6,
-    "user_id": "1114302275305979904",
-    "username": "samlemonskoff",
-    "slot": "16.06"
+    "pick_in_round": 7,
+    "draft_slot": 7,
+    "user_id": "1128381875430596608",
+    "username": "UGrizz14",
+    "slot": "16.07"
   },
   "me": {
     "username": "johnor",
@@ -41,12 +41,12 @@
     "user_id": "1127785716420898816",
     "username": "johnor",
     "slot": "16.10",
-    "picks_away": 4
+    "picks_away": 3
   },
   "board_derivation": {
     "method": "snake, order reverses at round 3; traded picks applied",
-    "checked_against_made_picks": 155,
-    "slot_and_roster_agree": 155,
+    "checked_against_made_picks": 156,
+    "slot_and_roster_agree": 156,
     "rounds_exercised": [
       1,
       2,
@@ -2888,12 +2888,12 @@
       "user_id": "1114302275305979904",
       "username": "samlemonskoff",
       "is_mine": false,
-      "status": "pending",
-      "sleeper_id": null,
-      "name": null,
-      "position": null,
-      "team": null,
-      "is_keeper": null
+      "status": "made",
+      "sleeper_id": "8134",
+      "name": "Khalil Shakir",
+      "position": "WR",
+      "team": "BUF",
+      "is_keeper": false
     },
     {
       "pick_no": 157,

@@ -202,6 +202,24 @@ def draftsharks_adp(pool: dict) -> list[dict]:
     ]
 
 
+def drop_ambiguous_identities(rows: list[dict]) -> tuple[list[dict], list[str]]:
+    """Split off every row of a same-name-same-position collision.
+
+    FantasyPros' 2026 ECR lists two distinct WRs named Isaiah Williams. A name-keyed
+    identity cannot tell such rows apart, so none of them is joinable to the pool;
+    dropping the collision (reported by the caller) beats failing the whole source.
+    """
+    counts: dict[tuple[str, str], int] = {}
+    for row in rows:
+        ident = (normalized_name(row["name"], drop_suffix=True), row["position"])
+        counts[ident] = counts.get(ident, 0) + 1
+    kept, dropped = [], []
+    for row in rows:
+        ident = (normalized_name(row["name"], drop_suffix=True), row["position"])
+        (kept if counts[ident] == 1 else dropped).append(row)
+    return kept, sorted(f"{row['name']} ({row['position']}, rank {row['rank']})" for row in dropped)
+
+
 def validate(source_id: str, rows: list[dict]) -> list[str]:
     problems = []
     if len(rows) < 50:

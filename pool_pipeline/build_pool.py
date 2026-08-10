@@ -7,8 +7,7 @@ Stage 2 of the build. ``parse_projections.py`` produces the full provider export
 consumes and drops everything else:
 
     900 players  ->  QB/RB/WR/TE only        (K and IDP have no roster slot)
-                 ->  a usable 3-year point total
-                 ->  the top 350 of those    (290 picks + a 60-player buffer)
+                 ->  a usable 3-year point total (~444 players; all of them kept)
 
     9 schemes x 4 horizons  ->  two columns: 3-year and 1-year points in this
                                 league's scoring
@@ -50,13 +49,20 @@ undrafted", not a real slot.
 
 **Ranking.** The pool is ordered by 3-year points descending, ties broken by the
 provider's dynasty rank. So the emitted ``rank`` is verifiable from the emitted
-``points_3yr`` column and the file references no quantity it does not contain. Cutting
-on the provider's dynasty rank instead swaps ~18 players at the boundary, all of them
-deep bench bodies well below replacement, and no rookie the provider ranks inside 350;
-``--report`` prints that diff so the choice stays visible.
+``points_3yr`` column and the file references no quantity it does not contain. Every
+eligible player is kept: an earlier top-350 cut dropped players the market drafts
+inside this league's 290 picks — the retirement-discounted Aaron Rodgers (3yr 166 but
+1yr 258, eligible rank 355) and near-miss RBs like Najee Harris and DJ Giddens — to
+save ~90 rows nobody needed saved.
 
 **Cleanups applied.** Players with a 0 or missing 3-year projection are dropped rather
-than ranked last (the source uses 0 where a null belongs). The 21 teamless players
+than ranked last (the source uses 0 where a null belongs) — except the ones in
+``SYNTHETIC_PROJECTIONS``, whose zeroes are a provider hole and get overwritten first.
+A career-edge veteran can publish a 1-year projection above his 3-year total (Aaron
+Rodgers 2026: 258 vs 166 — the source discounts future seasons by retirement odds, its
+season projection does not). Downstream prices years 2-3 as ``points_3yr -
+points_1yr``, and a negative future season is not a real quantity, so the 3-year cell
+is raised to the 1-year value: a win-now season and zeroed future seasons. The 21 teamless players
 carry ``bye_week: 18``, a sentinel — real byes run weeks 5-14 — so their bye is
 nulled. Stale printed ranks, undocumented percent_low/percent_high, hidden_row,
 analyst comments and profile paths are not carried: recover them from projections.json,
@@ -88,8 +94,9 @@ POINTS_FIELD = f"points_{HORIZON}"
 #: Roster slots exist for these only; K and IDP (DB/DL/LB) are dropped whole.
 POSITIONS = ("QB", "RB", "WR", "TE")
 
-#: 290 picks in this league (10 teams x 29 roster spots), plus a buffer.
-RANK_LIMIT = 350
+#: Effectively no cut: only ~444 of the 900 source rows are offensive players with a
+#: usable projection, and the old 350 cut dropped market-drafted players (see docstring).
+RANK_LIMIT = 1000
 
 #: The published 1QB column that already prices each position's reception rate.
 POINTS_COLUMNS = {"TE": "ppr"}
@@ -114,6 +121,17 @@ PLAUSIBLE_ROUNDS = 45  # ~490 ranked players / 12 per round; beyond this is tail
 NO_TEAM = frozenset({"UNS", "RK"})
 PLACEHOLDER_BYE = 18
 
+#: Projections invented for players the source zero-fills but the market drafts.
+#: Justin Fields (superflex ADP 214) is a Draftsharks data hole: 0 at every horizon.
+#: Basis: median Draftsharks points of the QBs ranked within +-3 of him on each of the
+#: four boards in data_source_investigator/data/rankings.json (FantasyCalc QB42,
+#: KeepTradeCut QB43, DynastyNerds QB42, FantasyPros QB41; comps Cousins, Allar,
+#: Richardson, Klubnik, Watson, Milroe, ...). Applied only while the source cell the
+#: build reads is still 0/missing, so a real projection supersedes this on arrival.
+SYNTHETIC_PROJECTIONS = {
+    10754: {"name": "Justin Fields", "3yr": 388, "1yr": 28},
+}
+
 FIELD_DEFINITIONS = {
     "rank": (
         f"Pool rank, 1..N, by {POINTS_FIELD} descending (ties broken by the "
@@ -130,7 +148,8 @@ FIELD_DEFINITIONS = {
     POINTS_FIELD: (
         "Three-year projected fantasy points under this league's scoring: 0.5/rec "
         "with a 0.5/rec TE premium. Copied from the provider column that prices "
-        "that rate exactly (TE: ppr, others: half_ppr)."
+        "that rate exactly (TE: ppr, others: half_ppr). Never below points_1yr: a "
+        "retirement-discounted 3yr cell is raised to the 1yr value (see 'adjustments')."
     ),
     "points_1yr": (
         "One-year projected points, same scoring and same source columns. The gap "
@@ -176,6 +195,50 @@ def dynasty_rank(record: dict) -> float:
     """The provider's own overall rank, used only to break point ties."""
     rank = record.get("rank_by_3d_value")
     return math.inf if rank is None else rank
+
+
+def apply_synthetic(records: list[dict]) -> list[str]:
+    """Fill SYNTHETIC_PROJECTIONS into still-zero source cells. Returns audit notes."""
+    by_id = {record["player_id"]: record for record in records}
+    notes = []
+    for player_id, synth in SYNTHETIC_PROJECTIONS.items():
+        record = by_id.get(player_id)
+        if record is None:
+            notes.append(f"{synth['name']} ({player_id}): not in source, skipped")
+            continue
+        column = points_column(record["position"])
+        if record["projections"]["3yr"].get(column):
+            notes.append(f"{synth['name']}: source now has a real projection, skipped")
+            continue
+        record["projections"]["3yr"][column] = synth["3yr"]
+        record["projections"]["1yr"][column] = synth["1yr"]
+        notes.append(
+            f"{synth['name']}: {column} 3yr={synth['3yr']} 1yr={synth['1yr']} "
+            "(comp-median, see SYNTHETIC_PROJECTIONS)"
+        )
+    return notes
+
+
+def zero_negative_futures(records: list[dict]) -> list[str]:
+    """Raise a 3-year cell that sits below the 1-year one (see docstring). Notes what.
+
+    Only a real 3-year projection is repaired — a 0 stays 0, meaning "no data", and the
+    player is dropped by the usable-projection filter as before.
+    """
+    notes = []
+    for record in records:
+        if record.get("position") not in POSITIONS:
+            continue  # K/IDP are full of these; they never reach the pool
+        column = points_column(record["position"])
+        horizons = record["projections"]
+        p3, p1 = horizons["3yr"].get(column), horizons["1yr"].get(column)
+        if p3 and p1 and p1 > p3:
+            horizons["3yr"][column] = p1
+            notes.append(
+                f"{record['name']}: {column} 3yr {p3} -> {p1} (1yr exceeded the "
+                "retirement-discounted 3yr; future seasons zeroed)"
+            )
+    return notes
 
 
 # ---------------------------------------------------------------------------
@@ -258,7 +321,9 @@ def build_rows(kept: list[dict]) -> list[dict]:
     return rows
 
 
-def build_document(source: dict, source_path: Path, rows: list[dict], stats: dict) -> dict:
+def build_document(
+    source: dict, source_path: Path, rows: list[dict], stats: dict, adjustments: list[str]
+) -> dict:
     """The output file: a short provenance header plus the rows."""
     return {
         "source_file": source_path.name,
@@ -281,6 +346,7 @@ def build_document(source: dict, source_path: Path, rows: list[dict], stats: dic
             "no_usable_projection": len(stats["dropped_unusable"]),
             "below_rank_limit": stats["cut_by_rank"],
         },
+        "adjustments": adjustments,
         "fields": FIELD_DEFINITIONS,
         "players": rows,
     }
@@ -496,6 +562,8 @@ def main(argv: list[str] | None = None) -> int:
 
     try:
         check_sources(source)
+        adjustments = apply_synthetic(source["players"])
+        adjustments += zero_negative_futures(source["players"])
         kept, stats = select(source["players"], args.limit)
     except (ValueError, KeyError) as exc:
         print(f"error: {exc}", file=sys.stderr)
@@ -503,9 +571,11 @@ def main(argv: list[str] | None = None) -> int:
     if not kept:
         print("error: no players survived the filters", file=sys.stderr)
         return 1
+    for note in adjustments:
+        print(f"adjusted: {note}", file=sys.stderr)
 
     rows = build_rows(kept)
-    document = build_document(source, args.input, rows, stats)
+    document = build_document(source, args.input, rows, stats, adjustments)
     with args.output.open("w", encoding="utf-8") as handle:
         json.dump(document, handle, indent=args.indent or None, ensure_ascii=False)
         handle.write("\n")

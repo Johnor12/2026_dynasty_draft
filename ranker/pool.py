@@ -34,7 +34,9 @@ class Player:
     sleeper_id: str | None = None  # the only key draft.json shares with the pool
     availability_index: int = 0  # rank on the opponents' consensus board, 0-based
     # The two value horizons, precomputed because the lineup solver reads them millions
-    # of times per run (value.HORIZONS; yr23 = points - points_1yr, never negative).
+    # of times per run (value.HORIZONS; yr23 = points - points_1yr, never negative —
+    # build_pool raises a retirement-discounted 3yr cell to the 1yr value, and
+    # load_pool rejects a pool that predates that repair).
     points_yr1: float = field(init=False, default=0.0)
     points_yr23: float = field(init=False, default=0.0)
 
@@ -47,7 +49,7 @@ def load_pool(path: Path) -> tuple[list[Player], dict]:
     """Read pool.json: already filtered to QB/RB/WR/TE with a usable 3-year projection.
 
     build_pool.py does the filtering — positions with no roster slot, the source's zeros
-    where a null belongs, and everything past rank 350 — so this only re-checks the
+    where a null belongs — so this only re-checks the
     invariants it promises rather than re-deriving them. The guards stay because a
     hand-edited or stale pool is the likeliest way this ever gets bad input.
     """
@@ -62,6 +64,12 @@ def load_pool(path: Path) -> tuple[list[Player], dict]:
         if not points or points <= 0:
             dropped["zero_projection"].append(rec["name"])
             continue
+        if rec["points_1yr"] > points:
+            raise ValueError(
+                f"{rec['name']}: points_1yr {rec['points_1yr']} > {POINTS_FIELD} "
+                f"{points} — a negative years-2-3 projection; rebuild pool.json "
+                "(build_pool zeroes negative future seasons)"
+            )
         players.append(
             Player(
                 player_id=rec["player_id"],
