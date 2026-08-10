@@ -113,9 +113,12 @@ Before and after changing an opponent model or pick policy, run
 ## Dashboard and automation
 
 Run `uv run serve.py` and open the local URL; direct `file://` access cannot fetch the
-JSON files. The main dashboard also polls Sleeper for a compact live-status strip and
-shows when its `draft.json` snapshot is stale.
+JSON files. The main dashboard also polls Sleeper for a compact live-status strip, shows
+when its `draft.json` snapshot is stale, and pins the status of any active refresh or
+deploy workflow run in that strip.
 
 `.github/workflows/refresh.yml` runs the live refresh on manual dispatch and commits the
-generated board and rankings. `.github/workflows/deploy-pages.yml` publishes the static
-dashboard. They share one concurrency group so refresh and deploy do not overlap.
+generated board, rankings, and source matches. `.github/workflows/deploy-pages.yml`
+publishes both dashboards plus `rankings.json` and `data_source_matches.json` to GitHub
+Pages, with the investigator at `data_source_investigator/`. They share one concurrency
+group so refresh and deploy do not overlap.

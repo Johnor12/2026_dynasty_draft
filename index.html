@@ -86,6 +86,14 @@
   .live-dot.off { background: var(--muted); }
   .sync { margin-left: auto; color: var(--good); }
   .sync.stale { color: var(--accent); font-weight: 650; }
+  .actions-pin {
+    flex: none; display: inline-flex; align-items: center; gap: 6px;
+    border: 1px solid var(--border); border-radius: 999px; background: var(--surface-2);
+    padding: 2px 10px; font-size: 12px; color: var(--ink-2); text-decoration: none;
+  }
+  .actions-pin.active { border-color: var(--accent); color: var(--accent); animation: stale-pulse 1.6s ease-in-out infinite; }
+  .actions-pin.ok { border-color: var(--good); color: var(--good); }
+  .actions-pin.fail { border-color: var(--bad); color: var(--bad); }
 
   section { margin-top: 30px; }
   section > h2 { font-size: 17px; line-height: 1.25; font-weight: 700; margin: 0 0 4px; }
@@ -206,6 +214,7 @@
   #error { display: none; padding: 16px; margin-top: 20px; }
   #error code { background: var(--surface-2); padding: 2px 5px; border-radius: 4px; }
   footer { margin-top: 38px; color: var(--muted); font-size: 11.5px; }
+  footer a { color: inherit; }
 
   @media (max-width: 1120px) {
     .roster-grid { grid-template-columns: repeat(2, minmax(260px, 1fr)); }
@@ -242,6 +251,7 @@
     <span id="liveMine"></span>
     <span id="liveLast"></span>
     <span class="sync" id="liveSync"></span>
+    <a class="actions-pin" id="actionsPin" rel="noopener" hidden></a>
   </div>
 
   <div class="card" id="error">
@@ -252,8 +262,8 @@
 
   <div id="app" hidden>
     <section id="next-picks">
-      <h2>Your next three picks</h2>
-      <p class="hint">Each later card assumes you followed the recommendations before it. “Chance to reach” estimates whether opponents leave the player available; the first card uses the stronger simulation where you keep passing on that player.</p>
+      <h2>Your next pick</h2>
+      <p class="hint">“Chance to reach” estimates whether opponents leave the player available, from simulations where you keep passing on that player.</p>
       <div class="picks-grid" id="picksGrid"></div>
       <details class="note"><summary>How the recommendation works</summary><p id="picksNote"></p></details>
     </section>
@@ -439,11 +449,74 @@ function rosterCards(roster, outlook) {
   });
 }
 
+/* Pinned Actions status: watch refresh/deploy runs and report the active one's progress. */
+const REPO = "Johnor12/2026_dynasty_draft";
+const WORKFLOW_LABELS = { "refresh.yml": "Refresh", "deploy-pages.yml": "Deploy" };
+const actionsPin = document.getElementById("actionsPin");
+let actionsTimer = null;
+let watchedRunId = null;
+let fastUntil = 0;
+
+actionsPin.addEventListener("click", event => {
+  if (actionsPin.dataset.reload) { event.preventDefault(); location.reload(); }
+});
+
+function setPin(text, cls, href, reload) {
+  actionsPin.hidden = false;
+  if (actionsPin.textContent !== text) actionsPin.textContent = text;
+  actionsPin.className = `actions-pin ${cls}`;
+  actionsPin.href = href || "#";
+  if (reload) { actionsPin.dataset.reload = "1"; actionsPin.removeAttribute("target"); }
+  else { delete actionsPin.dataset.reload; actionsPin.target = "_blank"; }
+}
+
+async function pollActions() {
+  clearTimeout(actionsTimer);
+  /* Unauthenticated GitHub allows 60 requests/hour, so only poll fast around activity. */
+  let delay = 90000;
+  try {
+    const token = localStorage.getItem("gh_token");
+    const response = await fetch(`https://api.github.com/repos/${REPO}/actions/runs?per_page=10`, {
+      cache: "no-store",
+      headers: { Accept: "application/vnd.github+json", ...(token ? { Authorization: `Bearer ${token}` } : {}) },
+    });
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+    const runs = (await response.json()).workflow_runs
+      .map(run => ({ ...run, label: WORKFLOW_LABELS[run.path.split("/").pop()] }))
+      .filter(run => run.label);
+    const active = runs.find(run => run.status === "in_progress")
+      || runs.find(run => run.status !== "completed");
+    if (active) {
+      watchedRunId = active.id;
+      fastUntil = Date.now() + 60000;
+      setPin(`${active.label} ${active.status === "in_progress" ? "running" : "queued"}…`,
+        "active", active.html_url);
+    } else if (watchedRunId != null) {
+      const done = runs.find(run => run.id === watchedRunId);
+      watchedRunId = null;
+      if (done && done.conclusion !== "success") {
+        setPin(`✗ ${done.label} ${done.conclusion.replace(/_/g, " ")}`, "fail", done.html_url);
+      } else if (done && done.label === "Deploy") {
+        setPin("✓ Deployed — reload board", "ok", null, true);
+      } else if (done) {
+        /* A successful refresh dispatches the Pages deploy a few seconds later;
+           fastUntil is still open, so the next quick poll picks that run up. */
+        setPin("✓ Refresh finished", "ok", done.html_url);
+      }
+    }
+  } catch {
+    delay = 300000;
+  }
+  if (Date.now() < fastUntil) delay = Math.min(delay, 12000);
+  actionsTimer = setTimeout(pollActions, delay);
+}
+pollActions();
+
 document.getElementById("refreshBtn").addEventListener("click", async event => {
   const button = event.currentTarget;
   let token = localStorage.getItem("gh_token");
   if (!token) {
-    token = prompt("GitHub token with Actions write access to Johnor12/2026_dynasty_draft:");
+    token = prompt(`GitHub token with Actions write access to ${REPO}:`);
     if (!token) return;
     token = token.trim();
     localStorage.setItem("gh_token", token);
@@ -456,7 +529,7 @@ document.getElementById("refreshBtn").addEventListener("click", async event => {
   }, delay);
   try {
     const response = await fetch(
-      "https://api.github.com/repos/Johnor12/2026_dynasty_draft/actions/workflows/refresh.yml/dispatches",
+      `https://api.github.com/repos/${REPO}/actions/workflows/refresh.yml/dispatches`,
       { method: "POST", headers: { Authorization: `Bearer ${token}`, Accept: "application/vnd.github+json" },
         body: JSON.stringify({ ref: "main" }) });
     if (response.status === 401 || response.status === 403) {
@@ -464,8 +537,11 @@ document.getElementById("refreshBtn").addEventListener("click", async event => {
       throw new Error(`token rejected (${response.status})`);
     }
     if (response.status !== 204) throw new Error(`HTTP ${response.status}`);
-    button.textContent = "✓ Refresh queued — reload when finished";
-    reset("↻ Refresh board", 60000);
+    button.textContent = "✓ Refresh queued";
+    fastUntil = Date.now() + 90000;
+    clearTimeout(actionsTimer);
+    actionsTimer = setTimeout(pollActions, 3000);
+    reset("↻ Refresh board", 10000);
   } catch (error) {
     button.textContent = `✗ ${error.message}`;
     reset("↻ Refresh board", 5000);
@@ -563,78 +639,78 @@ function chanceCell(candidate, stats, pick, d) {
 
 function renderNextPicks(d, byId) {
   document.getElementById("picksNote").textContent =
-    "Lineup gain is the player's marginal expected-lineup value, including call-up probability for positional depth and one unique waiver fallback per position. Next-pick option value and two-pick total describe the ordinary fallback policy; they are diagnostics, not the first card's ranking. The first card is ordered by final-roster EV after searching target plans across four held picks and playing each plan through the entire remaining draft " +
+    "Lineup gain is the player's marginal expected-lineup value, including call-up probability for positional depth and one unique waiver fallback per position. Next-pick option value and two-pick total describe the ordinary fallback policy; they are diagnostics, not the table's ranking. The table is ordered by final-roster EV after searching target plans across four held picks and playing each plan through the entire remaining draft " +
     `${d.my_next_picks.rollout_sims} times, conditional on each candidate reaching your turn. Candidates and later targets below 5% survival are omitted. Rollout edges compare each plan with the ordinary policy on the same path — every candidate's, including the two-pick leader's, so final-roster EV ranks them directly and remains the objective. A listed path contains only forced targets; the ordinary policy resumes after its last target or whenever an opponent takes a target first. The two-pick leader keeps the recommendation unless a candidate beats his plan by twice the simulation error between them. Raw player points use this league's scoring.`;
 
-  const prior = [];
-  const cards = d.my_next_picks.picks.map((pick, pickIndex) => {
-    const hasRollout = pick.candidates.some(candidate => candidate.rollout_ev != null);
-    const candidates = hasRollout
-      ? [...pick.candidates].sort((a, b) => b.rollout_ev - a.rollout_ev)
-      : pick.candidates;
-    const context = pickIndex === 0 && d.draft.next_pick_of_mine?.slot === pick.pick
-      ? `${pick.overall} overall · ${d.draft.next_pick_of_mine.picks_away} picks between`
-      : `${pick.overall} overall${prior.length ? ` · after ${prior.join(" + ")}` : ""}`;
-    const rows = candidates.map(candidate => {
-      const stats = byId.get(candidate.player_id);
-      const isTake = candidate.player_id === pick.take_id;
-      const trend = trendPerYear(stats);
-      const rolloutNote = candidate.rollout_edge == null ? null
-        : `${signed(candidate.rollout_edge)} ± ${fmt(candidate.rollout_se)} vs ordinary policy`;
-      const targets = candidate.four_pick_plan
-        ?.map(target => `${target.pick} ${target.name}`).join(" → ");
-      const planNote = targets ? `Targets: ${targets}; ordinary policy thereafter` : null;
-      return h("tr", { class: isTake ? "recommended" : "" },
-        h("td", {},
-          h("div", { class: "player-main" }, candidate.name, " ",
-            h("span", { class: `chip pos ${candidate.position}` }, candidate.position),
-            stats?.is_rookie ? [" ", h("span", { class: "chip rookie" }, "R")] : null,
-            isTake ? [" ", h("span", { class: "chip take" }, "TAKE")] : null),
-          h("div", { class: "player-meta" }, stats
-            ? [
-                `board #${stats.rank}`,
-                `field #${stats.opponent_consensus_rank}`,
-                `Δ ${signed(stats.opponent_rank_delta)}`,
-                stats.team,
-                stats.age == null ? null : `age ${fmt(stats.age)}`,
-              ].filter(Boolean).join(" · ")
-            : "projection unavailable")),
-        h("td", { class: "num" }, fmt(stats?.points_1yr)),
-        h("td", { class: "num" }, fmt(futurePerYear(stats))),
-        h("td", { class: `num ${trendClass(trend)}` }, signed(trend)),
-        h("td", { class: "num" }, fmt(candidate.value_now)),
-        h("td", { class: "num" }, fmt(candidate.next_pick_ev)),
-        h("td", { class: "num score-main" }, fmt(candidate.score)),
-        h("td", {}, chanceCell(candidate, stats, pick, d)),
-        hasRollout ? h("td", { class: "num" },
-          h("div", {}, fmt(candidate.rollout_ev)),
-          h("div", { class: "cell-note" }, rolloutNote),
-          planNote ? h("div", { class: "cell-note" }, planNote) : null) : null);
-    });
-    prior.push((pick.deterministic_fallback || pick.take).replace(/ \((QB|RB|WR|TE)\)$/, ""));
-    return h("article", { class: "card pick-card" },
-      h("div", { class: "pick-head" },
-        h("span", { class: "pick-label" }, `Pick ${pick.pick}`),
-        h("span", { class: "pick-context" }, context),
-        h("span", { class: "recommendation" },
-          pickIndex === 0 && hasRollout ? "Recommendation if available: " : "Recommendation: ",
-          h("strong", {}, pick.take),
-          pick.deterministic_fallback
-            ? ` · deterministic fallback: ${pick.deterministic_fallback}`
-            : null)),
-      h("div", { class: "pick-table-wrap" },
-        h("table", { class: `pick-table${hasRollout ? " has-rollout" : ""}` },
-          h("thead", {}, h("tr", {},
-            h("th", {}, "Player"), h("th", { class: "num" }, "Year 1"),
-            h("th", { class: "num" }, "Years 2–3 / yr"), h("th", { class: "num" }, "Trend / yr"),
-            h("th", { class: "num", title: "Marginal expected-lineup value added to your roster" }, "Lineup gain"),
-            h("th", { class: "num", title: "Expected value of your best option at the following pick" }, "Next-pick option"),
-            h("th", { class: "num", title: "Ordinary-policy diagnostic; this does not rank the first card" }, "Two-pick total"),
-            h("th", {}, "Chance to reach"),
-            hasRollout ? h("th", { class: "num", title: "Mean final-roster value; the first card is sorted highest first" }, "Final roster EV ↓") : null)),
-          h("tbody", {}, ...rows))));
+  const pick = d.my_next_picks.picks[0];
+  if (!pick) {
+    document.getElementById("picksGrid").replaceChildren();
+    return;
+  }
+  const hasRollout = pick.candidates.some(candidate => candidate.rollout_ev != null);
+  const candidates = hasRollout
+    ? [...pick.candidates].sort((a, b) => b.rollout_ev - a.rollout_ev)
+    : pick.candidates;
+  const context = d.draft.next_pick_of_mine?.slot === pick.pick
+    ? `${pick.overall} overall · ${d.draft.next_pick_of_mine.picks_away} picks between`
+    : `${pick.overall} overall`;
+  const rows = candidates.map(candidate => {
+    const stats = byId.get(candidate.player_id);
+    const isTake = candidate.player_id === pick.take_id;
+    const trend = trendPerYear(stats);
+    const rolloutNote = candidate.rollout_edge == null ? null
+      : `${signed(candidate.rollout_edge)} ± ${fmt(candidate.rollout_se)} vs ordinary policy`;
+    const targets = candidate.four_pick_plan
+      ?.map(target => `${target.pick} ${target.name}`).join(" → ");
+    const planNote = targets ? `Targets: ${targets}; ordinary policy thereafter` : null;
+    return h("tr", { class: isTake ? "recommended" : "" },
+      h("td", {},
+        h("div", { class: "player-main" }, candidate.name, " ",
+          h("span", { class: `chip pos ${candidate.position}` }, candidate.position),
+          stats?.is_rookie ? [" ", h("span", { class: "chip rookie" }, "R")] : null,
+          isTake ? [" ", h("span", { class: "chip take" }, "TAKE")] : null),
+        h("div", { class: "player-meta" }, stats
+          ? [
+              `board #${stats.rank}`,
+              `field #${stats.opponent_consensus_rank}`,
+              `Δ ${signed(stats.opponent_rank_delta)}`,
+              stats.team,
+              stats.age == null ? null : `age ${fmt(stats.age)}`,
+            ].filter(Boolean).join(" · ")
+          : "projection unavailable")),
+      h("td", { class: "num" }, fmt(stats?.points_1yr)),
+      h("td", { class: "num" }, fmt(futurePerYear(stats))),
+      h("td", { class: `num ${trendClass(trend)}` }, signed(trend)),
+      h("td", { class: "num" }, fmt(candidate.value_now)),
+      h("td", { class: "num" }, fmt(candidate.next_pick_ev)),
+      h("td", { class: "num score-main" }, fmt(candidate.score)),
+      h("td", {}, chanceCell(candidate, stats, pick, d)),
+      hasRollout ? h("td", { class: "num" },
+        h("div", {}, fmt(candidate.rollout_ev)),
+        h("div", { class: "cell-note" }, rolloutNote),
+        planNote ? h("div", { class: "cell-note" }, planNote) : null) : null);
   });
-  document.getElementById("picksGrid").replaceChildren(...cards);
+  document.getElementById("picksGrid").replaceChildren(h("article", { class: "card pick-card" },
+    h("div", { class: "pick-head" },
+      h("span", { class: "pick-label" }, `Pick ${pick.pick}`),
+      h("span", { class: "pick-context" }, context),
+      h("span", { class: "recommendation" },
+        hasRollout ? "Recommendation if available: " : "Recommendation: ",
+        h("strong", {}, pick.take),
+        pick.deterministic_fallback
+          ? ` · deterministic fallback: ${pick.deterministic_fallback}`
+          : null)),
+    h("div", { class: "pick-table-wrap" },
+      h("table", { class: `pick-table${hasRollout ? " has-rollout" : ""}` },
+        h("thead", {}, h("tr", {},
+          h("th", {}, "Player"), h("th", { class: "num" }, "Year 1"),
+          h("th", { class: "num" }, "Years 2–3 / yr"), h("th", { class: "num" }, "Trend / yr"),
+          h("th", { class: "num", title: "Marginal expected-lineup value added to your roster" }, "Lineup gain"),
+          h("th", { class: "num", title: "Expected value of your best option at the following pick" }, "Next-pick option"),
+          h("th", { class: "num", title: "Ordinary-policy diagnostic; this does not rank the table" }, "Two-pick total"),
+          h("th", {}, "Chance to reach"),
+          hasRollout ? h("th", { class: "num", title: "Mean final-roster value; the table is sorted highest first" }, "Final roster EV ↓") : null)),
+        h("tbody", {}, ...rows)))));
 }
 
 function renderMyRoster(d) {
@@ -663,7 +739,7 @@ function renderBoard(d, state) {
     ? `Undrafted players ranked by lineup gain. Chance at ${nextPick} is the estimated probability no opponent takes the player first, from ${d.monte_carlo.sims} simulated drafts.`
     : "Undrafted players ranked by lineup gain.";
   document.getElementById("boardNote").textContent =
-    "Year 1 and Years 2–3 / year are raw projected fantasy points in this league's scoring. Trend is the later annual pace minus Year 1. Lineup gain — the board's ranking metric — is what the pick recommendations actually maximize (before availability lookahead): the player's marginal expected-lineup value added to your current roster, waiver fallbacks included. It shrinks at positions where your roster is already strong. Field Δ is opponent consensus rank minus board rank, so positive means your process values the player earlier than the modeled field. The recommendation tables also account for who may survive. Best-available odds use a Kaplan–Meier opponent-demand estimate; use the pass-on-him odds in the first recommendation table for the candidates that matter most.";
+    "Year 1 and Years 2–3 / year are raw projected fantasy points in this league's scoring. Trend is the later annual pace minus Year 1. Lineup gain — the board's ranking metric — is what the pick recommendations actually maximize (before availability lookahead): the player's marginal expected-lineup value added to your current roster, waiver fallbacks included. It shrinks at positions where your roster is already strong. Field Δ is opponent consensus rank minus board rank, so positive means your process values the player earlier than the modeled field. The recommendation tables also account for who may survive. Best-available odds use a Kaplan–Meier opponent-demand estimate; use the pass-on-him odds in the recommendation table for the candidates that matter most.";
 
   let rows = d.rankings;
   if (state.position !== "ALL") rows = rows.filter(row => row.position === state.position);
@@ -768,8 +844,9 @@ function renderLeagueOutlook(d) {
     state.all = !state.all;
     renderBoard(d, state);
   });
-  document.getElementById("footer").textContent =
-    `Projection input: ${d.value_input} · ${d.monte_carlo.sims} availability simulations · ${d.my_next_picks.option_sims} short option redraws · ${d.my_next_picks.rollout_sims} full-draft rollouts per four-pick plan`;
+  document.getElementById("footer").replaceChildren(
+    `Projection input: ${d.value_input} · ${d.monte_carlo.sims} availability simulations · ${d.my_next_picks.option_sims} short option redraws · ${d.my_next_picks.rollout_sims} full-draft rollouts per four-pick plan · `,
+    h("a", { href: "data_source_investigator/" }, "data source investigator"));
   document.getElementById("app").hidden = false;
 })();
 </script>
