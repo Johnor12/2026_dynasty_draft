@@ -1,13 +1,13 @@
 {
   "source": "https://api.sleeper.app/v1/draft/1388293618208374784",
-  "fetched_at": "2026-08-11T10:25:13+00:00",
+  "fetched_at": "2026-08-11T15:09:25+00:00",
   "draft_id": "1388293618208374784",
   "league_id": "1388293617071714304",
   "league_name": "Dudes",
   "season": "2026",
-  "status": "paused",
+  "status": "drafting",
   "started_at": "2026-08-04T13:02:55+00:00",
-  "last_picked_at": "2026-08-11T02:18:47+00:00",
+  "last_picked_at": "2026-08-11T14:09:25+00:00",
   "format": {
     "type": "snake",
     "teams": 10,
@@ -16,16 +16,16 @@
     "scoring_type": "dynasty_2qb"
   },
   "pick_count": 290,
-  "picks_made": 187,
-  "picks_pending": 103,
+  "picks_made": 191,
+  "picks_pending": 99,
   "on_the_clock": {
-    "pick_no": 188,
-    "round": 19,
-    "pick_in_round": 8,
-    "draft_slot": 3,
-    "user_id": "865368720548196352",
-    "username": "jedmxk",
-    "slot": "19.08"
+    "pick_no": 192,
+    "round": 20,
+    "pick_in_round": 2,
+    "draft_slot": 2,
+    "user_id": "1127785716420898816",
+    "username": "johnor",
+    "slot": "20.02"
   },
   "me": {
     "username": "johnor",
@@ -41,12 +41,12 @@
     "user_id": "1127785716420898816",
     "username": "johnor",
     "slot": "20.02",
-    "picks_away": 4
+    "picks_away": 0
   },
   "board_derivation": {
     "method": "snake, order reverses at round 3; traded picks applied",
-    "checked_against_made_picks": 187,
-    "slot_and_roster_agree": 187,
+    "checked_against_made_picks": 191,
+    "slot_and_roster_agree": 191,
     "rounds_exercised": [
       1,
       2,
@@ -66,7 +66,8 @@
       16,
       17,
       18,
-      19
+      19,
+      20
     ],
     "mismatches": []
   },
@@ -3403,12 +3404,12 @@
       "user_id": "865368720548196352",
       "username": "jedmxk",
       "is_mine": false,
-      "status": "pending",
-      "sleeper_id": null,
-      "name": null,
-      "position": null,
-      "team": null,
-      "is_keeper": null
+      "status": "made",
+      "sleeper_id": "12524",
+      "name": "Shedeur Sanders",
+      "position": "QB",
+      "team": "CLE",
+      "is_keeper": false
     },
     {
       "pick_no": 189,
@@ -3419,12 +3420,12 @@
       "user_id": "1128025586577879040",
       "username": "justinmfftt",
       "is_mine": false,
-      "status": "pending",
-      "sleeper_id": null,
-      "name": null,
-      "position": null,
-      "team": null,
-      "is_keeper": null
+      "status": "made",
+      "sleeper_id": "10213",
+      "name": "Tre Tucker",
+      "position": "WR",
+      "team": "LV",
+      "is_keeper": false
     },
     {
       "pick_no": 190,
@@ -3435,12 +3436,12 @@
       "user_id": "1388546393752240128",
       "username": "AndNic31",
       "is_mine": false,
-      "status": "pending",
-      "sleeper_id": null,
-      "name": null,
-      "position": null,
-      "team": null,
-      "is_keeper": null
+      "status": "made",
+      "sleeper_id": "13305",
+      "name": "Mike Washington",
+      "position": "RB",
+      "team": "LV",
+      "is_keeper": false
     },
     {
       "pick_no": 191,
@@ -3451,12 +3452,12 @@
       "user_id": "1388546393752240128",
       "username": "AndNic31",
       "is_mine": false,
-      "status": "pending",
-      "sleeper_id": null,
-      "name": null,
-      "position": null,
-      "team": null,
-      "is_keeper": null
+      "status": "made",
+      "sleeper_id": "13296",
+      "name": "Caleb Douglas",
+      "position": "WR",
+      "team": "MIA",
+      "is_keeper": false
     },
     {
       "pick_no": 192,
