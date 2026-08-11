@@ -1,13 +1,13 @@
 {
   "source": "https://api.sleeper.app/v1/draft/1388293618208374784",
-  "fetched_at": "2026-08-11T16:52:38+00:00",
+  "fetched_at": "2026-08-11T21:29:02+00:00",
   "draft_id": "1388293618208374784",
   "league_id": "1388293617071714304",
   "league_name": "Dudes",
   "season": "2026",
   "status": "drafting",
   "started_at": "2026-08-04T13:02:55+00:00",
-  "last_picked_at": "2026-08-11T16:39:37+00:00",
+  "last_picked_at": "2026-08-11T21:20:45+00:00",
   "format": {
     "type": "snake",
     "teams": 10,
@@ -16,16 +16,16 @@
     "scoring_type": "dynasty_2qb"
   },
   "pick_count": 290,
-  "picks_made": 198,
-  "picks_pending": 92,
+  "picks_made": 208,
+  "picks_pending": 82,
   "on_the_clock": {
-    "pick_no": 199,
-    "round": 20,
+    "pick_no": 209,
+    "round": 21,
     "pick_in_round": 9,
-    "draft_slot": 9,
+    "draft_slot": 2,
     "user_id": "1127785716420898816",
     "username": "johnor",
-    "slot": "20.09"
+    "slot": "21.09"
   },
   "me": {
     "username": "johnor",
@@ -34,19 +34,19 @@
     "roster_id": 2
   },
   "my_next_pick": {
-    "pick_no": 199,
-    "round": 20,
+    "pick_no": 209,
+    "round": 21,
     "pick_in_round": 9,
-    "draft_slot": 9,
+    "draft_slot": 2,
     "user_id": "1127785716420898816",
     "username": "johnor",
-    "slot": "20.09",
+    "slot": "21.09",
     "picks_away": 0
   },
   "board_derivation": {
     "method": "snake, order reverses at round 3; traded picks applied",
-    "checked_against_made_picks": 198,
-    "slot_and_roster_agree": 198,
+    "checked_against_made_picks": 208,
+    "slot_and_roster_agree": 208,
     "rounds_exercised": [
       1,
       2,
@@ -67,7 +67,8 @@
       17,
       18,
       19,
-      20
+      20,
+      21
     ],
     "mismatches": []
   },
@@ -3608,12 +3609,12 @@
       "user_id": "1127785716420898816",
       "username": "johnor",
       "is_mine": true,
-      "status": "pending",
-      "sleeper_id": null,
-      "name": null,
-      "position": null,
-      "team": null,
-      "is_keeper": null
+      "status": "made",
+      "sleeper_id": "96",
+      "name": "Aaron Rodgers",
+      "position": "QB",
+      "team": "PIT",
+      "is_keeper": false
     },
     {
       "pick_no": 200,
@@ -3624,12 +3625,12 @@
       "user_id": "751220778036551680",
       "username": "nedjh2",
       "is_mine": false,
-      "status": "pending",
-      "sleeper_id": null,
-      "name": null,
-      "position": null,
-      "team": null,
-      "is_keeper": null
+      "status": "made",
+      "sleeper_id": "10219",
+      "name": "Chris Rodriguez",
+      "position": "RB",
+      "team": "JAX",
+      "is_keeper": false
     },
     {
       "pick_no": 201,
@@ -3640,12 +3641,12 @@
       "user_id": "751220778036551680",
       "username": "nedjh2",
       "is_mine": false,
-      "status": "pending",
-      "sleeper_id": null,
-      "name": null,
-      "position": null,
-      "team": null,
-      "is_keeper": null
+      "status": "made",
+      "sleeper_id": "13272",
+      "name": "Carson Beck",
+      "position": "QB",
+      "team": "ARI",
+      "is_keeper": false
     },
     {
       "pick_no": 202,
@@ -3656,12 +3657,12 @@
       "user_id": "207916077173182464",
       "username": "dccb31",
       "is_mine": false,
-      "status": "pending",
-      "sleeper_id": null,
-      "name": null,
-      "position": null,
-      "team": null,
-      "is_keeper": null
+      "status": "made",
+      "sleeper_id": "11625",
+      "name": "Adonai Mitchell",
+      "position": "WR",
+      "team": "NYJ",
+      "is_keeper": false
     },
     {
       "pick_no": 203,
@@ -3672,12 +3673,12 @@
       "user_id": "1128025586577879040",
       "username": "justinmfftt",
       "is_mine": false,
-      "status": "pending",
-      "sleeper_id": null,
-      "name": null,
-      "position": null,
-      "team": null,
-      "is_keeper": null
+      "status": "made",
+      "sleeper_id": "8172",
+      "name": "Greg Dulcich",
+      "position": "TE",
+      "team": "MIA",
+      "is_keeper": false
     },
     {
       "pick_no": 204,
@@ -3688,12 +3689,12 @@
       "user_id": "1128381875430596608",
       "username": "UGrizz14",
       "is_mine": false,
-      "status": "pending",
-      "sleeper_id": null,
-      "name": null,
-      "position": null,
-      "team": null,
-      "is_keeper": null
+      "status": "made",
+      "sleeper_id": "13337",
+      "name": "Emmett Johnson",
+      "position": "RB",
+      "team": "KC",
+      "is_keeper": false
     },
     {
       "pick_no": 205,
@@ -3704,12 +3705,12 @@
       "user_id": "1114302275305979904",
       "username": "samlemonskoff",
       "is_mine": false,
-      "status": "pending",
-      "sleeper_id": null,
-      "name": null,
-      "position": null,
-      "team": null,
-      "is_keeper": null
+      "status": "made",
+      "sleeper_id": "12499",
+      "name": "Elic Ayomanor",
+      "position": "WR",
+      "team": "TEN",
+      "is_keeper": false
     },
     {
       "pick_no": 206,
@@ -3720,12 +3721,12 @@
       "user_id": "870397485556875264",
       "username": "dirtydole",
       "is_mine": false,
-      "status": "pending",
-      "sleeper_id": null,
-      "name": null,
-      "position": null,
-      "team": null,
-      "is_keeper": null
+      "status": "made",
+      "sleeper_id": "4199",
+      "name": "Aaron Jones",
+      "position": "RB",
+      "team": "MIN",
+      "is_keeper": false
     },
     {
       "pick_no": 207,
@@ -3736,12 +3737,12 @@
       "user_id": "735592932748435456",
       "username": "bwood637",
       "is_mine": false,
-      "status": "pending",
-      "sleeper_id": null,
-      "name": null,
-      "position": null,
-      "team": null,
-      "is_keeper": null
+      "status": "made",
+      "sleeper_id": "9502",
+      "name": "Tank Dell",
+      "position": "WR",
+      "team": "HOU",
+      "is_keeper": false
     },
     {
       "pick_no": 208,
@@ -3752,12 +3753,12 @@
       "user_id": "865368720548196352",
       "username": "jedmxk",
       "is_mine": false,
-      "status": "pending",
-      "sleeper_id": null,
-      "name": null,
-      "position": null,
-      "team": null,
-      "is_keeper": null
+      "status": "made",
+      "sleeper_id": "9229",
+      "name": "Anthony Richardson",
+      "position": "QB",
+      "team": "IND",
+      "is_keeper": false
     },
     {
       "pick_no": 209,
