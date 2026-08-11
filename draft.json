@@ -1,13 +1,13 @@
 {
   "source": "https://api.sleeper.app/v1/draft/1388293618208374784",
-  "fetched_at": "2026-08-11T21:29:02+00:00",
+  "fetched_at": "2026-08-11T21:46:04+00:00",
   "draft_id": "1388293618208374784",
   "league_id": "1388293617071714304",
   "league_name": "Dudes",
   "season": "2026",
   "status": "drafting",
   "started_at": "2026-08-04T13:02:55+00:00",
-  "last_picked_at": "2026-08-11T21:20:45+00:00",
+  "last_picked_at": "2026-08-11T21:43:46+00:00",
   "format": {
     "type": "snake",
     "teams": 10,
@@ -16,16 +16,16 @@
     "scoring_type": "dynasty_2qb"
   },
   "pick_count": 290,
-  "picks_made": 208,
-  "picks_pending": 82,
+  "picks_made": 211,
+  "picks_pending": 79,
   "on_the_clock": {
-    "pick_no": 209,
-    "round": 21,
-    "pick_in_round": 9,
+    "pick_no": 212,
+    "round": 22,
+    "pick_in_round": 2,
     "draft_slot": 2,
     "user_id": "1127785716420898816",
     "username": "johnor",
-    "slot": "21.09"
+    "slot": "22.02"
   },
   "me": {
     "username": "johnor",
@@ -34,19 +34,19 @@
     "roster_id": 2
   },
   "my_next_pick": {
-    "pick_no": 209,
-    "round": 21,
-    "pick_in_round": 9,
+    "pick_no": 212,
+    "round": 22,
+    "pick_in_round": 2,
     "draft_slot": 2,
     "user_id": "1127785716420898816",
     "username": "johnor",
-    "slot": "21.09",
+    "slot": "22.02",
     "picks_away": 0
   },
   "board_derivation": {
     "method": "snake, order reverses at round 3; traded picks applied",
-    "checked_against_made_picks": 208,
-    "slot_and_roster_agree": 208,
+    "checked_against_made_picks": 211,
+    "slot_and_roster_agree": 211,
     "rounds_exercised": [
       1,
       2,
@@ -68,7 +68,8 @@
       18,
       19,
       20,
-      21
+      21,
+      22
     ],
     "mismatches": []
   },
@@ -3769,12 +3770,12 @@
       "user_id": "1127785716420898816",
       "username": "johnor",
       "is_mine": true,
-      "status": "pending",
-      "sleeper_id": null,
-      "name": null,
-      "position": null,
-      "team": null,
-      "is_keeper": null
+      "status": "made",
+      "sleeper_id": "12469",
+      "name": "Dylan Sampson",
+      "position": "RB",
+      "team": "CLE",
+      "is_keeper": false
     },
     {
       "pick_no": 210,
@@ -3785,12 +3786,12 @@
       "user_id": "1388546393752240128",
       "username": "AndNic31",
       "is_mine": false,
-      "status": "pending",
-      "sleeper_id": null,
-      "name": null,
-      "position": null,
-      "team": null,
-      "is_keeper": null
+      "status": "made",
+      "sleeper_id": "13289",
+      "name": "Drew Allar",
+      "position": "QB",
+      "team": "PIT",
+      "is_keeper": false
     },
     {
       "pick_no": 211,
@@ -3801,12 +3802,12 @@
       "user_id": "1388546393752240128",
       "username": "AndNic31",
       "is_mine": false,
-      "status": "pending",
-      "sleeper_id": null,
-      "name": null,
-      "position": null,
-      "team": null,
-      "is_keeper": null
+      "status": "made",
+      "sleeper_id": "13293",
+      "name": "Ja'Kobi Lane",
+      "position": "WR",
+      "team": "BAL",
+      "is_keeper": false
     },
     {
       "pick_no": 212,
