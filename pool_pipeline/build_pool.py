@@ -132,6 +132,34 @@ SYNTHETIC_PROJECTIONS = {
     10754: {"name": "Justin Fields", "3yr": 388, "1yr": 28},
 }
 
+#: Players the source omits entirely but this league's market drafts. Same comp-median
+#: basis as SYNTHETIC_PROJECTIONS, except the whole row is invented, not just the
+#: points: Mac Jones (drafted pick 182 of this draft) sits QB35-39 on all four
+#: investigator boards; his cells are the medians over the QBs within +-3 of him on
+#: each board (Tua, McCarthy, Brissett, Rodgers, Watson, Cousins, Geno, Beck, Allar,
+#: Richardson, Milroe, Klubnik): 3yr 406, 1yr 54, superflex ADP overall 222 -> 19.06
+#: in the source's 12-team round.pick encoding. A QB's points are reception-blind, so
+#: every scoring column carries the same number. Skipped once the source publishes a
+#: real row under the same name and position.
+_MAC_JONES_SCHEMES = [*ADP_FAMILY, "standard", "half_ppr", "ppr", "te_premium"]
+SYNTHETIC_PLAYERS = [
+    {
+        "player_id": 900001,  # out-of-band: real source ids stay far below 900000
+        "name": "Mac Jones",
+        "position": "QB",
+        "team": "SF",
+        "age": 27.9,
+        "bye_week": 8,
+        "is_rookie": False,
+        "rank_by_3d_value": None,
+        "projections": {
+            "3yr": {scheme: 406 for scheme in _MAC_JONES_SCHEMES},
+            "1yr": {scheme: 54 for scheme in _MAC_JONES_SCHEMES},
+        },
+        "adp": {scheme: 19.06 for scheme in ADP_FAMILY},
+    },
+]
+
 FIELD_DEFINITIONS = {
     "rank": (
         f"Pool rank, 1..N, by {POINTS_FIELD} descending (ties broken by the "
@@ -215,6 +243,22 @@ def apply_synthetic(records: list[dict]) -> list[str]:
         notes.append(
             f"{synth['name']}: {column} 3yr={synth['3yr']} 1yr={synth['1yr']} "
             "(comp-median, see SYNTHETIC_PROJECTIONS)"
+        )
+    return notes
+
+
+def add_synthetic_players(records: list[dict]) -> list[str]:
+    """Append SYNTHETIC_PLAYERS the source still lacks. Returns audit notes."""
+    present = {(record["name"].casefold(), record["position"]) for record in records}
+    notes = []
+    for synth in SYNTHETIC_PLAYERS:
+        if (synth["name"].casefold(), synth["position"]) in present:
+            notes.append(f"{synth['name']}: source now lists him, synthetic row skipped")
+            continue
+        records.append(synth)
+        notes.append(
+            f"{synth['name']}: fully synthetic row, absent from source "
+            "(comp-median, see SYNTHETIC_PLAYERS)"
         )
     return notes
 
@@ -563,6 +607,7 @@ def main(argv: list[str] | None = None) -> int:
     try:
         check_sources(source)
         adjustments = apply_synthetic(source["players"])
+        adjustments += add_synthetic_players(source["players"])
         adjustments += zero_negative_futures(source["players"])
         kept, stats = select(source["players"], args.limit)
     except (ValueError, KeyError) as exc:

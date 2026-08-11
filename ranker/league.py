@@ -75,6 +75,12 @@ OPPONENT_BALANCE_STRENGTH = 2.0
 # prescribing one exact roster shape. My slot never uses this heuristic.
 OPPONENT_DEPTH_TARGETS = {"QB": 3, "RB": 8, "WR": 11, "TE": 3}
 OPPONENT_DEPTH_PENALTY = 2.0
+# Flat source-rank multiplier per position; < 1 pulls the position up an opponent's
+# board. Opponents throw RB darts beyond what any source board or the need model above
+# predicts: replaying the observed draft (evaluate_opponents.py), the actual RB share
+# exceeded the predicted share in every four-round bucket, most severely in rounds 13+
+# (39% actual vs 13% predicted).
+OPPONENT_POSITION_TILT = {"RB": 0.67}
 # Multiplier around each opponent's fitted source adherence: 1 reproduces the observed
 # mean log-rank loss before roster-balance adjustments, while 0 removes random variation.
 NOISE = 1.0

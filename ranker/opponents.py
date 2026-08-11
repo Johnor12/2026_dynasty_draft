@@ -21,6 +21,11 @@ from .pool import Player
 
 SUFFIXES = {"jr", "sr", "ii", "iii", "iv", "v"}
 COLD_START_LOG2_LOSS = 1.5
+# An owner whose 1-2 observed picks happen to sit exactly on a source board gets a
+# fitted loss near 0, which calibrates to a near-deterministic policy (replayed picks
+# then cost 30-80 bits when such an owner deviates). Shrink the fitted loss toward the
+# cold-start prior as if that prior had been observed on this many extra picks.
+LOSS_SHRINK_PSEUDO_PICKS = 2
 
 
 @dataclass(frozen=True, slots=True)
@@ -199,7 +204,11 @@ def build_opponent_strategies(
                 f"opponent slot {slot}'s {source_id} board covers "
                 f"{len(order)}/{len(players)} players"
             )
-        loss = float(inferred["mean_log2_loss"])
+        picks_seen = owner["pick_count"] if owner else 0
+        loss = (
+            picks_seen * float(inferred["mean_log2_loss"])
+            + LOSS_SHRINK_PSEUDO_PICKS * COLD_START_LOG2_LOSS
+        ) / (picks_seen + LOSS_SHRINK_PSEUDO_PICKS)
         strategies[slot] = OpponentStrategy(
             slot=slot,
             roster_id=roster_id,

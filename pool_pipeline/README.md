@@ -35,9 +35,11 @@ the small metadata file records when it was fetched.
 schemes, four horizons, displayed and derived ranks, ADP, and analysis text. The printed
 ranks in the saved HTML are stale; consumers use the gap-free ranks derived from 3D value.
 
-`pool.json` is the narrow draft input: the top 350 usable QB/RB/WR/TE players, with 13
+`pool.json` is the narrow draft input: every usable QB/RB/WR/TE player, with 13
 fields per player. The ranker uses projected points, not DraftSharks' provider-scaled 3D
-value.
+value. A player the source omits but the league drafts can be added as a fully
+synthetic comp-median row (`SYNTHETIC_PLAYERS` in `build_pool.py`; currently Mac
+Jones), and is dropped automatically once the provider publishes a real row.
 
 - `points_1yr`: year-one points in this league's scoring
 - `points_3yr`: cumulative three-year points in this league's scoring

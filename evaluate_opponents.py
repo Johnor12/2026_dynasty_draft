@@ -104,7 +104,14 @@ def evaluate(
         ranks = {player.player_id: rank for rank, player in enumerate(ordered, start=1)}
         actual_player = by_sleeper.get(str(actual.get("sleeper_id")))
         if actual_player is None or actual_player.player_id not in ranks:
-            raise ValueError(f"actual pick {actual['pick_no']} {actual['name']} is not predictable")
+            # A drafted player outside the pool (or outside the legal candidate set)
+            # has zero model probability; score the picks the model can see.
+            print(
+                f"warning: skipping pick {actual['pick_no']} {actual['name']}: "
+                "not in the pool/candidate list",
+                file=sys.stderr,
+            )
+            continue
         actual_rank = ranks[actual_player.player_id]
         predictions = [model.choose_opponent(0, slot) for _ in range(TRIALS)]
         errors = [abs(ranks[predicted.player_id] - actual_rank) for predicted in predictions]

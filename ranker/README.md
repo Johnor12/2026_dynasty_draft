@@ -66,7 +66,11 @@ compounding source-rank penalty for adding players beyond comfortable positional
 The depth targets sum to 25, so the last four spots remain source-driven rather than
 forcing every opponent into one exact roster shape. These are preferences, not draft
 limits: a large enough source-rank gap can still justify another player at a deep position.
-Observed `mean_log2_loss` calibrates randomness around that preference. Missing provider
+Observed `mean_log2_loss` calibrates randomness around that preference, after shrinking
+toward the cold-start prior as if that prior had been observed on two extra picks — one
+or two on-board picks otherwise fit a near-deterministic policy. A flat RB tilt
+(`OPPONENT_POSITION_TILT`) prices the RB dart-throwing that replays show every source
+board under-predicts. Missing provider
 players are appended in DraftSharks ADP order; opponents never fall back to my board.
 
 My simulated pick policy does not use those targets or any other positional roster-size

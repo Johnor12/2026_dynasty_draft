@@ -17,6 +17,7 @@ from .league import (
     FIRST_PICK_PER_POS,
     MY_SLOT,
     OPPONENT_DEPTH_TARGETS,
+    OPPONENT_POSITION_TILT,
     POSITIONS,
     ROUNDS,
     STARTING_SLOTS,
@@ -90,10 +91,11 @@ def opponent_selftest(players: list[Player]) -> list[str]:
     if my_take == external[0]:
         fails.append("my optimizer followed the opponent source board")
 
-    # A filled WR group versus an empty RB group gives the best RB a soft 3x rank boost:
-    # close source values bend toward RB, while a large enough source gap still wins.
+    # A filled WR group versus an empty TE group gives the best TE a soft 3x rank boost:
+    # close source values bend toward TE, while a large enough source gap still wins.
+    # TE probes these boundaries because OPPONENT_POSITION_TILT would shift them for RB.
     wrs = [p for p in players if p.position == "WR"]
-    rb = next(p for p in players if p.position == "RB")
+    te = next(p for p in players if p.position == "TE")
     board = fresh_board()
     board.rosters[0] = wrs[:3]
     board.picks_left[0] -= 3
@@ -102,17 +104,17 @@ def opponent_selftest(players: list[Player]) -> list[str]:
         ids = {p.player_id for p in prefix}
         return prefix + [p for p in players if p.player_id not in ids]
 
-    close_order = complete([wrs[3], rb])
+    close_order = complete([wrs[3], te])
     close = Draft(
         players,
         wire,
         board,
         opponents=synthetic_opponents(players, board, close_order),
     )
-    if close.choose_opponent(0, 1) != rb:
-        fails.append("opponent did not prefer a close RB with RB starters unfilled")
+    if close.choose_opponent(0, 1) != te:
+        fails.append("opponent did not prefer a close TE with the TE starter unfilled")
 
-    value_order = complete([wrs[3], wrs[4], wrs[5], rb])
+    value_order = complete([wrs[3], wrs[4], wrs[5], te])
     value = Draft(
         players,
         wire,
@@ -122,23 +124,27 @@ def opponent_selftest(players: list[Player]) -> list[str]:
     if value.choose_opponent(0, 1) != wrs[3]:
         fails.append("opponent balance preference overrode too large a source-rank gap")
 
+    adjustments = value.opponent_position_adjustments(1)
+    if abs(adjustments["RB"] - OPPONENT_POSITION_TILT["RB"] * adjustments["TE"]) > 1e-12:
+        fails.append("RB tilt missing from opponent position adjustments")
+
     # Once a roster reaches comfortable WR depth, another WR's adjusted source rank is
     # doubled against other positions. This is a preference, not a positional limit.
     board = fresh_board()
     board.rosters[0] = wrs[: OPPONENT_DEPTH_TARGETS["WR"]]
     board.picks_left[0] -= len(board.rosters[0])
-    depth_order = complete([wrs[OPPONENT_DEPTH_TARGETS["WR"]], rb])
+    depth_order = complete([wrs[OPPONENT_DEPTH_TARGETS["WR"]], te])
     depth = Draft(
         players,
         wire,
         board,
         opponents=synthetic_opponents(players, board, depth_order),
     )
-    if depth.choose_opponent(0, 1) != rb:
-        fails.append("opponent did not prefer close RB over excessive WR depth")
+    if depth.choose_opponent(0, 1) != te:
+        fails.append("opponent did not prefer close TE over excessive WR depth")
 
     start = OPPONENT_DEPTH_TARGETS["WR"]
-    depth_value_order = complete(wrs[start : start + 6] + [rb])
+    depth_value_order = complete(wrs[start : start + 6] + [te])
     depth_value = Draft(
         players,
         wire,

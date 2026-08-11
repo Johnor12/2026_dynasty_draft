@@ -19,6 +19,7 @@ from .league import (
     OPPONENT_BALANCE_STRENGTH,
     OPPONENT_DEPTH_PENALTY,
     OPPONENT_DEPTH_TARGETS,
+    OPPONENT_POSITION_TILT,
     POSITIONS,
     SURVIVAL_SIGMA,
 )
@@ -332,7 +333,8 @@ class Draft:
                 / required
             )
             depth_penalty = self.opponent_depth_penalty(roster, off, position)
-            out[position] = depth_penalty / starter_boost
+            tilt = OPPONENT_POSITION_TILT.get(position, 1.0)
+            out[position] = tilt * depth_penalty / starter_boost
         return out
 
     def better_available(self, p: Player) -> int:
