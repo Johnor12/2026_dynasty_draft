@@ -1,13 +1,13 @@
 {
   "source": "https://api.sleeper.app/v1/draft/1388293618208374784",
-  "fetched_at": "2026-08-11T21:46:04+00:00",
+  "fetched_at": "2026-08-11T23:40:45+00:00",
   "draft_id": "1388293618208374784",
   "league_id": "1388293617071714304",
   "league_name": "Dudes",
   "season": "2026",
   "status": "drafting",
   "started_at": "2026-08-04T13:02:55+00:00",
-  "last_picked_at": "2026-08-11T21:43:46+00:00",
+  "last_picked_at": "2026-08-11T23:30:08+00:00",
   "format": {
     "type": "snake",
     "teams": 10,
@@ -16,16 +16,16 @@
     "scoring_type": "dynasty_2qb"
   },
   "pick_count": 290,
-  "picks_made": 211,
-  "picks_pending": 79,
+  "picks_made": 215,
+  "picks_pending": 75,
   "on_the_clock": {
-    "pick_no": 212,
+    "pick_no": 216,
     "round": 22,
-    "pick_in_round": 2,
-    "draft_slot": 2,
-    "user_id": "1127785716420898816",
-    "username": "johnor",
-    "slot": "22.02"
+    "pick_in_round": 6,
+    "draft_slot": 6,
+    "user_id": "1114302275305979904",
+    "username": "samlemonskoff",
+    "slot": "22.06"
   },
   "me": {
     "username": "johnor",
@@ -34,19 +34,19 @@
     "roster_id": 2
   },
   "my_next_pick": {
-    "pick_no": 212,
-    "round": 22,
-    "pick_in_round": 2,
+    "pick_no": 229,
+    "round": 23,
+    "pick_in_round": 9,
     "draft_slot": 2,
     "user_id": "1127785716420898816",
     "username": "johnor",
-    "slot": "22.02",
-    "picks_away": 0
+    "slot": "23.09",
+    "picks_away": 13
   },
   "board_derivation": {
     "method": "snake, order reverses at round 3; traded picks applied",
-    "checked_against_made_picks": 211,
-    "slot_and_roster_agree": 211,
+    "checked_against_made_picks": 215,
+    "slot_and_roster_agree": 215,
     "rounds_exercised": [
       1,
       2,
@@ -3818,12 +3818,12 @@
       "user_id": "1127785716420898816",
       "username": "johnor",
       "is_mine": true,
-      "status": "pending",
-      "sleeper_id": null,
-      "name": null,
-      "position": null,
-      "team": null,
-      "is_keeper": null
+      "status": "made",
+      "sleeper_id": "13317",
+      "name": "Ted Hurst",
+      "position": "WR",
+      "team": "TB",
+      "is_keeper": false
     },
     {
       "pick_no": 213,
@@ -3834,12 +3834,12 @@
       "user_id": "865368720548196352",
       "username": "jedmxk",
       "is_mine": false,
-      "status": "pending",
-      "sleeper_id": null,
-      "name": null,
-      "position": null,
-      "team": null,
-      "is_keeper": null
+      "status": "made",
+      "sleeper_id": "6783",
+      "name": "Jerry Jeudy",
+      "position": "WR",
+      "team": "CLE",
+      "is_keeper": false
     },
     {
       "pick_no": 214,
@@ -3850,12 +3850,12 @@
       "user_id": "735592932748435456",
       "username": "bwood637",
       "is_mine": false,
-      "status": "pending",
-      "sleeper_id": null,
-      "name": null,
-      "position": null,
-      "team": null,
-      "is_keeper": null
+      "status": "made",
+      "sleeper_id": "1166",
+      "name": "Kirk Cousins",
+      "position": "QB",
+      "team": "LV",
+      "is_keeper": false
     },
     {
       "pick_no": 215,
@@ -3866,12 +3866,12 @@
       "user_id": "870397485556875264",
       "username": "dirtydole",
       "is_mine": false,
-      "status": "pending",
-      "sleeper_id": null,
-      "name": null,
-      "position": null,
-      "team": null,
-      "is_keeper": null
+      "status": "made",
+      "sleeper_id": "8180",
+      "name": "Jalen Nailor",
+      "position": "WR",
+      "team": "LV",
+      "is_keeper": false
     },
     {
       "pick_no": 216,
