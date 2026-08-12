@@ -1,10 +1,10 @@
 {
-  "generated_at": "2026-08-12T10:57:45+00:00",
+  "generated_at": "2026-08-12T13:39:03+00:00",
   "draft": {
     "draft_id": "1388293618208374784",
-    "draft_fetched_at": "2026-08-12T10:57:44+00:00",
+    "draft_fetched_at": "2026-08-12T13:39:02+00:00",
     "draft_started_at": "2026-08-04T13:02:55+00:00",
-    "picks_analyzed": 225
+    "picks_analyzed": 228
   },
   "ranking_snapshot": {
     "generated_at": "2026-08-11T16:02:45+00:00",
@@ -7307,7 +7307,7 @@
     {
       "roster_id": 7,
       "username": "bwood637",
-      "pick_count": 22,
+      "pick_count": 23,
       "picks": [
         {
           "pick_no": 4,
@@ -7440,49 +7440,55 @@
           "round": 22,
           "name": "Kirk Cousins",
           "position": "QB"
+        },
+        {
+          "pick_no": 227,
+          "round": 23,
+          "name": "Theo Johnson",
+          "position": "TE"
         }
       ],
       "inferred_source": {
         "source_id": "draftsharks_adp",
         "source_name": "DraftSharks superflex ADP",
-        "fit_score": 64.4,
-        "picks": 22,
-        "matched_picks": 22,
+        "fit_score": 65.7,
+        "picks": 23,
+        "matched_picks": 23,
         "coverage": 1.0,
-        "mean_availability_rank": 6.14,
-        "median_availability_rank": 3.0,
-        "top_available_rate": 0.182,
-        "top_3_available_rate": 0.545,
-        "mean_log2_loss": 1.901
+        "mean_availability_rank": 5.91,
+        "median_availability_rank": 3,
+        "top_available_rate": 0.217,
+        "top_3_available_rate": 0.565,
+        "mean_log2_loss": 1.819
       },
       "runner_up": {
         "source_id": "fantasycalc",
         "source_name": "FantasyCalc",
-        "fit_score": 56.6,
-        "picks": 22,
-        "matched_picks": 22,
+        "fit_score": 55.3,
+        "picks": 23,
+        "matched_picks": 23,
         "coverage": 1.0,
-        "mean_availability_rank": 9.41,
-        "median_availability_rank": 4.0,
-        "top_available_rate": 0.045,
-        "top_3_available_rate": 0.455,
-        "mean_log2_loss": 2.466
+        "mean_availability_rank": 10.17,
+        "median_availability_rank": 4,
+        "top_available_rate": 0.043,
+        "top_3_available_rate": 0.435,
+        "mean_log2_loss": 2.565
       },
       "confidence": "moderate",
-      "score_gap": 7.8,
+      "score_gap": 10.4,
       "provider_scores": [
         {
           "source_id": "draftsharks_adp",
           "source_name": "DraftSharks superflex ADP",
-          "fit_score": 64.4,
-          "picks": 22,
-          "matched_picks": 22,
+          "fit_score": 65.7,
+          "picks": 23,
+          "matched_picks": 23,
           "coverage": 1.0,
-          "mean_availability_rank": 6.14,
-          "median_availability_rank": 3.0,
-          "top_available_rate": 0.182,
-          "top_3_available_rate": 0.545,
-          "mean_log2_loss": 1.901,
+          "mean_availability_rank": 5.91,
+          "median_availability_rank": 3,
+          "top_available_rate": 0.217,
+          "top_3_available_rate": 0.565,
+          "mean_log2_loss": 1.819,
           "evidence": [
             {
               "pick_no": 4,
@@ -8033,21 +8039,32 @@
                   "overall_rank": 183
                 }
               ]
+            },
+            {
+              "pick_no": 227,
+              "round": 23,
+              "player": "Theo Johnson",
+              "position": "TE",
+              "matched": true,
+              "overall_rank": 173,
+              "availability_rank": 1,
+              "skipped_count": 0,
+              "higher_ranked_available": []
             }
           ]
         },
         {
           "source_id": "fantasycalc",
           "source_name": "FantasyCalc",
-          "fit_score": 56.6,
-          "picks": 22,
-          "matched_picks": 22,
+          "fit_score": 55.3,
+          "picks": 23,
+          "matched_picks": 23,
           "coverage": 1.0,
-          "mean_availability_rank": 9.41,
-          "median_availability_rank": 4.0,
-          "top_available_rate": 0.045,
-          "top_3_available_rate": 0.455,
-          "mean_log2_loss": 2.466,
+          "mean_availability_rank": 10.17,
+          "median_availability_rank": 4,
+          "top_available_rate": 0.043,
+          "top_3_available_rate": 0.435,
+          "mean_log2_loss": 2.565,
           "evidence": [
             {
               "pick_no": 4,
@@ -8651,21 +8668,58 @@
                   "overall_rank": 178
                 }
               ]
+            },
+            {
+              "pick_no": 227,
+              "round": 23,
+              "player": "Theo Johnson",
+              "position": "TE",
+              "matched": true,
+              "overall_rank": 249,
+              "availability_rank": 27,
+              "skipped_count": 26,
+              "higher_ranked_available": [
+                {
+                  "name": "Eli Raridon",
+                  "position": "TE",
+                  "overall_rank": 178
+                },
+                {
+                  "name": "Alvin Kamara",
+                  "position": "RB",
+                  "overall_rank": 186
+                },
+                {
+                  "name": "Deshaun Watson",
+                  "position": "QB",
+                  "overall_rank": 187
+                },
+                {
+                  "name": "Keon Coleman",
+                  "position": "WR",
+                  "overall_rank": 191
+                },
+                {
+                  "name": "Cade Otton",
+                  "position": "TE",
+                  "overall_rank": 196
+                }
+              ]
             }
           ]
         },
         {
           "source_id": "fantasypros",
           "source_name": "FantasyPros ECR",
-          "fit_score": 54.4,
-          "picks": 22,
-          "matched_picks": 22,
+          "fit_score": 52.9,
+          "picks": 23,
+          "matched_picks": 23,
           "coverage": 1.0,
-          "mean_availability_rank": 14.09,
-          "median_availability_rank": 7.5,
-          "top_available_rate": 0.273,
-          "top_3_available_rate": 0.273,
-          "mean_log2_loss": 2.634,
+          "mean_availability_rank": 15.3,
+          "median_availability_rank": 8,
+          "top_available_rate": 0.261,
+          "top_3_available_rate": 0.261,
+          "mean_log2_loss": 2.754,
           "evidence": [
             {
               "pick_no": 4,
@@ -9289,21 +9343,58 @@
                   "overall_rank": 186
                 }
               ]
+            },
+            {
+              "pick_no": 227,
+              "round": 23,
+              "player": "Theo Johnson",
+              "position": "TE",
+              "matched": true,
+              "overall_rank": 260,
+              "availability_rank": 42,
+              "skipped_count": 41,
+              "higher_ranked_available": [
+                {
+                  "name": "Jaylin Noel",
+                  "position": "WR",
+                  "overall_rank": 174
+                },
+                {
+                  "name": "Oscar Delp",
+                  "position": "TE",
+                  "overall_rank": 175
+                },
+                {
+                  "name": "Max Klare",
+                  "position": "TE",
+                  "overall_rank": 186
+                },
+                {
+                  "name": "Jack Bech",
+                  "position": "WR",
+                  "overall_rank": 191
+                },
+                {
+                  "name": "Eli Raridon",
+                  "position": "TE",
+                  "overall_rank": 197
+                }
+              ]
             }
           ]
         },
         {
           "source_id": "keeptradecut",
           "source_name": "KeepTradeCut",
-          "fit_score": 53.0,
-          "picks": 22,
-          "matched_picks": 22,
+          "fit_score": 52.7,
+          "picks": 23,
+          "matched_picks": 23,
           "coverage": 1.0,
-          "mean_availability_rank": 12.5,
-          "median_availability_rank": 5.5,
-          "top_available_rate": 0.091,
-          "top_3_available_rate": 0.364,
-          "mean_log2_loss": 2.748,
+          "mean_availability_rank": 12.39,
+          "median_availability_rank": 6,
+          "top_available_rate": 0.087,
+          "top_3_available_rate": 0.348,
+          "mean_log2_loss": 2.773,
           "evidence": [
             {
               "pick_no": 4,
@@ -9951,21 +10042,58 @@
                   "overall_rank": 187
                 }
               ]
+            },
+            {
+              "pick_no": 227,
+              "round": 23,
+              "player": "Theo Johnson",
+              "position": "TE",
+              "matched": true,
+              "overall_rank": 213,
+              "availability_rank": 10,
+              "skipped_count": 9,
+              "higher_ranked_available": [
+                {
+                  "name": "Elijah Arroyo",
+                  "position": "TE",
+                  "overall_rank": 157
+                },
+                {
+                  "name": "Eli Raridon",
+                  "position": "TE",
+                  "overall_rank": 169
+                },
+                {
+                  "name": "Cade Otton",
+                  "position": "TE",
+                  "overall_rank": 175
+                },
+                {
+                  "name": "Malik Washington",
+                  "position": "WR",
+                  "overall_rank": 186
+                },
+                {
+                  "name": "Max Klare",
+                  "position": "TE",
+                  "overall_rank": 187
+                }
+              ]
             }
           ]
         },
         {
           "source_id": "dynastynerds",
           "source_name": "Dynasty Nerds",
-          "fit_score": 49.8,
-          "picks": 22,
-          "matched_picks": 22,
+          "fit_score": 48.9,
+          "picks": 23,
+          "matched_picks": 23,
           "coverage": 1.0,
-          "mean_availability_rank": 12.45,
-          "median_availability_rank": 6.5,
+          "mean_availability_rank": 13.09,
+          "median_availability_rank": 7,
           "top_available_rate": 0.0,
-          "top_3_available_rate": 0.273,
-          "mean_log2_loss": 3.02,
+          "top_3_available_rate": 0.261,
+          "mean_log2_loss": 3.095,
           "evidence": [
             {
               "pick_no": 4,
@@ -10638,6 +10766,43 @@
               "overall_rank": 227,
               "availability_rank": 23,
               "skipped_count": 22,
+              "higher_ranked_available": [
+                {
+                  "name": "Eli Raridon",
+                  "position": "TE",
+                  "overall_rank": 170
+                },
+                {
+                  "name": "Jack Bech",
+                  "position": "WR",
+                  "overall_rank": 172
+                },
+                {
+                  "name": "Max Klare",
+                  "position": "TE",
+                  "overall_rank": 173
+                },
+                {
+                  "name": "Kaleb Johnson",
+                  "position": "RB",
+                  "overall_rank": 181
+                },
+                {
+                  "name": "Skyler Bell",
+                  "position": "WR",
+                  "overall_rank": 184
+                }
+              ]
+            },
+            {
+              "pick_no": 227,
+              "round": 23,
+              "player": "Theo Johnson",
+              "position": "TE",
+              "matched": true,
+              "overall_rank": 245,
+              "availability_rank": 27,
+              "skipped_count": 26,
               "higher_ranked_available": [
                 {
                   "name": "Eli Raridon",
@@ -14488,7 +14653,7 @@
     {
       "roster_id": 9,
       "username": "dirtydole",
-      "pick_count": 22,
+      "pick_count": 23,
       "picks": [
         {
           "pick_no": 5,
@@ -14621,49 +14786,55 @@
           "round": 22,
           "name": "Jalen Nailor",
           "position": "WR"
+        },
+        {
+          "pick_no": 226,
+          "round": 23,
+          "name": "Tory Horton",
+          "position": "WR"
         }
       ],
       "inferred_source": {
         "source_id": "keeptradecut",
         "source_name": "KeepTradeCut",
-        "fit_score": 61.4,
-        "picks": 22,
-        "matched_picks": 22,
+        "fit_score": 61.1,
+        "picks": 23,
+        "matched_picks": 23,
         "coverage": 1.0,
-        "mean_availability_rank": 7.77,
-        "median_availability_rank": 5.0,
-        "top_available_rate": 0.273,
-        "top_3_available_rate": 0.455,
-        "mean_log2_loss": 2.108
+        "mean_availability_rank": 7.7,
+        "median_availability_rank": 5,
+        "top_available_rate": 0.261,
+        "top_3_available_rate": 0.435,
+        "mean_log2_loss": 2.129
       },
       "runner_up": {
         "source_id": "fantasypros",
         "source_name": "FantasyPros ECR",
-        "fit_score": 60.0,
-        "picks": 22,
-        "matched_picks": 22,
+        "fit_score": 59.5,
+        "picks": 23,
+        "matched_picks": 23,
         "coverage": 1.0,
-        "mean_availability_rank": 8.23,
-        "median_availability_rank": 4.5,
-        "top_available_rate": 0.182,
-        "top_3_available_rate": 0.455,
-        "mean_log2_loss": 2.211
+        "mean_availability_rank": 8.22,
+        "median_availability_rank": 5,
+        "top_available_rate": 0.174,
+        "top_3_available_rate": 0.435,
+        "mean_log2_loss": 2.245
       },
       "confidence": "weak",
-      "score_gap": 1.4,
+      "score_gap": 1.6,
       "provider_scores": [
         {
           "source_id": "keeptradecut",
           "source_name": "KeepTradeCut",
-          "fit_score": 61.4,
-          "picks": 22,
-          "matched_picks": 22,
+          "fit_score": 61.1,
+          "picks": 23,
+          "matched_picks": 23,
           "coverage": 1.0,
-          "mean_availability_rank": 7.77,
-          "median_availability_rank": 5.0,
-          "top_available_rate": 0.273,
-          "top_3_available_rate": 0.455,
-          "mean_log2_loss": 2.108,
+          "mean_availability_rank": 7.7,
+          "median_availability_rank": 5,
+          "top_available_rate": 0.261,
+          "top_3_available_rate": 0.435,
+          "mean_log2_loss": 2.129,
           "evidence": [
             {
               "pick_no": 5,
@@ -15242,21 +15413,58 @@
                   "overall_rank": 187
                 }
               ]
+            },
+            {
+              "pick_no": 226,
+              "round": 23,
+              "player": "Tory Horton",
+              "position": "WR",
+              "matched": true,
+              "overall_rank": 193,
+              "availability_rank": 6,
+              "skipped_count": 5,
+              "higher_ranked_available": [
+                {
+                  "name": "Elijah Arroyo",
+                  "position": "TE",
+                  "overall_rank": 157
+                },
+                {
+                  "name": "Eli Raridon",
+                  "position": "TE",
+                  "overall_rank": 169
+                },
+                {
+                  "name": "Cade Otton",
+                  "position": "TE",
+                  "overall_rank": 175
+                },
+                {
+                  "name": "Malik Washington",
+                  "position": "WR",
+                  "overall_rank": 186
+                },
+                {
+                  "name": "Max Klare",
+                  "position": "TE",
+                  "overall_rank": 187
+                }
+              ]
             }
           ]
         },
         {
           "source_id": "fantasypros",
           "source_name": "FantasyPros ECR",
-          "fit_score": 60.0,
-          "picks": 22,
-          "matched_picks": 22,
+          "fit_score": 59.5,
+          "picks": 23,
+          "matched_picks": 23,
           "coverage": 1.0,
-          "mean_availability_rank": 8.23,
-          "median_availability_rank": 4.5,
-          "top_available_rate": 0.182,
-          "top_3_available_rate": 0.455,
-          "mean_log2_loss": 2.211,
+          "mean_availability_rank": 8.22,
+          "median_availability_rank": 5,
+          "top_available_rate": 0.174,
+          "top_3_available_rate": 0.435,
+          "mean_log2_loss": 2.245,
           "evidence": [
             {
               "pick_no": 5,
@@ -15847,21 +16055,58 @@
                   "overall_rank": 186
                 }
               ]
+            },
+            {
+              "pick_no": 226,
+              "round": 23,
+              "player": "Tory Horton",
+              "position": "WR",
+              "matched": true,
+              "overall_rank": 212,
+              "availability_rank": 8,
+              "skipped_count": 7,
+              "higher_ranked_available": [
+                {
+                  "name": "Jaylin Noel",
+                  "position": "WR",
+                  "overall_rank": 174
+                },
+                {
+                  "name": "Oscar Delp",
+                  "position": "TE",
+                  "overall_rank": 175
+                },
+                {
+                  "name": "Max Klare",
+                  "position": "TE",
+                  "overall_rank": 186
+                },
+                {
+                  "name": "Jack Bech",
+                  "position": "WR",
+                  "overall_rank": 191
+                },
+                {
+                  "name": "Eli Raridon",
+                  "position": "TE",
+                  "overall_rank": 197
+                }
+              ]
             }
           ]
         },
         {
           "source_id": "fantasycalc",
           "source_name": "FantasyCalc",
-          "fit_score": 58.7,
-          "picks": 22,
-          "matched_picks": 22,
+          "fit_score": 58.4,
+          "picks": 23,
+          "matched_picks": 23,
           "coverage": 1.0,
-          "mean_availability_rank": 8.18,
-          "median_availability_rank": 5.0,
-          "top_available_rate": 0.136,
-          "top_3_available_rate": 0.273,
-          "mean_log2_loss": 2.304,
+          "mean_availability_rank": 8.13,
+          "median_availability_rank": 5,
+          "top_available_rate": 0.13,
+          "top_3_available_rate": 0.261,
+          "mean_log2_loss": 2.326,
           "evidence": [
             {
               "pick_no": 5,
@@ -16493,21 +16738,58 @@
                   "overall_rank": 187
                 }
               ]
+            },
+            {
+              "pick_no": 226,
+              "round": 23,
+              "player": "Tory Horton",
+              "position": "WR",
+              "matched": true,
+              "overall_rank": 199,
+              "availability_rank": 7,
+              "skipped_count": 6,
+              "higher_ranked_available": [
+                {
+                  "name": "Eli Raridon",
+                  "position": "TE",
+                  "overall_rank": 178
+                },
+                {
+                  "name": "Alvin Kamara",
+                  "position": "RB",
+                  "overall_rank": 186
+                },
+                {
+                  "name": "Deshaun Watson",
+                  "position": "QB",
+                  "overall_rank": 187
+                },
+                {
+                  "name": "Keon Coleman",
+                  "position": "WR",
+                  "overall_rank": 191
+                },
+                {
+                  "name": "Cade Otton",
+                  "position": "TE",
+                  "overall_rank": 196
+                }
+              ]
             }
           ]
         },
         {
           "source_id": "draftsharks_adp",
           "source_name": "DraftSharks superflex ADP",
-          "fit_score": 54.4,
-          "picks": 22,
-          "matched_picks": 22,
+          "fit_score": 54.0,
+          "picks": 23,
+          "matched_picks": 23,
           "coverage": 1.0,
-          "mean_availability_rank": 9.18,
-          "median_availability_rank": 6.0,
-          "top_available_rate": 0.091,
-          "top_3_available_rate": 0.364,
-          "mean_log2_loss": 2.636,
+          "mean_availability_rank": 9.22,
+          "median_availability_rank": 7,
+          "top_available_rate": 0.087,
+          "top_3_available_rate": 0.348,
+          "mean_log2_loss": 2.666,
           "evidence": [
             {
               "pick_no": 5,
@@ -17155,21 +17437,58 @@
                   "overall_rank": 183
                 }
               ]
+            },
+            {
+              "pick_no": 226,
+              "round": 23,
+              "player": "Tory Horton",
+              "position": "WR",
+              "matched": true,
+              "overall_rank": 218,
+              "availability_rank": 10,
+              "skipped_count": 9,
+              "higher_ranked_available": [
+                {
+                  "name": "Theo Johnson",
+                  "position": "TE",
+                  "overall_rank": 173
+                },
+                {
+                  "name": "Tyreek Hill",
+                  "position": "WR",
+                  "overall_rank": 195
+                },
+                {
+                  "name": "Kaleb Johnson",
+                  "position": "RB",
+                  "overall_rank": 196
+                },
+                {
+                  "name": "Jake Tonges",
+                  "position": "TE",
+                  "overall_rank": 201
+                },
+                {
+                  "name": "Jaylin Noel",
+                  "position": "WR",
+                  "overall_rank": 202
+                }
+              ]
             }
           ]
         },
         {
           "source_id": "dynastynerds",
           "source_name": "Dynasty Nerds",
-          "fit_score": 54.0,
-          "picks": 22,
-          "matched_picks": 22,
+          "fit_score": 53.6,
+          "picks": 23,
+          "matched_picks": 23,
           "coverage": 1.0,
-          "mean_availability_rank": 10.45,
-          "median_availability_rank": 10.0,
-          "top_available_rate": 0.182,
-          "top_3_available_rate": 0.273,
-          "mean_log2_loss": 2.67,
+          "mean_availability_rank": 10.43,
+          "median_availability_rank": 10,
+          "top_available_rate": 0.174,
+          "top_3_available_rate": 0.261,
+          "mean_log2_loss": 2.698,
           "evidence": [
             {
               "pick_no": 5,
@@ -17815,6 +18134,43 @@
                   "overall_rank": 184
                 }
               ]
+            },
+            {
+              "pick_no": 226,
+              "round": 23,
+              "player": "Tory Horton",
+              "position": "WR",
+              "matched": true,
+              "overall_rank": 207,
+              "availability_rank": 10,
+              "skipped_count": 9,
+              "higher_ranked_available": [
+                {
+                  "name": "Eli Raridon",
+                  "position": "TE",
+                  "overall_rank": 170
+                },
+                {
+                  "name": "Jack Bech",
+                  "position": "WR",
+                  "overall_rank": 172
+                },
+                {
+                  "name": "Max Klare",
+                  "position": "TE",
+                  "overall_rank": 173
+                },
+                {
+                  "name": "Kaleb Johnson",
+                  "position": "RB",
+                  "overall_rank": 181
+                },
+                {
+                  "name": "Skyler Bell",
+                  "position": "WR",
+                  "overall_rank": 184
+                }
+              ]
             }
           ]
         }
@@ -17823,7 +18179,7 @@
     {
       "roster_id": 8,
       "username": "jedmxk",
-      "pick_count": 21,
+      "pick_count": 22,
       "picks": [
         {
           "pick_no": 3,
@@ -17950,49 +18306,55 @@
           "round": 22,
           "name": "Jerry Jeudy",
           "position": "WR"
+        },
+        {
+          "pick_no": 228,
+          "round": 23,
+          "name": "Tyreek Hill",
+          "position": "WR"
         }
       ],
       "inferred_source": {
         "source_id": "draftsharks_adp",
         "source_name": "DraftSharks superflex ADP",
-        "fit_score": 54.8,
-        "picks": 21,
-        "matched_picks": 21,
+        "fit_score": 56.3,
+        "picks": 22,
+        "matched_picks": 22,
         "coverage": 1.0,
-        "mean_availability_rank": 12.43,
-        "median_availability_rank": 6,
-        "top_available_rate": 0.143,
-        "top_3_available_rate": 0.333,
-        "mean_log2_loss": 2.605
+        "mean_availability_rank": 11.91,
+        "median_availability_rank": 6.0,
+        "top_available_rate": 0.182,
+        "top_3_available_rate": 0.364,
+        "mean_log2_loss": 2.486
       },
       "runner_up": {
         "source_id": "dynastynerds",
         "source_name": "Dynasty Nerds",
-        "fit_score": 51.2,
-        "picks": 21,
-        "matched_picks": 21,
+        "fit_score": 50.1,
+        "picks": 22,
+        "matched_picks": 22,
         "coverage": 1.0,
-        "mean_availability_rank": 16.14,
-        "median_availability_rank": 8,
-        "top_available_rate": 0.19,
-        "top_3_available_rate": 0.286,
-        "mean_log2_loss": 2.893
+        "mean_availability_rank": 17.0,
+        "median_availability_rank": 8.0,
+        "top_available_rate": 0.182,
+        "top_3_available_rate": 0.273,
+        "mean_log2_loss": 2.995
       },
-      "confidence": "weak",
-      "score_gap": 3.6,
+      "confidence": "moderate",
+      "score_gap": 6.2,
       "provider_scores": [
         {
           "source_id": "draftsharks_adp",
           "source_name": "DraftSharks superflex ADP",
-          "fit_score": 54.8,
-          "picks": 21,
-          "matched_picks": 21,
+          "fit_score": 56.3,
+          "picks": 22,
+          "matched_picks": 22,
           "coverage": 1.0,
-          "mean_availability_rank": 12.43,
-          "median_availability_rank": 6,
-          "top_available_rate": 0.143,
-          "top_3_available_rate": 0.333,
-          "mean_log2_loss": 2.605,
+          "mean_availability_rank": 11.91,
+          "median_availability_rank": 6.0,
+          "top_available_rate": 0.182,
+          "top_3_available_rate": 0.364,
+          "mean_log2_loss": 2.486,
           "evidence": [
             {
               "pick_no": 3,
@@ -18612,21 +18974,32 @@
                   "overall_rank": 183
                 }
               ]
+            },
+            {
+              "pick_no": 228,
+              "round": 23,
+              "player": "Tyreek Hill",
+              "position": "WR",
+              "matched": true,
+              "overall_rank": 195,
+              "availability_rank": 1,
+              "skipped_count": 0,
+              "higher_ranked_available": []
             }
           ]
         },
         {
           "source_id": "dynastynerds",
           "source_name": "Dynasty Nerds",
-          "fit_score": 51.2,
-          "picks": 21,
-          "matched_picks": 21,
+          "fit_score": 50.1,
+          "picks": 22,
+          "matched_picks": 22,
           "coverage": 1.0,
-          "mean_availability_rank": 16.14,
-          "median_availability_rank": 8,
-          "top_available_rate": 0.19,
-          "top_3_available_rate": 0.286,
-          "mean_log2_loss": 2.893,
+          "mean_availability_rank": 17.0,
+          "median_availability_rank": 8.0,
+          "top_available_rate": 0.182,
+          "top_3_available_rate": 0.273,
+          "mean_log2_loss": 2.995,
           "evidence": [
             {
               "pick_no": 3,
@@ -19250,21 +19623,58 @@
               "availability_rank": 1,
               "skipped_count": 0,
               "higher_ranked_available": []
+            },
+            {
+              "pick_no": 228,
+              "round": 23,
+              "player": "Tyreek Hill",
+              "position": "WR",
+              "matched": true,
+              "overall_rank": 255,
+              "availability_rank": 35,
+              "skipped_count": 34,
+              "higher_ranked_available": [
+                {
+                  "name": "Eli Raridon",
+                  "position": "TE",
+                  "overall_rank": 170
+                },
+                {
+                  "name": "Jack Bech",
+                  "position": "WR",
+                  "overall_rank": 172
+                },
+                {
+                  "name": "Max Klare",
+                  "position": "TE",
+                  "overall_rank": 173
+                },
+                {
+                  "name": "Kaleb Johnson",
+                  "position": "RB",
+                  "overall_rank": 181
+                },
+                {
+                  "name": "Skyler Bell",
+                  "position": "WR",
+                  "overall_rank": 184
+                }
+              ]
             }
           ]
         },
         {
           "source_id": "fantasycalc",
           "source_name": "FantasyCalc",
-          "fit_score": 50.6,
-          "picks": 21,
-          "matched_picks": 21,
+          "fit_score": 50.0,
+          "picks": 22,
+          "matched_picks": 22,
           "coverage": 1.0,
-          "mean_availability_rank": 14.81,
-          "median_availability_rank": 9,
-          "top_available_rate": 0.143,
-          "top_3_available_rate": 0.238,
-          "mean_log2_loss": 2.949,
+          "mean_availability_rank": 14.86,
+          "median_availability_rank": 9.0,
+          "top_available_rate": 0.136,
+          "top_3_available_rate": 0.227,
+          "mean_log2_loss": 2.996,
           "evidence": [
             {
               "pick_no": 3,
@@ -19919,21 +20329,58 @@
                   "overall_rank": 188
                 }
               ]
+            },
+            {
+              "pick_no": 228,
+              "round": 23,
+              "player": "Tyreek Hill",
+              "position": "WR",
+              "matched": true,
+              "overall_rank": 233,
+              "availability_rank": 16,
+              "skipped_count": 15,
+              "higher_ranked_available": [
+                {
+                  "name": "Eli Raridon",
+                  "position": "TE",
+                  "overall_rank": 178
+                },
+                {
+                  "name": "Alvin Kamara",
+                  "position": "RB",
+                  "overall_rank": 186
+                },
+                {
+                  "name": "Deshaun Watson",
+                  "position": "QB",
+                  "overall_rank": 187
+                },
+                {
+                  "name": "Keon Coleman",
+                  "position": "WR",
+                  "overall_rank": 191
+                },
+                {
+                  "name": "Cade Otton",
+                  "position": "TE",
+                  "overall_rank": 196
+                }
+              ]
             }
           ]
         },
         {
           "source_id": "fantasypros",
           "source_name": "FantasyPros ECR",
-          "fit_score": 47.5,
-          "picks": 21,
-          "matched_picks": 21,
+          "fit_score": 46.8,
+          "picks": 22,
+          "matched_picks": 22,
           "coverage": 1.0,
-          "mean_availability_rank": 18.14,
-          "median_availability_rank": 8,
+          "mean_availability_rank": 18.41,
+          "median_availability_rank": 8.5,
           "top_available_rate": 0.0,
-          "top_3_available_rate": 0.238,
-          "mean_log2_loss": 3.22,
+          "top_3_available_rate": 0.227,
+          "mean_log2_loss": 3.282,
           "evidence": [
             {
               "pick_no": 3,
@@ -20601,21 +21048,58 @@
                   "overall_rank": 175
                 }
               ]
+            },
+            {
+              "pick_no": 228,
+              "round": 23,
+              "player": "Tyreek Hill",
+              "position": "WR",
+              "matched": true,
+              "overall_rank": 239,
+              "availability_rank": 24,
+              "skipped_count": 23,
+              "higher_ranked_available": [
+                {
+                  "name": "Jaylin Noel",
+                  "position": "WR",
+                  "overall_rank": 174
+                },
+                {
+                  "name": "Oscar Delp",
+                  "position": "TE",
+                  "overall_rank": 175
+                },
+                {
+                  "name": "Max Klare",
+                  "position": "TE",
+                  "overall_rank": 186
+                },
+                {
+                  "name": "Jack Bech",
+                  "position": "WR",
+                  "overall_rank": 191
+                },
+                {
+                  "name": "Eli Raridon",
+                  "position": "TE",
+                  "overall_rank": 197
+                }
+              ]
             }
           ]
         },
         {
           "source_id": "keeptradecut",
           "source_name": "KeepTradeCut",
-          "fit_score": 46.1,
-          "picks": 21,
-          "matched_picks": 21,
+          "fit_score": 44.3,
+          "picks": 22,
+          "matched_picks": 22,
           "coverage": 1.0,
-          "mean_availability_rank": 18.0,
-          "median_availability_rank": 12,
-          "top_available_rate": 0.095,
-          "top_3_available_rate": 0.19,
-          "mean_log2_loss": 3.352,
+          "mean_availability_rank": 23.27,
+          "median_availability_rank": 12.5,
+          "top_available_rate": 0.091,
+          "top_3_available_rate": 0.182,
+          "mean_log2_loss": 3.521,
           "evidence": [
             {
               "pick_no": 3,
@@ -21264,6 +21748,43 @@
               "overall_rank": 207,
               "availability_rank": 13,
               "skipped_count": 12,
+              "higher_ranked_available": [
+                {
+                  "name": "Elijah Arroyo",
+                  "position": "TE",
+                  "overall_rank": 157
+                },
+                {
+                  "name": "Eli Raridon",
+                  "position": "TE",
+                  "overall_rank": 169
+                },
+                {
+                  "name": "Cade Otton",
+                  "position": "TE",
+                  "overall_rank": 175
+                },
+                {
+                  "name": "Malik Washington",
+                  "position": "WR",
+                  "overall_rank": 186
+                },
+                {
+                  "name": "Max Klare",
+                  "position": "TE",
+                  "overall_rank": 187
+                }
+              ]
+            },
+            {
+              "pick_no": 228,
+              "round": 23,
+              "player": "Tyreek Hill",
+              "position": "WR",
+              "matched": true,
+              "overall_rank": 361,
+              "availability_rank": 134,
+              "skipped_count": 133,
               "higher_ranked_available": [
                 {
                   "name": "Elijah Arroyo",
