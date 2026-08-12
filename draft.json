@@ -1,13 +1,13 @@
 {
   "source": "https://api.sleeper.app/v1/draft/1388293618208374784",
-  "fetched_at": "2026-08-11T23:40:45+00:00",
+  "fetched_at": "2026-08-12T10:57:44+00:00",
   "draft_id": "1388293618208374784",
   "league_id": "1388293617071714304",
   "league_name": "Dudes",
   "season": "2026",
-  "status": "drafting",
+  "status": "paused",
   "started_at": "2026-08-04T13:02:55+00:00",
-  "last_picked_at": "2026-08-11T23:30:08+00:00",
+  "last_picked_at": "2026-08-12T04:44:47+00:00",
   "format": {
     "type": "snake",
     "teams": 10,
@@ -16,16 +16,16 @@
     "scoring_type": "dynasty_2qb"
   },
   "pick_count": 290,
-  "picks_made": 215,
-  "picks_pending": 75,
+  "picks_made": 225,
+  "picks_pending": 65,
   "on_the_clock": {
-    "pick_no": 216,
-    "round": 22,
+    "pick_no": 226,
+    "round": 23,
     "pick_in_round": 6,
-    "draft_slot": 6,
-    "user_id": "1114302275305979904",
-    "username": "samlemonskoff",
-    "slot": "22.06"
+    "draft_slot": 5,
+    "user_id": "870397485556875264",
+    "username": "dirtydole",
+    "slot": "23.06"
   },
   "me": {
     "username": "johnor",
@@ -41,12 +41,12 @@
     "user_id": "1127785716420898816",
     "username": "johnor",
     "slot": "23.09",
-    "picks_away": 13
+    "picks_away": 3
   },
   "board_derivation": {
     "method": "snake, order reverses at round 3; traded picks applied",
-    "checked_against_made_picks": 215,
-    "slot_and_roster_agree": 215,
+    "checked_against_made_picks": 225,
+    "slot_and_roster_agree": 225,
     "rounds_exercised": [
       1,
       2,
@@ -69,7 +69,8 @@
       19,
       20,
       21,
-      22
+      22,
+      23
     ],
     "mismatches": []
   },
@@ -3882,12 +3883,12 @@
       "user_id": "1114302275305979904",
       "username": "samlemonskoff",
       "is_mine": false,
-      "status": "pending",
-      "sleeper_id": null,
-      "name": null,
-      "position": null,
-      "team": null,
-      "is_keeper": null
+      "status": "made",
+      "sleeper_id": "11627",
+      "name": "Troy Franklin",
+      "position": "WR",
+      "team": "DEN",
+      "is_keeper": false
     },
     {
       "pick_no": 217,
@@ -3898,12 +3899,12 @@
       "user_id": "1128381875430596608",
       "username": "UGrizz14",
       "is_mine": false,
-      "status": "pending",
-      "sleeper_id": null,
-      "name": null,
-      "position": null,
-      "team": null,
-      "is_keeper": null
+      "status": "made",
+      "sleeper_id": "12540",
+      "name": "Chimere Dike",
+      "position": "WR",
+      "team": "TEN",
+      "is_keeper": false
     },
     {
       "pick_no": 218,
@@ -3914,12 +3915,12 @@
       "user_id": "1128025586577879040",
       "username": "justinmfftt",
       "is_mine": false,
-      "status": "pending",
-      "sleeper_id": null,
-      "name": null,
-      "position": null,
-      "team": null,
-      "is_keeper": null
+      "status": "made",
+      "sleeper_id": "12457",
+      "name": "Jaydon Blue",
+      "position": "RB",
+      "team": "DAL",
+      "is_keeper": false
     },
     {
       "pick_no": 219,
@@ -3930,12 +3931,12 @@
       "user_id": "207916077173182464",
       "username": "dccb31",
       "is_mine": false,
-      "status": "pending",
-      "sleeper_id": null,
-      "name": null,
-      "position": null,
-      "team": null,
-      "is_keeper": null
+      "status": "made",
+      "sleeper_id": "13405",
+      "name": "Kaytron Allen",
+      "position": "RB",
+      "team": "WAS",
+      "is_keeper": false
     },
     {
       "pick_no": 220,
@@ -3946,12 +3947,12 @@
       "user_id": "751220778036551680",
       "username": "nedjh2",
       "is_mine": false,
-      "status": "pending",
-      "sleeper_id": null,
-      "name": null,
-      "position": null,
-      "team": null,
-      "is_keeper": null
+      "status": "made",
+      "sleeper_id": "9504",
+      "name": "Kayshon Boutte",
+      "position": "WR",
+      "team": "NE",
+      "is_keeper": false
     },
     {
       "pick_no": 221,
@@ -3962,12 +3963,12 @@
       "user_id": "751220778036551680",
       "username": "nedjh2",
       "is_mine": false,
-      "status": "pending",
-      "sleeper_id": null,
-      "name": null,
-      "position": null,
-      "team": null,
-      "is_keeper": null
+      "status": "made",
+      "sleeper_id": "11592",
+      "name": "Erick All",
+      "position": "TE",
+      "team": "CIN",
+      "is_keeper": false
     },
     {
       "pick_no": 222,
@@ -3978,12 +3979,12 @@
       "user_id": "207916077173182464",
       "username": "dccb31",
       "is_mine": false,
-      "status": "pending",
-      "sleeper_id": null,
-      "name": null,
-      "position": null,
-      "team": null,
-      "is_keeper": null
+      "status": "made",
+      "sleeper_id": "13414",
+      "name": "Kaelon Black",
+      "position": "RB",
+      "team": "SF",
+      "is_keeper": false
     },
     {
       "pick_no": 223,
@@ -3994,12 +3995,12 @@
       "user_id": "1128025586577879040",
       "username": "justinmfftt",
       "is_mine": false,
-      "status": "pending",
-      "sleeper_id": null,
-      "name": null,
-      "position": null,
-      "team": null,
-      "is_keeper": null
+      "status": "made",
+      "sleeper_id": "13424",
+      "name": "Seth McGowan",
+      "position": "RB",
+      "team": "IND",
+      "is_keeper": false
     },
     {
       "pick_no": 224,
@@ -4010,12 +4011,12 @@
       "user_id": "1128381875430596608",
       "username": "UGrizz14",
       "is_mine": false,
-      "status": "pending",
-      "sleeper_id": null,
-      "name": null,
-      "position": null,
-      "team": null,
-      "is_keeper": null
+      "status": "made",
+      "sleeper_id": "11435",
+      "name": "Emanuel Wilson",
+      "position": "RB",
+      "team": "SEA",
+      "is_keeper": false
     },
     {
       "pick_no": 225,
@@ -4026,12 +4027,12 @@
       "user_id": "1114302275305979904",
       "username": "samlemonskoff",
       "is_mine": false,
-      "status": "pending",
-      "sleeper_id": null,
-      "name": null,
-      "position": null,
-      "team": null,
-      "is_keeper": null
+      "status": "made",
+      "sleeper_id": "6803",
+      "name": "Brandon Aiyuk",
+      "position": "WR",
+      "team": "SF",
+      "is_keeper": false
     },
     {
       "pick_no": 226,
