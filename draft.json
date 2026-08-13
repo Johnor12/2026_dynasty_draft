@@ -1,13 +1,13 @@
 {
   "source": "https://api.sleeper.app/v1/draft/1388293618208374784",
-  "fetched_at": "2026-08-12T13:39:02+00:00",
+  "fetched_at": "2026-08-13T01:19:37+00:00",
   "draft_id": "1388293618208374784",
   "league_id": "1388293617071714304",
   "league_name": "Dudes",
   "season": "2026",
-  "status": "drafting",
+  "status": "complete",
   "started_at": "2026-08-04T13:02:55+00:00",
-  "last_picked_at": "2026-08-12T13:30:34+00:00",
+  "last_picked_at": "2026-08-13T01:11:06+00:00",
   "format": {
     "type": "snake",
     "teams": 10,
@@ -16,37 +16,20 @@
     "scoring_type": "dynasty_2qb"
   },
   "pick_count": 290,
-  "picks_made": 228,
-  "picks_pending": 62,
-  "on_the_clock": {
-    "pick_no": 229,
-    "round": 23,
-    "pick_in_round": 9,
-    "draft_slot": 2,
-    "user_id": "1127785716420898816",
-    "username": "johnor",
-    "slot": "23.09"
-  },
+  "picks_made": 290,
+  "picks_pending": 0,
+  "on_the_clock": null,
   "me": {
     "username": "johnor",
     "user_id": "1127785716420898816",
     "draft_slot": 2,
     "roster_id": 2
   },
-  "my_next_pick": {
-    "pick_no": 229,
-    "round": 23,
-    "pick_in_round": 9,
-    "draft_slot": 2,
-    "user_id": "1127785716420898816",
-    "username": "johnor",
-    "slot": "23.09",
-    "picks_away": 0
-  },
+  "my_next_pick": null,
   "board_derivation": {
     "method": "snake, order reverses at round 3; traded picks applied",
-    "checked_against_made_picks": 228,
-    "slot_and_roster_agree": 228,
+    "checked_against_made_picks": 290,
+    "slot_and_roster_agree": 290,
     "rounds_exercised": [
       1,
       2,
@@ -70,7 +53,13 @@
       20,
       21,
       22,
-      23
+      23,
+      24,
+      25,
+      26,
+      27,
+      28,
+      29
     ],
     "mismatches": []
   },
@@ -160,6 +149,7 @@
     {
       "round": 4,
       "season": "2026",
+      "draft_id": 1388293618208374784,
       "roster_id": 1,
       "owner_id": 2,
       "previous_owner_id": 1
@@ -167,6 +157,7 @@
     {
       "round": 5,
       "season": "2026",
+      "draft_id": 1388293618208374784,
       "roster_id": 1,
       "owner_id": 2,
       "previous_owner_id": 1
@@ -174,6 +165,7 @@
     {
       "round": 6,
       "season": "2026",
+      "draft_id": 1388293618208374784,
       "roster_id": 1,
       "owner_id": 2,
       "previous_owner_id": 1
@@ -181,6 +173,7 @@
     {
       "round": 7,
       "season": "2026",
+      "draft_id": 1388293618208374784,
       "roster_id": 1,
       "owner_id": 9,
       "previous_owner_id": 1
@@ -188,6 +181,7 @@
     {
       "round": 10,
       "season": "2026",
+      "draft_id": 1388293618208374784,
       "roster_id": 1,
       "owner_id": 2,
       "previous_owner_id": 1
@@ -195,6 +189,7 @@
     {
       "round": 11,
       "season": "2026",
+      "draft_id": 1388293618208374784,
       "roster_id": 1,
       "owner_id": 2,
       "previous_owner_id": 1
@@ -202,6 +197,7 @@
     {
       "round": 17,
       "season": "2026",
+      "draft_id": 1388293618208374784,
       "roster_id": 1,
       "owner_id": 2,
       "previous_owner_id": 1
@@ -209,6 +205,7 @@
     {
       "round": 19,
       "season": "2026",
+      "draft_id": 1388293618208374784,
       "roster_id": 1,
       "owner_id": 2,
       "previous_owner_id": 1
@@ -216,6 +213,7 @@
     {
       "round": 4,
       "season": "2026",
+      "draft_id": 1388293618208374784,
       "roster_id": 2,
       "owner_id": 1,
       "previous_owner_id": 2
@@ -223,6 +221,7 @@
     {
       "round": 6,
       "season": "2026",
+      "draft_id": 1388293618208374784,
       "roster_id": 2,
       "owner_id": 9,
       "previous_owner_id": 1
@@ -230,6 +229,7 @@
     {
       "round": 8,
       "season": "2026",
+      "draft_id": 1388293618208374784,
       "roster_id": 2,
       "owner_id": 9,
       "previous_owner_id": 1
@@ -237,6 +237,7 @@
     {
       "round": 10,
       "season": "2026",
+      "draft_id": 1388293618208374784,
       "roster_id": 2,
       "owner_id": 1,
       "previous_owner_id": 2
@@ -244,6 +245,7 @@
     {
       "round": 11,
       "season": "2026",
+      "draft_id": 1388293618208374784,
       "roster_id": 2,
       "owner_id": 1,
       "previous_owner_id": 2
@@ -251,6 +253,7 @@
     {
       "round": 13,
       "season": "2026",
+      "draft_id": 1388293618208374784,
       "roster_id": 2,
       "owner_id": 3,
       "previous_owner_id": 2
@@ -258,6 +261,7 @@
     {
       "round": 16,
       "season": "2026",
+      "draft_id": 1388293618208374784,
       "roster_id": 2,
       "owner_id": 3,
       "previous_owner_id": 2
@@ -265,6 +269,7 @@
     {
       "round": 17,
       "season": "2026",
+      "draft_id": 1388293618208374784,
       "roster_id": 2,
       "owner_id": 1,
       "previous_owner_id": 2
@@ -272,6 +277,7 @@
     {
       "round": 18,
       "season": "2026",
+      "draft_id": 1388293618208374784,
       "roster_id": 2,
       "owner_id": 3,
       "previous_owner_id": 2
@@ -279,6 +285,7 @@
     {
       "round": 19,
       "season": "2026",
+      "draft_id": 1388293618208374784,
       "roster_id": 2,
       "owner_id": 1,
       "previous_owner_id": 2
@@ -286,6 +293,7 @@
     {
       "round": 20,
       "season": "2026",
+      "draft_id": 1388293618208374784,
       "roster_id": 2,
       "owner_id": 4,
       "previous_owner_id": 2
@@ -293,6 +301,7 @@
     {
       "round": 27,
       "season": "2026",
+      "draft_id": 1388293618208374784,
       "roster_id": 2,
       "owner_id": 4,
       "previous_owner_id": 2
@@ -300,6 +309,7 @@
     {
       "round": 8,
       "season": "2026",
+      "draft_id": 1388293618208374784,
       "roster_id": 3,
       "owner_id": 6,
       "previous_owner_id": 3
@@ -307,6 +317,7 @@
     {
       "round": 11,
       "season": "2026",
+      "draft_id": 1388293618208374784,
       "roster_id": 3,
       "owner_id": 6,
       "previous_owner_id": 3
@@ -314,6 +325,7 @@
     {
       "round": 13,
       "season": "2026",
+      "draft_id": 1388293618208374784,
       "roster_id": 3,
       "owner_id": 2,
       "previous_owner_id": 3
@@ -321,6 +333,7 @@
     {
       "round": 16,
       "season": "2026",
+      "draft_id": 1388293618208374784,
       "roster_id": 3,
       "owner_id": 2,
       "previous_owner_id": 3
@@ -328,6 +341,7 @@
     {
       "round": 18,
       "season": "2026",
+      "draft_id": 1388293618208374784,
       "roster_id": 3,
       "owner_id": 2,
       "previous_owner_id": 3
@@ -335,6 +349,7 @@
     {
       "round": 6,
       "season": "2026",
+      "draft_id": 1388293618208374784,
       "roster_id": 4,
       "owner_id": 6,
       "previous_owner_id": 4
@@ -342,6 +357,7 @@
     {
       "round": 7,
       "season": "2026",
+      "draft_id": 1388293618208374784,
       "roster_id": 4,
       "owner_id": 6,
       "previous_owner_id": 4
@@ -349,6 +365,7 @@
     {
       "round": 20,
       "season": "2026",
+      "draft_id": 1388293618208374784,
       "roster_id": 4,
       "owner_id": 2,
       "previous_owner_id": 4
@@ -356,6 +373,7 @@
     {
       "round": 25,
       "season": "2026",
+      "draft_id": 1388293618208374784,
       "roster_id": 4,
       "owner_id": 2,
       "previous_owner_id": 4
@@ -363,6 +381,7 @@
     {
       "round": 6,
       "season": "2026",
+      "draft_id": 1388293618208374784,
       "roster_id": 6,
       "owner_id": 4,
       "previous_owner_id": 6
@@ -370,6 +389,7 @@
     {
       "round": 7,
       "season": "2026",
+      "draft_id": 1388293618208374784,
       "roster_id": 6,
       "owner_id": 4,
       "previous_owner_id": 6
@@ -377,6 +397,7 @@
     {
       "round": 8,
       "season": "2026",
+      "draft_id": 1388293618208374784,
       "roster_id": 6,
       "owner_id": 3,
       "previous_owner_id": 6
@@ -384,6 +405,7 @@
     {
       "round": 11,
       "season": "2026",
+      "draft_id": 1388293618208374784,
       "roster_id": 6,
       "owner_id": 3,
       "previous_owner_id": 6
@@ -391,6 +413,7 @@
     {
       "round": 15,
       "season": "2026",
+      "draft_id": 1388293618208374784,
       "roster_id": 8,
       "owner_id": 1,
       "previous_owner_id": 8
@@ -398,6 +421,7 @@
     {
       "round": 5,
       "season": "2026",
+      "draft_id": 1388293618208374784,
       "roster_id": 9,
       "owner_id": 1,
       "previous_owner_id": 9
@@ -405,6 +429,7 @@
     {
       "round": 7,
       "season": "2026",
+      "draft_id": 1388293618208374784,
       "roster_id": 9,
       "owner_id": 1,
       "previous_owner_id": 9
@@ -412,6 +437,7 @@
     {
       "round": 8,
       "season": "2026",
+      "draft_id": 1388293618208374784,
       "roster_id": 9,
       "owner_id": 1,
       "previous_owner_id": 9
@@ -4091,12 +4117,12 @@
       "user_id": "1127785716420898816",
       "username": "johnor",
       "is_mine": true,
-      "status": "pending",
-      "sleeper_id": null,
-      "name": null,
-      "position": null,
-      "team": null,
-      "is_keeper": null
+      "status": "made",
+      "sleeper_id": "12521",
+      "name": "Elijah Arroyo",
+      "position": "TE",
+      "team": "SEA",
+      "is_keeper": false
     },
     {
       "pick_no": 230,
@@ -4107,12 +4133,12 @@
       "user_id": "1388546393752240128",
       "username": "AndNic31",
       "is_mine": false,
-      "status": "pending",
-      "sleeper_id": null,
-      "name": null,
-      "position": null,
-      "team": null,
-      "is_keeper": null
+      "status": "made",
+      "sleeper_id": "12467",
+      "name": "Jordan James",
+      "position": "RB",
+      "team": "SF",
+      "is_keeper": false
     },
     {
       "pick_no": 231,
@@ -4123,12 +4149,12 @@
       "user_id": "1388546393752240128",
       "username": "AndNic31",
       "is_mine": false,
-      "status": "pending",
-      "sleeper_id": null,
-      "name": null,
-      "position": null,
-      "team": null,
-      "is_keeper": null
+      "status": "made",
+      "sleeper_id": "9486",
+      "name": "Dontayvion Wicks",
+      "position": "WR",
+      "team": "PHI",
+      "is_keeper": false
     },
     {
       "pick_no": 232,
@@ -4139,12 +4165,12 @@
       "user_id": "1127785716420898816",
       "username": "johnor",
       "is_mine": true,
-      "status": "pending",
-      "sleeper_id": null,
-      "name": null,
-      "position": null,
-      "team": null,
-      "is_keeper": null
+      "status": "made",
+      "sleeper_id": "11643",
+      "name": "Jaylen Wright",
+      "position": "RB",
+      "team": "MIA",
+      "is_keeper": false
     },
     {
       "pick_no": 233,
@@ -4155,12 +4181,12 @@
       "user_id": "865368720548196352",
       "username": "jedmxk",
       "is_mine": false,
-      "status": "pending",
-      "sleeper_id": null,
-      "name": null,
-      "position": null,
-      "team": null,
-      "is_keeper": null
+      "status": "made",
+      "sleeper_id": "12504",
+      "name": "Kaleb Johnson",
+      "position": "RB",
+      "team": "PIT",
+      "is_keeper": false
     },
     {
       "pick_no": 234,
@@ -4171,12 +4197,12 @@
       "user_id": "735592932748435456",
       "username": "bwood637",
       "is_mine": false,
-      "status": "pending",
-      "sleeper_id": null,
-      "name": null,
-      "position": null,
-      "team": null,
-      "is_keeper": null
+      "status": "made",
+      "sleeper_id": "4017",
+      "name": "Deshaun Watson",
+      "position": "QB",
+      "team": "CLE",
+      "is_keeper": false
     },
     {
       "pick_no": 235,
@@ -4187,12 +4213,12 @@
       "user_id": "870397485556875264",
       "username": "dirtydole",
       "is_mine": false,
-      "status": "pending",
-      "sleeper_id": null,
-      "name": null,
-      "position": null,
-      "team": null,
-      "is_keeper": null
+      "status": "made",
+      "sleeper_id": "7591",
+      "name": "Justin Fields",
+      "position": "QB",
+      "team": "KC",
+      "is_keeper": false
     },
     {
       "pick_no": 236,
@@ -4203,12 +4229,12 @@
       "user_id": "1114302275305979904",
       "username": "samlemonskoff",
       "is_mine": false,
-      "status": "pending",
-      "sleeper_id": null,
-      "name": null,
-      "position": null,
-      "team": null,
-      "is_keeper": null
+      "status": "made",
+      "sleeper_id": "11575",
+      "name": "Ray Davis",
+      "position": "RB",
+      "team": "BUF",
+      "is_keeper": false
     },
     {
       "pick_no": 237,
@@ -4219,12 +4245,12 @@
       "user_id": "1128381875430596608",
       "username": "UGrizz14",
       "is_mine": false,
-      "status": "pending",
-      "sleeper_id": null,
-      "name": null,
-      "position": null,
-      "team": null,
-      "is_keeper": null
+      "status": "made",
+      "sleeper_id": "8111",
+      "name": "Cade Otton",
+      "position": "TE",
+      "team": "TB",
+      "is_keeper": false
     },
     {
       "pick_no": 238,
@@ -4235,12 +4261,12 @@
       "user_id": "1128025586577879040",
       "username": "justinmfftt",
       "is_mine": false,
-      "status": "pending",
-      "sleeper_id": null,
-      "name": null,
-      "position": null,
-      "team": null,
-      "is_keeper": null
+      "status": "made",
+      "sleeper_id": "12476",
+      "name": "Devin Neal",
+      "position": "RB",
+      "team": "NO",
+      "is_keeper": false
     },
     {
       "pick_no": 239,
@@ -4251,12 +4277,12 @@
       "user_id": "207916077173182464",
       "username": "dccb31",
       "is_mine": false,
-      "status": "pending",
-      "sleeper_id": null,
-      "name": null,
-      "position": null,
-      "team": null,
-      "is_keeper": null
+      "status": "made",
+      "sleeper_id": "7571",
+      "name": "Rashod Bateman",
+      "position": "WR",
+      "team": "BAL",
+      "is_keeper": false
     },
     {
       "pick_no": 240,
@@ -4267,12 +4293,12 @@
       "user_id": "751220778036551680",
       "username": "nedjh2",
       "is_mine": false,
-      "status": "pending",
-      "sleeper_id": null,
-      "name": null,
-      "position": null,
-      "team": null,
-      "is_keeper": null
+      "status": "made",
+      "sleeper_id": "12536",
+      "name": "Jaylin Noel",
+      "position": "WR",
+      "team": "HOU",
+      "is_keeper": false
     },
     {
       "pick_no": 241,
@@ -4283,12 +4309,12 @@
       "user_id": "751220778036551680",
       "username": "nedjh2",
       "is_mine": false,
-      "status": "pending",
-      "sleeper_id": null,
-      "name": null,
-      "position": null,
-      "team": null,
-      "is_keeper": null
+      "status": "made",
+      "sleeper_id": "13347",
+      "name": "Demond Claiborne",
+      "position": "RB",
+      "team": "MIN",
+      "is_keeper": false
     },
     {
       "pick_no": 242,
@@ -4299,12 +4325,12 @@
       "user_id": "1127785716420898816",
       "username": "johnor",
       "is_mine": true,
-      "status": "pending",
-      "sleeper_id": null,
-      "name": null,
-      "position": null,
-      "team": null,
-      "is_keeper": null
+      "status": "made",
+      "sleeper_id": "13402",
+      "name": "Skyler Bell",
+      "position": "WR",
+      "team": "BUF",
+      "is_keeper": false
     },
     {
       "pick_no": 243,
@@ -4315,12 +4341,12 @@
       "user_id": "1128025586577879040",
       "username": "justinmfftt",
       "is_mine": false,
-      "status": "pending",
-      "sleeper_id": null,
-      "name": null,
-      "position": null,
-      "team": null,
-      "is_keeper": null
+      "status": "made",
+      "sleeper_id": "9482",
+      "name": "Michael Mayer",
+      "position": "TE",
+      "team": "LV",
+      "is_keeper": false
     },
     {
       "pick_no": 244,
@@ -4331,12 +4357,12 @@
       "user_id": "1128381875430596608",
       "username": "UGrizz14",
       "is_mine": false,
-      "status": "pending",
-      "sleeper_id": null,
-      "name": null,
-      "position": null,
-      "team": null,
-      "is_keeper": null
+      "status": "made",
+      "sleeper_id": "8698",
+      "name": "Jake Tonges",
+      "position": "TE",
+      "team": "SF",
+      "is_keeper": false
     },
     {
       "pick_no": 245,
@@ -4347,12 +4373,12 @@
       "user_id": "1114302275305979904",
       "username": "samlemonskoff",
       "is_mine": false,
-      "status": "pending",
-      "sleeper_id": null,
-      "name": null,
-      "position": null,
-      "team": null,
-      "is_keeper": null
+      "status": "made",
+      "sleeper_id": "12483",
+      "name": "Jack Bech",
+      "position": "WR",
+      "team": "LV",
+      "is_keeper": false
     },
     {
       "pick_no": 246,
@@ -4363,12 +4389,12 @@
       "user_id": "870397485556875264",
       "username": "dirtydole",
       "is_mine": false,
-      "status": "pending",
-      "sleeper_id": null,
-      "name": null,
-      "position": null,
-      "team": null,
-      "is_keeper": null
+      "status": "made",
+      "sleeper_id": "12510",
+      "name": "Jalen Milroe",
+      "position": "QB",
+      "team": "SEA",
+      "is_keeper": false
     },
     {
       "pick_no": 247,
@@ -4379,12 +4405,12 @@
       "user_id": "735592932748435456",
       "username": "bwood637",
       "is_mine": false,
-      "status": "pending",
-      "sleeper_id": null,
-      "name": null,
-      "position": null,
-      "team": null,
-      "is_keeper": null
+      "status": "made",
+      "sleeper_id": "4035",
+      "name": "Alvin Kamara",
+      "position": "RB",
+      "team": "NO",
+      "is_keeper": false
     },
     {
       "pick_no": 248,
@@ -4395,12 +4421,12 @@
       "user_id": "865368720548196352",
       "username": "jedmxk",
       "is_mine": false,
-      "status": "pending",
-      "sleeper_id": null,
-      "name": null,
-      "position": null,
-      "team": null,
-      "is_keeper": null
+      "status": "made",
+      "sleeper_id": "4137",
+      "name": "James Conner",
+      "position": "RB",
+      "team": "ARI",
+      "is_keeper": false
     },
     {
       "pick_no": 249,
@@ -4411,12 +4437,12 @@
       "user_id": "1127785716420898816",
       "username": "johnor",
       "is_mine": true,
-      "status": "pending",
-      "sleeper_id": null,
-      "name": null,
-      "position": null,
-      "team": null,
-      "is_keeper": null
+      "status": "made",
+      "sleeper_id": "12495",
+      "name": "Ollie Gordon",
+      "position": "RB",
+      "team": "MIA",
+      "is_keeper": false
     },
     {
       "pick_no": 250,
@@ -4427,12 +4453,12 @@
       "user_id": "1388546393752240128",
       "username": "AndNic31",
       "is_mine": false,
-      "status": "pending",
-      "sleeper_id": null,
-      "name": null,
-      "position": null,
-      "team": null,
-      "is_keeper": null
+      "status": "made",
+      "sleeper_id": "13400",
+      "name": "Justin Joly",
+      "position": "TE",
+      "team": "DEN",
+      "is_keeper": false
     },
     {
       "pick_no": 251,
@@ -4443,12 +4469,12 @@
       "user_id": "1388546393752240128",
       "username": "AndNic31",
       "is_mine": false,
-      "status": "pending",
-      "sleeper_id": null,
-      "name": null,
-      "position": null,
-      "team": null,
-      "is_keeper": null
+      "status": "made",
+      "sleeper_id": "13319",
+      "name": "Oscar Delp",
+      "position": "TE",
+      "team": "NO",
+      "is_keeper": false
     },
     {
       "pick_no": 252,
@@ -4459,12 +4485,12 @@
       "user_id": "1127785716420898816",
       "username": "johnor",
       "is_mine": true,
-      "status": "pending",
-      "sleeper_id": null,
-      "name": null,
-      "position": null,
-      "team": null,
-      "is_keeper": null
+      "status": "made",
+      "sleeper_id": "13380",
+      "name": "Brenen Thompson",
+      "position": "WR",
+      "team": "LAC",
+      "is_keeper": false
     },
     {
       "pick_no": 253,
@@ -4475,12 +4501,12 @@
       "user_id": "865368720548196352",
       "username": "jedmxk",
       "is_mine": false,
-      "status": "pending",
-      "sleeper_id": null,
-      "name": null,
-      "position": null,
-      "team": null,
-      "is_keeper": null
+      "status": "made",
+      "sleeper_id": "12547",
+      "name": "Kyle Williams",
+      "position": "WR",
+      "team": "NE",
+      "is_keeper": false
     },
     {
       "pick_no": 254,
@@ -4491,12 +4517,12 @@
       "user_id": "735592932748435456",
       "username": "bwood637",
       "is_mine": false,
-      "status": "pending",
-      "sleeper_id": null,
-      "name": null,
-      "position": null,
-      "team": null,
-      "is_keeper": null
+      "status": "made",
+      "sleeper_id": "11637",
+      "name": "Keon Coleman",
+      "position": "WR",
+      "team": "BUF",
+      "is_keeper": false
     },
     {
       "pick_no": 255,
@@ -4507,12 +4533,12 @@
       "user_id": "870397485556875264",
       "username": "dirtydole",
       "is_mine": false,
-      "status": "pending",
-      "sleeper_id": null,
-      "name": null,
-      "position": null,
-      "team": null,
-      "is_keeper": null
+      "status": "made",
+      "sleeper_id": "13302",
+      "name": "Adam Randall",
+      "position": "RB",
+      "team": "BAL",
+      "is_keeper": false
     },
     {
       "pick_no": 256,
@@ -4523,12 +4549,12 @@
       "user_id": "1114302275305979904",
       "username": "samlemonskoff",
       "is_mine": false,
-      "status": "pending",
-      "sleeper_id": null,
-      "name": null,
-      "position": null,
-      "team": null,
-      "is_keeper": null
+      "status": "made",
+      "sleeper_id": "12455",
+      "name": "Brashard Smith",
+      "position": "RB",
+      "team": "KC",
+      "is_keeper": false
     },
     {
       "pick_no": 257,
@@ -4539,12 +4565,12 @@
       "user_id": "1128381875430596608",
       "username": "UGrizz14",
       "is_mine": false,
-      "status": "pending",
-      "sleeper_id": null,
-      "name": null,
-      "position": null,
-      "team": null,
-      "is_keeper": null
+      "status": "made",
+      "sleeper_id": "6865",
+      "name": "Colby Parkinson",
+      "position": "TE",
+      "team": "LAR",
+      "is_keeper": false
     },
     {
       "pick_no": 258,
@@ -4555,12 +4581,12 @@
       "user_id": "1128025586577879040",
       "username": "justinmfftt",
       "is_mine": false,
-      "status": "pending",
-      "sleeper_id": null,
-      "name": null,
-      "position": null,
-      "team": null,
-      "is_keeper": null
+      "status": "made",
+      "sleeper_id": "9506",
+      "name": "Sean Tucker",
+      "position": "RB",
+      "team": "TB",
+      "is_keeper": false
     },
     {
       "pick_no": 259,
@@ -4571,12 +4597,12 @@
       "user_id": "207916077173182464",
       "username": "dccb31",
       "is_mine": false,
-      "status": "pending",
-      "sleeper_id": null,
-      "name": null,
-      "position": null,
-      "team": null,
-      "is_keeper": null
+      "status": "made",
+      "sleeper_id": "12511",
+      "name": "Will Howard",
+      "position": "QB",
+      "team": "PIT",
+      "is_keeper": false
     },
     {
       "pick_no": 260,
@@ -4587,12 +4613,12 @@
       "user_id": "751220778036551680",
       "username": "nedjh2",
       "is_mine": false,
-      "status": "pending",
-      "sleeper_id": null,
-      "name": null,
-      "position": null,
-      "team": null,
-      "is_keeper": null
+      "status": "made",
+      "sleeper_id": "11610",
+      "name": "Malik Washington",
+      "position": "WR",
+      "team": "MIA",
+      "is_keeper": false
     },
     {
       "pick_no": 261,
@@ -4603,12 +4629,12 @@
       "user_id": "751220778036551680",
       "username": "nedjh2",
       "is_mine": false,
-      "status": "pending",
-      "sleeper_id": null,
-      "name": null,
-      "position": null,
+      "status": "made",
+      "sleeper_id": "1479",
+      "name": "Keenan Allen",
+      "position": "WR",
       "team": null,
-      "is_keeper": null
+      "is_keeper": false
     },
     {
       "pick_no": 262,
@@ -4619,12 +4645,12 @@
       "user_id": "207916077173182464",
       "username": "dccb31",
       "is_mine": false,
-      "status": "pending",
-      "sleeper_id": null,
-      "name": null,
-      "position": null,
-      "team": null,
-      "is_keeper": null
+      "status": "made",
+      "sleeper_id": "12505",
+      "name": "Jalen Royals",
+      "position": "WR",
+      "team": "KC",
+      "is_keeper": false
     },
     {
       "pick_no": 263,
@@ -4635,12 +4661,12 @@
       "user_id": "1128025586577879040",
       "username": "justinmfftt",
       "is_mine": false,
-      "status": "pending",
-      "sleeper_id": null,
-      "name": null,
-      "position": null,
-      "team": null,
-      "is_keeper": null
+      "status": "made",
+      "sleeper_id": "11571",
+      "name": "Isaiah Davis",
+      "position": "RB",
+      "team": "NYJ",
+      "is_keeper": false
     },
     {
       "pick_no": 264,
@@ -4651,12 +4677,12 @@
       "user_id": "1128381875430596608",
       "username": "UGrizz14",
       "is_mine": false,
-      "status": "pending",
-      "sleeper_id": null,
-      "name": null,
-      "position": null,
-      "team": null,
-      "is_keeper": null
+      "status": "made",
+      "sleeper_id": "11626",
+      "name": "Xavier Legette",
+      "position": "WR",
+      "team": "CAR",
+      "is_keeper": false
     },
     {
       "pick_no": 265,
@@ -4667,12 +4693,12 @@
       "user_id": "1114302275305979904",
       "username": "samlemonskoff",
       "is_mine": false,
-      "status": "pending",
-      "sleeper_id": null,
-      "name": null,
-      "position": null,
-      "team": null,
-      "is_keeper": null
+      "status": "made",
+      "sleeper_id": "9494",
+      "name": "Marvin Mims",
+      "position": "WR",
+      "team": "DEN",
+      "is_keeper": false
     },
     {
       "pick_no": 266,
@@ -4683,12 +4709,12 @@
       "user_id": "870397485556875264",
       "username": "dirtydole",
       "is_mine": false,
-      "status": "pending",
-      "sleeper_id": null,
-      "name": null,
-      "position": null,
-      "team": null,
-      "is_keeper": null
+      "status": "made",
+      "sleeper_id": "13303",
+      "name": "Cade Klubnik",
+      "position": "QB",
+      "team": "NYJ",
+      "is_keeper": false
     },
     {
       "pick_no": 267,
@@ -4699,12 +4725,12 @@
       "user_id": "735592932748435456",
       "username": "bwood637",
       "is_mine": false,
-      "status": "pending",
-      "sleeper_id": null,
-      "name": null,
-      "position": null,
-      "team": null,
-      "is_keeper": null
+      "status": "made",
+      "sleeper_id": "12470",
+      "name": "Riley Leonard",
+      "position": "QB",
+      "team": "IND",
+      "is_keeper": false
     },
     {
       "pick_no": 268,
@@ -4715,12 +4741,12 @@
       "user_id": "865368720548196352",
       "username": "jedmxk",
       "is_mine": false,
-      "status": "pending",
-      "sleeper_id": null,
-      "name": null,
-      "position": null,
-      "team": null,
-      "is_keeper": null
+      "status": "made",
+      "sleeper_id": "12485",
+      "name": "Tez Johnson",
+      "position": "WR",
+      "team": "TB",
+      "is_keeper": false
     },
     {
       "pick_no": 269,
@@ -4731,12 +4757,12 @@
       "user_id": "207916077173182464",
       "username": "dccb31",
       "is_mine": false,
-      "status": "pending",
-      "sleeper_id": null,
-      "name": null,
-      "position": null,
-      "team": null,
-      "is_keeper": null
+      "status": "made",
+      "sleeper_id": "13278",
+      "name": "Max Klare",
+      "position": "TE",
+      "team": "LAR",
+      "is_keeper": false
     },
     {
       "pick_no": 270,
@@ -4747,12 +4773,12 @@
       "user_id": "1388546393752240128",
       "username": "AndNic31",
       "is_mine": false,
-      "status": "pending",
-      "sleeper_id": null,
-      "name": null,
-      "position": null,
-      "team": null,
-      "is_keeper": null
+      "status": "made",
+      "sleeper_id": "8119",
+      "name": "Jahan Dotson",
+      "position": "WR",
+      "team": "ATL",
+      "is_keeper": false
     },
     {
       "pick_no": 271,
@@ -4763,12 +4789,12 @@
       "user_id": "1388546393752240128",
       "username": "AndNic31",
       "is_mine": false,
-      "status": "pending",
-      "sleeper_id": null,
-      "name": null,
-      "position": null,
-      "team": null,
-      "is_keeper": null
+      "status": "made",
+      "sleeper_id": "13282",
+      "name": "Jack Endries",
+      "position": "TE",
+      "team": "CIN",
+      "is_keeper": false
     },
     {
       "pick_no": 272,
@@ -4779,12 +4805,12 @@
       "user_id": "1127785716420898816",
       "username": "johnor",
       "is_mine": true,
-      "status": "pending",
-      "sleeper_id": null,
-      "name": null,
-      "position": null,
-      "team": null,
-      "is_keeper": null
+      "status": "made",
+      "sleeper_id": "13306",
+      "name": "Taylen Green",
+      "position": "QB",
+      "team": "CLE",
+      "is_keeper": false
     },
     {
       "pick_no": 273,
@@ -4795,12 +4821,12 @@
       "user_id": "865368720548196352",
       "username": "jedmxk",
       "is_mine": false,
-      "status": "pending",
-      "sleeper_id": null,
-      "name": null,
-      "position": null,
-      "team": null,
-      "is_keeper": null
+      "status": "made",
+      "sleeper_id": "7090",
+      "name": "Darnell Mooney",
+      "position": "WR",
+      "team": "NYG",
+      "is_keeper": false
     },
     {
       "pick_no": 274,
@@ -4811,12 +4837,12 @@
       "user_id": "735592932748435456",
       "username": "bwood637",
       "is_mine": false,
-      "status": "pending",
-      "sleeper_id": null,
-      "name": null,
-      "position": null,
-      "team": null,
-      "is_keeper": null
+      "status": "made",
+      "sleeper_id": "12503",
+      "name": "Isaiah Bond",
+      "position": "WR",
+      "team": "CLE",
+      "is_keeper": false
     },
     {
       "pick_no": 275,
@@ -4827,12 +4853,12 @@
       "user_id": "870397485556875264",
       "username": "dirtydole",
       "is_mine": false,
-      "status": "pending",
-      "sleeper_id": null,
-      "name": null,
-      "position": null,
-      "team": null,
-      "is_keeper": null
+      "status": "made",
+      "sleeper_id": "13404",
+      "name": "Garrett Nussmeier",
+      "position": "QB",
+      "team": "KC",
+      "is_keeper": false
     },
     {
       "pick_no": 276,
@@ -4843,12 +4869,12 @@
       "user_id": "1114302275305979904",
       "username": "samlemonskoff",
       "is_mine": false,
-      "status": "pending",
-      "sleeper_id": null,
-      "name": null,
-      "position": null,
-      "team": null,
-      "is_keeper": null
+      "status": "made",
+      "sleeper_id": "11596",
+      "name": "Ben Sinnott",
+      "position": "TE",
+      "team": "WAS",
+      "is_keeper": false
     },
     {
       "pick_no": 277,
@@ -4859,12 +4885,12 @@
       "user_id": "1128381875430596608",
       "username": "UGrizz14",
       "is_mine": false,
-      "status": "pending",
-      "sleeper_id": null,
-      "name": null,
-      "position": null,
-      "team": null,
-      "is_keeper": null
+      "status": "made",
+      "sleeper_id": "12471",
+      "name": "DJ Giddens",
+      "position": "RB",
+      "team": "IND",
+      "is_keeper": false
     },
     {
       "pick_no": 278,
@@ -4875,12 +4901,12 @@
       "user_id": "1128025586577879040",
       "username": "justinmfftt",
       "is_mine": false,
-      "status": "pending",
-      "sleeper_id": null,
-      "name": null,
-      "position": null,
+      "status": "made",
+      "sleeper_id": "7528",
+      "name": "Najee Harris",
+      "position": "RB",
       "team": null,
-      "is_keeper": null
+      "is_keeper": false
     },
     {
       "pick_no": 279,
@@ -4891,12 +4917,12 @@
       "user_id": "207916077173182464",
       "username": "dccb31",
       "is_mine": false,
-      "status": "pending",
-      "sleeper_id": null,
-      "name": null,
-      "position": null,
-      "team": null,
-      "is_keeper": null
+      "status": "made",
+      "sleeper_id": "4981",
+      "name": "Calvin Ridley",
+      "position": "WR",
+      "team": "TEN",
+      "is_keeper": false
     },
     {
       "pick_no": 280,
@@ -4907,12 +4933,12 @@
       "user_id": "751220778036551680",
       "username": "nedjh2",
       "is_mine": false,
-      "status": "pending",
-      "sleeper_id": null,
-      "name": null,
-      "position": null,
-      "team": null,
-      "is_keeper": null
+      "status": "made",
+      "sleeper_id": "13421",
+      "name": "Eli Raridon",
+      "position": "TE",
+      "team": "NE",
+      "is_keeper": false
     },
     {
       "pick_no": 281,
@@ -4923,12 +4949,12 @@
       "user_id": "751220778036551680",
       "username": "nedjh2",
       "is_mine": false,
-      "status": "pending",
-      "sleeper_id": null,
-      "name": null,
-      "position": null,
-      "team": null,
-      "is_keeper": null
+      "status": "made",
+      "sleeper_id": "2306",
+      "name": "Jameis Winston",
+      "position": "QB",
+      "team": "NYG",
+      "is_keeper": false
     },
     {
       "pick_no": 282,
@@ -4939,12 +4965,12 @@
       "user_id": "207916077173182464",
       "username": "dccb31",
       "is_mine": false,
-      "status": "pending",
-      "sleeper_id": null,
-      "name": null,
-      "position": null,
-      "team": null,
-      "is_keeper": null
+      "status": "made",
+      "sleeper_id": "13335",
+      "name": "Cole Payton",
+      "position": "QB",
+      "team": "PHI",
+      "is_keeper": false
     },
     {
       "pick_no": 283,
@@ -4955,12 +4981,12 @@
       "user_id": "1128025586577879040",
       "username": "justinmfftt",
       "is_mine": false,
-      "status": "pending",
-      "sleeper_id": null,
-      "name": null,
-      "position": null,
+      "status": "made",
+      "sleeper_id": "2505",
+      "name": "Darren Waller",
+      "position": "TE",
       "team": null,
-      "is_keeper": null
+      "is_keeper": false
     },
     {
       "pick_no": 284,
@@ -4971,12 +4997,12 @@
       "user_id": "1128381875430596608",
       "username": "UGrizz14",
       "is_mine": false,
-      "status": "pending",
-      "sleeper_id": null,
-      "name": null,
-      "position": null,
-      "team": null,
-      "is_keeper": null
+      "status": "made",
+      "sleeper_id": "11600",
+      "name": "Ja'Tavion Sanders",
+      "position": "TE",
+      "team": "CAR",
+      "is_keeper": false
     },
     {
       "pick_no": 285,
@@ -4987,12 +5013,12 @@
       "user_id": "1114302275305979904",
       "username": "samlemonskoff",
       "is_mine": false,
-      "status": "pending",
-      "sleeper_id": null,
-      "name": null,
-      "position": null,
-      "team": null,
-      "is_keeper": null
+      "status": "made",
+      "sleeper_id": "12544",
+      "name": "LeQuint Allen",
+      "position": "RB",
+      "team": "JAX",
+      "is_keeper": false
     },
     {
       "pick_no": 286,
@@ -5003,12 +5029,12 @@
       "user_id": "870397485556875264",
       "username": "dirtydole",
       "is_mine": false,
-      "status": "pending",
-      "sleeper_id": null,
-      "name": null,
-      "position": null,
-      "team": null,
-      "is_keeper": null
+      "status": "made",
+      "sleeper_id": "4066",
+      "name": "Evan Engram",
+      "position": "TE",
+      "team": "DEN",
+      "is_keeper": false
     },
     {
       "pick_no": 287,
@@ -5019,12 +5045,12 @@
       "user_id": "735592932748435456",
       "username": "bwood637",
       "is_mine": false,
-      "status": "pending",
-      "sleeper_id": null,
-      "name": null,
-      "position": null,
-      "team": null,
-      "is_keeper": null
+      "status": "made",
+      "sleeper_id": "4950",
+      "name": "Christian Kirk",
+      "position": "WR",
+      "team": "SF",
+      "is_keeper": false
     },
     {
       "pick_no": 288,
@@ -5035,12 +5061,12 @@
       "user_id": "865368720548196352",
       "username": "jedmxk",
       "is_mine": false,
-      "status": "pending",
-      "sleeper_id": null,
-      "name": null,
-      "position": null,
-      "team": null,
-      "is_keeper": null
+      "status": "made",
+      "sleeper_id": "11834",
+      "name": "Devaughn Vele",
+      "position": "WR",
+      "team": "NO",
+      "is_keeper": false
     },
     {
       "pick_no": 289,
@@ -5051,12 +5077,12 @@
       "user_id": "1127785716420898816",
       "username": "johnor",
       "is_mine": true,
-      "status": "pending",
-      "sleeper_id": null,
-      "name": null,
-      "position": null,
-      "team": null,
-      "is_keeper": null
+      "status": "made",
+      "sleeper_id": "13420",
+      "name": "Bryce Lance",
+      "position": "WR",
+      "team": "NO",
+      "is_keeper": false
     },
     {
       "pick_no": 290,
@@ -5067,12 +5093,12 @@
       "user_id": "1388546393752240128",
       "username": "AndNic31",
       "is_mine": false,
-      "status": "pending",
-      "sleeper_id": null,
-      "name": null,
-      "position": null,
-      "team": null,
-      "is_keeper": null
+      "status": "made",
+      "sleeper_id": "13329",
+      "name": "Malik Benson",
+      "position": "WR",
+      "team": "LV",
+      "is_keeper": false
     }
   ]
 }

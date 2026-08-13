@@ -100,14 +100,19 @@ def validate(
         check(len(roster) == want, f"slot {i} ends with {len(roster)} players, want {want}")
         # The real constraint is the 25 non-taxi spots; which specific picks land on taxi is
         # not fixed, and a mandatory pick may have to be a non-rookie when no rookie at a
-        # required position is left. Only players the pool carries are counted: this asks
-        # whether the simulation's own choices fit, and `draft.json` does not say whether a
-        # selection outside the pool is a rookie, so counting those would assert something
-        # unknown. `Draft.candidates` still counts them as veterans for its cap.
-        non_rookies = sum(1 for p in roster if not p.is_rookie)
+        # required position is left. Made picks are facts and may already exceed the cap
+        # (owners drop players after the draft), so only the simulation's own additions
+        # must fit the room left. Only players the pool carries are counted: `draft.json`
+        # does not say whether a selection outside the pool is a rookie, so counting those
+        # would assert something unknown. `Draft.candidates` still counts them as veterans
+        # for its cap.
+        made_non_rookies = sum(1 for p in made if not p.is_rookie)
+        room = max(0, NON_TAXI_SLOTS - made_non_rookies)
+        added_non_rookies = sum(1 for p in roster[len(made) :] if not p.is_rookie)
         check(
-            non_rookies <= NON_TAXI_SLOTS,
-            f"slot {i} holds {non_rookies} non-rookies, over the {NON_TAXI_SLOTS} non-taxi spots",
+            added_non_rookies <= room,
+            f"slot {i} was dealt {added_non_rookies} non-rookies with only {room} "
+            f"non-taxi spots left",
         )
         # Whether 10 slots can be filled depends only on the roster's positions, not on
         # which horizon orders the pecking, so one horizon suffices here.
