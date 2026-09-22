@@ -62,7 +62,8 @@ def parse_fantasycalc(path: Path) -> list[dict]:
 
 
 def parse_keeptradecut(path: Path) -> list[dict]:
-    rows = js_json(path.read_text(), "var playersArray =")
+    # KTC moved its board out of `var playersArray = [...]` into this JSON tag (Sep 2026).
+    rows = js_json(path.read_text(), '<script type="application/json" id="ktc-players">')
     ranked = []
     for raw in rows:
         if raw["position"] not in POSITIONS:

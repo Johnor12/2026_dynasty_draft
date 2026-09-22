@@ -1,8 +1,8 @@
 # 2026 dynasty fantasy draft
 
-A toolkit for a 10-team superflex dynasty startup draft. Independent
-processes publish stable JSON artifacts at the repository root; the ranker consumes
-those artifacts and the static dashboard renders the result.
+A toolkit for a 10-team superflex dynasty startup draft, and now for in-season
+waiver moves. Independent processes publish stable JSON artifacts at the repository
+root; the ranker consumes those artifacts and the static dashboard renders the result.
 
 ## League assumptions
 
@@ -40,12 +40,22 @@ data_source_investigator/ ────> data_source_matches.json
                          └────> data/rankings.json ─┘
 ```
 
+In season:
+
+```text
+pool.json ─────────────────────────────────────────┐
+data_source_investigator/ ────> data/rankings.json ─┼─> waivers.py ──> +EV moves on stdout
+league_pipeline/ ─────────────> league.json ────────┘
+```
+
 The published files have distinct owners:
 
 - `pool.json`: 350 projection-backed QB/RB/WR/TE players, keyed to Sleeper
 - `draft.json`: all 290 made and pending picks from Sleeper
 - `data_source_matches.json`: the provider board closest to each opponent's picks
 - `rankings.json`: undrafted-player rankings, recommendations, simulations, and validation
+- `league.json`: current Sleeper rosters (active, taxi, IR) and every player's
+  rest-of-season projected points in this league's scoring
 
 `sleeper_id` is the cross-process player key. `roster_id` and `draft_slot` connect
 opponent source matches to the live board.
@@ -58,6 +68,9 @@ opponent source matches to the live board.
   boards and infer opponent strategies
 - [Ranker](ranker/README.md): wire-level solver, opponent simulation, planning,
   and output contracts
+- `league_pipeline/fetch_league.py`: Sleeper league rosters and weekly projections to
+  `league.json`
+- `waivers.py`: in-season refresh and waiver-move pricing
 - `index.html`: dependency-free dashboard for `rankings.json`
 - `data_source_investigator/index.html`: source-fit and pick-evidence dashboard
 - `serve.py`: serves both dashboards at http://127.0.0.1:8123
@@ -96,6 +109,26 @@ uv run refresh.py --report
 `refresh.py` deliberately does only three live steps: fetch the draft, re-run source
 inference against the existing provider snapshot, then rank. It does not rebuild the
 offline pool or fetch provider boards.
+
+In season, refresh provider rankings and the league, then list +EV waiver moves:
+
+```bash
+uv run waivers.py
+```
+
+It refetches and rebuilds the provider boards, fetches `league.json`, and then prices
+every free agent against my roster with the ranker's expected-lineup value. The yr1
+horizon becomes rest-of-season points: Sleeper's weekly projections from the current
+week through week 17, scored with the league's `scoring_settings`. Years 2–3 remain
+DraftSharks' from `pool.json`, and are 0 for players DraftSharks does not project. The
+best unrostered player at each position is the wire fallback, so a move's EV includes
+the fallback it spends or creates. Each free agent is shown with his best active-roster
+drop. Moves are not additive. The refreshed provider ranks are shown only as context
+(`mkt`) and never enter EV.
+
+Refreshing the boards overwrites the gitignored draft-time raw snapshots. It also
+means a bare `rank.py` refuses to run until `investigate.py` re-matches against the
+new snapshot, which `refresh.py` already does.
 
 Run offline checks:
 
