@@ -520,10 +520,12 @@ def report(source: dict, kept: list[dict], rows: list[dict], stats: dict) -> Non
         + ("" if len(set(picks)) == len(picks) else "  <- COLLISIONS"),
         file=out,
     )
-    roundtrip = sum(1 for r in kept if decode_adp(r["adp"][ADP_COLUMN]) == adp_of(r))
+    # In season the source publishes no ADP, so only priced rows can round-trip.
+    priced = [r for r in kept if r["adp"].get(ADP_COLUMN) is not None]
+    roundtrip = sum(1 for r in priced if decode_adp(r["adp"][ADP_COLUMN]) == adp_of(r))
     tail = [pick for pick in picks if pick > PLAUSIBLE_ROUNDS * TEAMS_PER_ROUND]
     print(
-        f"  decode round-trips for {roundtrip}/{len(kept)}; range "
+        f"  decode round-trips for {roundtrip}/{len(priced)}; range "
         f"{min(picks, default=0)}..{max(picks, default=0)}, {len(tail)} past round "
         f"{PLAUSIBLE_ROUNDS} (provider tail noise, not a real slot)",
         file=out,

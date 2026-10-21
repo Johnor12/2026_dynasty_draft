@@ -1,12 +1,14 @@
 #!/usr/bin/env python3
 """Refresh provider rankings and our league, then list +EV waiver moves.
 
-Three refresh steps, each a standalone script run with ``uv run`` from the repo root,
+Five refresh steps, each a standalone script run with ``uv run`` from the repo root,
 stopping on the first failure:
 
-    1. data_source_investigator/fetch_rankings.py   provider boards -> data/raw/
-    2. data_source_investigator/build_rankings.py   -> data/rankings.json
-    3. league_pipeline/fetch_league.py              rosters + projections -> league.json
+    1. pool_pipeline/fetch_projections.py           DraftSharks rows -> pool_pipeline/data/projections.html
+    2. pool_pipeline/pipeline.py                    -> pool.json (2027-28 points)
+    3. data_source_investigator/fetch_rankings.py   provider boards -> data/raw/
+    4. data_source_investigator/build_rankings.py   -> data/rankings.json
+    5. league_pipeline/fetch_league.py              rosters + projections -> league.json
 
 Moves are then priced the way rank.py priced draft picks: my roster's expected optimal
 lineup points (ranker/value.py) summed over two horizons, which in-season are
@@ -46,6 +48,8 @@ POOL = REPO_ROOT / "pool.json"
 SOURCE_RANKINGS = REPO_ROOT / "data_source_investigator/data/rankings.json"
 
 STEPS = (
+    ("fetch projections", "pool_pipeline/fetch_projections.py"),
+    ("pool", "pool_pipeline/pipeline.py"),
     ("fetch rankings", "data_source_investigator/fetch_rankings.py"),
     ("build rankings", "data_source_investigator/build_rankings.py"),
     ("league", "league_pipeline/fetch_league.py"),
@@ -80,7 +84,7 @@ def load_players(league: dict, pool: dict) -> dict[str, Player]:
 def market_ranks(rankings: dict) -> dict[str, float]:
     ranks: dict[str, list[int]] = defaultdict(list)
     for source in rankings["sources"]:
-        # Derived from pool.json, so it is frozen at the draft rather than refreshed.
+        # Derived from pool.json's ADP, which DraftSharks does not publish in season.
         if source["id"] == "draftsharks_adp":
             continue
         for row in source["players"]:

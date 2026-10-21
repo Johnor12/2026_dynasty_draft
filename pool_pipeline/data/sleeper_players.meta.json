@@ -1,10 +1,10 @@
 {
   "url": "https://api.sleeper.app/v1/players/nfl",
-  "fetched_at": "2026-08-04T16:43:16+00:00",
+  "fetched_at": "2026-10-21T14:39:03+00:00",
   "file": "sleeper_players.json",
-  "bytes": 14621658,
-  "sha256": "1dfd00f25cdf2d5c1a7dcbb335ca25a636acb782c5ac366122df147af59cd956",
-  "player_count": 12207,
-  "offensive_count": 4035,
-  "active_offensive_count": 3040
+  "bytes": 14660301,
+  "sha256": "8b8ff47dd6aa0e3a485cc8e9bbe38139cf24cdffdd001f97e849bfb95d7593ec",
+  "player_count": 12229,
+  "offensive_count": 4042,
+  "active_offensive_count": 3047
 }

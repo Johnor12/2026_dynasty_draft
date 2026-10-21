@@ -28,7 +28,7 @@ PIPELINE_DIR = Path(__file__).resolve().parent
 REPO_ROOT = PIPELINE_DIR.parent
 DATA_DIR = PIPELINE_DIR / "data"
 
-#: Stage 1 input: hand-saved from the provider's site. Not machine-refreshable.
+#: Stage 1 input: the provider's rankings rows, pulled by ``fetch_projections.py``.
 PROJECTIONS_HTML = DATA_DIR / "projections.html"
 
 #: Stage 1 output / stage 2 input: the full provider export, never narrowed.

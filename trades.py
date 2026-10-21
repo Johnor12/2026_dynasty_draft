@@ -24,10 +24,15 @@ two picks in one package are valued independently. Opponent picks are not modele
 
 Every package also carries my market delta on KeepTradeCut superflex TE+, on FantasyCalc
 10-team superflex, and `mkt`, their blend, with FantasyCalc rescaled onto KTC's scale by
-the ratio of the boards over shared players. The opponent is scored on both horizons by
-default; --tanking scores him on yr23 only, for a seller who has written off this season.
-His EV is printed but a sweep filters on what he will check: packages that are +EV for me
-and cost him at most MARKET_SLACK of the blended value he sends.
+the ratio of the boards over shared players. `KTCcalc` is my margin on KeepTradeCut's trade
+calculator, whose value adjustment (ported below from the site's script) shrinks every
+piece toward a share of the trade's best piece and credits the side whose pieces keep more
+of their value with the single-player equivalent of the gap, so quantity-for-quality reads
+as a loss for the seller and even a 1-for-1 gap is amplified. The opponent is scored on
+both horizons by default; --tanking scores him on yr23 only, for a seller who has written
+off this season. His EV is printed but a sweep filters on what he will check: my margin
+on the calculator may be at most KTC_SLACK, about what his own Burrow-for-Love offer
+conceded there.
 
 Usage:
     uv run trades.py nedjh2 --tanking
@@ -40,6 +45,7 @@ from __future__ import annotations
 import argparse
 import itertools
 import json
+import math
 import multiprocessing
 import sys
 from dataclasses import dataclass, field
@@ -63,9 +69,11 @@ FANTASYCALC_RAW = REPO_ROOT / "data_source_investigator/data/raw/fantasycalc.jso
 MY_2027_SLOT = 7
 MY_PICKS = {"2027 1st": MY_2027_SLOT, "2027 2nd": 10 + MY_2027_SLOT}
 PICK_WINDOW = 2  # slots either side of mine whose history forms the lottery
-# Blended value he will give up, as a share of what he sends. nedjh2's own Burrow-for-Love
-# offer conceded 9% of the blend (2% on KTC alone), and his Brown-for-my-first ask was even.
-MARKET_SLACK = 0.10
+KTC_VARIANCE = 5  # the calculator's default fairness band, in percent of the two totals
+KTC_MAX_PLAYER = 10000
+# My margin on the calculator he will still accept. His own Burrow-for-Love offer favored me
+# by about 1,100 there, so he is not treating its verdict as a hard line.
+KTC_SLACK = 1100
 WORKERS = 8
 TOP_PER_SHAPE = 12
 TOP_PER_TARGET = 12
@@ -189,6 +197,83 @@ def worth(board: dict[str, float], assets) -> float:
     return sum(board.get(p.sleeper_id, 0) for p in assets)
 
 
+# KeepTradeCut's trade calculator, ported from site.min.js (adjustPackageNew, ALGOTOUSE 2) and
+# checked against the live page. Pick values are unscaled (pickVal 0).
+def _ktc_round(x: float) -> int:
+    return math.floor(x + 0.5)  # Math.round
+
+
+def _ktc_shrunk(value: float, best: float) -> float:
+    """A piece's value once consolidation is priced: near full for the best piece, much less below it."""
+    return (0.1 * (value / 10099) ** 1.4 + 0.7 * (value / (1.05 * best)) ** 1.25 + 0.2) * value
+
+
+def _ktc_single(gap: float, best: float, top: float) -> int:
+    """The one-piece value whose shrunk value is `gap` (the site's Newton solve)."""
+    a, t, x = top + 100, best, 5 * gap
+    for _ in range(20):
+        f = (0.1 * (x / a) ** 1.4 + 0.7 * (x / (1.05 * t)) ** 1.25 + 0.2) * x - gap
+        d = 0.24 * x ** 1.4 / a ** 1.4 + 1.575 * x ** 1.25 / (1.05 ** 1.25 * t ** 1.25) + 0.2
+        step = x - f / d
+        if abs(step - x) < 1e-8:
+            return _ktc_round(step)
+        x = step
+    return _ktc_round(x)
+
+
+def ktc_close(e: float, a: float) -> bool:
+    e, a = max(0.0, e), max(0.0, a)
+    pct = min(100.0, abs(e - a) / (e + a) * 100) if e + a else 0.0
+    return _ktc_round(10 * pct) / 10 <= KTC_VARIANCE
+
+
+def ktc_calculator(board: dict[str, float], mine: list[Player], his: list[Player]) -> tuple[float, float]:
+    """Adjusted totals (what I get, what he gets) as the calculator shows them, me as Team 1."""
+    v1 = sorted((board.get(p.sleeper_id, 0) for p in mine), reverse=True)
+    v2 = sorted((board.get(p.sleeper_id, 0) for p in his), reverse=True)
+    total1, total2 = sum(v1), sum(v2)
+    if not total1 or not total2:
+        return total1, total2
+    top, best = max(board.values()), max(v1[0], v2[0])
+    e, a = sum(_ktc_shrunk(v, best) for v in v1), sum(_ktc_shrunk(v, best) for v in v2)
+    gap = math.floor(abs(e - a))
+    adj1 = adj2 = 0.0
+    if ktc_close(total1, total2) and ktc_close(e, a):
+        if e > a:
+            b = total2 + _ktc_single(gap, best, top) - total1
+            adj1, adj2 = (b, 0.0) if b > 0 else (0.0, -b)
+        elif a > e:
+            b = total1 + _ktc_single(gap, best, top) - total2
+            adj1, adj2 = (0.0, b) if b > 0 else (-b, 0.0)
+    elif e / total1 > a / total2:
+        if e > a:
+            b = total2 + _ktc_single(gap, best, top) - total1
+            adj1, adj2 = (b, 0.0) if b > 0 else (0.0, -b)
+        elif total1 != total2 and (w := _ktc_single(gap, best, top)) > 0:
+            if total1 < total2:
+                t = w - (total2 - total1)
+                if t > 0:
+                    adj2 = 0.0 if t > KTC_MAX_PLAYER else t
+                else:
+                    adj1 = -t
+            else:
+                adj2 = w - (total1 - total2)
+    else:
+        if a > e:
+            b = total1 + _ktc_single(gap, best, top) - total2
+            adj1, adj2 = (0.0, b) if b > 0 else (-b, 0.0)
+        elif total1 != total2 and (w := _ktc_single(gap, best, top)) > 0:
+            if total1 < total2:
+                adj1 = w - (total2 - total1)
+            else:
+                t = w - (total1 - total2)
+                if t > 0:
+                    adj1 = 0.0 if t > KTC_MAX_PLAYER else t
+                else:
+                    adj2 = -t
+    return max(0.0, total1 + adj1), max(0.0, total2 + adj2)
+
+
 def load_team(league: dict, players: dict[str, Player], username: str) -> Team:
     row = next((r for r in league["rosters"] if r["username"] == username), None)
     if row is None:
@@ -306,7 +391,9 @@ class Context:
         my_gain = {h: my_after[h] - self.my_base[h] for h in HORIZONS}
         his_gain = objective(his_after, self.tanking) - objective(self.his_base, self.tanking)
         deltas = {b: worth(v, get) - worth(v, give) for b, v in self.market.items()}  # my side
-        plausible = deltas["mkt"] <= MARKET_SLACK * worth(self.market["mkt"], get)
+        t_me, t_him = ktc_calculator(self.market["ktc"], get, give)
+        deltas["calc"] = t_me - t_him
+        plausible = deltas["calc"] <= KTC_SLACK
         return my_gain, his_gain, deltas, plausible, my_moves, his_moves
 
 
@@ -356,8 +443,8 @@ def main() -> int:
     def line(give, get, my_gain, his_gain, deltas) -> str:
         return (
             f"{sum(my_gain.values()):+6.1f} {my_gain['yr1']:+6.1f} {my_gain['yr23']:+6.1f} | "
-            f"{his_gain:+6.1f} | {deltas['mkt']:+6.0f} {deltas['ktc']:+6.0f} {deltas['fc']:+6.0f} | "
-            f"give {', '.join(give)} | get {', '.join(get)}"
+            f"{his_gain:+6.1f} | {deltas['mkt']:+6.0f} {deltas['ktc']:+6.0f} {deltas['fc']:+6.0f} "
+            f"{deltas['calc']:+7.0f} | give {', '.join(give)} | get {', '.join(get)}"
         )
 
     print(
@@ -372,10 +459,10 @@ def main() -> int:
             f"{pricer.pick_value(him, pick):+.1f} on his; "
             f"mkt {market['mkt'][name]:.0f} (KTC {market['ktc'][name]}, FC {market['fc'][name]})"
         )
-    print("market deltas are from my side, in minus out")
+    print("market deltas are from my side, in minus out; KTCcalc is my margin on KTC's calculator")
     header = (
         f"\n{'EV me':>6} {'ros':>6} {'y2-3':>6} | {'EV him':>6} | "
-        f"{'mkt':>6} {'KTC':>6} {'FC':>6} | trade"
+        f"{'mkt':>6} {'KTC':>6} {'FC':>6} {'KTCcalc':>7} | trade"
     )
 
     if args.give:
@@ -388,7 +475,7 @@ def main() -> int:
             if moves:
                 print(f"  {who} then: {'; '.join(moves)}")
         if not plausible:
-            print(f"  he loses more than {MARKET_SLACK:.0%} of the blended value he sends")
+            print(f"  KTC's calculator favors me by {deltas['calc']:.0f}, past the {KTC_SLACK} he has conceded")
         return 0
 
     _CTX = ctx

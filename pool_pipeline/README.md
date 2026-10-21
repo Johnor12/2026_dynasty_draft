@@ -1,13 +1,14 @@
 # Pool pipeline
 
-This independent, offline pipeline turns a saved DraftSharks projections page into the
-league's `pool.json`. It is rerun when projections change, not during every live-draft
-refresh.
+This independent pipeline turns DraftSharks' dynasty rankings rows into the league's
+`pool.json`. `fetch_projections.py` pulls the rows from the page's `load-rows` endpoint,
+which needs no login; `waivers.py` reruns the whole thing weekly, and it is not part of
+the live-draft refresh.
 
 ## Stages
 
 ```text
-data/projections.html
+fetch_projections.py    -> data/projections.html
   -> parse_projections.py -> data/projections.json
   -> build_pool.py        -> ../pool.json
   -> match_sleeper.py     -> ../pool.json with sleeper_id
@@ -17,6 +18,7 @@ data/projections.html
 also a standalone CLI:
 
 ```bash
+uv run pool_pipeline/fetch_projections.py
 uv run pool_pipeline/pipeline.py --report
 uv run pool_pipeline/pipeline.py --only pool
 uv run pool_pipeline/parse_projections.py in.html -o out.json
@@ -32,7 +34,9 @@ the small metadata file records when it was fetched.
 ## File contracts
 
 `projections.json` is a faithful provider export: identity fields, eight scoring
-schemes, four horizons, displayed and derived ranks, ADP, and analysis text. The printed
+schemes, four horizons, displayed and derived ranks, ADP, and analysis text. About 880
+rows across all positions, 395 of them QB/RB/WR/TE. In season the 1-year column is
+season-to-date plus rest of season and ADP is absent. The printed
 ranks in the saved HTML are stale; consumers use the gap-free ranks derived from 3D value.
 
 `pool.json` is the narrow draft input: every usable QB/RB/WR/TE player, with 13

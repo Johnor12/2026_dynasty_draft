@@ -1,6 +1,6 @@
 {
   "source": "https://api.sleeper.app/v1",
-  "fetched_at": "2026-10-21T12:10:05+00:00",
+  "fetched_at": "2026-10-21T14:52:33+00:00",
   "league_id": "1388293617071714304",
   "league_name": "Dudes",
   "season": "2026",
@@ -4313,7 +4313,7 @@
       "position": "WR",
       "team": "SEA",
       "injury_status": null,
-      "ros_points": 59.34
+      "ros_points": 59.33
     },
     "4040": {
       "name": "JuJu Smith-Schuster",
@@ -4334,7 +4334,7 @@
       "position": "QB",
       "team": "KC",
       "injury_status": null,
-      "ros_points": 211.83
+      "ros_points": 211.82
     },
     "4050": {
       "name": "Cyril Grayson",
@@ -13112,7 +13112,7 @@
       "position": "RB",
       "team": "KC",
       "injury_status": null,
-      "ros_points": 214.45
+      "ros_points": 214.46
     },
     "8152": {
       "name": "Kennedy Brooks",
@@ -14820,7 +14820,7 @@
       "position": "WR",
       "team": "SEA",
       "injury_status": null,
-      "ros_points": 210.08
+      "ros_points": 210.07
     },
     "9489": {
       "name": "Justin Shorter",
@@ -16185,7 +16185,7 @@
       "position": "RB",
       "team": "SEA",
       "injury_status": null,
-      "ros_points": 29.23
+      "ros_points": 29.3
     },
     "11438": {
       "name": "Dallas Daniels",
@@ -18642,7 +18642,7 @@
       "position": "WR",
       "team": "SEA",
       "injury_status": null,
-      "ros_points": 29.29
+      "ros_points": 29.28
     },
     "12498": {
       "name": "Mason Taylor",

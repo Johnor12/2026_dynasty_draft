@@ -43,7 +43,7 @@ data_source_investigator/ ────> data_source_matches.json
 In season:
 
 ```text
-pool.json ─────────────────────────────────────────┐
+pool_pipeline/ ───────────────> pool.json ──────────┐
 data_source_investigator/ ────> data/rankings.json ─┼─> waivers.py ──> +EV moves on stdout
 league_pipeline/ ─────────────> league.json ────────┤
 data_source_investigator/data/raw/ ─────────────────┼─> trades.py ───> +EV trades on stdout
@@ -95,9 +95,10 @@ adjustments and fitted choice noise. Opponent picks never use my projections or 
 
 ## Common workflows
 
-Rebuild the projection pool after saving updated provider HTML:
+Pull DraftSharks' dynasty rows and rebuild the projection pool:
 
 ```bash
+uv run pool_pipeline/fetch_projections.py
 uv run pool_pipeline/pipeline.py --report
 ```
 
@@ -123,11 +124,16 @@ In season, refresh provider rankings and the league, then list +EV waiver moves:
 uv run waivers.py
 ```
 
-It refetches and rebuilds the provider boards, fetches `league.json`, and then prices
-every free agent against my roster with the ranker's expected-lineup value. The yr1
+It pulls DraftSharks' dynasty rows and rebuilds `pool.json`, refetches and rebuilds the
+provider boards, fetches `league.json`, and then prices every free agent against my
+roster with the ranker's expected-lineup value. The yr1
 horizon becomes rest-of-season points: Sleeper's weekly projections from the current
-week through week 17, scored with the league's `scoring_settings`. Years 2–3 remain
-DraftSharks' from `pool.json`, and are 0 for players DraftSharks does not project. The
+week through week 17, scored with the league's `scoring_settings`. Years 2–3 are
+DraftSharks' 2027-28 points from the rebuilt `pool.json`: in season its 1-year column is
+season-to-date plus rest of season, so 3yr minus 1yr is still the next two seasons. They
+are 0 for players DraftSharks does not project, which in season is everyone past about
+395 QB/RB/WR/TE, and the source publishes no ADP then. The in-season rebuild overwrites
+the draft-time pool that `rankings.json` was ranked on; git history keeps that one. The
 best unrostered player at each position is the wire fallback, so a move's EV includes
 the fallback it spends or creates. Each free agent is shown with his best active-roster
 drop. Moves are not additive. The refreshed provider ranks are shown only as context
@@ -161,13 +167,18 @@ season stats with the league's settings; it moves once a year, so it is not part
 waivers refresh.
 
 Every package also shows my market delta on KeepTradeCut superflex TE+, on FantasyCalc's
-10-team values, and `mkt`, their blend with FantasyCalc rescaled onto KTC's scale. Pick
-values come from the raw snapshots, which is why the KeepTradeCut fetch includes rookie
-picks; `build_rankings.py` drops them from the board. The opponent is scored on both
-horizons, or on 2027-28 only with `--tanking`. His EV is printed but a sweep filters on
-what he will actually check: it lists packages that are +EV for me and cost him at most
-`MARKET_SLACK` of the blended value he sends. A sweep runs on up to eight worker
-processes.
+10-team values, and `mkt`, their blend with FantasyCalc rescaled onto KTC's scale, and `KTCcalc`, my margin
+on KeepTradeCut's trade calculator. That calculator's value adjustment, ported into
+`trades.py` from the site's script and checked against the live page, shrinks every piece
+toward a share of the trade's best piece and credits the side whose pieces keep more of
+their value with the single-player equivalent of the gap: quantity for quality reads as a
+loss for the seller, and even a 1-for-1 gap is amplified several times. Pick values come
+from the raw snapshots, which is why the KeepTradeCut fetch includes rookie picks;
+`build_rankings.py` drops them from the board. The opponent is scored on both horizons, or
+on 2027-28 only with `--tanking`. His EV is printed but a sweep filters on what he will
+actually check: it lists packages that are +EV for me and on which the calculator favors me
+by at most `KTC_SLACK`, about what his own offer conceded there. A sweep runs on up to
+eight worker processes.
 
 Refreshing the boards overwrites the gitignored draft-time raw snapshots. It also
 means a bare `rank.py` refuses to run until `investigate.py` re-matches against the
