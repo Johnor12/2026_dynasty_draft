@@ -1,0 +1,2418 @@
+{
+ "source": {
+  "draft_order": "https://github.com/nflverse/nflverse-data/releases/download/draft_picks/draft_picks.csv",
+  "stats": "https://api.sleeper.app/v1/stats/nfl/regular"
+ },
+ "fetched_at": "2026-10-21T13:51:07+00:00",
+ "classes": [
+  2019,
+  2020,
+  2021,
+  2022,
+  2023,
+  2024
+ ],
+ "slots": 40,
+ "rows": [
+  {
+   "class": 2019,
+   "slot": 1,
+   "nfl_pick": 1,
+   "name": "Kyler Murray",
+   "position": "QB",
+   "sleeper_id": "5849",
+   "yr1_points": 297.3,
+   "yr2_points": 390.7
+  },
+  {
+   "class": 2019,
+   "slot": 2,
+   "nfl_pick": 6,
+   "name": "Daniel Jones",
+   "position": "QB",
+   "sleeper_id": "5870",
+   "yr1_points": 227.0,
+   "yr2_points": 190.0
+  },
+  {
+   "class": 2019,
+   "slot": 3,
+   "nfl_pick": 8,
+   "name": "T.J. Hockenson",
+   "position": "TE",
+   "sleeper_id": "5844",
+   "yr1_points": 80.7,
+   "yr2_points": 175.3
+  },
+  {
+   "class": 2019,
+   "slot": 4,
+   "nfl_pick": 15,
+   "name": "Dwayne Haskins",
+   "position": "QB",
+   "sleeper_id": "5845",
+   "yr1_points": 83.7,
+   "yr2_points": 75.2
+  },
+  {
+   "class": 2019,
+   "slot": 5,
+   "nfl_pick": 20,
+   "name": "Noah Fant",
+   "position": "TE",
+   "sleeper_id": "5857",
+   "yr1_points": 111.0,
+   "yr2_points": 149.3
+  },
+  {
+   "class": 2019,
+   "slot": 6,
+   "nfl_pick": 24,
+   "name": "Josh Jacobs",
+   "position": "RB",
+   "sleeper_id": "5850",
+   "yr1_points": 181.6,
+   "yr2_points": 214.8
+  },
+  {
+   "class": 2019,
+   "slot": 7,
+   "nfl_pick": 25,
+   "name": "Marquise Brown",
+   "position": "WR",
+   "sleeper_id": "5848",
+   "yr1_points": 123.4,
+   "yr2_points": 154.0
+  },
+  {
+   "class": 2019,
+   "slot": 8,
+   "nfl_pick": 32,
+   "name": "N'Keal Harry",
+   "position": "WR",
+   "sleeper_id": null,
+   "yr1_points": 0,
+   "yr2_points": 0
+  },
+  {
+   "class": 2019,
+   "slot": 9,
+   "nfl_pick": 36,
+   "name": "Deebo Samuel",
+   "position": "WR",
+   "sleeper_id": "5872",
+   "yr1_points": 160.6,
+   "yr2_points": 64.2
+  },
+  {
+   "class": 2019,
+   "slot": 10,
+   "nfl_pick": 42,
+   "name": "Drew Lock",
+   "position": "QB",
+   "sleeper_id": "5854",
+   "yr1_points": 71.0,
+   "yr2_points": 196.3
+  },
+  {
+   "class": 2019,
+   "slot": 11,
+   "nfl_pick": 50,
+   "name": "Irv Smith Jr.",
+   "position": "TE",
+   "sleeper_id": "6126",
+   "yr1_points": 79.1,
+   "yr2_points": 98.5
+  },
+  {
+   "class": 2019,
+   "slot": 12,
+   "nfl_pick": 51,
+   "name": "A.J. Brown",
+   "position": "WR",
+   "sleeper_id": "5859",
+   "yr1_points": 191.1,
+   "yr2_points": 212.5
+  },
+  {
+   "class": 2019,
+   "slot": 13,
+   "nfl_pick": 52,
+   "name": "Drew Sample",
+   "position": "TE",
+   "sleeper_id": "6001",
+   "yr1_points": 8.0,
+   "yr2_points": 78.9
+  },
+  {
+   "class": 2019,
+   "slot": 14,
+   "nfl_pick": 53,
+   "name": "Miles Sanders",
+   "position": "RB",
+   "sleeper_id": "6151",
+   "yr1_points": 193.7,
+   "yr2_points": 156.4
+  },
+  {
+   "class": 2019,
+   "slot": 15,
+   "nfl_pick": 56,
+   "name": "Mecole Hardman",
+   "position": "WR",
+   "sleeper_id": "5917",
+   "yr1_points": 106.5,
+   "yr2_points": 107.6
+  },
+  {
+   "class": 2019,
+   "slot": 16,
+   "nfl_pick": 57,
+   "name": "JJ Arcega-Whiteside",
+   "position": "WR",
+   "sleeper_id": "5863",
+   "yr1_points": 27.9,
+   "yr2_points": 18.5
+  },
+  {
+   "class": 2019,
+   "slot": 17,
+   "nfl_pick": 59,
+   "name": "Parris Campbell",
+   "position": "WR",
+   "sleeper_id": "5880",
+   "yr1_points": 29.1,
+   "yr2_points": 11.7
+  },
+  {
+   "class": 2019,
+   "slot": 18,
+   "nfl_pick": 62,
+   "name": "Andy Isabella",
+   "position": "WR",
+   "sleeper_id": "5915",
+   "yr1_points": 30.9,
+   "yr2_points": 44.3
+  },
+  {
+   "class": 2019,
+   "slot": 19,
+   "nfl_pick": 64,
+   "name": "D.K. Metcalf",
+   "position": "WR",
+   "sleeper_id": "5846",
+   "yr1_points": 158.1,
+   "yr2_points": 229.8
+  },
+  {
+   "class": 2019,
+   "slot": 20,
+   "nfl_pick": 66,
+   "name": "Diontae Johnson",
+   "position": "WR",
+   "sleeper_id": "5937",
+   "yr1_points": 133.6,
+   "yr2_points": 177.8
+  },
+  {
+   "class": 2019,
+   "slot": 21,
+   "nfl_pick": 67,
+   "name": "Jalen Hurd",
+   "position": "WR",
+   "sleeper_id": "5911",
+   "yr1_points": 0,
+   "yr2_points": 0
+  },
+  {
+   "class": 2019,
+   "slot": 22,
+   "nfl_pick": 69,
+   "name": "Josh Oliver",
+   "position": "TE",
+   "sleeper_id": "5973",
+   "yr1_points": 4.5,
+   "yr2_points": 0
+  },
+  {
+   "class": 2019,
+   "slot": 23,
+   "nfl_pick": 70,
+   "name": "Darrell Henderson",
+   "position": "RB",
+   "sleeper_id": "5916",
+   "yr1_points": 20.4,
+   "yr2_points": 122.3
+  },
+  {
+   "class": 2019,
+   "slot": 24,
+   "nfl_pick": 73,
+   "name": "David Montgomery",
+   "position": "RB",
+   "sleeper_id": "5892",
+   "yr1_points": 157.9,
+   "yr2_points": 237.8
+  },
+  {
+   "class": 2019,
+   "slot": 25,
+   "nfl_pick": 74,
+   "name": "Devin Singletary",
+   "position": "RB",
+   "sleeper_id": "6130",
+   "yr1_points": 133.4,
+   "yr2_points": 124.6
+  },
+  {
+   "class": 2019,
+   "slot": 26,
+   "nfl_pick": 75,
+   "name": "Jace Sternberger",
+   "position": "TE",
+   "sleeper_id": "6139",
+   "yr1_points": 0,
+   "yr2_points": 29.4
+  },
+  {
+   "class": 2019,
+   "slot": 27,
+   "nfl_pick": 76,
+   "name": "Terry McLaurin",
+   "position": "WR",
+   "sleeper_id": "5927",
+   "yr1_points": 162.9,
+   "yr2_points": 180.3
+  },
+  {
+   "class": 2019,
+   "slot": 28,
+   "nfl_pick": 86,
+   "name": "Kahale Warring",
+   "position": "TE",
+   "sleeper_id": "6164",
+   "yr1_points": 0,
+   "yr2_points": 6.5
+  },
+  {
+   "class": 2019,
+   "slot": 29,
+   "nfl_pick": 87,
+   "name": "Damien Harris",
+   "position": "RB",
+   "sleeper_id": "5890",
+   "yr1_points": 1.2,
+   "yr2_points": 88.8
+  },
+  {
+   "class": 2019,
+   "slot": 30,
+   "nfl_pick": 93,
+   "name": "Miles Boykin",
+   "position": "WR",
+   "sleeper_id": "5965",
+   "yr1_points": 44.3,
+   "yr2_points": 60.1
+  },
+  {
+   "class": 2019,
+   "slot": 31,
+   "nfl_pick": 96,
+   "name": "Dawson Knox",
+   "position": "TE",
+   "sleeper_id": "5906",
+   "yr1_points": 79.7,
+   "yr2_points": 66.8
+  },
+  {
+   "class": 2019,
+   "slot": 32,
+   "nfl_pick": 100,
+   "name": "Will Grier",
+   "position": "QB",
+   "sleeper_id": "5903",
+   "yr1_points": 5.3,
+   "yr2_points": 0
+  },
+  {
+   "class": 2019,
+   "slot": 33,
+   "nfl_pick": 102,
+   "name": "Alexander Mattison",
+   "position": "RB",
+   "sleeper_id": "5987",
+   "yr1_points": 63.4,
+   "yr2_points": 80.4
+  },
+  {
+   "class": 2019,
+   "slot": 34,
+   "nfl_pick": 103,
+   "name": "Hakeem Butler",
+   "position": "WR",
+   "sleeper_id": null,
+   "yr1_points": 0,
+   "yr2_points": 0
+  },
+  {
+   "class": 2019,
+   "slot": 35,
+   "nfl_pick": 104,
+   "name": "Ryan Finley",
+   "position": "QB",
+   "sleeper_id": "5885",
+   "yr1_points": 26.7,
+   "yr2_points": 21.2
+  },
+  {
+   "class": 2019,
+   "slot": 36,
+   "nfl_pick": 112,
+   "name": "Bryce Love",
+   "position": "RB",
+   "sleeper_id": "5889",
+   "yr1_points": 0,
+   "yr2_points": 0
+  },
+  {
+   "class": 2019,
+   "slot": 37,
+   "nfl_pick": 113,
+   "name": "Justice Hill",
+   "position": "RB",
+   "sleeper_id": "5995",
+   "yr1_points": 45.5,
+   "yr2_points": 11.5
+  },
+  {
+   "class": 2019,
+   "slot": 38,
+   "nfl_pick": 120,
+   "name": "Gary Jennings Jr",
+   "position": "WR",
+   "sleeper_id": "6045",
+   "yr1_points": 0,
+   "yr2_points": 0
+  },
+  {
+   "class": 2019,
+   "slot": 39,
+   "nfl_pick": 121,
+   "name": "Trevon Wesco",
+   "position": "TE",
+   "sleeper_id": "6181",
+   "yr1_points": 6.9,
+   "yr2_points": 1.5
+  },
+  {
+   "class": 2019,
+   "slot": 40,
+   "nfl_pick": 122,
+   "name": "Benny Snell Jr.",
+   "position": "RB",
+   "sleeper_id": "6156",
+   "yr1_points": 56.4,
+   "yr2_points": 70.9
+  },
+  {
+   "class": 2020,
+   "slot": 1,
+   "nfl_pick": 1,
+   "name": "Joe Burrow",
+   "position": "QB",
+   "sleeper_id": "6770",
+   "yr1_points": 178.7,
+   "yr2_points": 328.2
+  },
+  {
+   "class": 2020,
+   "slot": 2,
+   "nfl_pick": 5,
+   "name": "Tua Tagovailoa",
+   "position": "QB",
+   "sleeper_id": "6768",
+   "yr1_points": 140.5,
+   "yr2_points": 190.9
+  },
+  {
+   "class": 2020,
+   "slot": 3,
+   "nfl_pick": 6,
+   "name": "Justin Herbert",
+   "position": "QB",
+   "sleeper_id": "6797",
+   "yr1_points": 342.8,
+   "yr2_points": 395.8
+  },
+  {
+   "class": 2020,
+   "slot": 4,
+   "nfl_pick": 12,
+   "name": "Henry Ruggs III",
+   "position": "WR",
+   "sleeper_id": "6789",
+   "yr1_points": 71.1,
+   "yr2_points": 72.5
+  },
+  {
+   "class": 2020,
+   "slot": 5,
+   "nfl_pick": 15,
+   "name": "Jerry Jeudy",
+   "position": "WR",
+   "sleeper_id": "6783",
+   "yr1_points": 131.6,
+   "yr2_points": 66.0
+  },
+  {
+   "class": 2020,
+   "slot": 6,
+   "nfl_pick": 17,
+   "name": "CeeDee Lamb",
+   "position": "WR",
+   "sleeper_id": "6786",
+   "yr1_points": 180.7,
+   "yr2_points": 193.3
+  },
+  {
+   "class": 2020,
+   "slot": 7,
+   "nfl_pick": 21,
+   "name": "Jalen Reagor",
+   "position": "WR",
+   "sleeper_id": "6798",
+   "yr1_points": 71.7,
+   "yr2_points": 61.6
+  },
+  {
+   "class": 2020,
+   "slot": 8,
+   "nfl_pick": 22,
+   "name": "Justin Jefferson",
+   "position": "WR",
+   "sleeper_id": "6794",
+   "yr1_points": 230.2,
+   "yr2_points": 276.4
+  },
+  {
+   "class": 2020,
+   "slot": 9,
+   "nfl_pick": 25,
+   "name": "Brandon Aiyuk",
+   "position": "WR",
+   "sleeper_id": "6803",
+   "yr1_points": 154.5,
+   "yr2_points": 142.3
+  },
+  {
+   "class": 2020,
+   "slot": 10,
+   "nfl_pick": 26,
+   "name": "Jordan Love",
+   "position": "QB",
+   "sleeper_id": "6804",
+   "yr1_points": 0,
+   "yr2_points": 24.1
+  },
+  {
+   "class": 2020,
+   "slot": 11,
+   "nfl_pick": 32,
+   "name": "Clyde Edwards-Helaire",
+   "position": "RB",
+   "sleeper_id": "6820",
+   "yr1_points": 158.0,
+   "yr2_points": 108.1
+  },
+  {
+   "class": 2020,
+   "slot": 12,
+   "nfl_pick": 33,
+   "name": "Tee Higgins",
+   "position": "WR",
+   "sleeper_id": "6801",
+   "yr1_points": 161.1,
+   "yr2_points": 182.1
+  },
+  {
+   "class": 2020,
+   "slot": 13,
+   "nfl_pick": 34,
+   "name": "Michael Pittman Jr.",
+   "position": "WR",
+   "sleeper_id": "6819",
+   "yr1_points": 78.9,
+   "yr2_points": 194.6
+  },
+  {
+   "class": 2020,
+   "slot": 14,
+   "nfl_pick": 35,
+   "name": "D'Andre Swift",
+   "position": "RB",
+   "sleeper_id": "6790",
+   "yr1_points": 166.8,
+   "yr2_points": 177.9
+  },
+  {
+   "class": 2020,
+   "slot": 15,
+   "nfl_pick": 41,
+   "name": "Jonathan Taylor",
+   "position": "RB",
+   "sleeper_id": "6813",
+   "yr1_points": 234.8,
+   "yr2_points": 353.1
+  },
+  {
+   "class": 2020,
+   "slot": 16,
+   "nfl_pick": 42,
+   "name": "Laviska Shenault Jr.",
+   "position": "WR",
+   "sleeper_id": "6814",
+   "yr1_points": 128.1,
+   "yr2_points": 95.5
+  },
+  {
+   "class": 2020,
+   "slot": 17,
+   "nfl_pick": 43,
+   "name": "Cole Kmet",
+   "position": "TE",
+   "sleeper_id": "6826",
+   "yr1_points": 62.0,
+   "yr2_points": 121.2
+  },
+  {
+   "class": 2020,
+   "slot": 18,
+   "nfl_pick": 46,
+   "name": "KJ Hamler",
+   "position": "WR",
+   "sleeper_id": "6805",
+   "yr1_points": 75.1,
+   "yr2_points": 9.9
+  },
+  {
+   "class": 2020,
+   "slot": 19,
+   "nfl_pick": 49,
+   "name": "Chase Claypool",
+   "position": "WR",
+   "sleeper_id": "6886",
+   "yr1_points": 183.9,
+   "yr2_points": 137.1
+  },
+  {
+   "class": 2020,
+   "slot": 20,
+   "nfl_pick": 52,
+   "name": "Cam Akers",
+   "position": "RB",
+   "sleeper_id": "6938",
+   "yr1_points": 96.3,
+   "yr2_points": 2.8
+  },
+  {
+   "class": 2020,
+   "slot": 21,
+   "nfl_pick": 53,
+   "name": "Jalen Hurts",
+   "position": "QB",
+   "sleeper_id": "6904",
+   "yr1_points": 112.9,
+   "yr2_points": 321.2
+  },
+  {
+   "class": 2020,
+   "slot": 22,
+   "nfl_pick": 55,
+   "name": "J.K. Dobbins",
+   "position": "RB",
+   "sleeper_id": "6806",
+   "yr1_points": 159.5,
+   "yr2_points": 0
+  },
+  {
+   "class": 2020,
+   "slot": 23,
+   "nfl_pick": 57,
+   "name": "Van Jefferson",
+   "position": "WR",
+   "sleeper_id": "6853",
+   "yr1_points": 37.4,
+   "yr2_points": 143.2
+  },
+  {
+   "class": 2020,
+   "slot": 24,
+   "nfl_pick": 59,
+   "name": "Denzel Mims",
+   "position": "WR",
+   "sleeper_id": "6849",
+   "yr1_points": 49.2,
+   "yr2_points": 17.3
+  },
+  {
+   "class": 2020,
+   "slot": 25,
+   "nfl_pick": 62,
+   "name": "AJ Dillon",
+   "position": "RB",
+   "sleeper_id": "6828",
+   "yr1_points": 39.3,
+   "yr2_points": 168.6
+  },
+  {
+   "class": 2020,
+   "slot": 26,
+   "nfl_pick": 66,
+   "name": "Antonio Gibson",
+   "position": "RB",
+   "sleeper_id": "6945",
+   "yr1_points": 184.2,
+   "yr2_points": 208.1
+  },
+  {
+   "class": 2020,
+   "slot": 27,
+   "nfl_pick": 76,
+   "name": "Ke'Shawn Vaughn",
+   "position": "RB",
+   "sleeper_id": "6885",
+   "yr1_points": 20.8,
+   "yr2_points": 34.6
+  },
+  {
+   "class": 2020,
+   "slot": 28,
+   "nfl_pick": 80,
+   "name": "Lynn Bowden Jr.",
+   "position": "WR",
+   "sleeper_id": "6909",
+   "yr1_points": 39.6,
+   "yr2_points": 0
+  },
+  {
+   "class": 2020,
+   "slot": 29,
+   "nfl_pick": 81,
+   "name": "Bryan Edwards",
+   "position": "WR",
+   "sleeper_id": "6870",
+   "yr1_points": 30.8,
+   "yr2_points": 92.1
+  },
+  {
+   "class": 2020,
+   "slot": 30,
+   "nfl_pick": 86,
+   "name": "Zack Moss",
+   "position": "RB",
+   "sleeper_id": "6845",
+   "yr1_points": 94.6,
+   "yr2_points": 93.7
+  },
+  {
+   "class": 2020,
+   "slot": 31,
+   "nfl_pick": 91,
+   "name": "Devin Asiasi",
+   "position": "TE",
+   "sleeper_id": "6956",
+   "yr1_points": 11.9,
+   "yr2_points": 0
+  },
+  {
+   "class": 2020,
+   "slot": 32,
+   "nfl_pick": 92,
+   "name": "Devin Duvernay",
+   "position": "WR",
+   "sleeper_id": "6847",
+   "yr1_points": 43.1,
+   "yr2_points": 66.7
+  },
+  {
+   "class": 2020,
+   "slot": 33,
+   "nfl_pick": 93,
+   "name": "Darrynton Evans",
+   "position": "RB",
+   "sleeper_id": "7064",
+   "yr1_points": 15.1,
+   "yr2_points": 2.8
+  },
+  {
+   "class": 2020,
+   "slot": 34,
+   "nfl_pick": 94,
+   "name": "Josiah Deguara",
+   "position": "TE",
+   "sleeper_id": "7050",
+   "yr1_points": 2.2,
+   "yr2_points": 61.5
+  },
+  {
+   "class": 2020,
+   "slot": 35,
+   "nfl_pick": 101,
+   "name": "Dalton Keene",
+   "position": "TE",
+   "sleeper_id": "7082",
+   "yr1_points": 4.6,
+   "yr2_points": 0
+  },
+  {
+   "class": 2020,
+   "slot": 36,
+   "nfl_pick": 105,
+   "name": "Adam Trautman",
+   "position": "TE",
+   "sleeper_id": "6869",
+   "yr1_points": 38.1,
+   "yr2_points": 63.3
+  },
+  {
+   "class": 2020,
+   "slot": 37,
+   "nfl_pick": 112,
+   "name": "Joshua Kelley",
+   "position": "RB",
+   "sleeper_id": "7045",
+   "yr1_points": 69.7,
+   "yr2_points": 14.5
+  },
+  {
+   "class": 2020,
+   "slot": 38,
+   "nfl_pick": 115,
+   "name": "Harrison Bryant",
+   "position": "TE",
+   "sleeper_id": "6850",
+   "yr1_points": 61.8,
+   "yr2_points": 62.3
+  },
+  {
+   "class": 2020,
+   "slot": 39,
+   "nfl_pick": 118,
+   "name": "Albert Okwuegbunam",
+   "position": "TE",
+   "sleeper_id": "6843",
+   "yr1_points": 29.1,
+   "yr2_points": 76.0
+  },
+  {
+   "class": 2020,
+   "slot": 40,
+   "nfl_pick": 120,
+   "name": "La'Mical Perine",
+   "position": "RB",
+   "sleeper_id": "6908",
+   "yr1_points": 47.0,
+   "yr2_points": 3.1
+  },
+  {
+   "class": 2021,
+   "slot": 1,
+   "nfl_pick": 1,
+   "name": "Trevor Lawrence",
+   "position": "QB",
+   "sleeper_id": "7523",
+   "yr1_points": 216.0,
+   "yr2_points": 303.6
+  },
+  {
+   "class": 2021,
+   "slot": 2,
+   "nfl_pick": 2,
+   "name": "Zach Wilson",
+   "position": "QB",
+   "sleeper_id": "7538",
+   "yr1_points": 162.9,
+   "yr2_points": 105.4
+  },
+  {
+   "class": 2021,
+   "slot": 3,
+   "nfl_pick": 3,
+   "name": "Trey Lance",
+   "position": "QB",
+   "sleeper_id": "7610",
+   "yr1_points": 66.9,
+   "yr2_points": 13.5
+  },
+  {
+   "class": 2021,
+   "slot": 4,
+   "nfl_pick": 4,
+   "name": "Kyle Pitts",
+   "position": "TE",
+   "sleeper_id": "7553",
+   "yr1_points": 176.6,
+   "yr2_points": 75.6
+  },
+  {
+   "class": 2021,
+   "slot": 5,
+   "nfl_pick": 5,
+   "name": "Ja'Marr Chase",
+   "position": "WR",
+   "sleeper_id": "7564",
+   "yr1_points": 264.1,
+   "yr2_points": 198.9
+  },
+  {
+   "class": 2021,
+   "slot": 6,
+   "nfl_pick": 6,
+   "name": "Jaylen Waddle",
+   "position": "WR",
+   "sleeper_id": "7526",
+   "yr1_points": 193.8,
+   "yr2_points": 221.7
+  },
+  {
+   "class": 2021,
+   "slot": 7,
+   "nfl_pick": 10,
+   "name": "DeVonta Smith",
+   "position": "WR",
+   "sleeper_id": "7525",
+   "yr1_points": 153.6,
+   "yr2_points": 207.1
+  },
+  {
+   "class": 2021,
+   "slot": 8,
+   "nfl_pick": 11,
+   "name": "Justin Fields",
+   "position": "QB",
+   "sleeper_id": "7591",
+   "yr1_points": 136.8,
+   "yr2_points": 307.0
+  },
+  {
+   "class": 2021,
+   "slot": 9,
+   "nfl_pick": 15,
+   "name": "Mac Jones",
+   "position": "QB",
+   "sleeper_id": "7527",
+   "yr1_points": 237.9,
+   "yr2_points": 181.1
+  },
+  {
+   "class": 2021,
+   "slot": 10,
+   "nfl_pick": 20,
+   "name": "Kadarius Toney",
+   "position": "WR",
+   "sleeper_id": "7606",
+   "yr1_points": 62.9,
+   "yr2_points": 49.3
+  },
+  {
+   "class": 2021,
+   "slot": 11,
+   "nfl_pick": 24,
+   "name": "Najee Harris",
+   "position": "RB",
+   "sleeper_id": "7528",
+   "yr1_points": 263.7,
+   "yr2_points": 203.4
+  },
+  {
+   "class": 2021,
+   "slot": 12,
+   "nfl_pick": 25,
+   "name": "Travis Etienne",
+   "position": "RB",
+   "sleeper_id": "7543",
+   "yr1_points": 0,
+   "yr2_points": 187.6
+  },
+  {
+   "class": 2021,
+   "slot": 13,
+   "nfl_pick": 27,
+   "name": "Rashod Bateman",
+   "position": "WR",
+   "sleeper_id": "7571",
+   "yr1_points": 80.5,
+   "yr2_points": 46.0
+  },
+  {
+   "class": 2021,
+   "slot": 14,
+   "nfl_pick": 34,
+   "name": "Elijah Moore",
+   "position": "WR",
+   "sleeper_id": "7596",
+   "yr1_points": 116.7,
+   "yr2_points": 69.6
+  },
+  {
+   "class": 2021,
+   "slot": 15,
+   "nfl_pick": 35,
+   "name": "Javonte Williams",
+   "position": "RB",
+   "sleeper_id": "7588",
+   "yr1_points": 183.4,
+   "yr2_points": 34.0
+  },
+  {
+   "class": 2021,
+   "slot": 16,
+   "nfl_pick": 49,
+   "name": "Rondale Moore",
+   "position": "WR",
+   "sleeper_id": "7601",
+   "yr1_points": 82.1,
+   "yr2_points": 67.4
+  },
+  {
+   "class": 2021,
+   "slot": 17,
+   "nfl_pick": 55,
+   "name": "Pat Freiermuth",
+   "position": "TE",
+   "sleeper_id": "7600",
+   "yr1_points": 151.7,
+   "yr2_points": 148.2
+  },
+  {
+   "class": 2021,
+   "slot": 18,
+   "nfl_pick": 56,
+   "name": "D'Wayne Eskridge",
+   "position": "WR",
+   "sleeper_id": null,
+   "yr1_points": 0,
+   "yr2_points": 0
+  },
+  {
+   "class": 2021,
+   "slot": 19,
+   "nfl_pick": 57,
+   "name": "Tutu Atwell",
+   "position": "WR",
+   "sleeper_id": "7562",
+   "yr1_points": 0.0,
+   "yr2_points": 54.2
+  },
+  {
+   "class": 2021,
+   "slot": 20,
+   "nfl_pick": 59,
+   "name": "Terrace Marshall Jr.",
+   "position": "WR",
+   "sleeper_id": "7565",
+   "yr1_points": 24.3,
+   "yr2_points": 69.0
+  },
+  {
+   "class": 2021,
+   "slot": 21,
+   "nfl_pick": 64,
+   "name": "Kyle Trask",
+   "position": "QB",
+   "sleeper_id": "7605",
+   "yr1_points": 0,
+   "yr2_points": 0.9
+  },
+  {
+   "class": 2021,
+   "slot": 22,
+   "nfl_pick": 66,
+   "name": "Kellen Mond",
+   "position": "QB",
+   "sleeper_id": "7581",
+   "yr1_points": 0.2,
+   "yr2_points": 0
+  },
+  {
+   "class": 2021,
+   "slot": 23,
+   "nfl_pick": 67,
+   "name": "Davis Mills",
+   "position": "QB",
+   "sleeper_id": "7585",
+   "yr1_points": 167.0,
+   "yr2_points": 196.5
+  },
+  {
+   "class": 2021,
+   "slot": 24,
+   "nfl_pick": 77,
+   "name": "Josh Palmer",
+   "position": "WR",
+   "sleeper_id": null,
+   "yr1_points": 0,
+   "yr2_points": 0
+  },
+  {
+   "class": 2021,
+   "slot": 25,
+   "nfl_pick": 81,
+   "name": "Hunter Long",
+   "position": "TE",
+   "sleeper_id": "7535",
+   "yr1_points": 1.8,
+   "yr2_points": 0
+  },
+  {
+   "class": 2021,
+   "slot": 26,
+   "nfl_pick": 82,
+   "name": "Dyami Brown",
+   "position": "WR",
+   "sleeper_id": "7587",
+   "yr1_points": 22.1,
+   "yr2_points": 30.3
+  },
+  {
+   "class": 2021,
+   "slot": 27,
+   "nfl_pick": 83,
+   "name": "Tommy Tremble",
+   "position": "TE",
+   "sleeper_id": "7694",
+   "yr1_points": 53.1,
+   "yr2_points": 52.4
+  },
+  {
+   "class": 2021,
+   "slot": 28,
+   "nfl_pick": 85,
+   "name": "Amari Rodgers",
+   "position": "WR",
+   "sleeper_id": "7540",
+   "yr1_points": 7.6,
+   "yr2_points": 31.1
+  },
+  {
+   "class": 2021,
+   "slot": 29,
+   "nfl_pick": 88,
+   "name": "Trey Sermon",
+   "position": "RB",
+   "sleeper_id": "7593",
+   "yr1_points": 26.8,
+   "yr2_points": 1.9
+  },
+  {
+   "class": 2021,
+   "slot": 30,
+   "nfl_pick": 89,
+   "name": "Nico Collins",
+   "position": "WR",
+   "sleeper_id": "7569",
+   "yr1_points": 67.1,
+   "yr2_points": 78.6
+  },
+  {
+   "class": 2021,
+   "slot": 31,
+   "nfl_pick": 91,
+   "name": "Anthony Schwartz",
+   "position": "WR",
+   "sleeper_id": "7533",
+   "yr1_points": 28.4,
+   "yr2_points": 16.8
+  },
+  {
+   "class": 2021,
+   "slot": 32,
+   "nfl_pick": 97,
+   "name": "Tre' McKitty",
+   "position": "TE",
+   "sleeper_id": "7554",
+   "yr1_points": 10.5,
+   "yr2_points": 17.2
+  },
+  {
+   "class": 2021,
+   "slot": 33,
+   "nfl_pick": 107,
+   "name": "Michael Carter",
+   "position": "RB",
+   "sleeper_id": "7607",
+   "yr1_points": 136.4,
+   "yr2_points": 105.5
+  },
+  {
+   "class": 2021,
+   "slot": 34,
+   "nfl_pick": 109,
+   "name": "Dez Fitzpatrick",
+   "position": "WR",
+   "sleeper_id": "7729",
+   "yr1_points": 13.4,
+   "yr2_points": 0
+  },
+  {
+   "class": 2021,
+   "slot": 35,
+   "nfl_pick": 112,
+   "name": "Amon-Ra St. Brown",
+   "position": "WR",
+   "sleeper_id": "7547",
+   "yr1_points": 182.3,
+   "yr2_points": 214.6
+  },
+  {
+   "class": 2021,
+   "slot": 36,
+   "nfl_pick": 119,
+   "name": "Kene Nwangwu",
+   "position": "RB",
+   "sleeper_id": "7720",
+   "yr1_points": 21.0,
+   "yr2_points": 10.5
+  },
+  {
+   "class": 2021,
+   "slot": 37,
+   "nfl_pick": 120,
+   "name": "Rhamondre Stevenson",
+   "position": "RB",
+   "sleeper_id": "7611",
+   "yr1_points": 107.9,
+   "yr2_points": 214.6
+  },
+  {
+   "class": 2021,
+   "slot": 38,
+   "nfl_pick": 124,
+   "name": "John Bates",
+   "position": "TE",
+   "sleeper_id": "7716",
+   "yr1_points": 50.9,
+   "yr2_points": 30.8
+  },
+  {
+   "class": 2021,
+   "slot": 39,
+   "nfl_pick": 126,
+   "name": "Chuba Hubbard",
+   "position": "RB",
+   "sleeper_id": "7594",
+   "yr1_points": 125.1,
+   "yr2_points": 80.7
+  },
+  {
+   "class": 2021,
+   "slot": 40,
+   "nfl_pick": 127,
+   "name": "Kylen Granson",
+   "position": "TE",
+   "sleeper_id": "7602",
+   "yr1_points": 21.6,
+   "yr2_points": 62.2
+  },
+  {
+   "class": 2022,
+   "slot": 1,
+   "nfl_pick": 8,
+   "name": "Drake London",
+   "position": "WR",
+   "sleeper_id": "8112",
+   "yr1_points": 142.6,
+   "yr2_points": 139.9
+  },
+  {
+   "class": 2022,
+   "slot": 2,
+   "nfl_pick": 10,
+   "name": "Garrett Wilson",
+   "position": "WR",
+   "sleeper_id": "8146",
+   "yr1_points": 174.2,
+   "yr2_points": 165.7
+  },
+  {
+   "class": 2022,
+   "slot": 3,
+   "nfl_pick": 11,
+   "name": "Chris Olave",
+   "position": "WR",
+   "sleeper_id": "8144",
+   "yr1_points": 162.2,
+   "yr2_points": 187.8
+  },
+  {
+   "class": 2022,
+   "slot": 4,
+   "nfl_pick": 12,
+   "name": "Jameson Williams",
+   "position": "WR",
+   "sleeper_id": "8148",
+   "yr1_points": 14.6,
+   "yr2_points": 68.3
+  },
+  {
+   "class": 2022,
+   "slot": 5,
+   "nfl_pick": 16,
+   "name": "Jahan Dotson",
+   "position": "WR",
+   "sleeper_id": "8119",
+   "yr1_points": 113.1,
+   "yr2_points": 100.3
+  },
+  {
+   "class": 2022,
+   "slot": 6,
+   "nfl_pick": 18,
+   "name": "Treylon Burks",
+   "position": "WR",
+   "sleeper_id": "8135",
+   "yr1_points": 77.6,
+   "yr2_points": 31.9
+  },
+  {
+   "class": 2022,
+   "slot": 7,
+   "nfl_pick": 20,
+   "name": "Kenny Pickett",
+   "position": "QB",
+   "sleeper_id": "8160",
+   "yr1_points": 158.9,
+   "yr2_points": 114.2
+  },
+  {
+   "class": 2022,
+   "slot": 8,
+   "nfl_pick": 34,
+   "name": "Christian Watson",
+   "position": "WR",
+   "sleeper_id": "8167",
+   "yr1_points": 143.6,
+   "yr2_points": 87.3
+  },
+  {
+   "class": 2022,
+   "slot": 9,
+   "nfl_pick": 36,
+   "name": "Breece Hall",
+   "position": "RB",
+   "sleeper_id": "8155",
+   "yr1_points": 105.6,
+   "yr2_points": 252.5
+  },
+  {
+   "class": 2022,
+   "slot": 10,
+   "nfl_pick": 41,
+   "name": "Kenneth Walker III",
+   "position": "RB",
+   "sleeper_id": "8151",
+   "yr1_points": 189.0,
+   "yr2_points": 184.9
+  },
+  {
+   "class": 2022,
+   "slot": 11,
+   "nfl_pick": 43,
+   "name": "Wan'Dale Robinson",
+   "position": "WR",
+   "sleeper_id": "8126",
+   "yr1_points": 40.1,
+   "yr2_points": 103.2
+  },
+  {
+   "class": 2022,
+   "slot": 12,
+   "nfl_pick": 44,
+   "name": "John Metchie",
+   "position": "WR",
+   "sleeper_id": "8147",
+   "yr1_points": 0,
+   "yr2_points": 24.2
+  },
+  {
+   "class": 2022,
+   "slot": 13,
+   "nfl_pick": 50,
+   "name": "Tyquan Thornton",
+   "position": "WR",
+   "sleeper_id": "8188",
+   "yr1_points": 55.3,
+   "yr2_points": 20.7
+  },
+  {
+   "class": 2022,
+   "slot": 14,
+   "nfl_pick": 52,
+   "name": "George Pickens",
+   "position": "WR",
+   "sleeper_id": "8137",
+   "yr1_points": 140.5,
+   "yr2_points": 177.3
+  },
+  {
+   "class": 2022,
+   "slot": 15,
+   "nfl_pick": 53,
+   "name": "Alec Pierce",
+   "position": "WR",
+   "sleeper_id": "8142",
+   "yr1_points": 91.8,
+   "yr2_points": 79.4
+  },
+  {
+   "class": 2022,
+   "slot": 16,
+   "nfl_pick": 54,
+   "name": "Skyy Moore",
+   "position": "WR",
+   "sleeper_id": "8168",
+   "yr1_points": 32.4,
+   "yr2_points": 43.2
+  },
+  {
+   "class": 2022,
+   "slot": 17,
+   "nfl_pick": 55,
+   "name": "Trey McBride",
+   "position": "TE",
+   "sleeper_id": "8130",
+   "yr1_points": 61.5,
+   "yr2_points": 181.5
+  },
+  {
+   "class": 2022,
+   "slot": 18,
+   "nfl_pick": 63,
+   "name": "James Cook",
+   "position": "RB",
+   "sleeper_id": "8138",
+   "yr1_points": 97.0,
+   "yr2_points": 210.7
+  },
+  {
+   "class": 2022,
+   "slot": 19,
+   "nfl_pick": 71,
+   "name": "Velus Jones Jr.",
+   "position": "WR",
+   "sleeper_id": "8223",
+   "yr1_points": 30.5,
+   "yr2_points": 9.1
+  },
+  {
+   "class": 2022,
+   "slot": 20,
+   "nfl_pick": 73,
+   "name": "Jelani Woods",
+   "position": "TE",
+   "sleeper_id": "8219",
+   "yr1_points": 74.2,
+   "yr2_points": 0
+  },
+  {
+   "class": 2022,
+   "slot": 21,
+   "nfl_pick": 74,
+   "name": "Desmond Ridder",
+   "position": "QB",
+   "sleeper_id": "8159",
+   "yr1_points": 38.7,
+   "yr2_points": 188.6
+  },
+  {
+   "class": 2022,
+   "slot": 22,
+   "nfl_pick": 80,
+   "name": "Greg Dulcich",
+   "position": "TE",
+   "sleeper_id": "8172",
+   "yr1_points": 86.1,
+   "yr2_points": 5.5
+  },
+  {
+   "class": 2022,
+   "slot": 23,
+   "nfl_pick": 86,
+   "name": "Malik Willis",
+   "position": "QB",
+   "sleeper_id": "8161",
+   "yr1_points": 22.3,
+   "yr2_points": 3.1
+  },
+  {
+   "class": 2022,
+   "slot": 24,
+   "nfl_pick": 88,
+   "name": "Jalen Tolbert",
+   "position": "WR",
+   "sleeper_id": "8117",
+   "yr1_points": 2.2,
+   "yr2_points": 47.8
+  },
+  {
+   "class": 2022,
+   "slot": 25,
+   "nfl_pick": 91,
+   "name": "Rachaad White",
+   "position": "RB",
+   "sleeper_id": "8136",
+   "yr1_points": 114.1,
+   "yr2_points": 235.9
+  },
+  {
+   "class": 2022,
+   "slot": 26,
+   "nfl_pick": 93,
+   "name": "Tyrion Davis-Price",
+   "position": "RB",
+   "sleeper_id": "8211",
+   "yr1_points": 9.9,
+   "yr2_points": 2.1
+  },
+  {
+   "class": 2022,
+   "slot": 27,
+   "nfl_pick": 94,
+   "name": "Matt Corral",
+   "position": "QB",
+   "sleeper_id": "8164",
+   "yr1_points": 0,
+   "yr2_points": 0
+  },
+  {
+   "class": 2022,
+   "slot": 28,
+   "nfl_pick": 98,
+   "name": "Brian Robinson Jr.",
+   "position": "RB",
+   "sleeper_id": "8154",
+   "yr1_points": 108.2,
+   "yr2_points": 180.1
+  },
+  {
+   "class": 2022,
+   "slot": 29,
+   "nfl_pick": 99,
+   "name": "David Bell",
+   "position": "WR",
+   "sleeper_id": "8118",
+   "yr1_points": 33.4,
+   "yr2_points": 41.7
+  },
+  {
+   "class": 2022,
+   "slot": 30,
+   "nfl_pick": 101,
+   "name": "Jeremy Ruckert",
+   "position": "TE",
+   "sleeper_id": "8145",
+   "yr1_points": 1.8,
+   "yr2_points": 31.1
+  },
+  {
+   "class": 2022,
+   "slot": 31,
+   "nfl_pick": 105,
+   "name": "Danny Gray",
+   "position": "WR",
+   "sleeper_id": "8176",
+   "yr1_points": 2.4,
+   "yr2_points": 0
+  },
+  {
+   "class": 2022,
+   "slot": 32,
+   "nfl_pick": 106,
+   "name": "Cade Otton",
+   "position": "TE",
+   "sleeper_id": "8111",
+   "yr1_points": 93.1,
+   "yr2_points": 116.5
+  },
+  {
+   "class": 2022,
+   "slot": 33,
+   "nfl_pick": 107,
+   "name": "Dameon Pierce",
+   "position": "RB",
+   "sleeper_id": "8129",
+   "yr1_points": 151.4,
+   "yr2_points": 76.2
+  },
+  {
+   "class": 2022,
+   "slot": 34,
+   "nfl_pick": 112,
+   "name": "Daniel Bellinger",
+   "position": "TE",
+   "sleeper_id": "8225",
+   "yr1_points": 75.0,
+   "yr2_points": 50.5
+  },
+  {
+   "class": 2022,
+   "slot": 35,
+   "nfl_pick": 122,
+   "name": "Zamir White",
+   "position": "RB",
+   "sleeper_id": "8139",
+   "yr1_points": 7.0,
+   "yr2_points": 66.4
+  },
+  {
+   "class": 2022,
+   "slot": 36,
+   "nfl_pick": 123,
+   "name": "Isaiah Spiller",
+   "position": "RB",
+   "sleeper_id": "8153",
+   "yr1_points": 6.9,
+   "yr2_points": 16.0
+  },
+  {
+   "class": 2022,
+   "slot": 37,
+   "nfl_pick": 125,
+   "name": "Erik Ezukanma",
+   "position": "WR",
+   "sleeper_id": "8114",
+   "yr1_points": 0.8,
+   "yr2_points": 2.2
+  },
+  {
+   "class": 2022,
+   "slot": 38,
+   "nfl_pick": 127,
+   "name": "Pierre Strong",
+   "position": "RB",
+   "sleeper_id": "8116",
+   "yr1_points": 23.7,
+   "yr2_points": 41.3
+  },
+  {
+   "class": 2022,
+   "slot": 39,
+   "nfl_pick": 128,
+   "name": "Charlie Kolar",
+   "position": "TE",
+   "sleeper_id": "8127",
+   "yr1_points": 8.9,
+   "yr2_points": 21.7
+  },
+  {
+   "class": 2022,
+   "slot": 40,
+   "nfl_pick": 129,
+   "name": "Jake Ferguson",
+   "position": "TE",
+   "sleeper_id": "8110",
+   "yr1_points": 48.4,
+   "yr2_points": 177.1
+  },
+  {
+   "class": 2023,
+   "slot": 1,
+   "nfl_pick": 1,
+   "name": "Bryce Young",
+   "position": "QB",
+   "sleeper_id": "9228",
+   "yr1_points": 166.4,
+   "yr2_points": 204.0
+  },
+  {
+   "class": 2023,
+   "slot": 2,
+   "nfl_pick": 2,
+   "name": "C.J. Stroud",
+   "position": "QB",
+   "sleeper_id": "9758",
+   "yr1_points": 280.5,
+   "yr2_points": 232.4
+  },
+  {
+   "class": 2023,
+   "slot": 3,
+   "nfl_pick": 4,
+   "name": "Anthony Richardson",
+   "position": "QB",
+   "sleeper_id": "9229",
+   "yr1_points": 73.7,
+   "yr2_points": 174.9
+  },
+  {
+   "class": 2023,
+   "slot": 4,
+   "nfl_pick": 8,
+   "name": "Bijan Robinson",
+   "position": "RB",
+   "sleeper_id": "9509",
+   "yr1_points": 217.3,
+   "yr2_points": 311.2
+  },
+  {
+   "class": 2023,
+   "slot": 5,
+   "nfl_pick": 12,
+   "name": "Jahmyr Gibbs",
+   "position": "RB",
+   "sleeper_id": "9221",
+   "yr1_points": 216.1,
+   "yr2_points": 336.9
+  },
+  {
+   "class": 2023,
+   "slot": 6,
+   "nfl_pick": 20,
+   "name": "Jaxon Smith-Njigba",
+   "position": "WR",
+   "sleeper_id": "9488",
+   "yr1_points": 118.3,
+   "yr2_points": 203.0
+  },
+  {
+   "class": 2023,
+   "slot": 7,
+   "nfl_pick": 21,
+   "name": "Quentin Johnston",
+   "position": "WR",
+   "sleeper_id": "9754",
+   "yr1_points": 75.0,
+   "yr2_points": 147.2
+  },
+  {
+   "class": 2023,
+   "slot": 8,
+   "nfl_pick": 22,
+   "name": "Zay Flowers",
+   "position": "WR",
+   "sleeper_id": "9997",
+   "yr1_points": 167.9,
+   "yr2_points": 172.5
+  },
+  {
+   "class": 2023,
+   "slot": 9,
+   "nfl_pick": 23,
+   "name": "Jordan Addison",
+   "position": "WR",
+   "sleeper_id": "9756",
+   "yr1_points": 186.3,
+   "yr2_points": 181.0
+  },
+  {
+   "class": 2023,
+   "slot": 10,
+   "nfl_pick": 25,
+   "name": "Dalton Kincaid",
+   "position": "TE",
+   "sleeper_id": "10236",
+   "yr1_points": 150.3,
+   "yr2_points": 100.8
+  },
+  {
+   "class": 2023,
+   "slot": 11,
+   "nfl_pick": 33,
+   "name": "Will Levis",
+   "position": "QB",
+   "sleeper_id": "9999",
+   "yr1_points": 106.0,
+   "yr2_points": 131.9
+  },
+  {
+   "class": 2023,
+   "slot": 12,
+   "nfl_pick": 34,
+   "name": "Sam LaPorta",
+   "position": "TE",
+   "sleeper_id": "10859",
+   "yr1_points": 239.3,
+   "yr2_points": 174.6
+  },
+  {
+   "class": 2023,
+   "slot": 13,
+   "nfl_pick": 35,
+   "name": "Michael Mayer",
+   "position": "TE",
+   "sleeper_id": "9482",
+   "yr1_points": 71.4,
+   "yr2_points": 36.6
+  },
+  {
+   "class": 2023,
+   "slot": 14,
+   "nfl_pick": 39,
+   "name": "Jonathan Mingo",
+   "position": "WR",
+   "sleeper_id": "10225",
+   "yr1_points": 63.3,
+   "yr2_points": 23.7
+  },
+  {
+   "class": 2023,
+   "slot": 15,
+   "nfl_pick": 42,
+   "name": "Luke Musgrave",
+   "position": "TE",
+   "sleeper_id": "9481",
+   "yr1_points": 75.2,
+   "yr2_points": 11.5
+  },
+  {
+   "class": 2023,
+   "slot": 16,
+   "nfl_pick": 50,
+   "name": "Jayden Reed",
+   "position": "WR",
+   "sleeper_id": "10222",
+   "yr1_points": 185.2,
+   "yr2_points": 169.5
+  },
+  {
+   "class": 2023,
+   "slot": 17,
+   "nfl_pick": 52,
+   "name": "Zach Charbonnet",
+   "position": "RB",
+   "sleeper_id": "9753",
+   "yr1_points": 89.6,
+   "yr2_points": 165.9
+  },
+  {
+   "class": 2023,
+   "slot": 18,
+   "nfl_pick": 55,
+   "name": "Rashee Rice",
+   "position": "WR",
+   "sleeper_id": "10229",
+   "yr1_points": 173.0,
+   "yr2_points": 52.9
+  },
+  {
+   "class": 2023,
+   "slot": 19,
+   "nfl_pick": 58,
+   "name": "Luke Schoonmaker",
+   "position": "TE",
+   "sleeper_id": "10871",
+   "yr1_points": 26.5,
+   "yr2_points": 57.1
+  },
+  {
+   "class": 2023,
+   "slot": 20,
+   "nfl_pick": 61,
+   "name": "Brenton Strange",
+   "position": "TE",
+   "sleeper_id": "9480",
+   "yr1_points": 14.5,
+   "yr2_points": 91.1
+  },
+  {
+   "class": 2023,
+   "slot": 21,
+   "nfl_pick": 63,
+   "name": "Marvin Mims",
+   "position": "WR",
+   "sleeper_id": "9494",
+   "yr1_points": 59.7,
+   "yr2_points": 110.0
+  },
+  {
+   "class": 2023,
+   "slot": 22,
+   "nfl_pick": 68,
+   "name": "Hendon Hooker",
+   "position": "QB",
+   "sleeper_id": "9998",
+   "yr1_points": 0,
+   "yr2_points": 2.7
+  },
+  {
+   "class": 2023,
+   "slot": 23,
+   "nfl_pick": 69,
+   "name": "Tank Dell",
+   "position": "WR",
+   "sleeper_id": "9502",
+   "yr1_points": 141.5,
+   "yr2_points": 114.5
+  },
+  {
+   "class": 2023,
+   "slot": 24,
+   "nfl_pick": 71,
+   "name": "Kendre Miller",
+   "position": "RB",
+   "sleeper_id": "9757",
+   "yr1_points": 38.3,
+   "yr2_points": 26.6
+  },
+  {
+   "class": 2023,
+   "slot": 25,
+   "nfl_pick": 73,
+   "name": "Jalin Hyatt",
+   "position": "WR",
+   "sleeper_id": "9497",
+   "yr1_points": 48.8,
+   "yr2_points": 10.2
+  },
+  {
+   "class": 2023,
+   "slot": 26,
+   "nfl_pick": 74,
+   "name": "Cedric Tillman",
+   "position": "WR",
+   "sleeper_id": "10444",
+   "yr1_points": 33.7,
+   "yr2_points": 65.9
+  },
+  {
+   "class": 2023,
+   "slot": 27,
+   "nfl_pick": 78,
+   "name": "Tucker Kraft",
+   "position": "TE",
+   "sleeper_id": "9484",
+   "yr1_points": 78.5,
+   "yr2_points": 163.3
+  },
+  {
+   "class": 2023,
+   "slot": 28,
+   "nfl_pick": 79,
+   "name": "Josh Downs",
+   "position": "WR",
+   "sleeper_id": "9500",
+   "yr1_points": 123.1,
+   "yr2_points": 147.5
+  },
+  {
+   "class": 2023,
+   "slot": 29,
+   "nfl_pick": 81,
+   "name": "Tyjae Spears",
+   "position": "RB",
+   "sleeper_id": "9508",
+   "yr1_points": 127.8,
+   "yr2_points": 98.6
+  },
+  {
+   "class": 2023,
+   "slot": 30,
+   "nfl_pick": 84,
+   "name": "De'Von Achane",
+   "position": "RB",
+   "sleeper_id": "9226",
+   "yr1_points": 177.2,
+   "yr2_points": 260.9
+  },
+  {
+   "class": 2023,
+   "slot": 31,
+   "nfl_pick": 88,
+   "name": "Tank Bigsby",
+   "position": "RB",
+   "sleeper_id": "9225",
+   "yr1_points": 22.3,
+   "yr2_points": 125.5
+  },
+  {
+   "class": 2023,
+   "slot": 32,
+   "nfl_pick": 93,
+   "name": "Darnell Washington",
+   "position": "TE",
+   "sleeper_id": "9479",
+   "yr1_points": 13.1,
+   "yr2_points": 45.0
+  },
+  {
+   "class": 2023,
+   "slot": 33,
+   "nfl_pick": 94,
+   "name": "Michael Wilson",
+   "position": "WR",
+   "sleeper_id": "10232",
+   "yr1_points": 95.5,
+   "yr2_points": 101.0
+  },
+  {
+   "class": 2023,
+   "slot": 34,
+   "nfl_pick": 100,
+   "name": "Tre Tucker",
+   "position": "WR",
+   "sleeper_id": "10213",
+   "yr1_points": 62.3,
+   "yr2_points": 105.8
+  },
+  {
+   "class": 2023,
+   "slot": 35,
+   "nfl_pick": 101,
+   "name": "Cameron Latu",
+   "position": "TE",
+   "sleeper_id": "10210",
+   "yr1_points": 0,
+   "yr2_points": 0
+  },
+  {
+   "class": 2023,
+   "slot": 36,
+   "nfl_pick": 115,
+   "name": "Roschon Johnson",
+   "position": "RB",
+   "sleeper_id": "10235",
+   "yr1_points": 85.1,
+   "yr2_points": 69.4
+  },
+  {
+   "class": 2023,
+   "slot": 37,
+   "nfl_pick": 125,
+   "name": "Derius Davis",
+   "position": "WR",
+   "sleeper_id": "10234",
+   "yr1_points": 28.2,
+   "yr2_points": 33.6
+  },
+  {
+   "class": 2023,
+   "slot": 38,
+   "nfl_pick": 127,
+   "name": "Jake Haener",
+   "position": "QB",
+   "sleeper_id": "10215",
+   "yr1_points": 0,
+   "yr2_points": 14.2
+  },
+  {
+   "class": 2023,
+   "slot": 39,
+   "nfl_pick": 128,
+   "name": "Stetson Bennett",
+   "position": "QB",
+   "sleeper_id": "10857",
+   "yr1_points": 0,
+   "yr2_points": 0
+  },
+  {
+   "class": 2023,
+   "slot": 40,
+   "nfl_pick": 131,
+   "name": "Charlie Jones",
+   "position": "WR",
+   "sleeper_id": "10228",
+   "yr1_points": 17.2,
+   "yr2_points": 5.0
+  },
+  {
+   "class": 2024,
+   "slot": 1,
+   "nfl_pick": 1,
+   "name": "Caleb Williams",
+   "position": "QB",
+   "sleeper_id": "11560",
+   "yr1_points": 260.5,
+   "yr2_points": 324.2
+  },
+  {
+   "class": 2024,
+   "slot": 2,
+   "nfl_pick": 2,
+   "name": "Jayden Daniels",
+   "position": "QB",
+   "sleeper_id": "11566",
+   "yr1_points": 364.8,
+   "yr2_points": 117.3
+  },
+  {
+   "class": 2024,
+   "slot": 3,
+   "nfl_pick": 3,
+   "name": "Drake Maye",
+   "position": "QB",
+   "sleeper_id": "11564",
+   "yr1_points": 187.1,
+   "yr2_points": 359.5
+  },
+  {
+   "class": 2024,
+   "slot": 4,
+   "nfl_pick": 4,
+   "name": "Marvin Harrison Jr.",
+   "position": "WR",
+   "sleeper_id": "11628",
+   "yr1_points": 165.5,
+   "yr2_points": 107.3
+  },
+  {
+   "class": 2024,
+   "slot": 5,
+   "nfl_pick": 6,
+   "name": "Malik Nabers",
+   "position": "WR",
+   "sleeper_id": "11632",
+   "yr1_points": 219.1,
+   "yr2_points": 48.1
+  },
+  {
+   "class": 2024,
+   "slot": 6,
+   "nfl_pick": 8,
+   "name": "Michael Penix",
+   "position": "QB",
+   "sleeper_id": "11559",
+   "yr1_points": 47.1,
+   "yr2_points": 123.3
+  },
+  {
+   "class": 2024,
+   "slot": 7,
+   "nfl_pick": 9,
+   "name": "Rome Odunze",
+   "position": "WR",
+   "sleeper_id": "11620",
+   "yr1_points": 117.9,
+   "yr2_points": 124.1
+  },
+  {
+   "class": 2024,
+   "slot": 8,
+   "nfl_pick": 10,
+   "name": "J.J. McCarthy",
+   "position": "QB",
+   "sleeper_id": "11565",
+   "yr1_points": 0,
+   "yr2_points": 137.4
+  },
+  {
+   "class": 2024,
+   "slot": 9,
+   "nfl_pick": 12,
+   "name": "Bo Nix",
+   "position": "QB",
+   "sleeper_id": "11563",
+   "yr1_points": 328.7,
+   "yr2_points": 315.8
+  },
+  {
+   "class": 2024,
+   "slot": 10,
+   "nfl_pick": 13,
+   "name": "Brock Bowers",
+   "position": "TE",
+   "sleeper_id": "11604",
+   "yr1_points": 262.7,
+   "yr2_points": 176.2
+  },
+  {
+   "class": 2024,
+   "slot": 11,
+   "nfl_pick": 23,
+   "name": "Brian Thomas",
+   "position": "WR",
+   "sleeper_id": "11631",
+   "yr1_points": 240.5,
+   "yr2_points": 114.8
+  },
+  {
+   "class": 2024,
+   "slot": 12,
+   "nfl_pick": 28,
+   "name": "Xavier Worthy",
+   "position": "WR",
+   "sleeper_id": "11624",
+   "yr1_points": 157.7,
+   "yr2_points": 88.9
+  },
+  {
+   "class": 2024,
+   "slot": 13,
+   "nfl_pick": 31,
+   "name": "Ricky Pearsall",
+   "position": "WR",
+   "sleeper_id": "11638",
+   "yr1_points": 78.0,
+   "yr2_points": 70.6
+  },
+  {
+   "class": 2024,
+   "slot": 14,
+   "nfl_pick": 32,
+   "name": "Xavier Legette",
+   "position": "WR",
+   "sleeper_id": "11626",
+   "yr1_points": 100.6,
+   "yr2_points": 71.8
+  },
+  {
+   "class": 2024,
+   "slot": 15,
+   "nfl_pick": 33,
+   "name": "Keon Coleman",
+   "position": "WR",
+   "sleeper_id": "11637",
+   "yr1_points": 97.0,
+   "yr2_points": 83.4
+  },
+  {
+   "class": 2024,
+   "slot": 16,
+   "nfl_pick": 34,
+   "name": "Ladd McConkey",
+   "position": "WR",
+   "sleeper_id": "11635",
+   "yr1_points": 199.9,
+   "yr2_points": 147.9
+  },
+  {
+   "class": 2024,
+   "slot": 17,
+   "nfl_pick": 37,
+   "name": "Ja'Lynn Polk",
+   "position": "WR",
+   "sleeper_id": "11619",
+   "yr1_points": 26.7,
+   "yr2_points": 0
+  },
+  {
+   "class": 2024,
+   "slot": 18,
+   "nfl_pick": 46,
+   "name": "Jonathon Brooks",
+   "position": "RB",
+   "sleeper_id": "11583",
+   "yr1_points": 6.0,
+   "yr2_points": 0
+  },
+  {
+   "class": 2024,
+   "slot": 19,
+   "nfl_pick": 52,
+   "name": "Adonai Mitchell",
+   "position": "WR",
+   "sleeper_id": "11625",
+   "yr1_points": 42.3,
+   "yr2_points": 71.4
+  },
+  {
+   "class": 2024,
+   "slot": 20,
+   "nfl_pick": 53,
+   "name": "Ben Sinnott",
+   "position": "TE",
+   "sleeper_id": "11596",
+   "yr1_points": 13.8,
+   "yr2_points": 28.4
+  },
+  {
+   "class": 2024,
+   "slot": 21,
+   "nfl_pick": 65,
+   "name": "Malachi Corley",
+   "position": "WR",
+   "sleeper_id": "11617",
+   "yr1_points": 3.7,
+   "yr2_points": 26.1
+  },
+  {
+   "class": 2024,
+   "slot": 22,
+   "nfl_pick": 66,
+   "name": "Trey Benson",
+   "position": "RB",
+   "sleeper_id": "11589",
+   "yr1_points": 44.0,
+   "yr2_points": 28.9
+  },
+  {
+   "class": 2024,
+   "slot": 23,
+   "nfl_pick": 80,
+   "name": "Jermaine Burton",
+   "position": "WR",
+   "sleeper_id": "11640",
+   "yr1_points": 12.7,
+   "yr2_points": 0
+  },
+  {
+   "class": 2024,
+   "slot": 24,
+   "nfl_pick": 82,
+   "name": "Tip Reiman",
+   "position": "TE",
+   "sleeper_id": "11716",
+   "yr1_points": 9.7,
+   "yr2_points": 4.8
+  },
+  {
+   "class": 2024,
+   "slot": 25,
+   "nfl_pick": 83,
+   "name": "Blake Corum",
+   "position": "RB",
+   "sleeper_id": "11586",
+   "yr1_points": 30.0,
+   "yr2_points": 118.2
+  },
+  {
+   "class": 2024,
+   "slot": 26,
+   "nfl_pick": 84,
+   "name": "Roman Wilson",
+   "position": "WR",
+   "sleeper_id": "11630",
+   "yr1_points": 0,
+   "yr2_points": 32.6
+  },
+  {
+   "class": 2024,
+   "slot": 27,
+   "nfl_pick": 88,
+   "name": "MarShawn Lloyd",
+   "position": "RB",
+   "sleeper_id": "11581",
+   "yr1_points": 2.3,
+   "yr2_points": 0
+  },
+  {
+   "class": 2024,
+   "slot": 28,
+   "nfl_pick": 92,
+   "name": "Jalen McMillan",
+   "position": "WR",
+   "sleeper_id": "11618",
+   "yr1_points": 116.9,
+   "yr2_points": 23.9
+  },
+  {
+   "class": 2024,
+   "slot": 29,
+   "nfl_pick": 100,
+   "name": "Luke McCaffrey",
+   "position": "WR",
+   "sleeper_id": "11650",
+   "yr1_points": 25.8,
+   "yr2_points": 45.8
+  },
+  {
+   "class": 2024,
+   "slot": 30,
+   "nfl_pick": 101,
+   "name": "Ja'Tavion Sanders",
+   "position": "TE",
+   "sleeper_id": "11600",
+   "yr1_points": 73.2,
+   "yr2_points": 54.0
+  },
+  {
+   "class": 2024,
+   "slot": 31,
+   "nfl_pick": 102,
+   "name": "Troy Franklin",
+   "position": "WR",
+   "sleeper_id": "11627",
+   "yr1_points": 53.1,
+   "yr2_points": 144.6
+  },
+  {
+   "class": 2024,
+   "slot": 32,
+   "nfl_pick": 107,
+   "name": "Theo Johnson",
+   "position": "TE",
+   "sleeper_id": "11597",
+   "yr1_points": 68.1,
+   "yr2_points": 127.8
+  },
+  {
+   "class": 2024,
+   "slot": 33,
+   "nfl_pick": 110,
+   "name": "Javon Baker",
+   "position": "WR",
+   "sleeper_id": "11645",
+   "yr1_points": 1.7,
+   "yr2_points": 0
+  },
+  {
+   "class": 2024,
+   "slot": 34,
+   "nfl_pick": 113,
+   "name": "Devontez Walker",
+   "position": "WR",
+   "sleeper_id": "11629",
+   "yr1_points": 8.6,
+   "yr2_points": 34.6
+  },
+  {
+   "class": 2024,
+   "slot": 35,
+   "nfl_pick": 115,
+   "name": "Erick All",
+   "position": "TE",
+   "sleeper_id": "11592",
+   "yr1_points": 35.8,
+   "yr2_points": 0
+  },
+  {
+   "class": 2024,
+   "slot": 36,
+   "nfl_pick": 120,
+   "name": "Jaylen Wright",
+   "position": "RB",
+   "sleeper_id": "11643",
+   "yr1_points": 25.2,
+   "yr2_points": 45.7
+  },
+  {
+   "class": 2024,
+   "slot": 37,
+   "nfl_pick": 121,
+   "name": "AJ Barner",
+   "position": "TE",
+   "sleeper_id": "11603",
+   "yr1_points": 78.5,
+   "yr2_points": 147.3
+  },
+  {
+   "class": 2024,
+   "slot": 38,
+   "nfl_pick": 123,
+   "name": "Cade Stover",
+   "position": "TE",
+   "sleeper_id": "11599",
+   "yr1_points": 34.3,
+   "yr2_points": 19.9
+  },
+  {
+   "class": 2024,
+   "slot": 39,
+   "nfl_pick": 125,
+   "name": "Bucky Irving",
+   "position": "RB",
+   "sleeper_id": "11584",
+   "yr1_points": 220.9,
+   "yr2_points": 123.5
+  },
+  {
+   "class": 2024,
+   "slot": 40,
+   "nfl_pick": 127,
+   "name": "Will Shipley",
+   "position": "RB",
+   "sleeper_id": "11577",
+   "yr1_points": 13.7,
+   "yr2_points": 13.0
+  }
+ ]
+}

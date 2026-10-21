@@ -45,7 +45,9 @@ In season:
 ```text
 pool.json ─────────────────────────────────────────┐
 data_source_investigator/ ────> data/rankings.json ─┼─> waivers.py ──> +EV moves on stdout
-league_pipeline/ ─────────────> league.json ────────┘
+league_pipeline/ ─────────────> league.json ────────┤
+data_source_investigator/data/raw/ ─────────────────┼─> trades.py ───> +EV trades on stdout
+league_pipeline/ ─────────────> pick_history.json ──┘
 ```
 
 The published files have distinct owners:
@@ -56,6 +58,8 @@ The published files have distinct owners:
 - `rankings.json`: undrafted-player rankings, recommendations, simulations, and validation
 - `league.json`: current Sleeper rosters (active, taxi, IR) and every player's
   rest-of-season projected points in this league's scoring
+- `pick_history.json`: for six past draft classes, the player at each rookie slot and his
+  first two seasons of points in this league's scoring
 
 `sleeper_id` is the cross-process player key. `roster_id` and `draft_slot` connect
 opponent source matches to the live board.
@@ -70,7 +74,10 @@ opponent source matches to the live board.
   and output contracts
 - `league_pipeline/fetch_league.py`: Sleeper league rosters and weekly projections to
   `league.json`
+- `league_pipeline/fetch_pick_history.py`: what rookie slots have returned, to
+  `pick_history.json`
 - `waivers.py`: in-season refresh and waiver-move pricing
+- `trades.py`: trade pricing against one opponent, proposed or swept
 - `index.html`: dependency-free dashboard for `rankings.json`
 - `data_source_investigator/index.html`: source-fit and pick-evidence dashboard
 - `serve.py`: serves both dashboards at http://127.0.0.1:8123
@@ -125,6 +132,42 @@ best unrostered player at each position is the wire fallback, so a move's EV inc
 the fallback it spends or creates. Each free agent is shown with his best active-roster
 drop. Moves are not additive. The refreshed provider ranks are shown only as context
 (`mkt`) and never enter EV.
+
+Price a proposed trade, or sweep every 1-for-1, 2-for-1, 1-for-2, and 2-for-2 package
+with one opponent:
+
+```bash
+uv run trades.py nedjh2 --tanking --give "Jeremiyah Love" --get "Joe Burrow"
+uv run trades.py nedjh2 --tanking
+```
+
+It reads what `waivers.py` refreshed plus `pick_history.json`, and does not refetch. Both
+rosters are priced with the same expected-lineup value and wire as waiver moves, and each
+roster is refilled to the league shape afterwards: incoming players keep IR or taxi when a
+spot is open, a surplus active body is cut cheapest-first, and an open spot takes the best
+free agent.
+
+My 2027 first and second are tradeable, priced as lotteries rather than projections.
+Valuing a mid first as one averaged rookie made it bench depth worth +2 points, because
+the average rookie never starts while the hit does. Instead a pick is the expectation, over
+the players history put within two slots of mine, of the lineup value each would add to the
+roster holding the pick, carrying his own position and his real first two seasons of
+scoring as the pick's 2027-28 points. A pick that moves loses that value on the sender's
+roster and gains it on the receiver's post-trade roster; one that stays put is taken as
+worth the same before and after. `MY_2027_SLOT` in `trades.py` fixes the slot. The
+history comes from `uv run league_pipeline/fetch_pick_history.py`, which proxies
+rookie-draft order with NFL draft order among QB/RB/WR/TE (nflverse) and scores Sleeper's
+season stats with the league's settings; it moves once a year, so it is not part of the
+waivers refresh.
+
+Every package also shows my market delta on KeepTradeCut superflex TE+, on FantasyCalc's
+10-team values, and `mkt`, their blend with FantasyCalc rescaled onto KTC's scale. Pick
+values come from the raw snapshots, which is why the KeepTradeCut fetch includes rookie
+picks; `build_rankings.py` drops them from the board. The opponent is scored on both
+horizons, or on 2027-28 only with `--tanking`. His EV is printed but a sweep filters on
+what he will actually check: it lists packages that are +EV for me and cost him at most
+`MARKET_SLACK` of the blended value he sends. A sweep runs on up to eight worker
+processes.
 
 Refreshing the boards overwrites the gitignored draft-time raw snapshots. It also
 means a bare `rank.py` refuses to run until `investigate.py` re-matches against the

@@ -41,9 +41,11 @@ SOURCES = {
     },
     "keeptradecut": {
         "name": "KeepTradeCut",
+        # RDP adds rookie draft picks, which trades.py prices off this raw snapshot;
+        # build_rankings.py drops them from the board.
         "url": (
             "https://keeptradecut.com/dynasty-rankings?"
-            "filters=QB%7CWR%7CRB%7CTE&format=2&page=0"
+            "filters=QB%7CWR%7CRB%7CTE%7CRDP&format=2&page=0"
         ),
         "file": "keeptradecut.html",
         "format": "dynasty superflex, 0.5 PPR, TE+ (closest to this league's 0.5 TEP)",
