@@ -78,6 +78,7 @@ opponent source matches to the live board.
   `pick_history.json`
 - `waivers.py`: in-season refresh and waiver-move pricing
 - `trades.py`: trade pricing against one opponent, proposed or swept
+- `odds.py`: playoff and title odds per target year, with and without a trade
 - `index.html`: dependency-free dashboard for `rankings.json`
 - `data_source_investigator/index.html`: source-fit and pick-evidence dashboard
 - `serve.py`: serves both dashboards at http://127.0.0.1:8123
@@ -179,6 +180,20 @@ on 2027-28 only with `--tanking`. His EV is printed but a sweep filters on what 
 actually check: it lists packages that are +EV for me and on which the calculator favors me
 by at most `KTC_SLACK`, about what his own offer conceded there. A sweep runs on up to
 eight worker processes.
+
+Turn a priced trade into chances of winning each target year:
+
+```bash
+uv run odds.py nedjh2 --give "2027 1st" --get "Kyren Williams"
+```
+
+It values every roster the way `trades.py` does, then simulates seasons with each team's
+weekly score drawn around its projected lineup points with the spread of this season's
+actual weekly scores. 2026 runs from Sleeper's live standings and remaining schedule into
+the league's playoff (six teams from week 15, top two seeds on a bye, seeded by wins then
+points). 2027 and 2028 are each one season on a random schedule with half of each team's
+2027-28 points, so they are odds with today's rosters, and the trade's effect on them is the
+point rather than the level. Only the two rosters in the trade change.
 
 Refreshing the boards overwrites the gitignored draft-time raw snapshots. It also
 means a bare `rank.py` refuses to run until `investigate.py` re-matches against the

@@ -1,6 +1,6 @@
 {
   "source": "https://api.sleeper.app/v1",
-  "fetched_at": "2026-10-21T14:52:33+00:00",
+  "fetched_at": "2026-10-22T13:55:02+00:00",
   "league_id": "1388293617071714304",
   "league_name": "Dudes",
   "season": "2026",
@@ -162,10 +162,14 @@
         "12481",
         "12484",
         "12487",
+        "12508",
         "12519",
         "12533",
         "12536",
         "13272",
+        "13281",
+        "13286",
+        "13294",
         "13301",
         "13347",
         "13413",
@@ -173,16 +177,13 @@
         "2306",
         "3257",
         "3634",
-        "6770",
-        "7547",
         "7553",
         "7567",
         "8150",
-        "8167",
         "8188",
         "9224",
+        "9226",
         "9487",
-        "9504",
         "9511"
       ],
       "taxi": [
@@ -192,7 +193,8 @@
       ],
       "reserve": [
         "12484",
-        "12487"
+        "12487",
+        "12508"
       ]
     },
     {
@@ -291,15 +293,11 @@
       "players": [
         "11783",
         "12491",
-        "12508",
         "12522",
         "12526",
         "12670",
-        "13281",
-        "13286",
         "13289",
         "13293",
-        "13294",
         "13296",
         "13298",
         "13305",
@@ -309,12 +307,14 @@
         "13726",
         "4037",
         "4217",
+        "6770",
         "6819",
         "7083",
+        "7547",
         "8119",
         "8154",
+        "8167",
         "9225",
-        "9226",
         "9228",
         "9480",
         "9486",
@@ -329,9 +329,7 @@
         "13726"
       ],
       "reserve": [
-        "12508",
-        "6819",
-        "9226"
+        "6819"
       ]
     },
     {
@@ -1051,7 +1049,7 @@
       "position": "QB",
       "team": "LV",
       "injury_status": null,
-      "ros_points": 170.26
+      "ros_points": 169.66
     },
     "1169": {
       "name": "Robert Griffin",
@@ -1205,14 +1203,14 @@
       "position": "QB",
       "team": "NYJ",
       "injury_status": null,
-      "ros_points": 147.14
+      "ros_points": 147.18
     },
     "1379": {
       "name": "Kyle Juszczyk",
       "position": "RB",
       "team": "SF",
       "injury_status": null,
-      "ros_points": 15.64
+      "ros_points": 15.56
     },
     "1386": {
       "name": "Giovani Bernard",
@@ -1267,8 +1265,8 @@
       "name": "Travis Kelce",
       "position": "TE",
       "team": "KC",
-      "injury_status": null,
-      "ros_points": 141.13
+      "injury_status": "Questionable",
+      "ros_points": 141.07
     },
     "1476": {
       "name": "Latavius Murray",
@@ -1705,7 +1703,7 @@
       "ros_points": 0.0
     },
     "2078": {
-      "name": "Odell Beckham",
+      "name": "Odell Beckham Jr.",
       "position": "WR",
       "team": "MIN",
       "injury_status": null,
@@ -1821,7 +1819,7 @@
       "position": "WR",
       "team": "SF",
       "injury_status": null,
-      "ros_points": 10.47
+      "ros_points": 10.39
     },
     "2200": {
       "name": "Timothy Flanders",
@@ -1912,7 +1910,7 @@
       "position": "QB",
       "team": "NYG",
       "injury_status": null,
-      "ros_points": 130.35
+      "ros_points": 118.46
     },
     "2307": {
       "name": "Marcus Mariota",
@@ -1971,7 +1969,7 @@
       "ros_points": 0.0
     },
     "2334": {
-      "name": "Phillip Dorsett",
+      "name": "Phillip Dorsett II",
       "position": "WR",
       "team": "LV",
       "injury_status": null,
@@ -3123,7 +3121,7 @@
       "position": "QB",
       "team": "DET",
       "injury_status": null,
-      "ros_points": 206.35
+      "ros_points": 206.18
     },
     "3164": {
       "name": "Ezekiel Elliott",
@@ -3158,7 +3156,7 @@
       "position": "RB",
       "team": "BAL",
       "injury_status": null,
-      "ros_points": 158.75
+      "ros_points": 158.33
     },
     "3199": {
       "name": "Michael Thomas",
@@ -3179,7 +3177,7 @@
       "position": "TE",
       "team": "ATL",
       "injury_status": null,
-      "ros_points": 32.25
+      "ros_points": 32.24
     },
     "3204": {
       "name": "C.J. Prosise",
@@ -3249,14 +3247,14 @@
       "position": "QB",
       "team": "ARI",
       "injury_status": null,
-      "ros_points": 154.22
+      "ros_points": 154.02
     },
     "3258": {
       "name": "Nick Vannett",
       "position": "TE",
       "team": "BAL",
       "injury_status": null,
-      "ros_points": 3.2
+      "ros_points": 3.18
     },
     "3269": {
       "name": "Chris Moore",
@@ -3360,7 +3358,7 @@
       "name": "Tyreek Hill",
       "position": "WR",
       "team": null,
-      "injury_status": "Questionable",
+      "injury_status": "",
       "ros_points": 0.0
     },
     "3328": {
@@ -3914,7 +3912,7 @@
       "position": "WR",
       "team": "CHI",
       "injury_status": null,
-      "ros_points": 57.77
+      "ros_points": 57.82
     },
     "3640": {
       "name": "Soma Vainuku",
@@ -4236,7 +4234,7 @@
       "position": "QB",
       "team": "CLE",
       "injury_status": null,
-      "ros_points": 58.55
+      "ros_points": 58.59
     },
     "4018": {
       "name": "Joe Mixon",
@@ -4278,13 +4276,13 @@
       "position": "RB",
       "team": "SF",
       "injury_status": null,
-      "ros_points": 194.6
+      "ros_points": 194.42
     },
     "4035": {
       "name": "Alvin Kamara",
       "position": "RB",
       "team": "NO",
-      "injury_status": null,
+      "injury_status": "Questionable",
       "ros_points": 53.64
     },
     "4036": {
@@ -4295,7 +4293,7 @@
       "ros_points": 0.0
     },
     "4037": {
-      "name": "Chris Godwin",
+      "name": "Chris Godwin Jr.",
       "position": "WR",
       "team": "TB",
       "injury_status": null,
@@ -4334,7 +4332,7 @@
       "position": "QB",
       "team": "KC",
       "injury_status": null,
-      "ros_points": 211.82
+      "ros_points": 211.63
     },
     "4050": {
       "name": "Cyril Grayson",
@@ -4481,7 +4479,7 @@
       "position": "TE",
       "team": "GB",
       "injury_status": null,
-      "ros_points": 29.17
+      "ros_points": 29.23
     },
     "4146": {
       "name": "Dede Westbrook",
@@ -4495,7 +4493,7 @@
       "position": "RB",
       "team": "CIN",
       "injury_status": null,
-      "ros_points": 56.07
+      "ros_points": 56.15
     },
     "4149": {
       "name": "Jamaal Williams",
@@ -4638,7 +4636,7 @@
       "ros_points": 0.0
     },
     "4199": {
-      "name": "Aaron Jones",
+      "name": "Aaron Jones Sr.",
       "position": "RB",
       "team": "MIN",
       "injury_status": null,
@@ -4670,7 +4668,7 @@
       "position": "TE",
       "team": "SF",
       "injury_status": null,
-      "ros_points": 157.0
+      "ros_points": 156.84
     },
     "4218": {
       "name": "Trent Taylor",
@@ -4908,7 +4906,7 @@
       "position": "RB",
       "team": "NYG",
       "injury_status": null,
-      "ros_points": 0.69
+      "ros_points": 0.68
     },
     "4358": {
       "name": "Austin Duke",
@@ -5097,7 +5095,7 @@
       "position": "WR",
       "team": "ARI",
       "injury_status": null,
-      "ros_points": 67.31
+      "ros_points": 67.25
     },
     "4455": {
       "name": "Matt Breida",
@@ -5608,7 +5606,7 @@
       "position": "RB",
       "team": "HOU",
       "injury_status": null,
-      "ros_points": 1.18
+      "ros_points": 6.01
     },
     "4721": {
       "name": "Shakeir Ryan",
@@ -5972,14 +5970,14 @@
       "position": "QB",
       "team": "BAL",
       "injury_status": "Questionable",
-      "ros_points": 226.45
+      "ros_points": 224.89
     },
     "4892": {
       "name": "Baker Mayfield",
       "position": "QB",
       "team": "TB",
       "injury_status": "Questionable",
-      "ros_points": 131.81
+      "ros_points": 146.06
     },
     "4895": {
       "name": "Lamar Atkins",
@@ -6098,7 +6096,7 @@
       "position": "QB",
       "team": "SEA",
       "injury_status": null,
-      "ros_points": 159.14
+      "ros_points": 159.17
     },
     "4949": {
       "name": "Derrius Guice",
@@ -6112,7 +6110,7 @@
       "position": "WR",
       "team": "SF",
       "injury_status": "IR",
-      "ros_points": 13.78
+      "ros_points": 13.77
     },
     "4951": {
       "name": "DJ Chark",
@@ -6153,7 +6151,7 @@
       "name": "Calvin Ridley",
       "position": "WR",
       "team": "TEN",
-      "injury_status": null,
+      "injury_status": "Questionable",
       "ros_points": 24.27
     },
     "4983": {
@@ -6196,7 +6194,7 @@
       "position": "TE",
       "team": "CIN",
       "injury_status": null,
-      "ros_points": 87.87
+      "ros_points": 87.83
     },
     "4994": {
       "name": "Kalen Ballage",
@@ -6244,8 +6242,8 @@
       "name": "Dalton Schultz",
       "position": "TE",
       "team": "HOU",
-      "injury_status": null,
-      "ros_points": 86.09
+      "injury_status": "Questionable",
+      "ros_points": 86.58
     },
     "5004": {
       "name": "Ito Smith",
@@ -6294,7 +6292,7 @@
       "position": "TE",
       "team": "BAL",
       "injury_status": null,
-      "ros_points": 104.51
+      "ros_points": 104.12
     },
     "5013": {
       "name": "Anthony Miller",
@@ -6595,7 +6593,7 @@
       "position": "TE",
       "team": "DET",
       "injury_status": null,
-      "ros_points": 3.96
+      "ros_points": 3.97
     },
     "5134": {
       "name": "Keith Kirkwood",
@@ -6668,7 +6666,7 @@
       "ros_points": 0.0
     },
     "5154": {
-      "name": "Trent Sherfield",
+      "name": "Trent Sherfield Sr.",
       "position": "WR",
       "team": "BUF",
       "injury_status": null,
@@ -7897,13 +7895,13 @@
       "position": "RB",
       "team": "GB",
       "injury_status": null,
-      "ros_points": 125.33
+      "ros_points": 124.59
     },
     "5854": {
       "name": "Drew Lock",
       "position": "QB",
       "team": "SEA",
-      "injury_status": null,
+      "injury_status": "Questionable",
       "ros_points": 0.0
     },
     "5857": {
@@ -7917,7 +7915,7 @@
       "name": "A.J. Brown",
       "position": "WR",
       "team": "NE",
-      "injury_status": "Questionable",
+      "injury_status": null,
       "ros_points": 119.13
     },
     "5863": {
@@ -7932,10 +7930,10 @@
       "position": "QB",
       "team": "IND",
       "injury_status": null,
-      "ros_points": 125.99
+      "ros_points": 126.43
     },
     "5872": {
-      "name": "Deebo Samuel",
+      "name": "Deebo Samuel Sr.",
       "position": "WR",
       "team": "SF",
       "injury_status": "Out",
@@ -8002,7 +8000,7 @@
       "position": "RB",
       "team": "HOU",
       "injury_status": "Questionable",
-      "ros_points": 106.21
+      "ros_points": 97.65
     },
     "5902": {
       "name": "Penny Hart",
@@ -8047,7 +8045,7 @@
       "ros_points": 0.0
     },
     "5917": {
-      "name": "Mecole Hardman",
+      "name": "Mecole Hardman Jr.",
       "position": "WR",
       "team": "IND",
       "injury_status": null,
@@ -8226,7 +8224,7 @@
       "position": "TE",
       "team": "HOU",
       "injury_status": null,
-      "ros_points": 31.86
+      "ros_points": 32.07
     },
     "5987": {
       "name": "Alexander Mattison",
@@ -8240,7 +8238,7 @@
       "position": "RB",
       "team": "BAL",
       "injury_status": null,
-      "ros_points": 53.58
+      "ros_points": 53.29
     },
     "5997": {
       "name": "Jazz Ferguson",
@@ -8254,7 +8252,7 @@
       "position": "TE",
       "team": "CIN",
       "injury_status": null,
-      "ros_points": 29.39
+      "ros_points": 29.37
     },
     "6002": {
       "name": "Qadree Ollison",
@@ -8271,7 +8269,7 @@
       "ros_points": 0.0
     },
     "6011": {
-      "name": "Gardner Minshew",
+      "name": "Gardner Minshew II",
       "position": "QB",
       "team": "ARI",
       "injury_status": null,
@@ -8506,7 +8504,7 @@
       "position": "RB",
       "team": "NYG",
       "injury_status": null,
-      "ros_points": 47.77
+      "ros_points": 47.47
     },
     "6136": {
       "name": "Jarrett Stidham",
@@ -8586,7 +8584,7 @@
       "ros_points": 0.0
     },
     "6154": {
-      "name": "David Sills",
+      "name": "David Sills V",
       "position": "WR",
       "team": "TB",
       "injury_status": "IR",
@@ -8869,8 +8867,8 @@
       "name": "Olamide Zaccheaus",
       "position": "WR",
       "team": "ATL",
-      "injury_status": null,
-      "ros_points": 17.51
+      "injury_status": "Questionable",
+      "ros_points": 17.5
     },
     "6279": {
       "name": "Brandon Dillon",
@@ -9815,7 +9813,7 @@
       "position": "QB",
       "team": "CIN",
       "injury_status": null,
-      "ros_points": 208.15
+      "ros_points": 208.28
     },
     "6778": {
       "name": "Chris Streveler",
@@ -9850,13 +9848,13 @@
       "position": "RB",
       "team": "CHI",
       "injury_status": null,
-      "ros_points": 143.13
+      "ros_points": 142.85
     },
     "6794": {
       "name": "Justin Jefferson",
       "position": "WR",
       "team": "MIN",
-      "injury_status": null,
+      "injury_status": "Questionable",
       "ros_points": 159.08
     },
     "6797": {
@@ -9878,7 +9876,7 @@
       "position": "WR",
       "team": "CIN",
       "injury_status": null,
-      "ros_points": 137.06
+      "ros_points": 137.03
     },
     "6803": {
       "name": "Brandon Aiyuk",
@@ -9891,8 +9889,8 @@
       "name": "Jordan Love",
       "position": "QB",
       "team": "GB",
-      "injury_status": null,
-      "ros_points": 176.91
+      "injury_status": "Questionable",
+      "ros_points": 176.99
     },
     "6805": {
       "name": "KJ Hamler",
@@ -9913,7 +9911,7 @@
       "position": "RB",
       "team": "IND",
       "injury_status": null,
-      "ros_points": 185.66
+      "ros_points": 185.42
     },
     "6814": {
       "name": "Laviska Shenault",
@@ -9923,7 +9921,7 @@
       "ros_points": 0.0
     },
     "6819": {
-      "name": "Michael Pittman",
+      "name": "Michael Pittman Jr.",
       "position": "WR",
       "team": "PIT",
       "injury_status": "IR",
@@ -9962,13 +9960,13 @@
       "position": "TE",
       "team": "CHI",
       "injury_status": null,
-      "ros_points": 42.58
+      "ros_points": 42.62
     },
     "6828": {
       "name": "AJ Dillon",
       "position": "RB",
       "team": "CAR",
-      "injury_status": "Questionable",
+      "injury_status": null,
       "ros_points": 7.97
     },
     "6832": {
@@ -10444,7 +10442,7 @@
       "name": "Rico Dowdle",
       "position": "RB",
       "team": "PIT",
-      "injury_status": null,
+      "injury_status": "Questionable",
       "ros_points": 65.82
     },
     "7032": {
@@ -10473,7 +10471,7 @@
       "position": "WR",
       "team": "LV",
       "injury_status": null,
-      "ros_points": 47.35
+      "ros_points": 47.17
     },
     "7045": {
       "name": "Joshua Kelley",
@@ -10640,8 +10638,8 @@
       "name": "Darnell Mooney",
       "position": "WR",
       "team": "NYG",
-      "injury_status": "Questionable",
-      "ros_points": 31.07
+      "injury_status": null,
+      "ros_points": 30.91
     },
     "7091": {
       "name": "Aaron Parker",
@@ -11494,7 +11492,7 @@
       "name": "Jaylen Waddle",
       "position": "WR",
       "team": "DEN",
-      "injury_status": null,
+      "injury_status": "Questionable",
       "ros_points": 103.42
     },
     "7527": {
@@ -11603,7 +11601,7 @@
       "ros_points": 0.0
     },
     "7543": {
-      "name": "Travis Etienne",
+      "name": "Travis Etienne Jr.",
       "position": "RB",
       "team": "NO",
       "injury_status": "IR",
@@ -11628,7 +11626,7 @@
       "position": "WR",
       "team": "DET",
       "injury_status": null,
-      "ros_points": 176.18
+      "ros_points": 176.03
     },
     "7548": {
       "name": "Tyler Vaughns",
@@ -11666,11 +11664,11 @@
       "ros_points": 0.0
     },
     "7553": {
-      "name": "Kyle Pitts",
+      "name": "Kyle Pitts Sr.",
       "position": "TE",
       "team": "ATL",
       "injury_status": null,
-      "ros_points": 75.87
+      "ros_points": 75.79
     },
     "7554": {
       "name": "Tre' McKitty",
@@ -11740,7 +11738,7 @@
       "position": "WR",
       "team": "CIN",
       "injury_status": null,
-      "ros_points": 167.81
+      "ros_points": 167.78
     },
     "7565": {
       "name": "Terrace Marshall",
@@ -11754,28 +11752,28 @@
       "position": "RB",
       "team": "TB",
       "injury_status": null,
-      "ros_points": 74.34
+      "ros_points": 74.22
     },
     "7568": {
       "name": "Brevin Jordan",
       "position": "TE",
       "team": "HOU",
       "injury_status": null,
-      "ros_points": 4.31
+      "ros_points": 4.39
     },
     "7569": {
       "name": "Nico Collins",
       "position": "WR",
       "team": "HOU",
       "injury_status": null,
-      "ros_points": 150.81
+      "ros_points": 152.09
     },
     "7571": {
       "name": "Rashod Bateman",
       "position": "WR",
       "team": "BAL",
       "injury_status": "Questionable",
-      "ros_points": 57.07
+      "ros_points": 56.85
     },
     "7572": {
       "name": "Kylin Hill",
@@ -12117,7 +12115,7 @@
       "name": "Kene Nwangwu",
       "position": "RB",
       "team": "NYJ",
-      "injury_status": null,
+      "injury_status": "Questionable",
       "ros_points": 0.75
     },
     "7729": {
@@ -12251,7 +12249,7 @@
       "position": "TE",
       "team": "SF",
       "injury_status": null,
-      "ros_points": 19.03
+      "ros_points": 19.01
     },
     "7848": {
       "name": "Scooter Harrington",
@@ -12363,7 +12361,7 @@
       "position": "TE",
       "team": "DET",
       "injury_status": null,
-      "ros_points": 19.42
+      "ros_points": 19.41
     },
     "7893": {
       "name": "Dedrick Mills",
@@ -12867,14 +12865,14 @@
       "position": "TE",
       "team": "TB",
       "injury_status": null,
-      "ros_points": 80.0
+      "ros_points": 79.94
     },
     "8112": {
       "name": "Drake London",
       "position": "WR",
       "team": "ATL",
       "injury_status": null,
-      "ros_points": 144.37
+      "ros_points": 144.26
     },
     "8114": {
       "name": "Erik Ezukanma",
@@ -12891,11 +12889,11 @@
       "ros_points": 0.0
     },
     "8116": {
-      "name": "Pierre Strong",
+      "name": "Pierre Strong Jr.",
       "position": "RB",
       "team": "GB",
       "injury_status": null,
-      "ros_points": 8.57
+      "ros_points": 8.93
     },
     "8117": {
       "name": "Jalen Tolbert",
@@ -12916,7 +12914,7 @@
       "position": "WR",
       "team": "ATL",
       "injury_status": null,
-      "ros_points": 32.84
+      "ros_points": 32.83
     },
     "8120": {
       "name": "Jerrion Ealy",
@@ -12937,7 +12935,7 @@
       "position": "RB",
       "team": "ARI",
       "injury_status": null,
-      "ros_points": 26.62
+      "ros_points": 30.15
     },
     "8123": {
       "name": "Hassan Haskins",
@@ -12947,7 +12945,7 @@
       "ros_points": 0.0
     },
     "8125": {
-      "name": "Calvin Austin",
+      "name": "Calvin Austin III",
       "position": "WR",
       "team": "NYG",
       "injury_status": "IR",
@@ -12979,21 +12977,21 @@
       "position": "TE",
       "team": "ARI",
       "injury_status": null,
-      "ros_points": 167.01
+      "ros_points": 166.95
     },
     "8131": {
       "name": "Isaiah Likely",
       "position": "TE",
       "team": "NYG",
       "injury_status": null,
-      "ros_points": 125.0
+      "ros_points": 124.56
     },
     "8132": {
       "name": "Tyler Allgeier",
       "position": "RB",
       "team": "ARI",
       "injury_status": null,
-      "ros_points": 57.32
+      "ros_points": 61.19
     },
     "8134": {
       "name": "Khalil Shakir",
@@ -13024,7 +13022,7 @@
       "ros_points": 102.96
     },
     "8138": {
-      "name": "James Cook",
+      "name": "James Cook III",
       "position": "RB",
       "team": "BUF",
       "injury_status": null,
@@ -13077,10 +13075,10 @@
       "position": "WR",
       "team": "NYJ",
       "injury_status": null,
-      "ros_points": 128.93
+      "ros_points": 128.99
     },
     "8147": {
-      "name": "John Metchie",
+      "name": "John Metchie III",
       "position": "WR",
       "team": "CAR",
       "injury_status": null,
@@ -13091,7 +13089,7 @@
       "position": "WR",
       "team": "DET",
       "injury_status": null,
-      "ros_points": 105.59
+      "ros_points": 105.52
     },
     "8149": {
       "name": "Master Teague",
@@ -13108,11 +13106,11 @@
       "ros_points": 172.48
     },
     "8151": {
-      "name": "Kenneth Walker",
+      "name": "Kenneth Walker III",
       "position": "RB",
       "team": "KC",
       "injury_status": null,
-      "ros_points": 214.46
+      "ros_points": 215.25
     },
     "8152": {
       "name": "Kennedy Brooks",
@@ -13129,11 +13127,11 @@
       "ros_points": 0.0
     },
     "8154": {
-      "name": "Brian Robinson",
+      "name": "Brian Robinson Jr.",
       "position": "RB",
       "team": "ATL",
-      "injury_status": null,
-      "ros_points": 46.9
+      "injury_status": "Questionable",
+      "ros_points": 46.91
     },
     "8155": {
       "name": "Breece Hall",
@@ -13202,8 +13200,8 @@
       "name": "Christian Watson",
       "position": "WR",
       "team": "GB",
-      "injury_status": null,
-      "ros_points": 147.49
+      "injury_status": "Questionable",
+      "ros_points": 147.55
     },
     "8168": {
       "name": "Skyy Moore",
@@ -13294,7 +13292,7 @@
       "position": "WR",
       "team": "LV",
       "injury_status": null,
-      "ros_points": 30.8
+      "ros_points": 30.74
     },
     "8181": {
       "name": "Connor Heyward",
@@ -13315,7 +13313,7 @@
       "position": "QB",
       "team": "SF",
       "injury_status": null,
-      "ros_points": 222.26
+      "ros_points": 221.99
     },
     "8184": {
       "name": "D'Vonte Price",
@@ -13432,7 +13430,7 @@
     "8200": {
       "name": "Kevin Austin",
       "position": "WR",
-      "team": "NO",
+      "team": null,
       "injury_status": null,
       "ros_points": 0.0
     },
@@ -13461,7 +13459,7 @@
       "name": "Bo Melton",
       "position": "WR",
       "team": "GB",
-      "injury_status": null,
+      "injury_status": "Questionable",
       "ros_points": 6.7
     },
     "8205": {
@@ -13584,7 +13582,7 @@
       "ros_points": 0.0
     },
     "8223": {
-      "name": "Velus Jones",
+      "name": "Velus Jones Jr.",
       "position": "RB",
       "team": "SEA",
       "injury_status": null,
@@ -13986,7 +13984,7 @@
       "name": "Drew Ogletree",
       "position": "TE",
       "team": "IND",
-      "injury_status": null,
+      "injury_status": "Questionable",
       "ros_points": 6.23
     },
     "8500": {
@@ -14008,7 +14006,7 @@
       "position": "WR",
       "team": "LV",
       "injury_status": null,
-      "ros_points": 4.25
+      "ros_points": 4.19
     },
     "8539": {
       "name": "Seth Green",
@@ -14231,7 +14229,7 @@
       "name": "Rashid Shaheed",
       "position": "WR",
       "team": "SEA",
-      "injury_status": null,
+      "injury_status": "Questionable",
       "ros_points": 52.32
     },
     "8685": {
@@ -14687,7 +14685,7 @@
       "position": "RB",
       "team": "DET",
       "injury_status": null,
-      "ros_points": 255.43
+      "ros_points": 255.14
     },
     "9222": {
       "name": "Zach Evans",
@@ -14708,7 +14706,7 @@
       "position": "RB",
       "team": "CIN",
       "injury_status": null,
-      "ros_points": 149.23
+      "ros_points": 149.46
     },
     "9225": {
       "name": "Tank Bigsby",
@@ -14739,7 +14737,7 @@
       "ros_points": 204.05
     },
     "9229": {
-      "name": "Anthony Richardson",
+      "name": "Anthony Richardson Sr.",
       "position": "QB",
       "team": "IND",
       "injury_status": null,
@@ -14750,7 +14748,7 @@
       "position": "QB",
       "team": "PHI",
       "injury_status": null,
-      "ros_points": 133.14
+      "ros_points": 133.47
     },
     "9231": {
       "name": "Jaren Hall",
@@ -14785,7 +14783,7 @@
       "position": "TE",
       "team": "LV",
       "injury_status": null,
-      "ros_points": 74.62
+      "ros_points": 74.5
     },
     "9483": {
       "name": "Zack Kuntz",
@@ -14799,7 +14797,7 @@
       "position": "TE",
       "team": "GB",
       "injury_status": null,
-      "ros_points": 112.32
+      "ros_points": 112.33
     },
     "9486": {
       "name": "Dontayvion Wicks",
@@ -14820,7 +14818,7 @@
       "position": "WR",
       "team": "SEA",
       "injury_status": null,
-      "ros_points": 210.07
+      "ros_points": 210.12
     },
     "9489": {
       "name": "Justin Shorter",
@@ -14833,7 +14831,7 @@
       "name": "Tyler Scott",
       "position": "WR",
       "team": "LV",
-      "injury_status": "Out",
+      "injury_status": "Questionable",
       "ros_points": 0.0
     },
     "9491": {
@@ -14858,7 +14856,7 @@
       "ros_points": 180.43
     },
     "9494": {
-      "name": "Marvin Mims",
+      "name": "Marvin Mims Jr.",
       "position": "WR",
       "team": "DEN",
       "injury_status": null,
@@ -14918,7 +14916,7 @@
       "position": "WR",
       "team": "HOU",
       "injury_status": "IR",
-      "ros_points": 20.63
+      "ros_points": 20.84
     },
     "9503": {
       "name": "Jacob Copeland",
@@ -14932,7 +14930,7 @@
       "position": "WR",
       "team": "HOU",
       "injury_status": null,
-      "ros_points": 47.09
+      "ros_points": 47.27
     },
     "9505": {
       "name": "Deuce Vaughn",
@@ -14945,7 +14943,7 @@
       "name": "Sean Tucker",
       "position": "RB",
       "team": "TB",
-      "injury_status": "Questionable",
+      "injury_status": null,
       "ros_points": 12.31
     },
     "9507": {
@@ -14967,7 +14965,7 @@
       "position": "RB",
       "team": "ATL",
       "injury_status": null,
-      "ros_points": 206.25
+      "ros_points": 206.29
     },
     "9510": {
       "name": "Lew Nichols",
@@ -14995,7 +14993,7 @@
       "position": "RB",
       "team": "SEA",
       "injury_status": "PUP",
-      "ros_points": 86.06
+      "ros_points": 86.12
     },
     "9754": {
       "name": "Quentin Johnston",
@@ -15008,7 +15006,7 @@
       "name": "Jordan Addison",
       "position": "WR",
       "team": "MIN",
-      "injury_status": "Questionable",
+      "injury_status": null,
       "ros_points": 79.52
     },
     "9757": {
@@ -15023,7 +15021,7 @@
       "position": "QB",
       "team": "HOU",
       "injury_status": null,
-      "ros_points": 165.41
+      "ros_points": 167.37
     },
     "9759": {
       "name": "C.J. Johnson",
@@ -15037,7 +15035,7 @@
       "position": "WR",
       "team": "BAL",
       "injury_status": null,
-      "ros_points": 161.63
+      "ros_points": 160.74
     },
     "9998": {
       "name": "Hendon Hooker",
@@ -15079,7 +15077,7 @@
       "position": "WR",
       "team": "LV",
       "injury_status": null,
-      "ros_points": 80.02
+      "ros_points": 79.83
     },
     "10214": {
       "name": "Davis Allen",
@@ -15114,10 +15112,10 @@
       "position": "WR",
       "team": "HOU",
       "injury_status": null,
-      "ros_points": 22.39
+      "ros_points": 22.57
     },
     "10219": {
-      "name": "Chris Rodriguez",
+      "name": "Chris Rodriguez Jr.",
       "position": "RB",
       "team": "JAX",
       "injury_status": null,
@@ -15183,15 +15181,15 @@
       "name": "Charlie Jones",
       "position": "WR",
       "team": "NYG",
-      "injury_status": null,
-      "ros_points": 1.8
+      "injury_status": "Questionable",
+      "ros_points": 1.79
     },
     "10229": {
       "name": "Rashee Rice",
       "position": "WR",
       "team": "KC",
       "injury_status": "Questionable",
-      "ros_points": 134.78
+      "ros_points": 134.72
     },
     "10230": {
       "name": "Jalen Wayne",
@@ -15212,7 +15210,7 @@
       "position": "WR",
       "team": "ARI",
       "injury_status": null,
-      "ros_points": 113.98
+      "ros_points": 113.86
     },
     "10233": {
       "name": "Max Duggan",
@@ -15233,7 +15231,7 @@
       "position": "RB",
       "team": "CHI",
       "injury_status": null,
-      "ros_points": 5.82
+      "ros_points": 11.04
     },
     "10236": {
       "name": "Dalton Kincaid",
@@ -15257,7 +15255,7 @@
       "ros_points": 0.0
     },
     "10857": {
-      "name": "Stetson Bennett",
+      "name": "Stetson Bennett IV",
       "position": "QB",
       "team": "LAR",
       "injury_status": null,
@@ -15268,7 +15266,7 @@
       "position": "TE",
       "team": "DET",
       "injury_status": null,
-      "ros_points": 139.43
+      "ros_points": 139.38
     },
     "10860": {
       "name": "Malik Cunningham",
@@ -15649,7 +15647,7 @@
       "ros_points": 0.0
     },
     "11186": {
-      "name": "Carlos Washington",
+      "name": "Carlos Washington Jr.",
       "position": "RB",
       "team": "MIA",
       "injury_status": null,
@@ -15807,7 +15805,7 @@
       "position": "RB",
       "team": "DET",
       "injury_status": null,
-      "ros_points": 2.7
+      "ros_points": 2.69
     },
     "11245": {
       "name": "Patrick Murtagh",
@@ -16199,7 +16197,7 @@
       "position": "RB",
       "team": "CLE",
       "injury_status": null,
-      "ros_points": 17.67
+      "ros_points": 17.43
     },
     "11445": {
       "name": "Taylor Grimes",
@@ -16489,18 +16487,18 @@
       "ros_points": 0.0
     },
     "11559": {
-      "name": "Michael Penix",
+      "name": "Michael Penix Jr.",
       "position": "QB",
       "team": "ATL",
       "injury_status": null,
-      "ros_points": 143.67
+      "ros_points": 143.56
     },
     "11560": {
       "name": "Caleb Williams",
       "position": "QB",
       "team": "CHI",
       "injury_status": null,
-      "ros_points": 184.87
+      "ros_points": 185.51
     },
     "11561": {
       "name": "Michael Pratt",
@@ -16535,7 +16533,7 @@
       "position": "QB",
       "team": "NYG",
       "injury_status": null,
-      "ros_points": 4.05
+      "ros_points": 16.51
     },
     "11566": {
       "name": "Jayden Daniels",
@@ -16570,7 +16568,7 @@
       "position": "RB",
       "team": "BAL",
       "injury_status": null,
-      "ros_points": 2.32
+      "ros_points": 2.31
     },
     "11571": {
       "name": "Isaiah Davis",
@@ -16580,7 +16578,7 @@
       "ros_points": 3.24
     },
     "11573": {
-      "name": "Frank Gore",
+      "name": "Frank Gore Jr.",
       "position": "RB",
       "team": "BUF",
       "injury_status": null,
@@ -16633,12 +16631,12 @@
       "position": "RB",
       "team": "GB",
       "injury_status": null,
-      "ros_points": 46.3
+      "ros_points": 46.78
     },
     "11582": {
       "name": "Carson Steele",
       "position": "RB",
-      "team": "PHI",
+      "team": null,
       "injury_status": "Out",
       "ros_points": 1.8
     },
@@ -16653,7 +16651,7 @@
       "name": "Bucky Irving",
       "position": "RB",
       "team": "TB",
-      "injury_status": null,
+      "injury_status": "Questionable",
       "ros_points": 134.15
     },
     "11586": {
@@ -16667,8 +16665,8 @@
       "name": "Jawhar Jordan",
       "position": "RB",
       "team": "HOU",
-      "injury_status": null,
-      "ros_points": 14.67
+      "injury_status": "Out",
+      "ros_points": 11.58
     },
     "11589": {
       "name": "Trey Benson",
@@ -16685,7 +16683,7 @@
       "ros_points": 0.0
     },
     "11592": {
-      "name": "Erick All",
+      "name": "Erick All Jr.",
       "position": "TE",
       "team": "CIN",
       "injury_status": null,
@@ -16717,7 +16715,7 @@
       "position": "TE",
       "team": "NYG",
       "injury_status": "Questionable",
-      "ros_points": 27.7
+      "ros_points": 27.62
     },
     "11598": {
       "name": "Tanner McLachlan",
@@ -16731,7 +16729,7 @@
       "position": "TE",
       "team": "HOU",
       "injury_status": null,
-      "ros_points": 8.94
+      "ros_points": 9.09
     },
     "11600": {
       "name": "Ja'Tavion Sanders",
@@ -16758,8 +16756,8 @@
       "name": "Brock Bowers",
       "position": "TE",
       "team": "LV",
-      "injury_status": null,
-      "ros_points": 167.51
+      "injury_status": "Questionable",
+      "ros_points": 167.15
     },
     "11605": {
       "name": "Jaheim Bell",
@@ -16836,7 +16834,7 @@
       "position": "WR",
       "team": "CHI",
       "injury_status": null,
-      "ros_points": 93.1
+      "ros_points": 93.08
     },
     "11621": {
       "name": "Brenden Rice",
@@ -16863,8 +16861,8 @@
       "name": "Adonai Mitchell",
       "position": "WR",
       "team": "NYJ",
-      "injury_status": "Doubtful",
-      "ros_points": 35.16
+      "injury_status": "Questionable",
+      "ros_points": 36.02
     },
     "11626": {
       "name": "Xavier Legette",
@@ -16881,18 +16879,18 @@
       "ros_points": 24.57
     },
     "11628": {
-      "name": "Marvin Harrison",
+      "name": "Marvin Harrison Jr.",
       "position": "WR",
       "team": "HOU",
       "injury_status": null,
-      "ros_points": 14.97
+      "ros_points": 15.25
     },
     "11629": {
       "name": "Devontez Walker",
       "position": "WR",
       "team": "BAL",
       "injury_status": null,
-      "ros_points": 26.89
+      "ros_points": 26.69
     },
     "11630": {
       "name": "Roman Wilson",
@@ -16902,7 +16900,7 @@
       "ros_points": 49.18
     },
     "11631": {
-      "name": "Brian Thomas",
+      "name": "Brian Thomas Jr.",
       "position": "WR",
       "team": "JAX",
       "injury_status": null,
@@ -16913,7 +16911,7 @@
       "position": "WR",
       "team": "NYG",
       "injury_status": null,
-      "ros_points": 116.59
+      "ros_points": 116.03
     },
     "11633": {
       "name": "Jamari Thrash",
@@ -16961,7 +16959,7 @@
       "name": "Jaylen Wright",
       "position": "RB",
       "team": "MIA",
-      "injury_status": null,
+      "injury_status": "Questionable",
       "ros_points": 44.11
     },
     "11644": {
@@ -17035,25 +17033,25 @@
       "ros_points": 0.0
     },
     "11655": {
-      "name": "Tyrone Tracy",
+      "name": "Tyrone Tracy Jr.",
       "position": "RB",
       "team": "NYG",
       "injury_status": null,
-      "ros_points": 78.55
+      "ros_points": 77.81
     },
     "11716": {
       "name": "Tip Reiman",
       "position": "TE",
       "team": "ARI",
       "injury_status": "PUP",
-      "ros_points": 9.61
+      "ros_points": 8.75
     },
     "11729": {
       "name": "Sione Vaki",
       "position": "RB",
       "team": "DET",
       "injury_status": null,
-      "ros_points": 41.9
+      "ros_points": 41.86
     },
     "11748": {
       "name": "Bub Means",
@@ -17114,7 +17112,7 @@
     "11820": {
       "name": "Devin Culp",
       "position": "TE",
-      "team": "CLE",
+      "team": null,
       "injury_status": null,
       "ros_points": 0.0
     },
@@ -17527,7 +17525,7 @@
     "12036": {
       "name": "Ian Wheeler",
       "position": "RB",
-      "team": "PHI",
+      "team": null,
       "injury_status": null,
       "ros_points": 0.0
     },
@@ -17557,7 +17555,7 @@
       "position": "RB",
       "team": "SEA",
       "injury_status": null,
-      "ros_points": 52.71
+      "ros_points": 52.77
     },
     "12061": {
       "name": "Noah Cain",
@@ -18411,17 +18409,17 @@
       "position": "RB",
       "team": "KC",
       "injury_status": null,
-      "ros_points": 2.25
+      "ros_points": 2.18
     },
     "12457": {
       "name": "Jaydon Blue",
       "position": "RB",
-      "team": "PHI",
+      "team": null,
       "injury_status": null,
       "ros_points": 1.5
     },
     "12460": {
-      "name": "Antwane Wells",
+      "name": "Antwane Wells Jr.",
       "position": "WR",
       "team": "ATL",
       "injury_status": null,
@@ -18446,7 +18444,7 @@
       "position": "RB",
       "team": "CLE",
       "injury_status": "IR",
-      "ros_points": 40.87
+      "ros_points": 41.61
     },
     "12470": {
       "name": "Riley Leonard",
@@ -18481,10 +18479,10 @@
       "position": "RB",
       "team": "HOU",
       "injury_status": null,
-      "ros_points": 81.1
+      "ros_points": 84.7
     },
     "12475": {
-      "name": "Ricky White",
+      "name": "Ricky White III",
       "position": "WR",
       "team": "SEA",
       "injury_status": null,
@@ -18530,13 +18528,13 @@
       "position": "RB",
       "team": "NYG",
       "injury_status": null,
-      "ros_points": 30.4
+      "ros_points": 30.15
     },
     "12482": {
       "name": "Savion Williams",
       "position": "WR",
       "team": "GB",
-      "injury_status": null,
+      "injury_status": "Questionable",
       "ros_points": 10.53
     },
     "12483": {
@@ -18624,7 +18622,7 @@
       "ros_points": 0.0
     },
     "12495": {
-      "name": "Ollie Gordon",
+      "name": "Ollie Gordon II",
       "position": "RB",
       "team": "MIA",
       "injury_status": null,
@@ -18669,8 +18667,8 @@
       "name": "Matthew Golden",
       "position": "WR",
       "team": "GB",
-      "injury_status": null,
-      "ros_points": 117.52
+      "injury_status": "Questionable",
+      "ros_points": 117.61
     },
     "12502": {
       "name": "Gunnar Helm",
@@ -18698,10 +18696,10 @@
       "position": "WR",
       "team": "KC",
       "injury_status": null,
-      "ros_points": 25.09
+      "ros_points": 25.03
     },
     "12506": {
-      "name": "Harold Fannin",
+      "name": "Harold Fannin Jr.",
       "position": "TE",
       "team": "CLE",
       "injury_status": null,
@@ -18747,13 +18745,13 @@
       "position": "RB",
       "team": "CLE",
       "injury_status": "Questionable",
-      "ros_points": 98.81
+      "ros_points": 98.72
     },
     "12514": {
       "name": "Emeka Egbuka",
       "position": "WR",
       "team": "TB",
-      "injury_status": null,
+      "injury_status": "Questionable",
       "ros_points": 91.94
     },
     "12515": {
@@ -18775,21 +18773,21 @@
       "position": "TE",
       "team": "CHI",
       "injury_status": null,
-      "ros_points": 101.43
+      "ros_points": 101.37
     },
     "12518": {
       "name": "Tyler Warren",
       "position": "TE",
       "team": "IND",
       "injury_status": "Questionable",
-      "ros_points": 119.05
+      "ros_points": 118.99
     },
     "12519": {
-      "name": "Luther Burden",
+      "name": "Luther Burden III",
       "position": "WR",
       "team": "CHI",
       "injury_status": null,
-      "ros_points": 105.43
+      "ros_points": 105.4
     },
     "12520": {
       "name": "Xavier Restrepo",
@@ -18813,7 +18811,7 @@
       "ros_points": 151.3
     },
     "12523": {
-      "name": "Jimmy Horn",
+      "name": "Jimmy Horn Jr.",
       "position": "WR",
       "team": "CLE",
       "injury_status": null,
@@ -18838,7 +18836,7 @@
       "position": "RB",
       "team": "LV",
       "injury_status": null,
-      "ros_points": 137.55
+      "ros_points": 138.37
     },
     "12528": {
       "name": "Ajou Ajou",
@@ -18886,22 +18884,22 @@
       "name": "Kyle Monangai",
       "position": "RB",
       "team": "CHI",
-      "injury_status": "Questionable",
-      "ros_points": 79.73
+      "injury_status": "Out",
+      "ros_points": 73.43
     },
     "12535": {
       "name": "Isaac TeSlaa",
       "position": "WR",
       "team": "DET",
       "injury_status": null,
-      "ros_points": 39.22
+      "ros_points": 39.19
     },
     "12536": {
       "name": "Jaylin Noel",
       "position": "WR",
       "team": "HOU",
       "injury_status": null,
-      "ros_points": 47.75
+      "ros_points": 48.16
     },
     "12538": {
       "name": "Brady Cook",
@@ -18925,14 +18923,14 @@
       "ros_points": 16.05
     },
     "12541": {
-      "name": "Dont'e Thornton",
+      "name": "Dont'e Thornton Jr.",
       "position": "WR",
       "team": "LV",
       "injury_status": "IR",
-      "ros_points": 0.0
+      "ros_points": 0.62
     },
     "12542": {
-      "name": "Efton Chism",
+      "name": "Efton Chism III",
       "position": "WR",
       "team": "NE",
       "injury_status": null,
@@ -18943,10 +18941,10 @@
       "position": "RB",
       "team": "CIN",
       "injury_status": null,
-      "ros_points": 5.79
+      "ros_points": 5.85
     },
     "12544": {
-      "name": "LeQuint Allen",
+      "name": "LeQuint Allen Jr.",
       "position": "RB",
       "team": "JAX",
       "injury_status": null,
@@ -18992,7 +18990,7 @@
       "position": "WR",
       "team": "SF",
       "injury_status": null,
-      "ros_points": 8.14
+      "ros_points": 8.07
     },
     "12641": {
       "name": "Jaylin Lane",
@@ -19058,7 +19056,7 @@
       "ros_points": 0.0
     },
     "12715": {
-      "name": "Thomas Fidone",
+      "name": "Thomas Fidone II",
       "position": "TE",
       "team": "NYG",
       "injury_status": null,
@@ -19394,7 +19392,7 @@
       "ros_points": 0.0
     },
     "12860": {
-      "name": "Theo Wease",
+      "name": "Theo Wease Jr.",
       "position": "WR",
       "team": "LAC",
       "injury_status": null,
@@ -19443,7 +19441,7 @@
       "ros_points": 0.0
     },
     "12884": {
-      "name": "Quincy Skinner",
+      "name": "Quincy Skinner Jr.",
       "position": "WR",
       "team": "GB",
       "injury_status": null,
@@ -19536,7 +19534,7 @@
     "12909": {
       "name": "Eli Pancol",
       "position": "WR",
-      "team": "IND",
+      "team": null,
       "injury_status": null,
       "ros_points": 0.0
     },
@@ -19583,7 +19581,7 @@
       "ros_points": 0.0
     },
     "12939": {
-      "name": "Anthony Tyus",
+      "name": "Anthony Tyus III",
       "position": "RB",
       "team": "CAR",
       "injury_status": null,
@@ -19888,7 +19886,7 @@
       "position": "WR",
       "team": "CHI",
       "injury_status": null,
-      "ros_points": 6.37
+      "ros_points": 5.92
     },
     "13080": {
       "name": "Deion Hankins",
@@ -19991,7 +19989,7 @@
     "13124": {
       "name": "Jeremiah Webb",
       "position": "WR",
-      "team": "NE",
+      "team": null,
       "injury_status": "Questionable",
       "ros_points": 0.0
     },
@@ -20171,7 +20169,7 @@
       "ros_points": 0.0
     },
     "13199": {
-      "name": "Montorie Foster",
+      "name": "Montorie Foster Jr.",
       "position": "WR",
       "team": "SEA",
       "injury_status": null,
@@ -20343,7 +20341,7 @@
       "position": "WR",
       "team": "CIN",
       "injury_status": null,
-      "ros_points": 12.33
+      "ros_points": 12.32
     },
     "13268": {
       "name": "Elijah Sarratt",
@@ -20370,7 +20368,7 @@
       "name": "Carson Beck",
       "position": "QB",
       "team": "ARI",
-      "injury_status": null,
+      "injury_status": "Questionable",
       "ros_points": 0.0
     },
     "13273": {
@@ -20378,7 +20376,7 @@
       "position": "TE",
       "team": "BAL",
       "injury_status": null,
-      "ros_points": 11.21
+      "ros_points": 11.12
     },
     "13274": {
       "name": "Germie Bernard",
@@ -20395,17 +20393,17 @@
       "ros_points": 0.0
     },
     "13276": {
-      "name": "Omar Cooper",
+      "name": "Omar Cooper Jr.",
       "position": "WR",
       "team": "NYJ",
       "injury_status": null,
-      "ros_points": 78.18
+      "ros_points": 77.14
     },
     "13277": {
       "name": "CJ Donaldson",
       "position": "RB",
       "team": "NO",
-      "injury_status": null,
+      "injury_status": "Questionable",
       "ros_points": 26.86
     },
     "13278": {
@@ -20455,7 +20453,7 @@
       "position": "WR",
       "team": "NYG",
       "injury_status": null,
-      "ros_points": 42.6
+      "ros_points": 42.39
     },
     "13286": {
       "name": "Jadarian Price",
@@ -20469,7 +20467,7 @@
       "position": "RB",
       "team": "ARI",
       "injury_status": "Questionable",
-      "ros_points": 91.11
+      "ros_points": 83.85
     },
     "13288": {
       "name": "Nicholas Singleton",
@@ -20511,7 +20509,7 @@
       "position": "WR",
       "team": "BAL",
       "injury_status": null,
-      "ros_points": 40.52
+      "ros_points": 40.24
     },
     "13294": {
       "name": "Makai Lemon",
@@ -20542,10 +20540,10 @@
       "ros_points": 2.85
     },
     "13298": {
-      "name": "KC Concepcion",
+      "name": "KC Concepcion Jr.",
       "position": "WR",
       "team": "CLE",
-      "injury_status": null,
+      "injury_status": "Questionable",
       "ros_points": 75.24
     },
     "13299": {
@@ -20574,7 +20572,7 @@
       "position": "RB",
       "team": "BAL",
       "injury_status": "IR",
-      "ros_points": 2.1
+      "ros_points": 1.88
     },
     "13303": {
       "name": "Cade Klubnik",
@@ -20591,11 +20589,11 @@
       "ros_points": 0.0
     },
     "13305": {
-      "name": "Mike Washington",
+      "name": "Mike Washington Jr.",
       "position": "RB",
       "team": "LV",
-      "injury_status": null,
-      "ros_points": 54.78
+      "injury_status": "Questionable",
+      "ros_points": 54.6
     },
     "13306": {
       "name": "Taylen Green",
@@ -20609,7 +20607,7 @@
       "position": "TE",
       "team": "HOU",
       "injury_status": null,
-      "ros_points": 18.54
+      "ros_points": 18.66
     },
     "13308": {
       "name": "Bauer Sharp",
@@ -20647,7 +20645,7 @@
       "ros_points": 0.0
     },
     "13313": {
-      "name": "Emmanuel Henderson",
+      "name": "Emmanuel Henderson Jr.",
       "position": "WR",
       "team": "SEA",
       "injury_status": null,
@@ -20668,18 +20666,18 @@
       "ros_points": 1.13
     },
     "13316": {
-      "name": "Eric Rivers",
+      "name": "Eric Rivers Jr.",
       "position": "WR",
       "team": "TB",
       "injury_status": null,
       "ros_points": 0.0
     },
     "13317": {
-      "name": "Ted Hurst",
+      "name": "Ted Hurst III",
       "position": "WR",
       "team": "TB",
       "injury_status": null,
-      "ros_points": 41.54
+      "ros_points": 41.48
     },
     "13318": {
       "name": "Noah Thomas",
@@ -20700,7 +20698,7 @@
       "position": "WR",
       "team": "ATL",
       "injury_status": null,
-      "ros_points": 26.35
+      "ros_points": 26.34
     },
     "13321": {
       "name": "Dan Villari",
@@ -20714,7 +20712,7 @@
       "position": "TE",
       "team": "CHI",
       "injury_status": null,
-      "ros_points": 23.82
+      "ros_points": 23.8
     },
     "13323": {
       "name": "Rahsul Faison",
@@ -20728,7 +20726,7 @@
       "position": "TE",
       "team": "BAL",
       "injury_status": "Questionable",
-      "ros_points": 31.87
+      "ros_points": 31.77
     },
     "13325": {
       "name": "Jordan Hudson",
@@ -20812,10 +20810,10 @@
       "position": "RB",
       "team": "KC",
       "injury_status": null,
-      "ros_points": 42.39
+      "ros_points": 41.87
     },
     "13338": {
-      "name": "Kevin Coleman",
+      "name": "Kevin Coleman Jr.",
       "position": "WR",
       "team": "MIA",
       "injury_status": null,
@@ -20836,7 +20834,7 @@
       "ros_points": 0.0
     },
     "13343": {
-      "name": "Vinny Anthony",
+      "name": "Vinny Anthony II",
       "position": "WR",
       "team": "ATL",
       "injury_status": null,
@@ -20860,7 +20858,7 @@
       "name": "Denzel Boston",
       "position": "WR",
       "team": "CLE",
-      "injury_status": null,
+      "injury_status": "Questionable",
       "ros_points": 92.48
     },
     "13347": {
@@ -20906,7 +20904,7 @@
       "ros_points": 0.0
     },
     "13353": {
-      "name": "Chris Brazzell",
+      "name": "Chris Brazzell II",
       "position": "WR",
       "team": "CAR",
       "injury_status": "IR",
@@ -20965,7 +20963,7 @@
       "name": "Justin Joly",
       "position": "TE",
       "team": "MIA",
-      "injury_status": "Questionable",
+      "injury_status": null,
       "ros_points": 5.29
     },
     "13401": {
@@ -21036,7 +21034,7 @@
       "position": "WR",
       "team": "CHI",
       "injury_status": null,
-      "ros_points": 6.98
+      "ros_points": 7.92
     },
     "13412": {
       "name": "Kendrick Law",
@@ -21057,7 +21055,7 @@
       "position": "RB",
       "team": "SF",
       "injury_status": null,
-      "ros_points": 46.99
+      "ros_points": 46.93
     },
     "13415": {
       "name": "Haynes King",
@@ -21081,7 +21079,7 @@
       "ros_points": 1.82
     },
     "13418": {
-      "name": "Robert Henry",
+      "name": "Robert Henry Jr.",
       "position": "RB",
       "team": "SEA",
       "injury_status": null,
@@ -21134,7 +21132,7 @@
       "position": "QB",
       "team": "TB",
       "injury_status": null,
-      "ros_points": 13.31
+      "ros_points": 0.0
     },
     "13426": {
       "name": "Sawyer Robertson",
@@ -21196,7 +21194,7 @@
       "name": "Will Kacmarek",
       "position": "TE",
       "team": "MIA",
-      "injury_status": null,
+      "injury_status": "Questionable",
       "ros_points": 14.86
     },
     "13435": {
@@ -21238,8 +21236,8 @@
       "name": "Colbie Young",
       "position": "WR",
       "team": "CIN",
-      "injury_status": "Questionable",
-      "ros_points": 16.17
+      "injury_status": null,
+      "ros_points": 16.16
     },
     "13491": {
       "name": "Kaden Wetjen",
@@ -21466,7 +21464,7 @@
       "ros_points": 0.0
     },
     "13670": {
-      "name": "Harrison Wallace",
+      "name": "Harrison Wallace III",
       "position": "WR",
       "team": "ARI",
       "injury_status": null,
@@ -21706,7 +21704,7 @@
     "13816": {
       "name": "Mark Gronowski",
       "position": "QB",
-      "team": "HOU",
+      "team": null,
       "injury_status": null,
       "ros_points": 0.0
     },
@@ -21881,7 +21879,7 @@
     "13898": {
       "name": "Corey Rucker",
       "position": "WR",
-      "team": "LV",
+      "team": null,
       "injury_status": "Questionable",
       "ros_points": 0.0
     },
@@ -22000,7 +21998,7 @@
     "13949": {
       "name": "Damon Bankston",
       "position": "RB",
-      "team": "GB",
+      "team": null,
       "injury_status": null,
       "ros_points": 0.0
     },
@@ -22124,7 +22122,7 @@
       "ros_points": 0.0
     },
     "14020": {
-      "name": "Dean Patterson",
+      "name": "Dean Patterson IV",
       "position": "WR",
       "team": "TB",
       "injury_status": null,

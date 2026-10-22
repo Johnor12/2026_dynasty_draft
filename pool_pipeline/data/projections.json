@@ -31,7 +31,7 @@
     "positional_rank_by_3d_value": "Derived positional rank by .5 PPR superflex 3D value descending.",
     "document_index": "0-based position of the row in the HTML, for reproducing on-page order."
   },
-  "player_count": 877,
+  "player_count": 880,
   "players": [
     {
       "document_index": 0,
@@ -370,7 +370,7 @@
           "te_premium": 269,
           "standard_superflex": 269,
           "half_ppr_superflex": 269,
-          "ppr_superflex": 272,
+          "ppr_superflex": 271,
           "te_premium_superflex": 269,
           "half_ppr_superflex_precise": 269
         },
@@ -928,11 +928,11 @@
       },
       "projections": {
         "1yr": {
-          "standard": 274,
+          "standard": 275,
           "half_ppr": 308,
           "ppr": 342,
           "te_premium": 342,
-          "standard_superflex": 274,
+          "standard_superflex": 275,
           "half_ppr_superflex": 308,
           "ppr_superflex": 344,
           "te_premium_superflex": 342,
@@ -1216,7 +1216,7 @@
           "te_premium": 329,
           "standard_superflex": 329,
           "half_ppr_superflex": 329,
-          "ppr_superflex": 332,
+          "ppr_superflex": 333,
           "te_premium_superflex": 329,
           "half_ppr_superflex_precise": 329
         },
@@ -1869,14 +1869,14 @@
       "projections": {
         "1yr": {
           "standard": 267,
-          "half_ppr": 296,
-          "ppr": 326,
-          "te_premium": 326,
+          "half_ppr": 297,
+          "ppr": 327,
+          "te_premium": 327,
           "standard_superflex": 267,
-          "half_ppr_superflex": 296,
+          "half_ppr_superflex": 297,
           "ppr_superflex": 328,
-          "te_premium_superflex": 326,
-          "half_ppr_superflex_precise": 296
+          "te_premium_superflex": 327,
+          "half_ppr_superflex_precise": 297
         },
         "3yr": {
           "standard": 676,
@@ -2814,7 +2814,7 @@
           "te_premium": 277,
           "standard_superflex": 277,
           "half_ppr_superflex": 277,
-          "ppr_superflex": 280,
+          "ppr_superflex": 281,
           "te_premium_superflex": 277,
           "half_ppr_superflex_precise": 277
         },
@@ -2996,11 +2996,11 @@
       },
       "projections": {
         "1yr": {
-          "standard": 152,
+          "standard": 151,
           "half_ppr": 191,
           "ppr": 231,
           "te_premium": 231,
-          "standard_superflex": 152,
+          "standard_superflex": 151,
           "half_ppr_superflex": 191,
           "ppr_superflex": 231,
           "te_premium_superflex": 231,
@@ -3431,7 +3431,7 @@
       "positional_rank_by_3d_value": 1,
       "team": "ARI",
       "team_id": 1,
-      "age": 26.8,
+      "age": 26.9,
       "bye_week": 14,
       "is_rookie": false,
       "tier_overall": 5,
@@ -4126,12 +4126,12 @@
         "1yr": {
           "standard": 183,
           "half_ppr": 214,
-          "ppr": 245,
-          "te_premium": 245,
+          "ppr": 244,
+          "te_premium": 244,
           "standard_superflex": 183,
           "half_ppr_superflex": 214,
           "ppr_superflex": 246,
-          "te_premium_superflex": 245,
+          "te_premium_superflex": 244,
           "half_ppr_superflex_precise": 214
         },
         "3yr": {
@@ -4600,42 +4600,42 @@
           "te_premium": 288,
           "standard_superflex": 288,
           "half_ppr_superflex": 288,
-          "ppr_superflex": 291,
+          "ppr_superflex": 292,
           "te_premium_superflex": 288,
           "half_ppr_superflex_precise": 288
         },
         "3yr": {
-          "standard": 786,
-          "half_ppr": 786,
-          "ppr": 786,
-          "te_premium": 786,
-          "standard_superflex": 786,
-          "half_ppr_superflex": 786,
-          "ppr_superflex": 794,
-          "te_premium_superflex": 786,
-          "half_ppr_superflex_precise": 786
+          "standard": 789,
+          "half_ppr": 789,
+          "ppr": 789,
+          "te_premium": 789,
+          "standard_superflex": 789,
+          "half_ppr_superflex": 789,
+          "ppr_superflex": 797,
+          "te_premium_superflex": 789,
+          "half_ppr_superflex_precise": 789
         },
         "5yr": {
-          "standard": 1306,
-          "half_ppr": 1306,
-          "ppr": 1306,
-          "te_premium": 1306,
-          "standard_superflex": 1306,
-          "half_ppr_superflex": 1306,
-          "ppr_superflex": 1319,
-          "te_premium_superflex": 1306,
-          "half_ppr_superflex_precise": 1306
+          "standard": 1311,
+          "half_ppr": 1311,
+          "ppr": 1311,
+          "te_premium": 1311,
+          "standard_superflex": 1311,
+          "half_ppr_superflex": 1311,
+          "ppr_superflex": 1324,
+          "te_premium_superflex": 1311,
+          "half_ppr_superflex_precise": 1311
         },
         "10yr": {
-          "standard": 2467,
-          "half_ppr": 2467,
-          "ppr": 2467,
-          "te_premium": 2467,
-          "standard_superflex": 2467,
-          "half_ppr_superflex": 2467,
-          "ppr_superflex": 2492,
-          "te_premium_superflex": 2467,
-          "half_ppr_superflex_precise": 2467
+          "standard": 2476,
+          "half_ppr": 2476,
+          "ppr": 2476,
+          "te_premium": 2476,
+          "standard_superflex": 2476,
+          "half_ppr_superflex": 2476,
+          "ppr_superflex": 2501,
+          "te_premium_superflex": 2476,
+          "half_ppr_superflex_precise": 2476
         }
       }
     },
@@ -4841,7 +4841,7 @@
       "positional_rank_by_3d_value": 14,
       "team": "NE",
       "team_id": 19,
-      "age": 23.9,
+      "age": 24,
       "bye_week": 11,
       "is_rookie": false,
       "tier_overall": 6,
@@ -5536,12 +5536,12 @@
         "1yr": {
           "standard": 178,
           "half_ppr": 198,
-          "ppr": 218,
-          "te_premium": 218,
+          "ppr": 217,
+          "te_premium": 217,
           "standard_superflex": 178,
           "half_ppr_superflex": 198,
           "ppr_superflex": 219,
-          "te_premium_superflex": 218,
+          "te_premium_superflex": 217,
           "half_ppr_superflex_precise": 198
         },
         "3yr": {
@@ -5781,7 +5781,7 @@
       "positional_rank_by_3d_value": 16,
       "team": "NYJ",
       "team_id": 22,
-      "age": 26.2,
+      "age": 26.3,
       "bye_week": 13,
       "is_rookie": false,
       "tier_overall": 7,
@@ -5969,7 +5969,7 @@
       "positional_rank_by_3d_value": 5,
       "team": "DET",
       "team_id": 11,
-      "age": 26.1,
+      "age": 26.2,
       "bye_week": 6,
       "is_rookie": false,
       "tier_overall": 7,
@@ -6627,7 +6627,7 @@
       "positional_rank_by_3d_value": 19,
       "team": "KC",
       "team_id": 16,
-      "age": 26.4,
+      "age": 26.5,
       "bye_week": 5,
       "is_rookie": false,
       "tier_overall": 7,
@@ -6662,15 +6662,15 @@
       },
       "projections": {
         "1yr": {
-          "standard": 126,
-          "half_ppr": 164,
-          "ppr": 201,
-          "te_premium": 201,
-          "standard_superflex": 126,
-          "half_ppr_superflex": 164,
-          "ppr_superflex": 201,
-          "te_premium_superflex": 201,
-          "half_ppr_superflex_precise": 164
+          "standard": 119,
+          "half_ppr": 154,
+          "ppr": 189,
+          "te_premium": 189,
+          "standard_superflex": 119,
+          "half_ppr_superflex": 154,
+          "ppr_superflex": 189,
+          "te_premium_superflex": 189,
+          "half_ppr_superflex_precise": 154
         },
         "3yr": {
           "standard": 374,
@@ -7415,14 +7415,14 @@
       "projections": {
         "1yr": {
           "standard": 132,
-          "half_ppr": 168,
+          "half_ppr": 169,
           "ppr": 205,
           "te_premium": 205,
           "standard_superflex": 132,
-          "half_ppr_superflex": 168,
+          "half_ppr_superflex": 169,
           "ppr_superflex": 205,
           "te_premium_superflex": 205,
-          "half_ppr_superflex_precise": 168
+          "half_ppr_superflex_precise": 169
         },
         "3yr": {
           "standard": 400,
@@ -8260,15 +8260,15 @@
       },
       "projections": {
         "1yr": {
-          "standard": 176,
-          "half_ppr": 192,
-          "ppr": 207,
-          "te_premium": 207,
-          "standard_superflex": 176,
-          "half_ppr_superflex": 192,
-          "ppr_superflex": 209,
-          "te_premium_superflex": 207,
-          "half_ppr_superflex_precise": 192
+          "standard": 188,
+          "half_ppr": 205,
+          "ppr": 221,
+          "te_premium": 221,
+          "standard_superflex": 188,
+          "half_ppr_superflex": 205,
+          "ppr_superflex": 223,
+          "te_premium_superflex": 221,
+          "half_ppr_superflex_precise": 205
         },
         "3yr": {
           "standard": 357,
@@ -8730,11 +8730,11 @@
       },
       "projections": {
         "1yr": {
-          "standard": 148,
+          "standard": 149,
           "half_ppr": 187,
           "ppr": 226,
           "te_premium": 226,
-          "standard_superflex": 148,
+          "standard_superflex": 149,
           "half_ppr_superflex": 187,
           "ppr_superflex": 226,
           "te_premium_superflex": 226,
@@ -10423,14 +10423,14 @@
       "projections": {
         "1yr": {
           "standard": 125,
-          "half_ppr": 161,
+          "half_ppr": 160,
           "ppr": 196,
           "te_premium": 196,
           "standard_superflex": 125,
-          "half_ppr_superflex": 161,
+          "half_ppr_superflex": 160,
           "ppr_superflex": 196,
           "te_premium_superflex": 196,
-          "half_ppr_superflex_precise": 161
+          "half_ppr_superflex_precise": 160
         },
         "3yr": {
           "standard": 357,
@@ -10516,15 +10516,15 @@
       },
       "projections": {
         "1yr": {
-          "standard": 137,
-          "half_ppr": 137,
-          "ppr": 137,
-          "te_premium": 137,
-          "standard_superflex": 137,
-          "half_ppr_superflex": 137,
-          "ppr_superflex": 137,
-          "te_premium_superflex": 137,
-          "half_ppr_superflex_precise": 137
+          "standard": 138,
+          "half_ppr": 138,
+          "ppr": 138,
+          "te_premium": 138,
+          "standard_superflex": 138,
+          "half_ppr_superflex": 138,
+          "ppr_superflex": 138,
+          "te_premium_superflex": 138,
+          "half_ppr_superflex_precise": 138
         },
         "3yr": {
           "standard": 342,
@@ -10704,14 +10704,14 @@
       },
       "projections": {
         "1yr": {
-          "standard": 116,
+          "standard": 117,
           "half_ppr": 147,
-          "ppr": 177,
-          "te_premium": 177,
-          "standard_superflex": 116,
+          "ppr": 178,
+          "te_premium": 178,
+          "standard_superflex": 117,
           "half_ppr_superflex": 147,
-          "ppr_superflex": 177,
-          "te_premium_superflex": 177,
+          "ppr_superflex": 178,
+          "te_premium_superflex": 178,
           "half_ppr_superflex_precise": 147
         },
         "3yr": {
@@ -10857,7 +10857,7 @@
       "positional_rank_by_3d_value": 13,
       "team": "SEA",
       "team_id": 27,
-      "age": 26.8,
+      "age": 26.9,
       "bye_week": 11,
       "is_rookie": false,
       "tier_overall": 9,
@@ -11456,15 +11456,15 @@
       },
       "projections": {
         "1yr": {
-          "standard": 115,
-          "half_ppr": 145,
-          "ppr": 175,
-          "te_premium": 175,
-          "standard_superflex": 115,
-          "half_ppr_superflex": 145,
-          "ppr_superflex": 175,
-          "te_premium_superflex": 175,
-          "half_ppr_superflex_precise": 145
+          "standard": 116,
+          "half_ppr": 146,
+          "ppr": 176,
+          "te_premium": 176,
+          "standard_superflex": 116,
+          "half_ppr_superflex": 146,
+          "ppr_superflex": 176,
+          "te_premium_superflex": 176,
+          "half_ppr_superflex_precise": 146
         },
         "3yr": {
           "standard": 302,
@@ -12774,12 +12774,12 @@
         "1yr": {
           "standard": 117,
           "half_ppr": 148,
-          "ppr": 178,
-          "te_premium": 178,
+          "ppr": 179,
+          "te_premium": 179,
           "standard_superflex": 117,
           "half_ppr_superflex": 148,
-          "ppr_superflex": 178,
-          "te_premium_superflex": 178,
+          "ppr_superflex": 179,
+          "te_premium_superflex": 179,
           "half_ppr_superflex_precise": 148
         },
         "3yr": {
@@ -14464,15 +14464,15 @@
       },
       "projections": {
         "1yr": {
-          "standard": 100,
-          "half_ppr": 134,
-          "ppr": 168,
+          "standard": 99,
+          "half_ppr": 133,
+          "ppr": 167,
           "te_premium": 202,
-          "standard_superflex": 100,
-          "half_ppr_superflex": 134,
-          "ppr_superflex": 168,
+          "standard_superflex": 99,
+          "half_ppr_superflex": 133,
+          "ppr_superflex": 167,
           "te_premium_superflex": 202,
-          "half_ppr_superflex_precise": 134
+          "half_ppr_superflex_precise": 133
         },
         "3yr": {
           "standard": 286,
@@ -15594,12 +15594,12 @@
         "1yr": {
           "standard": 83,
           "half_ppr": 92,
-          "ppr": 101,
-          "te_premium": 101,
+          "ppr": 102,
+          "te_premium": 102,
           "standard_superflex": 83,
           "half_ppr_superflex": 92,
-          "ppr_superflex": 101,
-          "te_premium_superflex": 101,
+          "ppr_superflex": 102,
+          "te_premium_superflex": 102,
           "half_ppr_superflex_precise": 92
         },
         "3yr": {
@@ -15968,15 +15968,15 @@
       },
       "projections": {
         "1yr": {
-          "standard": 105,
-          "half_ppr": 111,
-          "ppr": 117,
-          "te_premium": 117,
-          "standard_superflex": 105,
-          "half_ppr_superflex": 111,
-          "ppr_superflex": 117,
-          "te_premium_superflex": 117,
-          "half_ppr_superflex_precise": 111
+          "standard": 90,
+          "half_ppr": 94,
+          "ppr": 99,
+          "te_premium": 99,
+          "standard_superflex": 90,
+          "half_ppr_superflex": 94,
+          "ppr_superflex": 99,
+          "te_premium_superflex": 99,
+          "half_ppr_superflex_precise": 94
         },
         "3yr": {
           "standard": 254,
@@ -16250,15 +16250,15 @@
       },
       "projections": {
         "1yr": {
-          "standard": 77,
-          "half_ppr": 97,
-          "ppr": 117,
-          "te_premium": 117,
-          "standard_superflex": 77,
-          "half_ppr_superflex": 97,
-          "ppr_superflex": 117,
-          "te_premium_superflex": 117,
-          "half_ppr_superflex_precise": 97
+          "standard": 76,
+          "half_ppr": 95,
+          "ppr": 115,
+          "te_premium": 115,
+          "standard_superflex": 76,
+          "half_ppr_superflex": 95,
+          "ppr_superflex": 115,
+          "te_premium_superflex": 115,
+          "half_ppr_superflex_precise": 95
         },
         "3yr": {
           "standard": 257,
@@ -19693,7 +19693,7 @@
       "positional_rank_by_3d_value": 8,
       "team": "DET",
       "team_id": 11,
-      "age": 24.9,
+      "age": 25,
       "bye_week": 6,
       "is_rookie": false,
       "tier_overall": 11,
@@ -19881,7 +19881,7 @@
       "positional_rank_by_3d_value": 28,
       "team": "NYJ",
       "team_id": 22,
-      "age": 23.6,
+      "age": 23.7,
       "bye_week": 13,
       "is_rookie": false,
       "tier_overall": 11,
@@ -22231,7 +22231,7 @@
       "positional_rank_by_3d_value": 50,
       "team": "ATL",
       "team_id": 2,
-      "age": 27.5,
+      "age": 27.6,
       "bye_week": 11,
       "is_rookie": false,
       "tier_overall": 11,
@@ -22268,12 +22268,12 @@
         "1yr": {
           "standard": 98,
           "half_ppr": 104,
-          "ppr": 109,
-          "te_premium": 109,
+          "ppr": 110,
+          "te_premium": 110,
           "standard_superflex": 98,
           "half_ppr_superflex": 104,
-          "ppr_superflex": 109,
-          "te_premium_superflex": 109,
+          "ppr_superflex": 110,
+          "te_premium_superflex": 110,
           "half_ppr_superflex_precise": 104
         },
         "3yr": {
@@ -22607,7 +22607,7 @@
       "positional_rank_by_3d_value": 10,
       "team": "ATL",
       "team_id": 2,
-      "age": 24.8,
+      "age": 24.9,
       "bye_week": 11,
       "is_rookie": false,
       "tier_overall": 11,
@@ -22924,11 +22924,11 @@
       },
       "projections": {
         "1yr": {
-          "standard": 139,
+          "standard": 138,
           "half_ppr": 147,
           "ppr": 156,
           "te_premium": 156,
-          "standard_superflex": 139,
+          "standard_superflex": 138,
           "half_ppr_superflex": 147,
           "ppr_superflex": 158,
           "te_premium_superflex": 156,
@@ -23077,7 +23077,7 @@
       "positional_rank_by_3d_value": 7,
       "team": "LVR",
       "team_id": 23,
-      "age": 29.1,
+      "age": 29.2,
       "bye_week": 13,
       "is_rookie": false,
       "tier_overall": 12,
@@ -23395,14 +23395,14 @@
       "projections": {
         "1yr": {
           "standard": 109,
-          "half_ppr": 143,
+          "half_ppr": 142,
           "ppr": 176,
           "te_premium": 176,
           "standard_superflex": 109,
-          "half_ppr_superflex": 143,
+          "half_ppr_superflex": 142,
           "ppr_superflex": 176,
           "te_premium_superflex": 176,
-          "half_ppr_superflex_precise": 143
+          "half_ppr_superflex_precise": 142
         },
         "3yr": {
           "standard": 251,
@@ -24544,26 +24544,26 @@
           "half_ppr_superflex_precise": 320
         },
         "5yr": {
-          "standard": 534,
-          "half_ppr": 534,
-          "ppr": 534,
-          "te_premium": 534,
-          "standard_superflex": 534,
-          "half_ppr_superflex": 534,
-          "ppr_superflex": 724,
-          "te_premium_superflex": 534,
-          "half_ppr_superflex_precise": 534
+          "standard": 533,
+          "half_ppr": 533,
+          "ppr": 533,
+          "te_premium": 533,
+          "standard_superflex": 533,
+          "half_ppr_superflex": 533,
+          "ppr_superflex": 723,
+          "te_premium_superflex": 533,
+          "half_ppr_superflex_precise": 533
         },
         "10yr": {
-          "standard": 1072,
-          "half_ppr": 1072,
-          "ppr": 1072,
-          "te_premium": 1072,
-          "standard_superflex": 1072,
-          "half_ppr_superflex": 1072,
-          "ppr_superflex": 1454,
-          "te_premium_superflex": 1072,
-          "half_ppr_superflex_precise": 1072
+          "standard": 1071,
+          "half_ppr": 1071,
+          "ppr": 1071,
+          "te_premium": 1071,
+          "standard_superflex": 1071,
+          "half_ppr_superflex": 1071,
+          "ppr_superflex": 1452,
+          "te_premium_superflex": 1071,
+          "half_ppr_superflex_precise": 1071
         }
       }
     },
@@ -25086,15 +25086,15 @@
       },
       "projections": {
         "1yr": {
-          "standard": 43,
-          "half_ppr": 55,
-          "ppr": 66,
-          "te_premium": 66,
-          "standard_superflex": 43,
-          "half_ppr_superflex": 55,
-          "ppr_superflex": 66,
-          "te_premium_superflex": 66,
-          "half_ppr_superflex_precise": 55
+          "standard": 45,
+          "half_ppr": 56,
+          "ppr": 68,
+          "te_premium": 68,
+          "standard_superflex": 45,
+          "half_ppr_superflex": 56,
+          "ppr_superflex": 68,
+          "te_premium_superflex": 68,
+          "half_ppr_superflex_precise": 56
         },
         "3yr": {
           "standard": 238,
@@ -27812,15 +27812,15 @@
       },
       "projections": {
         "1yr": {
-          "standard": 138,
-          "half_ppr": 132,
-          "ppr": 138,
-          "te_premium": 138,
+          "standard": 137,
+          "half_ppr": 131,
+          "ppr": 137,
+          "te_premium": 137,
           "standard_superflex": 136,
-          "half_ppr_superflex": 138,
+          "half_ppr_superflex": 137,
           "ppr_superflex": 136,
-          "te_premium_superflex": 138,
-          "half_ppr_superflex_precise": 138
+          "te_premium_superflex": 137,
+          "half_ppr_superflex_precise": 137
         },
         "3yr": {
           "standard": 297,
@@ -28285,11 +28285,11 @@
           "standard": 98,
           "half_ppr": 131,
           "ppr": 164,
-          "te_premium": 198,
+          "te_premium": 197,
           "standard_superflex": 98,
           "half_ppr_superflex": 131,
           "ppr_superflex": 164,
-          "te_premium_superflex": 198,
+          "te_premium_superflex": 197,
           "half_ppr_superflex_precise": 131
         },
         "3yr": {
@@ -29850,8 +29850,8 @@
       "is_rookie": false,
       "tier_overall": 13,
       "tier_positional": 12,
-      "percent_low": 26.0,
-      "percent_high": 64.0,
+      "percent_low": 29.0,
+      "percent_high": 43.0,
       "hidden_row": true,
       "profile_path": "",
       "analysis": "Nailor continued flashing in 2025 especially in the red zone. He could be a starter for the Raiders with their lack of WR depth",
@@ -30350,15 +30350,15 @@
       },
       "projections": {
         "1yr": {
-          "standard": 43,
-          "half_ppr": 56,
-          "ppr": 69,
-          "te_premium": 69,
-          "standard_superflex": 43,
-          "half_ppr_superflex": 56,
-          "ppr_superflex": 69,
-          "te_premium_superflex": 69,
-          "half_ppr_superflex_precise": 56
+          "standard": 45,
+          "half_ppr": 59,
+          "ppr": 73,
+          "te_premium": 73,
+          "standard_superflex": 45,
+          "half_ppr_superflex": 59,
+          "ppr_superflex": 73,
+          "te_premium_superflex": 73,
+          "half_ppr_superflex_precise": 59
         },
         "3yr": {
           "standard": 226,
@@ -30444,48 +30444,48 @@
       },
       "projections": {
         "1yr": {
-          "standard": 108,
-          "half_ppr": 108,
-          "ppr": 108,
-          "te_premium": 108,
-          "standard_superflex": 108,
-          "half_ppr_superflex": 108,
-          "ppr_superflex": 149,
-          "te_premium_superflex": 108,
-          "half_ppr_superflex_precise": 108
+          "standard": 107,
+          "half_ppr": 107,
+          "ppr": 107,
+          "te_premium": 107,
+          "standard_superflex": 107,
+          "half_ppr_superflex": 107,
+          "ppr_superflex": 147,
+          "te_premium_superflex": 107,
+          "half_ppr_superflex_precise": 107
         },
         "3yr": {
-          "standard": 284,
-          "half_ppr": 284,
-          "ppr": 284,
-          "te_premium": 284,
-          "standard_superflex": 284,
-          "half_ppr_superflex": 284,
-          "ppr_superflex": 393,
-          "te_premium_superflex": 284,
-          "half_ppr_superflex_precise": 284
+          "standard": 282,
+          "half_ppr": 282,
+          "ppr": 282,
+          "te_premium": 282,
+          "standard_superflex": 282,
+          "half_ppr_superflex": 282,
+          "ppr_superflex": 389,
+          "te_premium_superflex": 282,
+          "half_ppr_superflex_precise": 282
         },
         "5yr": {
-          "standard": 474,
-          "half_ppr": 474,
-          "ppr": 474,
-          "te_premium": 474,
-          "standard_superflex": 474,
-          "half_ppr_superflex": 474,
-          "ppr_superflex": 654,
-          "te_premium_superflex": 474,
-          "half_ppr_superflex_precise": 474
+          "standard": 469,
+          "half_ppr": 469,
+          "ppr": 469,
+          "te_premium": 469,
+          "standard_superflex": 469,
+          "half_ppr_superflex": 469,
+          "ppr_superflex": 649,
+          "te_premium_superflex": 469,
+          "half_ppr_superflex_precise": 469
         },
         "10yr": {
-          "standard": 952,
-          "half_ppr": 952,
-          "ppr": 952,
-          "te_premium": 952,
-          "standard_superflex": 952,
-          "half_ppr_superflex": 952,
-          "ppr_superflex": 1313,
-          "te_premium_superflex": 952,
-          "half_ppr_superflex_precise": 952
+          "standard": 942,
+          "half_ppr": 942,
+          "ppr": 942,
+          "te_premium": 942,
+          "standard_superflex": 942,
+          "half_ppr_superflex": 942,
+          "ppr_superflex": 1303,
+          "te_premium_superflex": 942,
+          "half_ppr_superflex_precise": 942
         }
       }
     },
@@ -31292,12 +31292,12 @@
         "1yr": {
           "standard": 67,
           "half_ppr": 81,
-          "ppr": 94,
-          "te_premium": 94,
+          "ppr": 95,
+          "te_premium": 95,
           "standard_superflex": 67,
           "half_ppr_superflex": 81,
-          "ppr_superflex": 94,
-          "te_premium_superflex": 94,
+          "ppr_superflex": 95,
+          "te_premium_superflex": 95,
           "half_ppr_superflex_precise": 81
         },
         "3yr": {
@@ -33170,15 +33170,15 @@
       },
       "projections": {
         "1yr": {
-          "standard": 136,
-          "half_ppr": 136,
-          "ppr": 136,
-          "te_premium": 136,
-          "standard_superflex": 136,
-          "half_ppr_superflex": 136,
-          "ppr_superflex": 136,
-          "te_premium_superflex": 136,
-          "half_ppr_superflex_precise": 136
+          "standard": 137,
+          "half_ppr": 137,
+          "ppr": 137,
+          "te_premium": 137,
+          "standard_superflex": 137,
+          "half_ppr_superflex": 137,
+          "ppr_superflex": 137,
+          "te_premium_superflex": 137,
+          "half_ppr_superflex_precise": 137
         },
         "3yr": {
           "standard": 311,
@@ -34299,14 +34299,14 @@
       "projections": {
         "1yr": {
           "standard": 41,
-          "half_ppr": 50,
+          "half_ppr": 51,
           "ppr": 60,
           "te_premium": 60,
           "standard_superflex": 41,
-          "half_ppr_superflex": 50,
+          "half_ppr_superflex": 51,
           "ppr_superflex": 60,
           "te_premium_superflex": 60,
-          "half_ppr_superflex_precise": 50
+          "half_ppr_superflex_precise": 51
         },
         "3yr": {
           "standard": 152,
@@ -35491,7 +35491,7 @@
       "tier_overall": 13,
       "tier_positional": 12,
       "percent_low": 58.0,
-      "percent_high": 37.0,
+      "percent_high": 32.0,
       "hidden_row": true,
       "profile_path": "",
       "analysis": "Jennings seized the opportunity with Brandon Aiyuk out all of last season and Ricky Pearsall dealing with injuries. The veteran finished as the WR34 in PPR points per game. We'll see where he ends up in free agency.",
@@ -36272,15 +36272,15 @@
       },
       "projections": {
         "1yr": {
-          "standard": 33,
-          "half_ppr": 36,
-          "ppr": 38,
-          "te_premium": 38,
-          "standard_superflex": 33,
-          "half_ppr_superflex": 36,
-          "ppr_superflex": 38,
-          "te_premium_superflex": 38,
-          "half_ppr_superflex_precise": 36
+          "standard": 35,
+          "half_ppr": 38,
+          "ppr": 40,
+          "te_premium": 40,
+          "standard_superflex": 35,
+          "half_ppr_superflex": 38,
+          "ppr_superflex": 40,
+          "te_premium_superflex": 40,
+          "half_ppr_superflex_precise": 38
         },
         "3yr": {
           "standard": 188,
@@ -39809,7 +39809,7 @@
       "positional_rank_by_3d_value": 52,
       "team": "ATL",
       "team_id": 2,
-      "age": 25.5,
+      "age": 25.6,
       "bye_week": 11,
       "is_rookie": false,
       "tier_overall": 14,
@@ -40692,12 +40692,12 @@
         "1yr": {
           "standard": 95,
           "half_ppr": 101,
-          "ppr": 108,
-          "te_premium": 108,
+          "ppr": 107,
+          "te_premium": 107,
           "standard_superflex": 95,
           "half_ppr_superflex": 101,
           "ppr_superflex": 109,
-          "te_premium_superflex": 108,
+          "te_premium_superflex": 107,
           "half_ppr_superflex_precise": 101
         },
         "3yr": {
@@ -40937,7 +40937,7 @@
       "positional_rank_by_3d_value": 38,
       "team": "IND",
       "team_id": 14,
-      "age": 24.3,
+      "age": 24.4,
       "bye_week": 13,
       "is_rookie": false,
       "tier_overall": 14,
@@ -44356,15 +44356,15 @@
       },
       "projections": {
         "1yr": {
-          "standard": 52,
-          "half_ppr": 67,
-          "ppr": 82,
-          "te_premium": 82,
-          "standard_superflex": 52,
-          "half_ppr_superflex": 67,
-          "ppr_superflex": 82,
-          "te_premium_superflex": 82,
-          "half_ppr_superflex_precise": 67
+          "standard": 56,
+          "half_ppr": 71,
+          "ppr": 87,
+          "te_premium": 87,
+          "standard_superflex": 56,
+          "half_ppr_superflex": 71,
+          "ppr_superflex": 87,
+          "te_premium_superflex": 87,
+          "half_ppr_superflex_precise": 71
         },
         "3yr": {
           "standard": 209,
@@ -45919,7 +45919,7 @@
       "positional_rank_by_3d_value": 127,
       "team": "GB",
       "team_id": 12,
-      "age": 24.8,
+      "age": 24.9,
       "bye_week": 11,
       "is_rookie": false,
       "tier_overall": 14,
@@ -46330,15 +46330,15 @@
       },
       "projections": {
         "1yr": {
-          "standard": 10,
-          "half_ppr": 13,
-          "ppr": 16,
-          "te_premium": 16,
-          "standard_superflex": 10,
-          "half_ppr_superflex": 13,
-          "ppr_superflex": 16,
-          "te_premium_superflex": 16,
-          "half_ppr_superflex_precise": 13
+          "standard": 11,
+          "half_ppr": 14,
+          "ppr": 17,
+          "te_premium": 17,
+          "standard_superflex": 11,
+          "half_ppr_superflex": 14,
+          "ppr_superflex": 17,
+          "te_premium_superflex": 17,
+          "half_ppr_superflex_precise": 14
         },
         "3yr": {
           "standard": 274,
@@ -49491,7 +49491,7 @@
       "positional_rank_by_3d_value": 131,
       "team": "ATL",
       "team_id": 2,
-      "age": 26.5,
+      "age": 26.6,
       "bye_week": 11,
       "is_rookie": false,
       "tier_overall": 14,
@@ -50525,7 +50525,7 @@
       "positional_rank_by_3d_value": 132,
       "team": "BUF",
       "team_id": 4,
-      "age": 27,
+      "age": 27.1,
       "bye_week": 7,
       "is_rookie": false,
       "tier_overall": 14,
@@ -52029,7 +52029,7 @@
       "positional_rank_by_3d_value": 94,
       "team": "HOU",
       "team_id": 13,
-      "age": 26.4,
+      "age": 26.5,
       "bye_week": 8,
       "is_rookie": false,
       "tier_overall": 15,
@@ -54567,7 +54567,7 @@
       "positional_rank_by_3d_value": 80,
       "team": "NE",
       "team_id": 19,
-      "age": 27.9,
+      "age": 28,
       "bye_week": 11,
       "is_rookie": false,
       "tier_overall": 15,
@@ -56764,15 +56764,15 @@
       },
       "projections": {
         "1yr": {
-          "standard": 29,
-          "half_ppr": 31,
-          "ppr": 33,
-          "te_premium": 33,
-          "standard_superflex": 29,
-          "half_ppr_superflex": 31,
-          "ppr_superflex": 33,
-          "te_premium_superflex": 33,
-          "half_ppr_superflex_precise": 31
+          "standard": 16,
+          "half_ppr": 17,
+          "ppr": 18,
+          "te_premium": 18,
+          "standard_superflex": 16,
+          "half_ppr_superflex": 17,
+          "ppr_superflex": 18,
+          "te_premium_superflex": 18,
+          "half_ppr_superflex_precise": 17
         },
         "3yr": {
           "standard": 104,
@@ -59925,7 +59925,7 @@
       "positional_rank_by_3d_value": 54,
       "team": "TEN",
       "team_id": 31,
-      "age": 26,
+      "age": 26.1,
       "bye_week": 9,
       "is_rookie": false,
       "tier_overall": 15,
@@ -60019,7 +60019,7 @@
       "positional_rank_by_3d_value": 126,
       "team": "JAC",
       "team_id": 15,
-      "age": 22,
+      "age": 22.1,
       "bye_week": 7,
       "is_rookie": true,
       "tier_overall": 15,
@@ -62233,31 +62233,31 @@
           "te_premium": 252,
           "standard_superflex": 252,
           "half_ppr_superflex": 252,
-          "ppr_superflex": 347,
+          "ppr_superflex": 346,
           "te_premium_superflex": 252,
           "half_ppr_superflex_precise": 252
         },
         "5yr": {
-          "standard": 420,
-          "half_ppr": 420,
-          "ppr": 420,
-          "te_premium": 420,
-          "standard_superflex": 420,
-          "half_ppr_superflex": 420,
-          "ppr_superflex": 578,
-          "te_premium_superflex": 420,
-          "half_ppr_superflex_precise": 420
+          "standard": 419,
+          "half_ppr": 419,
+          "ppr": 419,
+          "te_premium": 419,
+          "standard_superflex": 419,
+          "half_ppr_superflex": 419,
+          "ppr_superflex": 576,
+          "te_premium_superflex": 419,
+          "half_ppr_superflex_precise": 419
         },
         "10yr": {
-          "standard": 844,
-          "half_ppr": 844,
-          "ppr": 844,
-          "te_premium": 844,
-          "standard_superflex": 844,
-          "half_ppr_superflex": 844,
-          "ppr_superflex": 1161,
-          "te_premium_superflex": 844,
-          "half_ppr_superflex_precise": 844
+          "standard": 842,
+          "half_ppr": 842,
+          "ppr": 842,
+          "te_premium": 842,
+          "standard_superflex": 842,
+          "half_ppr_superflex": 842,
+          "ppr_superflex": 1158,
+          "te_premium_superflex": 842,
+          "half_ppr_superflex_precise": 842
         }
       }
     },
@@ -62453,100 +62453,6 @@
       "document_index": 664,
       "rank_displayed": 665,
       "rank_by_3d_value": 665,
-      "player_id": 35533,
-      "name": "Jaydon Blue",
-      "first_name": "Jaydon",
-      "last_name": "Blue",
-      "position": "RB",
-      "positional_rank_label": "89",
-      "positional_rank_displayed": null,
-      "positional_rank_by_3d_value": 89,
-      "team": "UNS",
-      "team_id": 32,
-      "age": 22.8,
-      "bye_week": 18,
-      "is_rookie": false,
-      "tier_overall": 15,
-      "tier_positional": 15,
-      "percent_low": 60.0,
-      "percent_high": 100.0,
-      "hidden_row": true,
-      "profile_path": "",
-      "analysis": "Blue was expected to be the next big Texas RB after Sophomore CJ Baxter went down with an injury. However, struggles with his vision early in 2024 led to a pass-catching role for the former four-star recruit. Blue ran a 4.38 at the NFL Combine despite nursing a torn muscle in his groin. His 4.25 Pro Day time may be more accurate to his actual speed. As the first RB drafted by the Cowboys, Blue carried some appeal entering the '25 season. But he barely saw the field and watched as Javonte Williams rebounded in a major way. Dallas then re-signed Williams to a three-year contract, putting a lid on Blue's dynasty value.",
-      "half_ppr_superflex_3d_value": -6.7,
-      "three_d_value": {
-        "standard": -16,
-        "half_ppr": -11,
-        "ppr": -8,
-        "te_premium": -7,
-        "standard_superflex": -9,
-        "half_ppr_superflex": -7,
-        "ppr_superflex": -5,
-        "te_premium_superflex": -6,
-        "half_ppr_superflex_precise": -6.7
-      },
-      "adp": {
-        "standard": null,
-        "half_ppr": null,
-        "ppr": null,
-        "te_premium": null,
-        "standard_superflex": null,
-        "half_ppr_superflex": null,
-        "ppr_superflex": null,
-        "te_premium_superflex": null,
-        "half_ppr_superflex_precise": null
-      },
-      "projections": {
-        "1yr": {
-          "standard": 16,
-          "half_ppr": 19,
-          "ppr": 22,
-          "te_premium": 22,
-          "standard_superflex": 16,
-          "half_ppr_superflex": 19,
-          "ppr_superflex": 22,
-          "te_premium_superflex": 22,
-          "half_ppr_superflex_precise": 19
-        },
-        "3yr": {
-          "standard": 78,
-          "half_ppr": 98,
-          "ppr": 119,
-          "te_premium": 119,
-          "standard_superflex": 78,
-          "half_ppr_superflex": 98,
-          "ppr_superflex": 121,
-          "te_premium_superflex": 119,
-          "half_ppr_superflex_precise": 98
-        },
-        "5yr": {
-          "standard": 124,
-          "half_ppr": 156,
-          "ppr": 188,
-          "te_premium": 188,
-          "standard_superflex": 124,
-          "half_ppr_superflex": 156,
-          "ppr_superflex": 193,
-          "te_premium_superflex": 188,
-          "half_ppr_superflex_precise": 156
-        },
-        "10yr": {
-          "standard": 222,
-          "half_ppr": 280,
-          "ppr": 337,
-          "te_premium": 337,
-          "standard_superflex": 222,
-          "half_ppr_superflex": 280,
-          "ppr_superflex": 345,
-          "te_premium_superflex": 337,
-          "half_ppr_superflex_precise": 280
-        }
-      }
-    },
-    {
-      "document_index": 665,
-      "rank_displayed": 666,
-      "rank_by_3d_value": 666,
       "player_id": 10614,
       "name": "Davon Hamilton",
       "first_name": "Davon",
@@ -62634,6 +62540,100 @@
           "ppr_superflex": 182,
           "te_premium_superflex": 182,
           "half_ppr_superflex_precise": 182
+        }
+      }
+    },
+    {
+      "document_index": 665,
+      "rank_displayed": 666,
+      "rank_by_3d_value": 666,
+      "player_id": 35533,
+      "name": "Jaydon Blue",
+      "first_name": "Jaydon",
+      "last_name": "Blue",
+      "position": "RB",
+      "positional_rank_label": "89",
+      "positional_rank_displayed": null,
+      "positional_rank_by_3d_value": 89,
+      "team": "UNS",
+      "team_id": 32,
+      "age": 22.8,
+      "bye_week": 18,
+      "is_rookie": false,
+      "tier_overall": 15,
+      "tier_positional": 15,
+      "percent_low": 60.0,
+      "percent_high": 100.0,
+      "hidden_row": true,
+      "profile_path": "",
+      "analysis": "Blue was expected to be the next big Texas RB after Sophomore CJ Baxter went down with an injury. However, struggles with his vision early in 2024 led to a pass-catching role for the former four-star recruit. Blue ran a 4.38 at the NFL Combine despite nursing a torn muscle in his groin. His 4.25 Pro Day time may be more accurate to his actual speed. As the first RB drafted by the Cowboys, Blue carried some appeal entering the '25 season. But he barely saw the field and watched as Javonte Williams rebounded in a major way. Dallas then re-signed Williams to a three-year contract, putting a lid on Blue's dynasty value.",
+      "half_ppr_superflex_3d_value": -6.7,
+      "three_d_value": {
+        "standard": -16,
+        "half_ppr": -11,
+        "ppr": -8,
+        "te_premium": -7,
+        "standard_superflex": -9,
+        "half_ppr_superflex": -7,
+        "ppr_superflex": -5,
+        "te_premium_superflex": -6,
+        "half_ppr_superflex_precise": -6.7
+      },
+      "adp": {
+        "standard": null,
+        "half_ppr": null,
+        "ppr": null,
+        "te_premium": null,
+        "standard_superflex": null,
+        "half_ppr_superflex": null,
+        "ppr_superflex": null,
+        "te_premium_superflex": null,
+        "half_ppr_superflex_precise": null
+      },
+      "projections": {
+        "1yr": {
+          "standard": 0,
+          "half_ppr": 0,
+          "ppr": 0,
+          "te_premium": 0,
+          "standard_superflex": 0,
+          "half_ppr_superflex": 0,
+          "ppr_superflex": 0,
+          "te_premium_superflex": 0,
+          "half_ppr_superflex_precise": 0
+        },
+        "3yr": {
+          "standard": 78,
+          "half_ppr": 98,
+          "ppr": 119,
+          "te_premium": 119,
+          "standard_superflex": 78,
+          "half_ppr_superflex": 98,
+          "ppr_superflex": 121,
+          "te_premium_superflex": 119,
+          "half_ppr_superflex_precise": 98
+        },
+        "5yr": {
+          "standard": 124,
+          "half_ppr": 156,
+          "ppr": 188,
+          "te_premium": 188,
+          "standard_superflex": 124,
+          "half_ppr_superflex": 156,
+          "ppr_superflex": 193,
+          "te_premium_superflex": 188,
+          "half_ppr_superflex_precise": 156
+        },
+        "10yr": {
+          "standard": 222,
+          "half_ppr": 280,
+          "ppr": 337,
+          "te_premium": 337,
+          "standard_superflex": 222,
+          "half_ppr_superflex": 280,
+          "ppr_superflex": 345,
+          "te_premium_superflex": 337,
+          "half_ppr_superflex_precise": 280
         }
       }
     },
@@ -64625,7 +64625,7 @@
       "positional_rank_by_3d_value": 60,
       "team": "GB",
       "team_id": 12,
-      "age": 31.1,
+      "age": 31.2,
       "bye_week": 11,
       "is_rookie": false,
       "tier_overall": 15,
@@ -67764,12 +67764,12 @@
         "1yr": {
           "standard": 24,
           "half_ppr": 30,
-          "ppr": 37,
-          "te_premium": 37,
+          "ppr": 36,
+          "te_premium": 36,
           "standard_superflex": 24,
           "half_ppr_superflex": 30,
-          "ppr_superflex": 37,
-          "te_premium_superflex": 37,
+          "ppr_superflex": 36,
+          "te_premium_superflex": 36,
           "half_ppr_superflex_precise": 30
         },
         "3yr": {
@@ -70265,7 +70265,7 @@
       "positional_rank_by_3d_value": 75,
       "team": "TB",
       "team_id": 30,
-      "age": 32,
+      "age": 32.1,
       "bye_week": 10,
       "is_rookie": false,
       "tier_overall": 15,
@@ -71487,7 +71487,7 @@
       "positional_rank_by_3d_value": 146,
       "team": "LAC",
       "team_id": 26,
-      "age": 35.6,
+      "age": 35.7,
       "bye_week": 7,
       "is_rookie": false,
       "tier_overall": 15,
@@ -76128,15 +76128,15 @@
       },
       "projections": {
         "1yr": {
-          "standard": 26,
-          "half_ppr": 29,
-          "ppr": 31,
-          "te_premium": 31,
-          "standard_superflex": 26,
-          "half_ppr_superflex": 29,
-          "ppr_superflex": 31,
-          "te_premium_superflex": 31,
-          "half_ppr_superflex_precise": 29
+          "standard": 20,
+          "half_ppr": 21,
+          "ppr": 23,
+          "te_premium": 23,
+          "standard_superflex": 20,
+          "half_ppr_superflex": 21,
+          "ppr_superflex": 23,
+          "te_premium_superflex": 23,
+          "half_ppr_superflex_precise": 21
         },
         "3yr": {
           "standard": 53,
@@ -77117,6 +77117,100 @@
       "document_index": 820,
       "rank_displayed": 821,
       "rank_by_3d_value": 821,
+      "player_id": 12613,
+      "name": "Jerome Ford",
+      "first_name": "Jerome",
+      "last_name": "Ford",
+      "position": "RB",
+      "positional_rank_label": "105",
+      "positional_rank_displayed": null,
+      "positional_rank_by_3d_value": 105,
+      "team": "WAS",
+      "team_id": 33,
+      "age": 27.1,
+      "bye_week": 7,
+      "is_rookie": false,
+      "tier_overall": 15,
+      "tier_positional": 15,
+      "percent_low": 17.0,
+      "percent_high": 220.0,
+      "hidden_row": true,
+      "profile_path": "",
+      "analysis": "",
+      "half_ppr_superflex_3d_value": -15.8,
+      "three_d_value": {
+        "standard": -28,
+        "half_ppr": -25,
+        "ppr": -23,
+        "te_premium": -21,
+        "standard_superflex": -17,
+        "half_ppr_superflex": -16,
+        "ppr_superflex": -16,
+        "te_premium_superflex": -16,
+        "half_ppr_superflex_precise": -15.8
+      },
+      "adp": {
+        "standard": null,
+        "half_ppr": null,
+        "ppr": null,
+        "te_premium": null,
+        "standard_superflex": null,
+        "half_ppr_superflex": null,
+        "ppr_superflex": null,
+        "te_premium_superflex": null,
+        "half_ppr_superflex_precise": null
+      },
+      "projections": {
+        "1yr": {
+          "standard": 0,
+          "half_ppr": 0,
+          "ppr": 0,
+          "te_premium": 0,
+          "standard_superflex": 0,
+          "half_ppr_superflex": 0,
+          "ppr_superflex": 0,
+          "te_premium_superflex": 0,
+          "half_ppr_superflex_precise": 0
+        },
+        "3yr": {
+          "standard": 163,
+          "half_ppr": 187,
+          "ppr": 211,
+          "te_premium": 211,
+          "standard_superflex": 163,
+          "half_ppr_superflex": 187,
+          "ppr_superflex": 213,
+          "te_premium_superflex": 211,
+          "half_ppr_superflex_precise": 187
+        },
+        "5yr": {
+          "standard": 252,
+          "half_ppr": 290,
+          "ppr": 327,
+          "te_premium": 327,
+          "standard_superflex": 252,
+          "half_ppr_superflex": 290,
+          "ppr_superflex": 331,
+          "te_premium_superflex": 327,
+          "half_ppr_superflex_precise": 290
+        },
+        "10yr": {
+          "standard": 428,
+          "half_ppr": 491,
+          "ppr": 555,
+          "te_premium": 555,
+          "standard_superflex": 428,
+          "half_ppr_superflex": 491,
+          "ppr_superflex": 561,
+          "te_premium_superflex": 555,
+          "half_ppr_superflex_precise": 491
+        }
+      }
+    },
+    {
+      "document_index": 821,
+      "rank_displayed": 822,
+      "rank_by_3d_value": 822,
       "player_id": 9517,
       "name": "Chidobe Awuzie",
       "first_name": "Chidobe",
@@ -77208,9 +77302,9 @@
       }
     },
     {
-      "document_index": 821,
-      "rank_displayed": 822,
-      "rank_by_3d_value": 822,
+      "document_index": 822,
+      "rank_displayed": 823,
+      "rank_by_3d_value": 823,
       "player_id": 36131,
       "name": "Jaden Dugger",
       "first_name": "Jaden",
@@ -77302,9 +77396,9 @@
       }
     },
     {
-      "document_index": 822,
-      "rank_displayed": 823,
-      "rank_by_3d_value": 823,
+      "document_index": 823,
+      "rank_displayed": 824,
+      "rank_by_3d_value": 824,
       "player_id": 14138,
       "name": "Derius Davis",
       "first_name": "Derius",
@@ -77396,9 +77490,9 @@
       }
     },
     {
-      "document_index": 823,
-      "rank_displayed": 824,
-      "rank_by_3d_value": 824,
+      "document_index": 824,
+      "rank_displayed": 825,
+      "rank_by_3d_value": 825,
       "player_id": 10309,
       "name": "Foster Moreau",
       "first_name": "Foster",
@@ -77490,9 +77584,9 @@
       }
     },
     {
-      "document_index": 824,
-      "rank_displayed": 825,
-      "rank_by_3d_value": 825,
+      "document_index": 825,
+      "rank_displayed": 826,
+      "rank_by_3d_value": 826,
       "player_id": 10029,
       "name": "Donte Jackson",
       "first_name": "Donte",
@@ -77584,9 +77678,9 @@
       }
     },
     {
-      "document_index": 825,
-      "rank_displayed": 826,
-      "rank_by_3d_value": 826,
+      "document_index": 826,
+      "rank_displayed": 827,
+      "rank_by_3d_value": 827,
       "player_id": 12717,
       "name": "Teagan Quitoriano",
       "first_name": "Teagan",
@@ -77678,9 +77772,103 @@
       }
     },
     {
-      "document_index": 826,
-      "rank_displayed": 827,
-      "rank_by_3d_value": 827,
+      "document_index": 827,
+      "rank_displayed": 828,
+      "rank_by_3d_value": 828,
+      "player_id": 36169,
+      "name": "Colson Yankoff",
+      "first_name": "Colson",
+      "last_name": "Yankoff",
+      "position": "TE",
+      "positional_rank_label": "88",
+      "positional_rank_displayed": null,
+      "positional_rank_by_3d_value": 88,
+      "team": "WAS",
+      "team_id": 33,
+      "age": 26.6,
+      "bye_week": 7,
+      "is_rookie": false,
+      "tier_overall": 15,
+      "tier_positional": 14,
+      "percent_low": 0.0,
+      "percent_high": 0.0,
+      "hidden_row": true,
+      "profile_path": "",
+      "analysis": "",
+      "half_ppr_superflex_3d_value": -16.9,
+      "three_d_value": {
+        "standard": -21,
+        "half_ppr": -26,
+        "ppr": -32,
+        "te_premium": -103,
+        "standard_superflex": -12,
+        "half_ppr_superflex": -17,
+        "ppr_superflex": -22,
+        "te_premium_superflex": -59,
+        "half_ppr_superflex_precise": -16.9
+      },
+      "adp": {
+        "standard": null,
+        "half_ppr": null,
+        "ppr": null,
+        "te_premium": null,
+        "standard_superflex": null,
+        "half_ppr_superflex": null,
+        "ppr_superflex": null,
+        "te_premium_superflex": null,
+        "half_ppr_superflex_precise": null
+      },
+      "projections": {
+        "1yr": {
+          "standard": 0,
+          "half_ppr": 1,
+          "ppr": 1,
+          "te_premium": 1,
+          "standard_superflex": 0,
+          "half_ppr_superflex": 1,
+          "ppr_superflex": 1,
+          "te_premium_superflex": 1,
+          "half_ppr_superflex_precise": 1
+        },
+        "3yr": {
+          "standard": 2,
+          "half_ppr": 3,
+          "ppr": 4,
+          "te_premium": 4,
+          "standard_superflex": 2,
+          "half_ppr_superflex": 3,
+          "ppr_superflex": 4,
+          "te_premium_superflex": 4,
+          "half_ppr_superflex_precise": 3
+        },
+        "5yr": {
+          "standard": 3,
+          "half_ppr": 5,
+          "ppr": 6,
+          "te_premium": 7,
+          "standard_superflex": 3,
+          "half_ppr_superflex": 5,
+          "ppr_superflex": 6,
+          "te_premium_superflex": 7,
+          "half_ppr_superflex_precise": 5
+        },
+        "10yr": {
+          "standard": 6,
+          "half_ppr": 8,
+          "ppr": 11,
+          "te_premium": 13,
+          "standard_superflex": 6,
+          "half_ppr_superflex": 8,
+          "ppr_superflex": 11,
+          "te_premium_superflex": 13,
+          "half_ppr_superflex_precise": 8
+        }
+      }
+    },
+    {
+      "document_index": 828,
+      "rank_displayed": 829,
+      "rank_by_3d_value": 829,
       "player_id": 6818,
       "name": "Demario Davis",
       "first_name": "Demario",
@@ -77772,9 +77960,9 @@
       }
     },
     {
-      "document_index": 827,
-      "rank_displayed": 828,
-      "rank_by_3d_value": 828,
+      "document_index": 829,
+      "rank_displayed": 830,
+      "rank_by_3d_value": 830,
       "player_id": 7396,
       "name": "Chris Boswell",
       "first_name": "Chris",
@@ -77866,9 +78054,9 @@
       }
     },
     {
-      "document_index": 828,
-      "rank_displayed": 829,
-      "rank_by_3d_value": 829,
+      "document_index": 830,
+      "rank_displayed": 831,
+      "rank_by_3d_value": 831,
       "player_id": 36155,
       "name": "Drew Stevens",
       "first_name": "Drew",
@@ -77925,44 +78113,44 @@
           "half_ppr_superflex_precise": 135
         },
         "3yr": {
-          "standard": 373,
-          "half_ppr": 373,
-          "ppr": 373,
-          "te_premium": 373,
-          "standard_superflex": 373,
-          "half_ppr_superflex": 373,
-          "ppr_superflex": 373,
-          "te_premium_superflex": 373,
-          "half_ppr_superflex_precise": 373
+          "standard": 372,
+          "half_ppr": 372,
+          "ppr": 372,
+          "te_premium": 372,
+          "standard_superflex": 372,
+          "half_ppr_superflex": 372,
+          "ppr_superflex": 372,
+          "te_premium_superflex": 372,
+          "half_ppr_superflex_precise": 372
         },
         "5yr": {
-          "standard": 606,
-          "half_ppr": 606,
-          "ppr": 606,
-          "te_premium": 606,
-          "standard_superflex": 606,
-          "half_ppr_superflex": 606,
-          "ppr_superflex": 606,
-          "te_premium_superflex": 606,
-          "half_ppr_superflex_precise": 606
+          "standard": 605,
+          "half_ppr": 605,
+          "ppr": 605,
+          "te_premium": 605,
+          "standard_superflex": 605,
+          "half_ppr_superflex": 605,
+          "ppr_superflex": 605,
+          "te_premium_superflex": 605,
+          "half_ppr_superflex_precise": 605
         },
         "10yr": {
-          "standard": 1060,
-          "half_ppr": 1060,
-          "ppr": 1060,
-          "te_premium": 1060,
-          "standard_superflex": 1060,
-          "half_ppr_superflex": 1060,
-          "ppr_superflex": 1060,
-          "te_premium_superflex": 1060,
-          "half_ppr_superflex_precise": 1060
+          "standard": 1058,
+          "half_ppr": 1058,
+          "ppr": 1058,
+          "te_premium": 1058,
+          "standard_superflex": 1058,
+          "half_ppr_superflex": 1058,
+          "ppr_superflex": 1058,
+          "te_premium_superflex": 1058,
+          "half_ppr_superflex_precise": 1058
         }
       }
     },
     {
-      "document_index": 829,
-      "rank_displayed": 830,
-      "rank_by_3d_value": 830,
+      "document_index": 831,
+      "rank_displayed": 832,
+      "rank_by_3d_value": 832,
       "player_id": 11230,
       "name": "Christian Rozeboom",
       "first_name": "Christian",
@@ -78054,9 +78242,9 @@
       }
     },
     {
-      "document_index": 830,
-      "rank_displayed": 831,
-      "rank_by_3d_value": 831,
+      "document_index": 832,
+      "rank_displayed": 833,
+      "rank_by_3d_value": 833,
       "player_id": 10805,
       "name": "Jeremiah Owusu-Koramoah",
       "first_name": "Jeremiah",
@@ -78148,9 +78336,9 @@
       }
     },
     {
-      "document_index": 831,
-      "rank_displayed": 832,
-      "rank_by_3d_value": 832,
+      "document_index": 833,
+      "rank_displayed": 834,
+      "rank_by_3d_value": 834,
       "player_id": 35142,
       "name": "JD Bertrand",
       "first_name": "JD",
@@ -78242,9 +78430,9 @@
       }
     },
     {
-      "document_index": 832,
-      "rank_displayed": 833,
-      "rank_by_3d_value": 833,
+      "document_index": 834,
+      "rank_displayed": 835,
+      "rank_by_3d_value": 835,
       "player_id": 36125,
       "name": "Jimmy Rolder",
       "first_name": "Jimmy",
@@ -78336,9 +78524,9 @@
       }
     },
     {
-      "document_index": 833,
-      "rank_displayed": 834,
-      "rank_by_3d_value": 834,
+      "document_index": 835,
+      "rank_displayed": 836,
+      "rank_by_3d_value": 836,
       "player_id": 35039,
       "name": "Anthony Gould",
       "first_name": "Anthony",
@@ -78430,9 +78618,9 @@
       }
     },
     {
-      "document_index": 834,
-      "rank_displayed": 835,
-      "rank_by_3d_value": 835,
+      "document_index": 836,
+      "rank_displayed": 837,
+      "rank_by_3d_value": 837,
       "player_id": 35381,
       "name": "Joshua Williams",
       "first_name": "Joshua",
@@ -78524,9 +78712,9 @@
       }
     },
     {
-      "document_index": 835,
-      "rank_displayed": 836,
-      "rank_by_3d_value": 836,
+      "document_index": 837,
+      "rank_displayed": 838,
+      "rank_by_3d_value": 838,
       "player_id": 35828,
       "name": "Nohl Williams",
       "first_name": "Nohl",
@@ -78618,9 +78806,9 @@
       }
     },
     {
-      "document_index": 836,
-      "rank_displayed": 837,
-      "rank_by_3d_value": 837,
+      "document_index": 838,
+      "rank_displayed": 839,
+      "rank_by_3d_value": 839,
       "player_id": 10022,
       "name": "Mike Hughes",
       "first_name": "Mike",
@@ -78712,9 +78900,9 @@
       }
     },
     {
-      "document_index": 837,
-      "rank_displayed": 838,
-      "rank_by_3d_value": 838,
+      "document_index": 839,
+      "rank_displayed": 840,
+      "rank_by_3d_value": 840,
       "player_id": 14154,
       "name": "Deonte Banks",
       "first_name": "Deonte",
@@ -78806,9 +78994,9 @@
       }
     },
     {
-      "document_index": 838,
-      "rank_displayed": 839,
-      "rank_by_3d_value": 839,
+      "document_index": 840,
+      "rank_displayed": 841,
+      "rank_by_3d_value": 841,
       "player_id": 36107,
       "name": "Zakee Wheatley",
       "first_name": "Zakee",
@@ -78900,9 +79088,9 @@
       }
     },
     {
-      "document_index": 839,
-      "rank_displayed": 840,
-      "rank_by_3d_value": 840,
+      "document_index": 841,
+      "rank_displayed": 842,
+      "rank_by_3d_value": 842,
       "player_id": 36069,
       "name": "Donaven McCulley",
       "first_name": "Donaven",
@@ -78994,9 +79182,9 @@
       }
     },
     {
-      "document_index": 840,
-      "rank_displayed": 841,
-      "rank_by_3d_value": 841,
+      "document_index": 842,
+      "rank_displayed": 843,
+      "rank_by_3d_value": 843,
       "player_id": 10740,
       "name": "Marcus Epps",
       "first_name": "Marcus",
@@ -79088,9 +79276,9 @@
       }
     },
     {
-      "document_index": 841,
-      "rank_displayed": 842,
-      "rank_by_3d_value": 842,
+      "document_index": 843,
+      "rank_displayed": 844,
+      "rank_by_3d_value": 844,
       "player_id": 7126,
       "name": "Cairo Santos",
       "first_name": "Cairo",
@@ -79182,9 +79370,9 @@
       }
     },
     {
-      "document_index": 842,
-      "rank_displayed": 843,
-      "rank_by_3d_value": 843,
+      "document_index": 844,
+      "rank_displayed": 845,
+      "rank_by_3d_value": 845,
       "player_id": 14160,
       "name": "Carrington Valentine",
       "first_name": "Carrington",
@@ -79276,9 +79464,103 @@
       }
     },
     {
-      "document_index": 843,
-      "rank_displayed": 844,
-      "rank_by_3d_value": 844,
+      "document_index": 845,
+      "rank_displayed": 846,
+      "rank_by_3d_value": 846,
+      "player_id": 36035,
+      "name": "Chris Hilton Jr.",
+      "first_name": "Chris",
+      "last_name": "Hilton Jr.",
+      "position": "WR",
+      "positional_rank_label": "160",
+      "positional_rank_displayed": null,
+      "positional_rank_by_3d_value": 160,
+      "team": "WAS",
+      "team_id": 33,
+      "age": 24,
+      "bye_week": 7,
+      "is_rookie": true,
+      "tier_overall": 15,
+      "tier_positional": 15,
+      "percent_low": 10.0,
+      "percent_high": 280.0,
+      "hidden_row": true,
+      "profile_path": "",
+      "analysis": "",
+      "half_ppr_superflex_3d_value": -24.2,
+      "three_d_value": {
+        "standard": -32,
+        "half_ppr": -38,
+        "ppr": -43,
+        "te_premium": -41,
+        "standard_superflex": -19,
+        "half_ppr_superflex": -24,
+        "ppr_superflex": -30,
+        "te_premium_superflex": -30,
+        "half_ppr_superflex_precise": -24.2
+      },
+      "adp": {
+        "standard": null,
+        "half_ppr": null,
+        "ppr": null,
+        "te_premium": null,
+        "standard_superflex": null,
+        "half_ppr_superflex": null,
+        "ppr_superflex": null,
+        "te_premium_superflex": null,
+        "half_ppr_superflex_precise": null
+      },
+      "projections": {
+        "1yr": {
+          "standard": 0,
+          "half_ppr": 0,
+          "ppr": 0,
+          "te_premium": 0,
+          "standard_superflex": 0,
+          "half_ppr_superflex": 0,
+          "ppr_superflex": 0,
+          "te_premium_superflex": 0,
+          "half_ppr_superflex_precise": 0
+        },
+        "3yr": {
+          "standard": 105,
+          "half_ppr": 137,
+          "ppr": 170,
+          "te_premium": 170,
+          "standard_superflex": 105,
+          "half_ppr_superflex": 137,
+          "ppr_superflex": 170,
+          "te_premium_superflex": 170,
+          "half_ppr_superflex_precise": 137
+        },
+        "5yr": {
+          "standard": 173,
+          "half_ppr": 228,
+          "ppr": 282,
+          "te_premium": 282,
+          "standard_superflex": 173,
+          "half_ppr_superflex": 228,
+          "ppr_superflex": 282,
+          "te_premium_superflex": 282,
+          "half_ppr_superflex_precise": 228
+        },
+        "10yr": {
+          "standard": 333,
+          "half_ppr": 437,
+          "ppr": 541,
+          "te_premium": 541,
+          "standard_superflex": 333,
+          "half_ppr_superflex": 437,
+          "ppr_superflex": 541,
+          "te_premium_superflex": 541,
+          "half_ppr_superflex_precise": 437
+        }
+      }
+    },
+    {
+      "document_index": 846,
+      "rank_displayed": 847,
+      "rank_by_3d_value": 847,
       "player_id": 36115,
       "name": "Colton Hood",
       "first_name": "Colton",
@@ -79370,9 +79652,9 @@
       }
     },
     {
-      "document_index": 844,
-      "rank_displayed": 845,
-      "rank_by_3d_value": 845,
+      "document_index": 847,
+      "rank_displayed": 848,
+      "rank_by_3d_value": 848,
       "player_id": 13479,
       "name": "Tony Adams",
       "first_name": "Tony",
@@ -79464,9 +79746,9 @@
       }
     },
     {
-      "document_index": 845,
-      "rank_displayed": 846,
-      "rank_by_3d_value": 846,
+      "document_index": 848,
+      "rank_displayed": 849,
+      "rank_by_3d_value": 849,
       "player_id": 36152,
       "name": "Dominic Zvada",
       "first_name": "Dominic",
@@ -79558,9 +79840,9 @@
       }
     },
     {
-      "document_index": 846,
-      "rank_displayed": 847,
-      "rank_by_3d_value": 847,
+      "document_index": 849,
+      "rank_displayed": 850,
+      "rank_by_3d_value": 850,
       "player_id": 35839,
       "name": "Darien Porter",
       "first_name": "Darien",
@@ -79652,9 +79934,9 @@
       }
     },
     {
-      "document_index": 847,
-      "rank_displayed": 848,
-      "rank_by_3d_value": 848,
+      "document_index": 850,
+      "rank_displayed": 851,
+      "rank_by_3d_value": 851,
       "player_id": 35895,
       "name": "Reddy Steward",
       "first_name": "Reddy",
@@ -79746,9 +80028,9 @@
       }
     },
     {
-      "document_index": 848,
-      "rank_displayed": 849,
-      "rank_by_3d_value": 849,
+      "document_index": 851,
+      "rank_displayed": 852,
+      "rank_by_3d_value": 852,
       "player_id": 10565,
       "name": "Kristian Fulton",
       "first_name": "Kristian",
@@ -79840,9 +80122,9 @@
       }
     },
     {
-      "document_index": 849,
-      "rank_displayed": 850,
-      "rank_by_3d_value": 850,
+      "document_index": 852,
+      "rank_displayed": 853,
+      "rank_by_3d_value": 853,
       "player_id": 13138,
       "name": "Martin Emerson",
       "first_name": "Martin",
@@ -79934,9 +80216,9 @@
       }
     },
     {
-      "document_index": 850,
-      "rank_displayed": 851,
-      "rank_by_3d_value": 851,
+      "document_index": 853,
+      "rank_displayed": 854,
+      "rank_by_3d_value": 854,
       "player_id": 13315,
       "name": "Darrell Baker Jr.",
       "first_name": "Darrell",
@@ -80028,9 +80310,9 @@
       }
     },
     {
-      "document_index": 851,
-      "rank_displayed": 852,
-      "rank_by_3d_value": 852,
+      "document_index": 854,
+      "rank_displayed": 855,
+      "rank_by_3d_value": 855,
       "player_id": 35085,
       "name": "Ennis Rakestraw Jr.",
       "first_name": "Ennis",
@@ -80122,9 +80404,9 @@
       }
     },
     {
-      "document_index": 852,
-      "rank_displayed": 853,
-      "rank_by_3d_value": 853,
+      "document_index": 855,
+      "rank_displayed": 856,
+      "rank_by_3d_value": 856,
       "player_id": 36110,
       "name": "Kamari Ramsey",
       "first_name": "Kamari",
@@ -80216,9 +80498,9 @@
       }
     },
     {
-      "document_index": 853,
-      "rank_displayed": 854,
-      "rank_by_3d_value": 854,
+      "document_index": 856,
+      "rank_displayed": 857,
+      "rank_by_3d_value": 857,
       "player_id": 36139,
       "name": "Jakobe Thomas",
       "first_name": "Jakobe",
@@ -80310,9 +80592,9 @@
       }
     },
     {
-      "document_index": 854,
-      "rank_displayed": 855,
-      "rank_by_3d_value": 855,
+      "document_index": 857,
+      "rank_displayed": 858,
+      "rank_by_3d_value": 858,
       "player_id": 36140,
       "name": "Jadon Canady",
       "first_name": "Jadon",
@@ -80404,9 +80686,9 @@
       }
     },
     {
-      "document_index": 855,
-      "rank_displayed": 856,
-      "rank_by_3d_value": 856,
+      "document_index": 858,
+      "rank_displayed": 859,
+      "rank_by_3d_value": 859,
       "player_id": 10630,
       "name": "Tyler Bass",
       "first_name": "Tyler",
@@ -80498,9 +80780,9 @@
       }
     },
     {
-      "document_index": 856,
-      "rank_displayed": 857,
-      "rank_by_3d_value": 857,
+      "document_index": 859,
+      "rank_displayed": 860,
+      "rank_by_3d_value": 860,
       "player_id": 35864,
       "name": "Harrison Mevis",
       "first_name": "Harrison",
@@ -80546,15 +80828,15 @@
       },
       "projections": {
         "1yr": {
-          "standard": 62,
-          "half_ppr": 62,
-          "ppr": 62,
-          "te_premium": 62,
-          "standard_superflex": 62,
-          "half_ppr_superflex": 62,
-          "ppr_superflex": 62,
-          "te_premium_superflex": 62,
-          "half_ppr_superflex_precise": 62
+          "standard": 46,
+          "half_ppr": 46,
+          "ppr": 46,
+          "te_premium": 46,
+          "standard_superflex": 46,
+          "half_ppr_superflex": 46,
+          "ppr_superflex": 46,
+          "te_premium_superflex": 46,
+          "half_ppr_superflex_precise": 46
         },
         "3yr": {
           "standard": 209,
@@ -80592,9 +80874,9 @@
       }
     },
     {
-      "document_index": 857,
-      "rank_displayed": 858,
-      "rank_by_3d_value": 858,
+      "document_index": 860,
+      "rank_displayed": 861,
+      "rank_by_3d_value": 861,
       "player_id": 14293,
       "name": "Chad Ryland",
       "first_name": "Chad",
@@ -80686,9 +80968,9 @@
       }
     },
     {
-      "document_index": 858,
-      "rank_displayed": 859,
-      "rank_by_3d_value": 859,
+      "document_index": 861,
+      "rank_displayed": 862,
+      "rank_by_3d_value": 862,
       "player_id": 35380,
       "name": "Andre Szmyt",
       "first_name": "Andre",
@@ -80780,9 +81062,9 @@
       }
     },
     {
-      "document_index": 859,
-      "rank_displayed": 860,
-      "rank_by_3d_value": 860,
+      "document_index": 862,
+      "rank_displayed": 863,
+      "rank_by_3d_value": 863,
       "player_id": 10421,
       "name": "Joey Slye",
       "first_name": "Joey",
@@ -80874,9 +81156,9 @@
       }
     },
     {
-      "document_index": 860,
-      "rank_displayed": 861,
-      "rank_by_3d_value": 861,
+      "document_index": 863,
+      "rank_displayed": 864,
+      "rank_by_3d_value": 864,
       "player_id": 10134,
       "name": "Eddy Pineiro",
       "first_name": "Eddy",
@@ -80968,9 +81250,9 @@
       }
     },
     {
-      "document_index": 861,
-      "rank_displayed": 862,
-      "rank_by_3d_value": 862,
+      "document_index": 864,
+      "rank_displayed": 865,
+      "rank_by_3d_value": 865,
       "player_id": 10093,
       "name": "Daniel Carlson",
       "first_name": "Daniel",
@@ -81062,9 +81344,9 @@
       }
     },
     {
-      "document_index": 862,
-      "rank_displayed": 863,
-      "rank_by_3d_value": 863,
+      "document_index": 865,
+      "rank_displayed": 866,
+      "rank_by_3d_value": 866,
       "player_id": 35208,
       "name": "Spencer Shrader",
       "first_name": "Spencer",
@@ -81156,9 +81438,9 @@
       }
     },
     {
-      "document_index": 863,
-      "rank_displayed": 864,
-      "rank_by_3d_value": 864,
+      "document_index": 866,
+      "rank_displayed": 867,
+      "rank_by_3d_value": 867,
       "player_id": 36121,
       "name": "Trey Smack",
       "first_name": "Trey",
@@ -81250,9 +81532,9 @@
       }
     },
     {
-      "document_index": 864,
-      "rank_displayed": 865,
-      "rank_by_3d_value": 865,
+      "document_index": 867,
+      "rank_displayed": 868,
+      "rank_by_3d_value": 868,
       "player_id": 10092,
       "name": "Jason Sanders",
       "first_name": "Jason",
@@ -81344,9 +81626,9 @@
       }
     },
     {
-      "document_index": 865,
-      "rank_displayed": 866,
-      "rank_by_3d_value": 866,
+      "document_index": 868,
+      "rank_displayed": 869,
+      "rank_by_3d_value": 869,
       "player_id": 10311,
       "name": "Matt Gay",
       "first_name": "Matt",
@@ -81438,9 +81720,9 @@
       }
     },
     {
-      "document_index": 866,
-      "rank_displayed": 867,
-      "rank_by_3d_value": 867,
+      "document_index": 869,
+      "rank_displayed": 870,
+      "rank_by_3d_value": 870,
       "player_id": 35590,
       "name": "Ryan Fitzgerald",
       "first_name": "Ryan",
@@ -81532,9 +81814,9 @@
       }
     },
     {
-      "document_index": 867,
-      "rank_displayed": 868,
-      "rank_by_3d_value": 868,
+      "document_index": 870,
+      "rank_displayed": 871,
+      "rank_by_3d_value": 871,
       "player_id": 35589,
       "name": "Ben Sauls",
       "first_name": "Ben",
@@ -81626,9 +81908,9 @@
       }
     },
     {
-      "document_index": 868,
-      "rank_displayed": 869,
-      "rank_by_3d_value": 869,
+      "document_index": 871,
+      "rank_displayed": 872,
+      "rank_by_3d_value": 872,
       "player_id": 35129,
       "name": "Joshua Karty",
       "first_name": "Joshua",
@@ -81720,9 +82002,9 @@
       }
     },
     {
-      "document_index": 869,
-      "rank_displayed": 870,
-      "rank_by_3d_value": 870,
+      "document_index": 872,
+      "rank_displayed": 873,
+      "rank_by_3d_value": 873,
       "player_id": 1322,
       "name": "Nick Folk",
       "first_name": "Nick",
@@ -81814,9 +82096,9 @@
       }
     },
     {
-      "document_index": 870,
-      "rank_displayed": 871,
-      "rank_by_3d_value": 871,
+      "document_index": 873,
+      "rank_displayed": 874,
+      "rank_by_3d_value": 874,
       "player_id": 7119,
       "name": "Brandon McManus",
       "first_name": "Brandon",
@@ -81908,9 +82190,9 @@
       }
     },
     {
-      "document_index": 871,
-      "rank_displayed": 872,
-      "rank_by_3d_value": 872,
+      "document_index": 874,
+      "rank_displayed": 875,
+      "rank_by_3d_value": 875,
       "player_id": 35804,
       "name": "Charlie Smyth",
       "first_name": "Charlie",
@@ -82002,9 +82284,9 @@
       }
     },
     {
-      "document_index": 872,
-      "rank_displayed": 873,
-      "rank_by_3d_value": 873,
+      "document_index": 875,
+      "rank_displayed": 876,
+      "rank_by_3d_value": 876,
       "player_id": 1371,
       "name": "Graham Gano",
       "first_name": "Graham",
@@ -82096,9 +82378,9 @@
       }
     },
     {
-      "document_index": 873,
-      "rank_displayed": 874,
-      "rank_by_3d_value": 874,
+      "document_index": 876,
+      "rank_displayed": 877,
+      "rank_by_3d_value": 877,
       "player_id": 12609,
       "name": "Cade York",
       "first_name": "Cade",
@@ -82190,9 +82472,9 @@
       }
     },
     {
-      "document_index": 874,
-      "rank_displayed": 875,
-      "rank_by_3d_value": 875,
+      "document_index": 877,
+      "rank_displayed": 878,
+      "rank_by_3d_value": 878,
       "player_id": 15551,
       "name": "Jake Moody",
       "first_name": "Jake",
@@ -82284,9 +82566,9 @@
       }
     },
     {
-      "document_index": 875,
-      "rank_displayed": 876,
-      "rank_by_3d_value": 876,
+      "document_index": 878,
+      "rank_displayed": 879,
+      "rank_by_3d_value": 879,
       "player_id": 10900,
       "name": "Riley Patterson",
       "first_name": "Riley",
@@ -82378,9 +82660,9 @@
       }
     },
     {
-      "document_index": 876,
-      "rank_displayed": 877,
-      "rank_by_3d_value": 877,
+      "document_index": 879,
+      "rank_displayed": 880,
+      "rank_by_3d_value": 880,
       "player_id": 14344,
       "name": "Blake Grupe",
       "first_name": "Blake",
