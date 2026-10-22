@@ -131,7 +131,11 @@ roster with the ranker's expected-lineup value. The yr1
 horizon becomes rest-of-season points: Sleeper's weekly projections from the current
 week through week 17, scored with the league's `scoring_settings`. Years 2–3 are
 DraftSharks' 2027-28 points from the rebuilt `pool.json`: in season its 1-year column is
-season-to-date plus rest of season, so 3yr minus 1yr is still the next two seasons. They
+season-to-date plus rest of season, so 3yr minus 1yr is still the next two seasons. The
+exception is a player whose season is over (IR, PUP, or Out with no rest-of-season
+points): his 1-year column is the shortened season but his 3-year total still carries a
+full one, so `load_players` in `waivers.py` takes two thirds of the 3-year total as his
+2027-28 instead of crediting him with a phantom 2026. They
 are 0 for players DraftSharks does not project, which in season is everyone past about
 395 QB/RB/WR/TE, and the source publishes no ADP then. The in-season rebuild overwrites
 the draft-time pool that `rankings.json` was ranked on; git history keeps that one. The
@@ -154,14 +158,17 @@ roster is refilled to the league shape afterwards: incoming players keep IR or t
 spot is open, a surplus active body is cut cheapest-first, and an open spot takes the best
 free agent.
 
-My 2027 first and second are tradeable, priced as lotteries rather than projections.
+My 2027 first and second are tradeable, and so are the opponent's 2027 picks, all priced
+as lotteries rather than projections.
 Valuing a mid first as one averaged rookie made it bench depth worth +2 points, because
 the average rookie never starts while the hit does. Instead a pick is the expectation, over
-the players history put within two slots of mine, of the lineup value each would add to the
-roster holding the pick, carrying his own position and his real first two seasons of
+the players history put within two slots of its own, of the lineup value each would add to
+the roster holding the pick, carrying his own position and his real first two seasons of
 scoring as the pick's 2027-28 points. A pick that moves loses that value on the sender's
 roster and gains it on the receiver's post-trade roster; one that stays put is taken as
-worth the same before and after. `MY_2027_SLOT` in `trades.py` fixes the slot. The
+worth the same before and after. `MY_2027_SLOT` in `trades.py` fixes my slot, and
+`HIS_PICKS` lists each opponent's 2027 picks at the slot the standings point to, named by
+the team whose finish sets the slot (`--get "nedjh2 2027 1st"`). The
 history comes from `uv run league_pipeline/fetch_pick_history.py`, which proxies
 rookie-draft order with NFL draft order among QB/RB/WR/TE (nflverse) and scores Sleeper's
 season stats with the league's settings; it moves once a year, so it is not part of the
@@ -169,7 +176,9 @@ waivers refresh.
 
 Every package also shows my market delta on KeepTradeCut superflex TE+, on FantasyCalc's
 10-team values, and `mkt`, their blend with FantasyCalc rescaled onto KTC's scale, and `KTCcalc`, my margin
-on KeepTradeCut's trade calculator. That calculator's value adjustment, ported into
+on KeepTradeCut's trade calculator. KeepTradeCut values are its "Crowd + Trades" blend, the
+calculator's default source, read off the raw snapshot; it prices picks a few hundred below
+the crowd-only value the rankings page lists. That calculator's value adjustment, ported into
 `trades.py` from the site's script and checked against the live page, shrinks every piece
 toward a share of the trade's best piece and credits the side whose pieces keep more of
 their value with the single-player equivalent of the gap: quantity for quality reads as a

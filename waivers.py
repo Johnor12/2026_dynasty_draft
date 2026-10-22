@@ -62,7 +62,19 @@ Wire = dict[str, dict[str, float]]
 
 
 def load_players(league: dict, pool: dict) -> dict[str, Player]:
-    yr23 = {p["sleeper_id"]: p["points_3yr"] - p["points_1yr"] for p in pool["players"]}
+    """Every projected player, with yr1 = rest of season and yr23 = DraftSharks' 2027-28.
+
+    2027-28 is the 3-year total minus the 1-year, except for a player whose season is over
+    (IR, PUP, or Out with no rest-of-season points): his 1-year column is the shortened
+    season but his 3-year total still carries a full one (Dart 36 vs 866 in week 7 of 2026,
+    against about 2.7 to 1 for healthy players), so the subtraction would hand him a phantom
+    2026. Two thirds of the 3-year total stands in for his next two seasons instead.
+    """
+    yr23 = {}
+    for p in pool["players"]:
+        row = league["players"].get(p["sleeper_id"])
+        done = row and row["ros_points"] == 0 and row["injury_status"] in ("IR", "PUP", "Out")
+        yr23[p["sleeper_id"]] = p["points_3yr"] * 2 / 3 if done else p["points_3yr"] - p["points_1yr"]
     return {
         sid: Player(
             player_id=int(sid),

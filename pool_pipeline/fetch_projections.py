@@ -9,7 +9,9 @@ when asked for more than it has, and ``pprSuperflexSlug`` picks the scheme the b
 ``data-value`` carries, so .5 PPR superflex matches the draft-time save.
 
 In season DraftSharks' 1-year column is season-to-date plus rest of season, so 3yr - 1yr
-is still the next two seasons; it publishes no ADP then.
+is still the next two seasons, except that a season-ending injury shortens the 1-year
+column but not the 3-year total (waivers.py's load_players corrects that); it publishes
+no ADP then.
 
 Usage:
     uv run pool_pipeline/fetch_projections.py

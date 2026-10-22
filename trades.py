@@ -12,19 +12,23 @@ Rosters refill to the league shape after the swap: an incoming player keeps IR o
 when the receiver has that spot open, surplus active bodies are cut cheapest-first, and an
 open active spot takes the best free agent.
 
-My 2027 first and second are tradeable. A pick is a lottery, not a projection: valuing a
-mid first as one averaged rookie made it bench depth worth +2 points, because the average
-rookie never starts while the hit does. So a pick is priced as the expectation, over the
-players history put within PICK_WINDOW slots of mine (pick_history.json, six classes), of
-the lineup value each would add to the roster holding the pick, carrying his own position
-and his real first two seasons of scoring as the pick's 2027-28 points. A pick that changes
+My 2027 first and second are tradeable, and so are the opponent's 2027 picks at the slots
+HIS_PICKS gives them. A pick is a lottery, not a projection: valuing a mid first as one
+averaged rookie made it bench depth worth +2 points, because the average rookie never
+starts while the hit does. So a pick is priced as the expectation, over the players
+history put within PICK_WINDOW slots of its own (pick_history.json, six classes), of the
+lineup value each would add to the roster holding the pick, carrying his own position and
+his real first two seasons of scoring as the pick's 2027-28 points. A pick that changes
 hands loses that value on the sender's current roster and gains it on the receiver's
 post-trade roster; a pick that stays put is taken as worth the same before and after, and
-two picks in one package are valued independently. Opponent picks are not modeled.
+two picks in one package are valued independently.
 
 Every package also carries my market delta on KeepTradeCut superflex TE+, on FantasyCalc
 10-team superflex, and `mkt`, their blend, with FantasyCalc rescaled onto KTC's scale by
-the ratio of the boards over shared players. `KTCcalc` is my margin on KeepTradeCut's trade
+the ratio of the boards over shared players. KeepTradeCut values are its "Crowd + Trades"
+blend (`blendValue` in the snapshot), the trade calculator's default source, which prices
+picks a few hundred below the crowd-only `value` the rankings page lists. `KTCcalc` is my
+margin on KeepTradeCut's trade
 calculator, whose value adjustment (ported below from the site's script) shrinks every
 piece toward a share of the trade's best piece and credits the side whose pieces keep more
 of their value with the single-player equivalent of the gap, so quantity-for-quality reads
@@ -38,6 +42,7 @@ Usage:
     uv run trades.py nedjh2 --tanking
     uv run trades.py nedjh2 --tanking --give "Jeremiyah Love" --get "Joe Burrow"
     uv run trades.py nedjh2 --tanking --give "2027 1st" --get "Chase Brown"
+    uv run trades.py nedjh2 --tanking --give "Jeremiyah Love" --get "nedjh2 2027 1st"
 """
 
 from __future__ import annotations
@@ -68,12 +73,22 @@ FANTASYCALC_RAW = REPO_ROOT / "data_source_investigator/data/raw/fantasycalc.jso
 # that band. Both boards price picks by tier: early is 1-3, mid 4-7, late 8-10.
 MY_2027_SLOT = 7
 MY_PICKS = {"2027 1st": MY_2027_SLOT, "2027 2nd": 10 + MY_2027_SLOT}
+# The opponent's 2027 picks, named by the team whose finish sets the slot, at the slot the
+# week 7 standings point to: nedjh2 is 1-5 and selling, AndNic31 is 3-3 and just bought
+# Burrow and Amon-Ra, justinmfftt is 5-1.
+HIS_PICKS = {
+    "nedjh2": {
+        "nedjh2 2027 1st": 2, "nedjh2 2027 2nd": 12,
+        "AndNic31 2027 1st": 6, "justinmfftt 2027 2nd": 20,
+    },
+}
 PICK_WINDOW = 2  # slots either side of mine whose history forms the lottery
 KTC_VARIANCE = 5  # the calculator's default fairness band, in percent of the two totals
 KTC_MAX_PLAYER = 10000
 # My margin on the calculator he will still accept. His own Burrow-for-Love offer favored me
-# by about 1,100 there, so he is not treating its verdict as a hard line.
-KTC_SLACK = 1100
+# by about 1,500 there on the Crowd + Trades values, so he is not treating its verdict as a
+# hard line.
+KTC_SLACK = 1500
 WORKERS = 8
 TOP_PER_SHAPE = 12
 TOP_PER_TARGET = 12
@@ -101,8 +116,8 @@ class Team:
         return roster_value(self.bodies(), wire)
 
 
-def pick_players() -> dict[str, Player]:
-    """My picks as zero-point markers, so they can sit in a package like a player."""
+def pick_players(picks: dict[str, int]) -> dict[str, Player]:
+    """Picks as zero-point markers, so they can sit in a package like a player."""
     return {
         name: Player(
             player_id=-1 - i,
@@ -117,14 +132,14 @@ def pick_players() -> dict[str, Player]:
             provider_adp=None,
             sleeper_id=name,
         )
-        for i, name in enumerate(MY_PICKS)
+        for i, name in enumerate(picks)
     }
 
 
-def pick_lotteries(history: dict) -> dict[str, list[Player]]:
+def pick_lotteries(history: dict, picks: dict[str, int]) -> dict[str, list[Player]]:
     """Each pick's outcomes: the rookies history put near its slot, as 2027-28 bodies."""
     out: dict[str, list[Player]] = {}
-    for i, (name, slot) in enumerate(MY_PICKS.items()):
+    for i, (name, slot) in enumerate(picks.items()):
         near = [r for r in history["rows"] if abs(r["slot"] - slot) <= PICK_WINDOW]
         out[name] = [
             Player(
@@ -153,37 +168,37 @@ def lottery_value(bodies: list[Player], outcomes: list[Player], wire: Wire) -> f
     ) / len(outcomes)
 
 
-def market_values() -> Market:
-    """Blend, KTC, and FantasyCalc values by sleeper id, plus my picks by name at their tier.
+def market_values(picks: dict[str, int]) -> Market:
+    """Blend, KTC, and FantasyCalc values by sleeper id, plus picks by name at their tier.
 
-    Players come from the matched board. Picks are not players, so build_rankings.py drops
-    them; they are read off the raw snapshots, which is why the KTC fetch includes RDP.
+    Players come from the matched board, which supplies the Sleeper ids; their values and the
+    picks' are the Crowd + Trades blend read off the raw snapshot (build_rankings.py keeps the
+    crowd-only value, and picks are not players so it drops them, which is why the KTC fetch
+    includes RDP). The blend matched the live calculator on 2026-10-22.
     """
     rankings = json.loads(RANKINGS.read_text())
+    text = KTC_RAW.read_text()
+    start = text.index('<script type="application/json" id="ktc-players">')
+    start = text.index("[", start)
+    ktc_rows, _ = json.JSONDecoder().raw_decode(text, start)
+    blend = {row["playerName"]: row["superflexValues"]["tep"]["blendValue"] for row in ktc_rows}
     ktc = {
-        row["sleeper_id"]: row["value"]
+        row["sleeper_id"]: blend[row["name"]]
         for source in rankings["sources"]
         if source["id"] == "keeptradecut"
         for row in source["players"]
         if row["sleeper_id"]
     }
-    text = KTC_RAW.read_text()
-    start = text.index('<script type="application/json" id="ktc-players">')
-    start = text.index("[", start)
-    ktc_rows, _ = json.JSONDecoder().raw_decode(text, start)
-    ktc_picks = {
-        row["playerName"]: row["superflexValues"]["tep"]["value"]
-        for row in ktc_rows
-        if row["position"] == "RDP"
-    }
+    ktc_picks = {row["playerName"]: blend[row["playerName"]] for row in ktc_rows if row["position"] == "RDP"}
     fc_rows = json.loads(FANTASYCALC_RAW.read_text())
     fc = {r["player"]["sleeperId"]: r["value"] for r in fc_rows if r["player"].get("sleeperId")}
     fc_picks = {r["player"]["name"]: r["value"] for r in fc_rows}
     shared = [sid for sid in ktc if sid in fc]
     scale = sum(ktc[s] for s in shared) / sum(fc[s] for s in shared)
-    tier = "Early" if MY_2027_SLOT <= 3 else "Mid" if MY_2027_SLOT <= 7 else "Late"
-    for name in MY_PICKS:
-        year, rnd = name.split()
+    for name, slot in picks.items():
+        year, rnd = name.split()[-2:]
+        in_round = (slot - 1) % 10 + 1
+        tier = "Early" if in_round <= 3 else "Mid" if in_round <= 7 else "Late"
         ktc[name] = ktc_picks[f"{year} {tier} {rnd}"]
         fc[name] = fc_picks[f"{year} {rnd} ({tier})"]
     blend = {}
@@ -351,11 +366,15 @@ class Pricer:
         me2, my_moves = self.after(me, give, get, him)
         him2, his_moves = self.after(him, get, give, me)
         my_after, his_after = me2.value(self.wire), him2.value(self.wire)
-        # A pick leaving me is worth its lottery on my roster now, and on his once he has it.
+        # A pick is worth its lottery on the sender's roster now, and on the receiver's once he has it.
         for p in give:
             if p.name in self.lotteries:
                 my_after["yr23"] -= self.pick_value(me, p)
                 his_after["yr23"] += self.pick_value(him2, p)
+        for p in get:
+            if p.name in self.lotteries:
+                his_after["yr23"] -= self.pick_value(him, p)
+                my_after["yr23"] += self.pick_value(me2, p)
         return my_after, his_after, my_moves, his_moves
 
 
@@ -363,9 +382,7 @@ def objective(value: dict[str, float], tanking: bool) -> float:
     return value["yr23"] if tanking else sum(value.values())
 
 
-def find(team: Team, picks: dict[str, Player], name: str) -> Player:
-    if name in picks:
-        return picks[name]
+def find(team: Team, name: str) -> Player:
     hits = [p for p in team.players() if name.lower() in p.name.lower()]
     if len(hits) != 1:
         sys.exit(f"error: {name!r} matches {[p.name for p in hits]} on {team.name}")
@@ -429,12 +446,15 @@ def main() -> int:
 
     league = json.loads(LEAGUE.read_text())
     players = load_players(league, json.loads(POOL.read_text()))
-    picks = pick_players()
-    lotteries = pick_lotteries(json.loads(PICK_HISTORY.read_text()))
-    market = market_values()
+    his_picks = HIS_PICKS.get(args.opponent, {})
+    slots = MY_PICKS | his_picks
+    picks = pick_players(slots)
+    lotteries = pick_lotteries(json.loads(PICK_HISTORY.read_text()), slots)
+    market = market_values(slots)
     me = load_team(league, players, league["me"]["username"])
-    me.picks = list(picks.values())
+    me.picks = [picks[n] for n in MY_PICKS]
     him = load_team(league, players, args.opponent)
+    him.picks = [picks[n] for n in his_picks]
 
     rostered = {sid for r in league["rosters"] for sid in r["players"]}
     pricer = Pricer(league, [p for sid, p in players.items() if sid not in rostered], lotteries)
@@ -454,7 +474,7 @@ def main() -> int:
     )
     for name, pick in picks.items():
         print(
-            f"{name}: lottery over {len(lotteries[name])} rookies near slot {MY_PICKS[name]}, "
+            f"{name}: lottery over {len(lotteries[name])} rookies near slot {slots[name]}, "
             f"worth {pricer.pick_value(me, pick):+.1f} on my roster and "
             f"{pricer.pick_value(him, pick):+.1f} on his; "
             f"mkt {market['mkt'][name]:.0f} (KTC {market['ktc'][name]}, FC {market['fc'][name]})"
@@ -466,8 +486,8 @@ def main() -> int:
     )
 
     if args.give:
-        give = [find(me, picks, n) for n in args.give]
-        get = [find(him, {}, n) for n in args.get]
+        give = [find(me, n) for n in args.give]
+        get = [find(him, n) for n in args.get]
         my_gain, his_gain, deltas, plausible, my_moves, his_moves = ctx.score(give, get)
         print(header)
         print(line(list(map(label, give)), list(map(label, get)), my_gain, his_gain, deltas))

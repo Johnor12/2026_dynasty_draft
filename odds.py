@@ -28,8 +28,8 @@ import statistics
 import urllib.request
 
 from trades import (
-    LEAGUE, PICK_HISTORY, POOL, Context, Pricer, Team, find, load_players, load_team,
-    market_values, pick_lotteries, pick_players,
+    HIS_PICKS, LEAGUE, MY_PICKS, PICK_HISTORY, POOL, Pricer, Team, find, load_players,
+    load_team, pick_lotteries, pick_players,
 )
 
 SLEEPER = "https://api.sleeper.app/v1/league"
@@ -98,11 +98,14 @@ def main() -> int:
 
     league = json.loads(LEAGUE.read_text())
     players = load_players(league, json.loads(POOL.read_text()))
-    picks = pick_players()
-    lotteries = pick_lotteries(json.loads(PICK_HISTORY.read_text()))
+    his_picks = HIS_PICKS.get(args.opponent, {})
+    slots = MY_PICKS | his_picks
+    picks = pick_players(slots)
+    lotteries = pick_lotteries(json.loads(PICK_HISTORY.read_text()), slots)
     me = load_team(league, players, league["me"]["username"])
-    me.picks = list(picks.values())
+    me.picks = [picks[n] for n in MY_PICKS]
     him = load_team(league, players, args.opponent)
+    him.picks = [picks[n] for n in his_picks]
     rostered = {sid for r in league["rosters"] for sid in r["players"]}
     pricer = Pricer(league, [p for sid, p in players.items() if sid not in rostered], lotteries)
     roster_id = {r["username"]: r["roster_id"] for r in league["rosters"]}
@@ -156,8 +159,8 @@ def main() -> int:
 
     report("no trade", values)
     if args.give:
-        give = [find(me, picks, n) for n in args.give]
-        get = [find(him, {}, n) for n in args.get]
+        give = [find(me, n) for n in args.give]
+        get = [find(him, n) for n in args.get]
         my_after, his_after, my_moves, his_moves = pricer.price(me, him, give, get)
         after = dict(values)
         after[mine], after[roster_id[him.name]] = my_after, his_after
