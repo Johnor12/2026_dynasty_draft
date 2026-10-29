@@ -47,7 +47,9 @@ pool_pipeline/ ───────────────> pool.json ──�
 data_source_investigator/ ────> data/rankings.json ─┼─> waivers.py ──> +EV moves on stdout
 league_pipeline/ ─────────────> league.json ────────┤
 data_source_investigator/data/raw/ ─────────────────┼─> trades.py ───> +EV trades on stdout
-league_pipeline/ ─────────────> pick_history.json ──┘
+league_pipeline/ ─────────────> pick_history.json ──┼─> odds.py ─────> title odds per target year
+Sleeper standings and schedule, live ───────────────┴─> sweep.py ────> league-wide trades in title odds
+sweep.py ─────────────────────> sweep_rows.json ──────> verdicts.py ──> the same, by what the calculator tells him
 ```
 
 The published files have distinct owners:
@@ -60,6 +62,8 @@ The published files have distinct owners:
   rest-of-season projected points in this league's scoring
 - `pick_history.json`: for six past draft classes, the player at each rookie slot and his
   first two seasons of points in this league's scoring
+- `sweep_rows.json`: every package the last sweep kept, with its calculator totals and
+  stance fit
 
 `sleeper_id` is the cross-process player key. `roster_id` and `draft_slot` connect
 opponent source matches to the live board.
@@ -79,6 +83,9 @@ opponent source matches to the live board.
 - `waivers.py`: in-season refresh and waiver-move pricing
 - `trades.py`: trade pricing against one opponent, proposed or swept
 - `odds.py`: playoff and title odds per target year, with and without a trade
+- `sweep.py`: every small package with every opponent, scored in title odds over 2026-28
+- `verdicts.py`: the last sweep's packages sorted by the calculator's verdict to him
+- `margins.py`: the calculator margin each side accepted in every league trade this season
 - `index.html`: dependency-free dashboard for `rankings.json`
 - `data_source_investigator/index.html`: source-fit and pick-evidence dashboard
 - `serve.py`: serves both dashboards at http://127.0.0.1:8123
@@ -148,18 +155,21 @@ Price a proposed trade, or sweep every 1-for-1, 2-for-1, 1-for-2, and 2-for-2 pa
 with one opponent:
 
 ```bash
-uv run trades.py nedjh2 --tanking --give "Jeremiyah Love" --get "Joe Burrow"
+uv run trades.py nedjh2 --tanking --give "Josh Jacobs" --get "Chase Brown"
 uv run trades.py nedjh2 --tanking
 ```
 
 It reads what `waivers.py` refreshed plus `pick_history.json`, and does not refetch. Both
-rosters are priced with the same expected-lineup value and wire as waiver moves, and each
+rosters are priced with the same expected-lineup value and wire as waiver moves, except
+that the quarterback wire is empty: in superflex every startable QB is rostered, and the
+one playable free agent this season had nobody behind him, so no trade is priced on the
+assumption that a QB can be found (`odds.py` and `sweep.py` share this). Each
 roster is refilled to the league shape afterwards: incoming players keep IR or taxi when a
 spot is open, a surplus active body is cut cheapest-first, and an open spot takes the best
 free agent.
 
-My 2027 first and second are tradeable, and so are the opponent's 2027 picks, all priced
-as lotteries rather than projections.
+My 2027 picks that I still own are tradeable, and so are the opponent's, all priced as
+lotteries rather than projections.
 Valuing a mid first as one averaged rookie made it bench depth worth +2 points, because
 the average rookie never starts while the hit does. Instead a pick is the expectation, over
 the players history put within two slots of its own, of the lineup value each would add to
@@ -167,7 +177,7 @@ the roster holding the pick, carrying his own position and his real first two se
 scoring as the pick's 2027-28 points. A pick that moves loses that value on the sender's
 roster and gains it on the receiver's post-trade roster; one that stays put is taken as
 worth the same before and after. `MY_2027_SLOT` in `trades.py` fixes my slot, and
-`HIS_PICKS` lists each opponent's 2027 picks at the slot the standings point to, named by
+`HIS_PICKS` lists each opponent's 2027 firsts and seconds at the slot the standings point to, named by
 the team whose finish sets the slot (`--get "nedjh2 2027 1st"`). The
 history comes from `uv run league_pipeline/fetch_pick_history.py`, which proxies
 rookie-draft order with NFL draft order among QB/RB/WR/TE (nflverse) and scores Sleeper's
@@ -193,7 +203,7 @@ eight worker processes.
 Turn a priced trade into chances of winning each target year:
 
 ```bash
-uv run odds.py nedjh2 --give "2027 1st" --get "Kyren Williams"
+uv run odds.py nedjh2 --give "Josh Jacobs" --get "Chase Brown"
 ```
 
 It values every roster the way `trades.py` does, then simulates seasons with each team's
@@ -203,6 +213,48 @@ the league's playoff (six teams from week 15, top two seeds on a bye, seeded by 
 points). 2027 and 2028 are each one season on a random schedule with half of each team's
 2027-28 points, so they are odds with today's rosters, and the trade's effect on them is the
 point rather than the level. Only the two rosters in the trade change.
+
+Sweep the whole league for packages that raise my chance of a title over the horizon:
+
+```bash
+uv run sweep.py
+uv run sweep.py UGrizz14 dirtydole
+```
+
+It scores every 1-for-1, 2-for-1, 1-for-2, 2-for-2, and depth-only 3-for-1 package with
+every opponent as the change in my cumulative title odds over 2026-28, p2026 + p2027 +
+p2028, with 2027 and 2028 the same today's-rosters season `odds.py` uses. The season
+model is `odds.py`'s, vectorized and run on common random numbers, so two valuations
+differ by the rosters and not by simulation noise. Only packages the calculator puts in
+play are priced at all: my margin at most `KTC_SLACK`, or he would refuse, and at least
+`-KTC_LOSS`, since a package the market scores that far against me is never worth titles
+and pricing it is where the time goes. A package is then priced in points as
+`trades.py` prices it, and a per-roster gradient of my title odds turns that into a linear
+estimate; only estimates past half of `MIN_TITLES` are simulated exactly, and only
+packages adding at least `MIN_TITLES` (ten points of cumulative title odds) are printed,
+the best per set of incoming pieces, and again restricted to the sendable ones; every kept
+package is also dumped to `sweep_rows.json`. His own
+change in title odds is shown but never filtered on: he judges a package on the calculator
+and on what he is trying to do, not on this model. So a package is sendable when
+KeepTradeCut's calculator scores it in his favor (its value adjustment already prices star
+power, one strong piece over a package of equals) and it fits his stance, read off his
+2026 playoff odds: a contender (`CONTENDING` or better) must not lose rest-of-season
+lineup points, a tanker (`TANKING` or worse) must not lose 2027-28 points, and anyone
+between must not lose their sum. The calculator filter is `trades.py`'s. A 3-for-1 is consolidation, so its three pieces come
+from my depth, the pieces worth under `DEPTH_TITLES` to me on their own. The script
+declares numpy in its inline metadata, so `uv run sweep.py` resolves it by itself
+(`uv run --offline sweep.py` once it is cached); the rest of the repository stays
+stdlib-only. It also pulls Sleeper's live standings and schedule, as `odds.py` does.
+
+`uv run verdicts.py` reads that dump and sorts the packages by the verdict the calculator
+page gives him, which is the likelihood he accepts: he wins (outside its fairness band,
+`KTC_VARIANCE`, in his favor), fair, or I win by at most `KTC_SLACK`. The stance fit is
+shown beside each rather than folded in, so the two filters stay separate.
+
+`uv run margins.py` lists every completed player trade in the league with each side's
+package on KeepTradeCut's calculator and the margin each side accepted, as a reference for
+the calculator band the sweep prices. It scores on today's values, not the trade date's,
+so older trades drift and the band should not be set from it until that is addressed.
 
 Refreshing the boards overwrites the gitignored draft-time raw snapshots. It also
 means a bare `rank.py` refuses to run until `investigate.py` re-matches against the

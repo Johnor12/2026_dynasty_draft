@@ -15,7 +15,7 @@ are "if the season were played with today's rosters" odds, and the trade's effec
 is the point, not the level. Only the two rosters in the trade change.
 
 Usage:
-    uv run odds.py nedjh2 --give "2027 1st" --get "Kyren Williams"
+    uv run odds.py nedjh2 --give "Josh Jacobs" --get "Chase Brown"
     uv run odds.py nedjh2
 """
 
@@ -78,6 +78,30 @@ def season_odds(
     return {i: (made[i] / SEASONS, titles[i] / SEASONS, total_wins[i] / SEASONS) for i in ids}
 
 
+def live_season(league: dict):
+    """Standings, the regular-season weeks left, and the spread of weekly scores so far, from Sleeper."""
+    league_id = league["league_id"]
+    wins, points = {}, {}
+    for r in fetch(f"{SLEEPER}/{league_id}/rosters"):
+        s = r["settings"]
+        wins[r["roster_id"]] = s["wins"]
+        points[r["roster_id"]] = s["fpts"] + s.get("fpts_decimal", 0) / 100
+    first_week = league["weeks"][0]
+    schedule, scored = [], {i: [] for i in wins}
+    for week in range(1, LAST_REGULAR_WEEK + 1):
+        pairs: dict[int, list[int]] = {}
+        for row in fetch(f"{SLEEPER}/{league_id}/matchups/{week}"):
+            pairs.setdefault(row["matchup_id"], []).append(row["roster_id"])
+            if week < first_week:
+                scored[row["roster_id"]].append(row["points"])
+        if week >= first_week:
+            schedule.append([tuple(p) for p in pairs.values()])
+    residuals = [p - statistics.mean(v) for v in scored.values() for p in v]
+    played = len(next(iter(scored.values())))
+    sd = statistics.pstdev(residuals) * (played / (played - 1)) ** 0.5
+    return wins, points, schedule, sd, played
+
+
 def random_schedule(ids: list[int], rng: random.Random) -> list[list[tuple[int, int]]]:
     weeks = []
     for _ in range(LAST_REGULAR_WEEK):
@@ -114,26 +138,8 @@ def main() -> int:
     values = {i: t.value(pricer.wire) for i, t in teams.items()}
     mine = roster_id[me.name]
 
-    # Standings, the schedule, and the spread of weekly scores so far, live from Sleeper.
-    league_id = league["league_id"]
-    wins, points = {}, {}
-    for r in fetch(f"{SLEEPER}/{league_id}/rosters"):
-        s = r["settings"]
-        wins[r["roster_id"]] = s["wins"]
-        points[r["roster_id"]] = s["fpts"] + s.get("fpts_decimal", 0) / 100
     weeks_left = league["weeks"]
-    schedule, scored = [], {i: [] for i in teams}
-    for week in range(1, LAST_REGULAR_WEEK + 1):
-        pairs: dict[int, list[int]] = {}
-        for row in fetch(f"{SLEEPER}/{league_id}/matchups/{week}"):
-            pairs.setdefault(row["matchup_id"], []).append(row["roster_id"])
-            if week < weeks_left[0]:
-                scored[row["roster_id"]].append(row["points"])
-        if week >= weeks_left[0]:
-            schedule.append([tuple(p) for p in pairs.values()])
-    residuals = [p - statistics.mean(v) for v in scored.values() for p in v]
-    played = len(next(iter(scored.values())))
-    sd = statistics.pstdev(residuals) * (played / (played - 1)) ** 0.5
+    wins, points, schedule, sd, played = live_season(league)
     print(f"weekly score spread {sd:.1f} over {played} played weeks; {len(schedule)} regular-season weeks left")
 
     rng = random.Random(1)

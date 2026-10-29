@@ -7,13 +7,16 @@ first when the in-season artifacts are stale.
 
 Both rosters are valued the way waivers.py values mine: expected optimal lineup points
 (ranker/value.py) in the in-season horizons, yr1 = rest of season and yr23 = 2027-28,
-against the same free-agent wire. A side's EV is its value after the trade minus before.
+against the same free-agent wire, except at quarterback, where the wire is taken as empty:
+in superflex every startable QB is rostered, and the one playable free agent this season
+had nobody behind him, so no trade is priced on the assumption that a QB can be found. A
+side's EV is its value after the trade minus before.
 Rosters refill to the league shape after the swap: an incoming player keeps IR or taxi
 when the receiver has that spot open, surplus active bodies are cut cheapest-first, and an
 open active spot takes the best free agent.
 
-My 2027 first and second are tradeable, and so are the opponent's 2027 picks at the slots
-HIS_PICKS gives them. A pick is a lottery, not a projection: valuing a mid first as one
+My 2027 picks (MY_PICKS) are tradeable, and so are the opponent's at the slots HIS_PICKS
+gives them. A pick is a lottery, not a projection: valuing a mid first as one
 averaged rookie made it bench depth worth +2 points, because the average rookie never
 starts while the hit does. So a pick is priced as the expectation, over the players
 history put within PICK_WINDOW slots of its own (pick_history.json, six classes), of the
@@ -40,9 +43,9 @@ conceded there.
 
 Usage:
     uv run trades.py nedjh2 --tanking
-    uv run trades.py nedjh2 --tanking --give "Jeremiyah Love" --get "Joe Burrow"
-    uv run trades.py nedjh2 --tanking --give "2027 1st" --get "Chase Brown"
-    uv run trades.py nedjh2 --tanking --give "Jeremiyah Love" --get "nedjh2 2027 1st"
+    uv run trades.py nedjh2 --tanking --give "Josh Jacobs" --get "Chase Brown"
+    uv run trades.py nedjh2 --tanking --give "2027 2nd" --get "Chase Brown"
+    uv run trades.py nedjh2 --tanking --give "Josh Jacobs" --get "nedjh2 2027 1st"
 """
 
 from __future__ import annotations
@@ -68,19 +71,27 @@ RANKINGS = REPO_ROOT / "data_source_investigator/data/rankings.json"
 KTC_RAW = REPO_ROOT / "data_source_investigator/data/raw/keeptradecut.html"
 FANTASYCALC_RAW = REPO_ROOT / "data_source_investigator/data/raw/fantasycalc.json"
 
-# Where my 2027 picks fall in the rookie draft. 4-2 in week 7 but seventh in points: a
-# playoff team's slot (1.05-1.10) is far likelier than a lottery one, so the middle of
-# that band. Both boards price picks by tier: early is 1-3, mid 4-7, late 8-10.
-MY_2027_SLOT = 7
-MY_PICKS = {"2027 1st": MY_2027_SLOT, "2027 2nd": 10 + MY_2027_SLOT}
-# The opponent's 2027 picks, named by the team whose finish sets the slot, at the slot the
-# week 7 standings point to: nedjh2 is 1-5 and selling, AndNic31 is 3-3 and just bought
-# Burrow and Amon-Ra, justinmfftt is 5-1.
+# Where 2027 picks fall in the rookie draft: reverse order of mean 2026 wins in sweep.py's
+# simulation after week 7 (nedjh2 2.6 ... johnor and justinmfftt 9.3). Both boards price
+# picks by tier: early is 1-3, mid 4-7, late 8-10.
+MY_2027_SLOT = 9
+# My 2027 1st went to nedjh2 on 2026-10-22.
+MY_PICKS = {"2027 2nd": 10 + MY_2027_SLOT}
+# Each opponent's 2027 firsts and seconds as Sleeper's traded picks had them on
+# 2026-10-28, named by the team whose finish sets the slot.
 HIS_PICKS = {
     "nedjh2": {
-        "nedjh2 2027 1st": 2, "nedjh2 2027 2nd": 12,
-        "AndNic31 2027 1st": 6, "justinmfftt 2027 2nd": 20,
+        "nedjh2 2027 1st": 1, "nedjh2 2027 2nd": 11, "AndNic31 2027 1st": 5,
+        "johnor 2027 1st": MY_2027_SLOT, "justinmfftt 2027 2nd": 20,
     },
+    "UGrizz14": {"UGrizz14 2027 1st": 2, "UGrizz14 2027 2nd": 12},
+    "dccb31": {"dccb31 2027 1st": 4, "dccb31 2027 2nd": 14},
+    "dirtydole": {"dirtydole 2027 1st": 3, "dirtydole 2027 2nd": 13},
+    "AndNic31": {"AndNic31 2027 2nd": 15},
+    "bwood637": {"bwood637 2027 1st": 6, "bwood637 2027 2nd": 16},
+    "jedmxk": {"jedmxk 2027 2nd": 18},
+    "samlemonskoff": {"samlemonskoff 2027 1st": 7, "samlemonskoff 2027 2nd": 17},
+    "justinmfftt": {"justinmfftt 2027 1st": 10, "jedmxk 2027 1st": 8},
 }
 PICK_WINDOW = 2  # slots either side of mine whose history forms the lottery
 KTC_VARIANCE = 5  # the calculator's default fairness band, in percent of the two totals
@@ -168,8 +179,14 @@ def lottery_value(bodies: list[Player], outcomes: list[Player], wire: Wire) -> f
     ) / len(outcomes)
 
 
-def market_values(picks: dict[str, int]) -> Market:
-    """Blend, KTC, and FantasyCalc values by sleeper id, plus picks by name at their tier.
+def pick_tier(slot: int) -> str:
+    """KeepTradeCut's and FantasyCalc's pick tiers: early is 1-3 in the round, mid 4-7, late 8-10."""
+    in_round = (slot - 1) % 10 + 1
+    return "Early" if in_round <= 3 else "Mid" if in_round <= 7 else "Late"
+
+
+def ktc_blend() -> tuple[dict[str, float], dict[str, float]]:
+    """KeepTradeCut's Crowd + Trades values off the raw snapshot: players by Sleeper id, picks by KTC name.
 
     Players come from the matched board, which supplies the Sleeper ids; their values and the
     picks' are the Crowd + Trades blend read off the raw snapshot (build_rankings.py keeps the
@@ -190,6 +207,12 @@ def market_values(picks: dict[str, int]) -> Market:
         if row["sleeper_id"]
     }
     ktc_picks = {row["playerName"]: blend[row["playerName"]] for row in ktc_rows if row["position"] == "RDP"}
+    return ktc, ktc_picks
+
+
+def market_values(picks: dict[str, int]) -> Market:
+    """Blend, KTC, and FantasyCalc values by sleeper id, plus picks by name at their tier."""
+    ktc, ktc_picks = ktc_blend()
     fc_rows = json.loads(FANTASYCALC_RAW.read_text())
     fc = {r["player"]["sleeperId"]: r["value"] for r in fc_rows if r["player"].get("sleeperId")}
     fc_picks = {r["player"]["name"]: r["value"] for r in fc_rows}
@@ -197,8 +220,7 @@ def market_values(picks: dict[str, int]) -> Market:
     scale = sum(ktc[s] for s in shared) / sum(fc[s] for s in shared)
     for name, slot in picks.items():
         year, rnd = name.split()[-2:]
-        in_round = (slot - 1) % 10 + 1
-        tier = "Early" if in_round <= 3 else "Mid" if in_round <= 7 else "Late"
+        tier = pick_tier(slot)
         ktc[name] = ktc_picks[f"{year} {tier} {rnd}"]
         fc[name] = fc_picks[f"{year} {rnd} ({tier})"]
     blend = {}
@@ -308,6 +330,8 @@ def load_team(league: dict, players: dict[str, Player], username: str) -> Team:
 
 class Pricer:
     def __init__(self, league: dict, free: list[Player], lotteries: dict[str, list[Player]]):
+        # No QB fallback: the wire has had one playable QB all season and none behind him.
+        free = [p for p in free if p.position != "QB"]
         self.top = top_free(free)
         self.wire = wire_levels(self.top)
         self.lotteries = lotteries
