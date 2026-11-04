@@ -1,6 +1,6 @@
 {
   "source": "https://api.sleeper.app/v1/draft/1388293618208374784",
-  "fetched_at": "2026-08-13T01:19:37+00:00",
+  "fetched_at": "2026-11-03T21:42:31+00:00",
   "draft_id": "1388293618208374784",
   "league_id": "1388293617071714304",
   "league_name": "Dudes",
@@ -69,7 +69,7 @@
       "roster_id": 6,
       "user_id": "1388546393752240128",
       "username": "AndNic31",
-      "team_name": "Cardiac Cats Enjoyer",
+      "team_name": "Mayo Clinic",
       "is_mine": false
     },
     {
@@ -85,7 +85,7 @@
       "roster_id": 8,
       "user_id": "865368720548196352",
       "username": "jedmxk",
-      "team_name": null,
+      "team_name": "The Injured Reserves",
       "is_mine": false
     },
     {
@@ -141,7 +141,7 @@
       "roster_id": 3,
       "user_id": "751220778036551680",
       "username": "nedjh2",
-      "team_name": null,
+      "team_name": "General Patton 🫡",
       "is_mine": false
     }
   ],

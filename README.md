@@ -139,8 +139,8 @@ horizon becomes rest-of-season points: Sleeper's weekly projections from the cur
 week through week 17, scored with the league's `scoring_settings`. Years 2–3 are
 DraftSharks' 2027-28 points from the rebuilt `pool.json`: in season its 1-year column is
 season-to-date plus rest of season, so 3yr minus 1yr is still the next two seasons. The
-exception is a player whose season is over (IR, PUP, or Out with no rest-of-season
-points): his 1-year column is the shortened season but his 3-year total still carries a
+exception is a player with no rest-of-season points (injured, benched, backup, or
+unsigned): his 1-year column is the shortened season but his 3-year total still carries a
 full one, so `load_players` in `waivers.py` takes two thirds of the 3-year total as his
 2027-28 instead of crediting him with a phantom 2026. They
 are 0 for players DraftSharks does not project, which in season is everyone past about
