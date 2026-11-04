@@ -78,19 +78,19 @@ MY_2027_SLOT = 9
 # My 2027 1st went to nedjh2 on 2026-10-22.
 MY_PICKS = {"2027 2nd": 10 + MY_2027_SLOT}
 # Each opponent's 2027 firsts and seconds as Sleeper's traded picks had them on
-# 2026-10-28, named by the team whose finish sets the slot.
+# 2026-11-04, named by the team whose finish sets the slot.
 HIS_PICKS = {
     "nedjh2": {
-        "nedjh2 2027 1st": 1, "nedjh2 2027 2nd": 11, "AndNic31 2027 1st": 5,
+        "nedjh2 2027 1st": 1, "nedjh2 2027 2nd": 11, "AndNic31 2027 1st": 4,
         "johnor 2027 1st": MY_2027_SLOT, "justinmfftt 2027 2nd": 20,
     },
     "UGrizz14": {"UGrizz14 2027 1st": 2, "UGrizz14 2027 2nd": 12},
-    "dccb31": {"dccb31 2027 1st": 4, "dccb31 2027 2nd": 14},
     "dirtydole": {"dirtydole 2027 1st": 3, "dirtydole 2027 2nd": 13},
-    "AndNic31": {"AndNic31 2027 2nd": 15},
-    "bwood637": {"bwood637 2027 1st": 6, "bwood637 2027 2nd": 16},
+    "AndNic31": {"AndNic31 2027 2nd": 14, "samlemonskoff 2027 1st": 6},
+    "bwood637": {"bwood637 2027 1st": 5, "bwood637 2027 2nd": 15},
+    "samlemonskoff": {"samlemonskoff 2027 2nd": 16},
+    "dccb31": {"dccb31 2027 1st": 7, "dccb31 2027 2nd": 17},
     "jedmxk": {"jedmxk 2027 2nd": 18},
-    "samlemonskoff": {"samlemonskoff 2027 1st": 7, "samlemonskoff 2027 2nd": 17},
     "justinmfftt": {"justinmfftt 2027 1st": 10, "jedmxk 2027 1st": 8},
 }
 PICK_WINDOW = 2  # slots either side of mine whose history forms the lottery
