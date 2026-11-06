@@ -142,7 +142,12 @@ season-to-date plus rest of season, so 3yr minus 1yr is still the next two seaso
 exception is a player with no rest-of-season points (injured, benched, backup, or
 unsigned): his 1-year column is the shortened season but his 3-year total still carries a
 full one, so `load_players` in `waivers.py` takes two thirds of the 3-year total as his
-2027-28 instead of crediting him with a phantom 2026. They
+2027-28 instead of crediting him with a phantom 2026. A player whose season merely moved
+gets a narrower correction: DraftSharks revises 3-year totals only in analyst batches, so
+when a row's 3-year total is unchanged since an older committed `pool.json`, that
+snapshot's 1-year column is the 2026 the total was built on, and `load_players` subtracts
+it instead once the current column is a fifth away from it in either direction. Git
+history is the snapshot store, so weekly refreshes have to keep being committed. They
 are 0 for players DraftSharks does not project, which in season is everyone past about
 395 QB/RB/WR/TE, and the source publishes no ADP then. The in-season rebuild overwrites
 the draft-time pool that `rankings.json` was ranked on; git history keeps that one. The

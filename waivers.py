@@ -58,7 +58,46 @@ STEPS = (
 # The smallest gain that prints as +0.1. Deep-bench swaps are worth hundredths of a point.
 MIN_EV = 0.05
 
+# A frozen row's 1-year column must have moved by this share of the season the row was
+# built on before it counts as stale; a healthy player's weekly stat drift is under a tenth.
+FROZEN_GAP = 0.2
+
 Wire = dict[str, dict[str, float]]
+
+
+def frozen_seasons(pool: dict) -> dict[int, int]:
+    """The 1-year column each untouched 3-year total was built on, by provider player id.
+
+    DraftSharks moves the 1-year column every week as stats replace projections but revises
+    the 3/5/10-year totals only in analyst batches of 40-65 players, so a row whose 3-year
+    total still matches an older committed pool.json still carries that snapshot's 1-year
+    column as its 2026. Walks the committed snapshots newest-first and returns, for every
+    player whose 3-year total is unchanged since at least one of them, the 1-year column of
+    the oldest snapshot in that run. Git history is the snapshot store, so weekly refreshes
+    have to keep being committed.
+    """
+    refs: dict[int, int] = {}
+    alive = {p["player_id"]: p["points_3yr"] for p in pool["players"]}
+    shas = subprocess.run(
+        ["git", "log", "--format=%H", "--", "pool.json"],
+        cwd=REPO_ROOT, capture_output=True, text=True, check=True,
+    ).stdout.split()
+    for sha in shas:
+        if not alive:
+            break
+        shown = subprocess.run(
+            ["git", "show", f"{sha}:pool.json"],
+            cwd=REPO_ROOT, capture_output=True, text=True, check=True,
+        ).stdout
+        rows = {p["player_id"]: p for p in json.loads(shown)["players"]}
+        for pid, total in list(alive.items()):
+            row = rows.get(pid)
+            # The first committed pool (2026-08-04) had no 1-year column.
+            if row is None or "points_1yr" not in row or row["points_3yr"] != total:
+                del alive[pid]
+            else:
+                refs[pid] = row["points_1yr"]
+    return refs
 
 
 def load_players(league: dict, pool: dict) -> dict[str, Player]:
@@ -71,12 +110,28 @@ def load_players(league: dict, pool: dict) -> dict[str, Player]:
     All 45 players DraftSharks gave 0 for 2026 on Nov 3 had a healthy peer's 3-to-5-year
     shape, so this holds for backups like Milroe too. Two thirds of the 3-year total stands
     in for his next two seasons instead.
+
+    A player whose season merely moved (injury, lost or won role, some rest of season left)
+    has the same problem in part: DraftSharks revises 3-year totals only in analyst batches,
+    so one unchanged since an older committed pool.json still contains that snapshot's
+    1-year column as 2026 (Love: 218 in August, 107 in week 10, 3-year 671 throughout; Jonah
+    Coleman 63 in week 7, 125 in week 10, 3-year 291 throughout). For such a row the
+    snapshot's column is subtracted instead, once the current one is a fifth away from it in
+    either direction (FROZEN_GAP); smaller gaps are weekly stat noise, and a row DraftSharks
+    did revise is trusted as is. On 2026-11-06 the 0-ROS rows the two-thirds rule covers
+    agreed with this within about 10 points (Noel 227 vs 225, Kmet 151 vs 163), so it keeps
+    precedence.
     """
+    built_on = frozen_seasons(pool)
     yr23 = {}
     for p in pool["players"]:
         row = league["players"].get(p["sleeper_id"])
         done = row and row["ros_points"] == 0
-        yr23[p["sleeper_id"]] = p["points_3yr"] * 2 / 3 if done else p["points_3yr"] - p["points_1yr"]
+        season = p["points_1yr"]
+        ref = built_on.get(p["player_id"])
+        if ref is not None and abs(season - ref) >= ref * FROZEN_GAP:
+            season = ref
+        yr23[p["sleeper_id"]] = p["points_3yr"] * 2 / 3 if done else p["points_3yr"] - season
     return {
         sid: Player(
             player_id=int(sid),
