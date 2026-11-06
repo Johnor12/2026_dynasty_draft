@@ -233,7 +233,11 @@ and pricing it is where the time goes. A package is then priced in points as
 estimate; only estimates past half of `MIN_TITLES` are simulated exactly, and only
 packages adding at least `MIN_TITLES` (ten points of cumulative title odds) are printed,
 the best per set of incoming pieces, and again restricted to the sendable ones; every kept
-package is also dumped to `sweep_rows.json`. His own
+package is also dumped to `sweep_rows.json`. A package never mixes a filler piece (worth
+under `FILLER_TITLES`, one point of cumulative title odds, to me on its own) with a real
+one: a zero-value piece added to balance the calculator reads to the other side as
+diluting the package, not sweetening it, so those packages are not priced; a package of
+only filler is consolidation and is. His own
 change in title odds is shown but never filtered on: he judges a package on the calculator
 and on what he is trying to do, not on this model. So a package is sendable when
 KeepTradeCut's calculator scores it in his favor (its value adjustment already prices star

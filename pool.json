@@ -497,11 +497,11 @@
       "name": "Sam Darnold",
       "position": "QB",
       "team": "SEA",
-      "age": 29.3,
+      "age": 29.4,
       "bye_week": 11,
       "is_rookie": false,
       "points_3yr": 762,
-      "points_1yr": 245,
+      "points_1yr": 230,
       "adp": null
     },
     {
@@ -741,7 +741,7 @@
       "bye_week": 11,
       "is_rookie": false,
       "points_3yr": 649,
-      "points_1yr": 215,
+      "points_1yr": 214,
       "adp": null
     },
     {
@@ -756,7 +756,7 @@
       "bye_week": 8,
       "is_rookie": false,
       "points_3yr": 620,
-      "points_1yr": 197,
+      "points_1yr": 198,
       "adp": null
     },
     {
@@ -812,7 +812,7 @@
       "name": "Tetairoa McMillan",
       "position": "WR",
       "team": "CAR",
-      "age": 23.5,
+      "age": 23.6,
       "bye_week": 5,
       "is_rookie": false,
       "points_3yr": 605,
@@ -1341,7 +1341,7 @@
       "bye_week": 10,
       "is_rookie": true,
       "points_3yr": 454,
-      "points_1yr": 129,
+      "points_1yr": 128,
       "adp": null
     },
     {
@@ -1426,9 +1426,9 @@
       "sleeper_id": "3257",
       "name": "Jacoby Brissett",
       "position": "QB",
-      "team": "ARI",
+      "team": "BAL",
       "age": 33.8,
-      "bye_week": 14,
+      "bye_week": 13,
       "is_rookie": false,
       "points_3yr": 445,
       "points_1yr": 124,
@@ -1641,7 +1641,7 @@
       "bye_week": 8,
       "is_rookie": false,
       "points_3yr": 402,
-      "points_1yr": 172,
+      "points_1yr": 171,
       "adp": null
     },
     {
@@ -1697,7 +1697,7 @@
       "name": "Michael Pittman Jr.",
       "position": "WR",
       "team": "PIT",
-      "age": 29,
+      "age": 29.1,
       "bye_week": 9,
       "is_rookie": false,
       "points_3yr": 396,
@@ -1742,7 +1742,7 @@
       "name": "Travis Kelce",
       "position": "TE",
       "team": "KC",
-      "age": 37,
+      "age": 37.1,
       "bye_week": 5,
       "is_rookie": false,
       "points_3yr": 394,
@@ -1952,7 +1952,7 @@
       "name": "Ja'Kobi Lane",
       "position": "WR",
       "team": "BAL",
-      "age": 22.2,
+      "age": 22.3,
       "bye_week": 13,
       "is_rookie": true,
       "points_3yr": 374,
@@ -1971,7 +1971,7 @@
       "bye_week": 8,
       "is_rookie": false,
       "points_3yr": 374,
-      "points_1yr": 143,
+      "points_1yr": 135,
       "adp": null
     },
     {
@@ -2076,7 +2076,7 @@
       "bye_week": 10,
       "is_rookie": false,
       "points_3yr": 370,
-      "points_1yr": 162,
+      "points_1yr": 160,
       "adp": null
     },
     {
@@ -2406,7 +2406,7 @@
       "bye_week": 8,
       "is_rookie": true,
       "points_3yr": 348,
-      "points_1yr": 97,
+      "points_1yr": 98,
       "adp": null
     },
     {
@@ -2436,7 +2436,7 @@
       "bye_week": 10,
       "is_rookie": false,
       "points_3yr": 344,
-      "points_1yr": 74,
+      "points_1yr": 79,
       "adp": null
     },
     {
@@ -2661,7 +2661,7 @@
       "bye_week": 8,
       "is_rookie": false,
       "points_3yr": 327,
-      "points_1yr": 134,
+      "points_1yr": 125,
       "adp": null
     },
     {
@@ -2691,7 +2691,7 @@
       "bye_week": 10,
       "is_rookie": false,
       "points_3yr": 326,
-      "points_1yr": 163,
+      "points_1yr": 150,
       "adp": null
     },
     {
@@ -2862,21 +2862,6 @@
     {
       "rank": 188,
       "positional_rank": 92,
-      "player_id": 34981,
-      "sleeper_id": "11627",
-      "name": "Troy Franklin",
-      "position": "WR",
-      "team": "DEN",
-      "age": 23.7,
-      "bye_week": 10,
-      "is_rookie": false,
-      "points_3yr": 319,
-      "points_1yr": 64,
-      "adp": null
-    },
-    {
-      "rank": 189,
-      "positional_rank": 93,
       "player_id": 36031,
       "sleeper_id": "13413",
       "name": "Cyrus Allen",
@@ -2887,6 +2872,21 @@
       "is_rookie": true,
       "points_3yr": 319,
       "points_1yr": 69,
+      "adp": null
+    },
+    {
+      "rank": 189,
+      "positional_rank": 93,
+      "player_id": 34981,
+      "sleeper_id": "11627",
+      "name": "Troy Franklin",
+      "position": "WR",
+      "team": "DEN",
+      "age": 23.7,
+      "bye_week": 10,
+      "is_rookie": false,
+      "points_3yr": 319,
+      "points_1yr": 61,
       "adp": null
     },
     {
@@ -3017,7 +3017,7 @@
       "name": "Cameron Skattebo",
       "position": "RB",
       "team": "NYG",
-      "age": 24.7,
+      "age": 24.8,
       "bye_week": 8,
       "is_rookie": false,
       "points_3yr": 312,
@@ -3201,7 +3201,7 @@
       "bye_week": 7,
       "is_rookie": false,
       "points_3yr": 298,
-      "points_1yr": 201,
+      "points_1yr": 199,
       "adp": null
     },
     {
@@ -3411,7 +3411,7 @@
       "bye_week": 8,
       "is_rookie": false,
       "points_3yr": 282,
-      "points_1yr": 47,
+      "points_1yr": 49,
       "adp": null
     },
     {
@@ -3482,7 +3482,7 @@
       "name": "Elijah Arroyo",
       "position": "TE",
       "team": "SEA",
-      "age": 23.5,
+      "age": 23.6,
       "bye_week": 11,
       "is_rookie": false,
       "points_3yr": 279,
@@ -3651,7 +3651,7 @@
       "bye_week": 8,
       "is_rookie": false,
       "points_3yr": 267,
-      "points_1yr": 151,
+      "points_1yr": 154,
       "adp": null
     },
     {
@@ -3801,7 +3801,7 @@
       "bye_week": 13,
       "is_rookie": true,
       "points_3yr": 257,
-      "points_1yr": 105,
+      "points_1yr": 104,
       "adp": null
     },
     {
@@ -4221,7 +4221,7 @@
       "bye_week": 7,
       "is_rookie": false,
       "points_3yr": 227,
-      "points_1yr": 97,
+      "points_1yr": 98,
       "adp": null
     },
     {
@@ -4401,7 +4401,7 @@
       "bye_week": 8,
       "is_rookie": false,
       "points_3yr": 210,
-      "points_1yr": 97,
+      "points_1yr": 99,
       "adp": null
     },
     {
@@ -4551,7 +4551,7 @@
       "bye_week": 8,
       "is_rookie": false,
       "points_3yr": 196,
-      "points_1yr": 150,
+      "points_1yr": 142,
       "adp": null
     },
     {
@@ -4686,7 +4686,7 @@
       "bye_week": 8,
       "is_rookie": false,
       "points_3yr": 185,
-      "points_1yr": 78,
+      "points_1yr": 81,
       "adp": null
     },
     {
@@ -4776,7 +4776,7 @@
       "bye_week": 8,
       "is_rookie": false,
       "points_3yr": 180,
-      "points_1yr": 31,
+      "points_1yr": 32,
       "adp": null
     },
     {
@@ -5162,7 +5162,7 @@
       "name": "LeQuint Allen",
       "position": "RB",
       "team": "JAC",
-      "age": 22.2,
+      "age": 22.3,
       "bye_week": 7,
       "is_rookie": false,
       "points_3yr": 154,
@@ -5207,7 +5207,7 @@
       "name": "James Conner",
       "position": "RB",
       "team": "ARI",
-      "age": 31.4,
+      "age": 31.5,
       "bye_week": 14,
       "is_rookie": false,
       "points_3yr": 151,
@@ -6171,7 +6171,7 @@
       "bye_week": 8,
       "is_rookie": true,
       "points_3yr": 17,
-      "points_1yr": 15,
+      "points_1yr": 16,
       "adp": null
     },
     {

@@ -29,7 +29,10 @@ not by simulation noise. Each package is first priced in points, and the gradien
 title odds (central differences per roster) turns that into a linear estimate; the season
 is simulated exactly only when the estimate clears LINEAR_FLOOR. A 3-for-1 is
 consolidation, so its three pieces come from my depth: players worth under DEPTH_TITLES
-to me on their own.
+to me on their own. A package never mixes a filler piece, one worth under FILLER_TITLES
+to me on its own, with a real one: a zero-value piece added to balance the calculator
+reads to the other side as diluting the package rather than sweetening it, so those
+packages are not priced. A package of only filler is consolidation and is.
 
 numpy comes from the inline script metadata, so `uv run sweep.py` resolves it on its own
 (`uv run --offline sweep.py` once it is cached). Reads what waivers.py refreshed, plus
@@ -66,6 +69,7 @@ SEASONS = 40000
 MIN_TITLES = 0.10  # cumulative title odds over 2026-28 a package must add to be printed
 LINEAR_FLOOR = MIN_TITLES / 2  # simulate exactly only when the linear estimate clears this
 DEPTH_TITLES = 0.08  # a piece worth less than this to me on its own is depth
+FILLER_TITLES = 0.01  # and under this it is filler, which dilutes a package instead of balancing it
 KTC_LOSS = 4000  # the calculator margin against me past which a package is not priced
 CONTENDING = 2 / 3  # 2026 playoff odds at which he is buying this season
 TANKING = 1 / 3  # and at which he has written it off
@@ -180,8 +184,8 @@ def gradient(ctx: Context, who: int) -> dict[tuple[int, str], float]:
     return out
 
 
-def depth(ctx: Context, grad: dict) -> list[int]:
-    """Indices of my pieces worth under DEPTH_TITLES on their own: the 3-for-1 pool."""
+def depth(ctx: Context, grad: dict, limit: float) -> list[int]:
+    """Indices of my pieces worth under `limit` of a title on their own."""
     me = ctx.rid[ctx.me.name]
     out = []
     for i, p in enumerate(ctx.me.players()):
@@ -190,7 +194,7 @@ def depth(ctx: Context, grad: dict) -> list[int]:
         else:
             without = roster_value([q for q in ctx.me.bodies() if q is not p], ctx.pricer.wire)
             cost = sum(grad[(me, h)] * (ctx.base[me][h] - without[h]) for h in HORIZONS)
-        if cost < DEPTH_TITLES:
+        if cost < limit:
             out.append(i)
     return out
 
@@ -316,11 +320,14 @@ def main() -> int:
             f"{base_now[i][1] + 2 * base_later[i][1]:12.1%}"
         )
     my_grad = gradient(ctx, me)
-    depth_ix = depth(ctx, my_grad)
+    depth_ix = depth(ctx, my_grad, DEPTH_TITLES)
+    filler_ix = set(depth(ctx, my_grad, FILLER_TITLES))
     print(
         f"\none of my points is worth {my_grad[(me, 'yr1')]:.3%} of a title this season and "
         f"{my_grad[(me, 'yr23')]:.4%} in 2027-28; 3-for-1 pool: "
         f"{', '.join(label(ctx.me.players()[i]) for i in depth_ix)}\n"
+        f"filler, never packaged with a real piece: "
+        f"{', '.join(label(ctx.me.players()[i]) for i in sorted(filler_ix))}\n"
         "columns: my cumulative title odds (2026 + 2 x 27/28), his; lineup points per horizon; "
         f"KTCcalc is my margin on the calculator, at most {KTC_SLACK}; mkt is my blended market delta"
     )
@@ -337,7 +344,10 @@ def main() -> int:
             for shape, (n_give, n_get) in SHAPES.items():
                 t0 = time.time()
                 pool_ix = depth_ix if n_give == 3 else range(len(ctx.me.players()))
-                tasks = [(g, n_get) for g in itertools.combinations(pool_ix, n_give)]
+                tasks = [
+                    (g, n_get) for g in itertools.combinations(pool_ix, n_give)
+                    if not 0 < len(filler_ix.intersection(g)) < len(g)
+                ]
                 found, stages = [], [0, 0, 0]
                 for chunk, counts in pool.imap_unordered(_work, tasks, chunksize=2):
                     found += chunk
