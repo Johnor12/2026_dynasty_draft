@@ -111,7 +111,7 @@
       "bye_week": 11,
       "is_rookie": false,
       "points_3yr": 969,
-      "points_1yr": 321,
+      "points_1yr": 320,
       "adp": null
     },
     {
@@ -141,7 +141,7 @@
       "bye_week": 8,
       "is_rookie": false,
       "points_3yr": 912,
-      "points_1yr": 324,
+      "points_1yr": 317,
       "adp": null
     },
     {
@@ -197,7 +197,7 @@
       "name": "Trevor Lawrence",
       "position": "QB",
       "team": "JAC",
-      "age": 27,
+      "age": 27.1,
       "bye_week": 7,
       "is_rookie": false,
       "points_3yr": 888,
@@ -336,7 +336,7 @@
       "bye_week": 6,
       "is_rookie": false,
       "points_3yr": 815,
-      "points_1yr": 260,
+      "points_1yr": 245,
       "adp": null
     },
     {
@@ -486,7 +486,7 @@
       "bye_week": 11,
       "is_rookie": false,
       "points_3yr": 763,
-      "points_1yr": 309,
+      "points_1yr": 310,
       "adp": null
     },
     {
@@ -666,7 +666,7 @@
       "bye_week": 6,
       "is_rookie": false,
       "points_3yr": 672,
-      "points_1yr": 210,
+      "points_1yr": 211,
       "adp": null
     },
     {
@@ -786,7 +786,7 @@
       "bye_week": 13,
       "is_rookie": false,
       "points_3yr": 613,
-      "points_1yr": 221,
+      "points_1yr": 218,
       "adp": null
     },
     {
@@ -816,7 +816,7 @@
       "bye_week": 5,
       "is_rookie": false,
       "points_3yr": 605,
-      "points_1yr": 194,
+      "points_1yr": 193,
       "adp": null
     },
     {
@@ -846,7 +846,7 @@
       "bye_week": 11,
       "is_rookie": false,
       "points_3yr": 581,
-      "points_1yr": 173,
+      "points_1yr": 172,
       "adp": null
     },
     {
@@ -966,7 +966,7 @@
       "bye_week": 8,
       "is_rookie": false,
       "points_3yr": 517,
-      "points_1yr": 291,
+      "points_1yr": 290,
       "adp": null
     },
     {
@@ -1281,7 +1281,7 @@
       "bye_week": 10,
       "is_rookie": false,
       "points_3yr": 456,
-      "points_1yr": 143,
+      "points_1yr": 142,
       "adp": null
     },
     {
@@ -1311,7 +1311,7 @@
       "bye_week": 7,
       "is_rookie": false,
       "points_3yr": 455,
-      "points_1yr": 163,
+      "points_1yr": 164,
       "adp": null
     },
     {
@@ -1457,7 +1457,7 @@
       "name": "Kyle Pitts",
       "position": "TE",
       "team": "ATL",
-      "age": 26,
+      "age": 26.1,
       "bye_week": 11,
       "is_rookie": false,
       "points_3yr": 436,
@@ -1496,28 +1496,13 @@
     },
     {
       "rank": 97,
-      "positional_rank": 17,
-      "player_id": 10195,
-      "sleeper_id": "5850",
-      "name": "Josh Jacobs",
-      "position": "RB",
-      "team": "GB",
-      "age": 28.7,
-      "bye_week": 11,
-      "is_rookie": false,
-      "points_3yr": 428,
-      "points_1yr": 141,
-      "adp": null
-    },
-    {
-      "rank": 98,
       "positional_rank": 37,
       "player_id": 35949,
       "sleeper_id": "13346",
       "name": "Denzel Boston",
       "position": "WR",
       "team": "CLE",
-      "age": 22.8,
+      "age": 22.9,
       "bye_week": 11,
       "is_rookie": true,
       "points_3yr": 426,
@@ -1525,7 +1510,7 @@
       "adp": null
     },
     {
-      "rank": 99,
+      "rank": 98,
       "positional_rank": 38,
       "player_id": 13546,
       "sleeper_id": "9756",
@@ -1540,7 +1525,7 @@
       "adp": null
     },
     {
-      "rank": 100,
+      "rank": 99,
       "positional_rank": 39,
       "player_id": 10197,
       "sleeper_id": "5846",
@@ -1552,6 +1537,21 @@
       "is_rookie": false,
       "points_3yr": 420,
       "points_1yr": 167,
+      "adp": null
+    },
+    {
+      "rank": 100,
+      "positional_rank": 17,
+      "player_id": 10195,
+      "sleeper_id": "5850",
+      "name": "Josh Jacobs",
+      "position": "RB",
+      "team": "GB",
+      "age": 28.7,
+      "bye_week": 11,
+      "is_rookie": false,
+      "points_3yr": 413,
+      "points_1yr": 136,
       "adp": null
     },
     {
@@ -1641,7 +1641,7 @@
       "bye_week": 8,
       "is_rookie": false,
       "points_3yr": 402,
-      "points_1yr": 171,
+      "points_1yr": 160,
       "adp": null
     },
     {
@@ -1716,7 +1716,7 @@
       "bye_week": 11,
       "is_rookie": false,
       "points_3yr": 395,
-      "points_1yr": 137,
+      "points_1yr": 132,
       "adp": null
     },
     {
@@ -1791,7 +1791,7 @@
       "bye_week": 10,
       "is_rookie": false,
       "points_3yr": 389,
-      "points_1yr": 196,
+      "points_1yr": 194,
       "adp": null
     },
     {
@@ -1847,7 +1847,7 @@
       "name": "Quentin Johnston",
       "position": "WR",
       "team": "LAC",
-      "age": 25.1,
+      "age": 25.2,
       "bye_week": 7,
       "is_rookie": false,
       "points_3yr": 383,
@@ -1881,7 +1881,7 @@
       "bye_week": 5,
       "is_rookie": false,
       "points_3yr": 380,
-      "points_1yr": 139,
+      "points_1yr": 138,
       "adp": null
     },
     {
@@ -1971,7 +1971,7 @@
       "bye_week": 8,
       "is_rookie": false,
       "points_3yr": 374,
-      "points_1yr": 135,
+      "points_1yr": 131,
       "adp": null
     },
     {
@@ -1986,7 +1986,7 @@
       "bye_week": 7,
       "is_rookie": true,
       "points_3yr": 373,
-      "points_1yr": 121,
+      "points_1yr": 122,
       "adp": null
     },
     {
@@ -2106,7 +2106,7 @@
       "bye_week": 11,
       "is_rookie": false,
       "points_3yr": 366,
-      "points_1yr": 103,
+      "points_1yr": 110,
       "adp": null
     },
     {
@@ -2312,7 +2312,7 @@
       "name": "Mark Andrews",
       "position": "TE",
       "team": "BAL",
-      "age": 31.1,
+      "age": 31.2,
       "bye_week": 13,
       "is_rookie": false,
       "points_3yr": 357,
@@ -2451,7 +2451,7 @@
       "bye_week": 5,
       "is_rookie": false,
       "points_3yr": 341,
-      "points_1yr": 225,
+      "points_1yr": 224,
       "adp": null
     },
     {
@@ -2541,7 +2541,7 @@
       "bye_week": 11,
       "is_rookie": true,
       "points_3yr": 333,
-      "points_1yr": 87,
+      "points_1yr": 88,
       "adp": null
     },
     {
@@ -2627,7 +2627,7 @@
       "name": "Gunnar Helm",
       "position": "TE",
       "team": "TEN",
-      "age": 24.1,
+      "age": 24.2,
       "bye_week": 9,
       "is_rookie": false,
       "points_3yr": 330,
@@ -2676,7 +2676,7 @@
       "bye_week": 6,
       "is_rookie": false,
       "points_3yr": 327,
-      "points_1yr": 141,
+      "points_1yr": 140,
       "adp": null
     },
     {
@@ -2862,6 +2862,21 @@
     {
       "rank": 188,
       "positional_rank": 92,
+      "player_id": 34981,
+      "sleeper_id": "11627",
+      "name": "Troy Franklin",
+      "position": "WR",
+      "team": "DEN",
+      "age": 23.8,
+      "bye_week": 10,
+      "is_rookie": false,
+      "points_3yr": 319,
+      "points_1yr": 61,
+      "adp": null
+    },
+    {
+      "rank": 189,
+      "positional_rank": 93,
       "player_id": 36031,
       "sleeper_id": "13413",
       "name": "Cyrus Allen",
@@ -2872,21 +2887,6 @@
       "is_rookie": true,
       "points_3yr": 319,
       "points_1yr": 69,
-      "adp": null
-    },
-    {
-      "rank": 189,
-      "positional_rank": 93,
-      "player_id": 34981,
-      "sleeper_id": "11627",
-      "name": "Troy Franklin",
-      "position": "WR",
-      "team": "DEN",
-      "age": 23.7,
-      "bye_week": 10,
-      "is_rookie": false,
-      "points_3yr": 319,
-      "points_1yr": 61,
       "adp": null
     },
     {
@@ -3021,7 +3021,7 @@
       "bye_week": 8,
       "is_rookie": false,
       "points_3yr": 312,
-      "points_1yr": 190,
+      "points_1yr": 180,
       "adp": null
     },
     {
@@ -3111,7 +3111,7 @@
       "bye_week": 11,
       "is_rookie": false,
       "points_3yr": 306,
-      "points_1yr": 193,
+      "points_1yr": 201,
       "adp": null
     },
     {
@@ -3197,7 +3197,7 @@
       "name": "Bhayshul Tuten",
       "position": "RB",
       "team": "JAC",
-      "age": 24.7,
+      "age": 23.7,
       "bye_week": 7,
       "is_rookie": false,
       "points_3yr": 298,
@@ -3441,7 +3441,7 @@
       "bye_week": 6,
       "is_rookie": false,
       "points_3yr": 281,
-      "points_1yr": 127,
+      "points_1yr": 126,
       "adp": null
     },
     {
@@ -3471,7 +3471,7 @@
       "bye_week": 8,
       "is_rookie": false,
       "points_3yr": 279,
-      "points_1yr": 29,
+      "points_1yr": 31,
       "adp": null
     },
     {
@@ -3516,7 +3516,7 @@
       "bye_week": 11,
       "is_rookie": true,
       "points_3yr": 278,
-      "points_1yr": 7,
+      "points_1yr": 6,
       "adp": null
     },
     {
@@ -3786,7 +3786,7 @@
       "bye_week": 7,
       "is_rookie": false,
       "points_3yr": 258,
-      "points_1yr": 74,
+      "points_1yr": 67,
       "adp": null
     },
     {
@@ -4172,7 +4172,7 @@
       "name": "Sam Roush",
       "position": "TE",
       "team": "CHI",
-      "age": 23.1,
+      "age": 23.2,
       "bye_week": 10,
       "is_rookie": true,
       "points_3yr": 230,
@@ -4626,7 +4626,7 @@
       "bye_week": 11,
       "is_rookie": false,
       "points_3yr": 188,
-      "points_1yr": 75,
+      "points_1yr": 74,
       "adp": null
     },
     {
@@ -4776,7 +4776,7 @@
       "bye_week": 8,
       "is_rookie": false,
       "points_3yr": 180,
-      "points_1yr": 32,
+      "points_1yr": 33,
       "adp": null
     },
     {
@@ -4821,7 +4821,7 @@
       "bye_week": 8,
       "is_rookie": false,
       "points_3yr": 177,
-      "points_1yr": 45,
+      "points_1yr": 51,
       "adp": null
     },
     {
@@ -4862,7 +4862,7 @@
       "name": "J. Michael Sturdivant",
       "position": "WR",
       "team": "GB",
-      "age": 24.1,
+      "age": 24.2,
       "bye_week": 11,
       "is_rookie": true,
       "points_3yr": 172,
@@ -5091,7 +5091,7 @@
       "bye_week": 7,
       "is_rookie": false,
       "points_3yr": 160,
-      "points_1yr": 28,
+      "points_1yr": 31,
       "adp": null
     },
     {
@@ -5297,7 +5297,7 @@
       "name": "Jackson Hawes",
       "position": "TE",
       "team": "BUF",
-      "age": 25.8,
+      "age": 25.9,
       "bye_week": 7,
       "is_rookie": false,
       "points_3yr": 144,
@@ -5316,7 +5316,7 @@
       "bye_week": 8,
       "is_rookie": false,
       "points_3yr": 143,
-      "points_1yr": 59,
+      "points_1yr": 63,
       "adp": null
     },
     {
@@ -5416,12 +5416,12 @@
       "sleeper_id": "6853",
       "name": "Van Jefferson",
       "position": "WR",
-      "team": "UNS",
+      "team": "WAS",
       "age": 30.3,
-      "bye_week": null,
+      "bye_week": 7,
       "is_rookie": false,
       "points_3yr": 135,
-      "points_1yr": 0,
+      "points_1yr": 3,
       "adp": null
     },
     {
@@ -5526,7 +5526,7 @@
       "bye_week": 11,
       "is_rookie": false,
       "points_3yr": 122,
-      "points_1yr": 40,
+      "points_1yr": 39,
       "adp": null
     },
     {
@@ -5552,7 +5552,7 @@
       "name": "Foster Moreau",
       "position": "TE",
       "team": "HOU",
-      "age": 29.4,
+      "age": 29.5,
       "bye_week": 8,
       "is_rookie": false,
       "points_3yr": 121,
@@ -6047,7 +6047,7 @@
       "name": "Casey Washington",
       "position": "WR",
       "team": "UNS",
-      "age": 25.6,
+      "age": 25.7,
       "bye_week": null,
       "is_rookie": false,
       "points_3yr": 48,
@@ -6122,7 +6122,7 @@
       "name": "Anthony Gould",
       "position": "WR",
       "team": "IND",
-      "age": 25.5,
+      "age": 25.6,
       "bye_week": 13,
       "is_rookie": false,
       "points_3yr": 28,
@@ -6171,7 +6171,7 @@
       "bye_week": 8,
       "is_rookie": true,
       "points_3yr": 17,
-      "points_1yr": 16,
+      "points_1yr": 13,
       "adp": null
     },
     {

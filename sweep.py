@@ -32,7 +32,8 @@ consolidation, so its three pieces come from my depth: players worth under DEPTH
 to me on their own. A package never mixes a filler piece, one worth under FILLER_TITLES
 to me on its own, with a real one: a zero-value piece added to balance the calculator
 reads to the other side as diluting the package rather than sweetening it, so those
-packages are not priced. A package of only filler is consolidation and is.
+packages are not priced. A package of only filler is consolidation and is. Nor is a
+package that sends an opponent a player on his BLACKLIST in trades.py.
 
 numpy comes from the inline script metadata, so `uv run sweep.py` resolves it on its own
 (`uv run --offline sweep.py` once it is cached). Reads what waivers.py refreshed, plus
@@ -60,8 +61,8 @@ import numpy as np  # noqa: E402
 from odds import FUTURE_WEEKS, PLAYOFF_TEAMS, live_season, random_schedule  # noqa: E402
 from ranker.value import HORIZONS  # noqa: E402
 from trades import (  # noqa: E402
-    HIS_PICKS, KTC_SLACK, LEAGUE, MY_PICKS, PICK_HISTORY, POOL, REPO_ROOT, Pricer, Team,
-    ktc_calculator, label, load_team, market_values, pick_lotteries, pick_players, worth,
+    BLACKLIST, HIS_PICKS, KTC_SLACK, LEAGUE, MY_PICKS, PICK_HISTORY, POOL, REPO_ROOT, Pricer,
+    Team, ktc_calculator, label, load_team, market_values, pick_lotteries, pick_players, worth,
 )
 from waivers import load_players, roster_value  # noqa: E402
 
@@ -298,6 +299,11 @@ def main() -> int:
         own = MY_PICKS if name == me_name else HIS_PICKS.get(name, {})
         team.picks = [pick_by_name[n] for n in own]
         teams[name] = team
+    mine = {p.name for p in teams[me_name].players()}
+    for opp, names in BLACKLIST.items():
+        if unknown := names - mine:
+            sys.exit(f"error: {opp}'s blacklist names {sorted(unknown)}, who are not on my roster")
+
     rostered = {sid for r in league["rosters"] for sid in r["players"]}
     pricer = Pricer(league, [p for sid, p in players.items() if sid not in rostered], lotteries)
     base = {rid[n]: t.value(pricer.wire) for n, t in teams.items()}
@@ -337,6 +343,7 @@ def main() -> int:
         ctx.opp = opp
         ctx.stance = stance(base_now[rid[opp]][0])
         ctx.grad = my_grad | gradient(ctx, rid[opp])
+        banned = {i for i, p in enumerate(ctx.me.players()) if p.name in BLACKLIST.get(opp, ())}
         _CTX = ctx
         rows: list[dict] = []
         # A pool per opponent: the workers fork with this opponent's context.
@@ -346,7 +353,7 @@ def main() -> int:
                 pool_ix = depth_ix if n_give == 3 else range(len(ctx.me.players()))
                 tasks = [
                     (g, n_get) for g in itertools.combinations(pool_ix, n_give)
-                    if not 0 < len(filler_ix.intersection(g)) < len(g)
+                    if not banned.intersection(g) and not 0 < len(filler_ix.intersection(g)) < len(g)
                 ]
                 found, stages = [], [0, 0, 0]
                 for chunk, counts in pool.imap_unordered(_work, tasks, chunksize=2):

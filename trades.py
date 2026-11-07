@@ -39,7 +39,8 @@ as a loss for the seller and even a 1-for-1 gap is amplified. The opponent is sc
 both horizons by default; --tanking scores him on yr23 only, for a seller who has written
 off this season. His EV is printed but a sweep filters on what he will check: my margin
 on the calculator may be at most KTC_SLACK, about what his own Burrow-for-Love offer
-conceded there.
+conceded there. BLACKLIST holds the players of mine each opponent has said he will not
+take: a sweep never sends them to him, and a proposal that does is flagged.
 
 Usage:
     uv run trades.py nedjh2 --tanking
@@ -93,6 +94,10 @@ HIS_PICKS = {
     "jedmxk": {"jedmxk 2027 2nd": 18},
     "justinmfftt": {"justinmfftt 2027 1st": 10, "jedmxk 2027 1st": 8},
 }
+# My players an opponent has said he will not take, by Sleeper username. A sweep never
+# sends them to him, and a proposal that does is flagged. AndNic31 (Sam Lemon) on
+# 2026-11-06: "Hendo and charbs are guys I'm the lowest of the low on."
+BLACKLIST = {"AndNic31": {"TreVeyon Henderson", "Zach Charbonnet"}}
 PICK_WINDOW = 2  # slots either side of mine whose history forms the lottery
 KTC_VARIANCE = 5  # the calculator's default fairness band, in percent of the two totals
 KTC_MAX_PLAYER = 10000
@@ -480,6 +485,10 @@ def main() -> int:
     him = load_team(league, players, args.opponent)
     him.picks = [picks[n] for n in his_picks]
 
+    banned = BLACKLIST.get(args.opponent, set())
+    if unknown := banned - {p.name for p in me.players()}:
+        sys.exit(f"error: {args.opponent}'s blacklist names {sorted(unknown)}, who are not on my roster")
+
     rostered = {sid for r in league["rosters"] for sid in r["players"]}
     pricer = Pricer(league, [p for sid, p in players.items() if sid not in rostered], lotteries)
     ctx = Context(me, him, pricer, market, args.tanking, me.value(pricer.wire), him.value(pricer.wire))
@@ -520,18 +529,23 @@ def main() -> int:
                 print(f"  {who} then: {'; '.join(moves)}")
         if not plausible:
             print(f"  KTC's calculator favors me by {deltas['calc']:.0f}, past the {KTC_SLACK} he has conceded")
+        for p in give:
+            if p.name in banned:
+                print(f"  {p.name} is on {him.name}'s blacklist: he has said he will not take him")
         return 0
 
     _CTX = ctx
     shapes = {
         "1-for-1": (1, 1), "2-for-1": (2, 1), "1-for-2": (1, 2), "2-for-2": (2, 2),
     }
+    banned_ix = {i for i, p in enumerate(me.players()) if p.name in banned}
     found: dict[str, list] = {}
     with multiprocessing.get_context("fork").Pool(WORKERS) as pool:
         for shape, (n_give, n_get) in shapes.items():
             tasks = [
                 (give_index, n_get)
                 for give_index in itertools.combinations(range(len(me.players())), n_give)
+                if not banned_ix.intersection(give_index)
             ]
             rows = [row for chunk in pool.imap_unordered(_sweep, tasks, chunksize=4) for row in chunk]
             rows.sort(key=lambda r: (-r[0], r[1], r[2]))

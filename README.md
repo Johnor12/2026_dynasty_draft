@@ -202,8 +202,10 @@ from the raw snapshots, which is why the KeepTradeCut fetch includes rookie pick
 `build_rankings.py` drops them from the board. The opponent is scored on both horizons, or
 on 2027-28 only with `--tanking`. His EV is printed but a sweep filters on what he will
 actually check: it lists packages that are +EV for me and on which the calculator favors me
-by at most `KTC_SLACK`, about what his own offer conceded there. A sweep runs on up to
-eight worker processes.
+by at most `KTC_SLACK`, about what his own offer conceded there. `BLACKLIST` in `trades.py`
+holds, per opponent, the players of mine he has said he will not take: a sweep (here and in
+`sweep.py`) never sends them to him, and a proposal that does is flagged. A sweep runs on up
+to eight worker processes.
 
 Turn a priced trade into chances of winning each target year:
 
