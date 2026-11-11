@@ -15,7 +15,7 @@ Rosters refill to the league shape after the swap: an incoming player keeps IR o
 when the receiver has that spot open, surplus active bodies are cut cheapest-first, and an
 open active spot takes the best free agent.
 
-My 2027 picks (MY_PICKS) are tradeable, and so are the opponent's at the slots HIS_PICKS
+My 2027 and 2028 picks (MY_PICKS) are tradeable, and so are the opponent's at the slots HIS_PICKS
 gives them. A pick is a lottery, not a projection: valuing a mid first as one
 averaged rookie made it bench depth worth +2 points, because the average rookie never
 starts while the hit does. So a pick is priced as the expectation, over the players
@@ -24,7 +24,9 @@ lineup value each would add to the roster holding the pick, carrying his own pos
 his real first two seasons of scoring as the pick's 2027-28 points. A pick that changes
 hands loses that value on the sender's current roster and gains it on the receiver's
 post-trade roster; a pick that stays put is taken as worth the same before and after, and
-two picks in one package are valued independently.
+two picks in one package are valued independently. A 2028 pick's rookie plays only the
+second season of that horizon, so he is weighed at twice his first season against the
+roster's two-season totals and the pick keeps half the gain.
 
 Every package also carries my market delta on KeepTradeCut superflex TE+, on FantasyCalc
 10-team superflex, and `mkt`, their blend, with FantasyCalc rescaled onto KTC's scale by
@@ -40,13 +42,15 @@ both horizons by default; --tanking scores him on yr23 only, for a seller who ha
 off this season. His EV is printed but a sweep filters on what he will check: my margin
 on the calculator may be at most KTC_SLACK, about what his own Burrow-for-Love offer
 conceded there. BLACKLIST holds the players of mine each opponent has said he will not
-take: a sweep never sends them to him, and a proposal that does is flagged.
+take: a sweep never sends them to him, and a proposal that does is flagged. Nor does a
+sweep offer a player of mine under KTC_FLOOR.
 
 Usage:
     uv run trades.py nedjh2 --tanking
     uv run trades.py nedjh2 --tanking --give "Josh Jacobs" --get "Chase Brown"
     uv run trades.py nedjh2 --tanking --give "2027 2nd" --get "Chase Brown"
     uv run trades.py nedjh2 --tanking --give "Josh Jacobs" --get "nedjh2 2027 1st"
+    uv run trades.py nedjh2 --tanking --give "2028 1st" --get "Chase Brown"
 """
 
 from __future__ import annotations
@@ -73,26 +77,31 @@ KTC_RAW = REPO_ROOT / "data_source_investigator/data/raw/keeptradecut.html"
 FANTASYCALC_RAW = REPO_ROOT / "data_source_investigator/data/raw/fantasycalc.json"
 
 # Where 2027 picks fall in the rookie draft: reverse order of mean 2026 wins in sweep.py's
-# simulation after week 7 (nedjh2 2.6 ... johnor and justinmfftt 9.3). Both boards price
-# picks by tier: early is 1-3, mid 4-7, late 8-10.
-MY_2027_SLOT = 9
-# My 2027 1st went to nedjh2 on 2026-10-22.
-MY_PICKS = {"2027 2nd": 10 + MY_2027_SLOT}
+# simulation after week 9 (nedjh2 1.8 ... johnor 8.7, jedmxk 9.0, justinmfftt 9.6). Both
+# boards price picks by tier: early is 1-3, mid 4-7, late 8-10.
+MY_2027_SLOT = 8
+# My 2027 1st went to nedjh2 on 2026-10-22. My 2028 picks sit at the same slot: the 2027-28
+# odds have me finishing about where I do this year, and both boards price that as late.
+MY_PICKS = {
+    "2027 2nd": 10 + MY_2027_SLOT,
+    "2028 1st": MY_2027_SLOT, "2028 2nd": 10 + MY_2027_SLOT,
+    "2028 3rd": 20 + MY_2027_SLOT, "2028 4th": 30 + MY_2027_SLOT,
+}
 # Each opponent's 2027 firsts and seconds as Sleeper's traded picks had them on
-# 2026-11-04, named by the team whose finish sets the slot.
+# 2026-11-11, named by the team whose finish sets the slot.
 HIS_PICKS = {
     "nedjh2": {
-        "nedjh2 2027 1st": 1, "nedjh2 2027 2nd": 11, "AndNic31 2027 1st": 4,
+        "nedjh2 2027 1st": 1, "nedjh2 2027 2nd": 11, "AndNic31 2027 1st": 5,
         "johnor 2027 1st": MY_2027_SLOT, "justinmfftt 2027 2nd": 20,
     },
     "UGrizz14": {"UGrizz14 2027 1st": 2, "UGrizz14 2027 2nd": 12},
     "dirtydole": {"dirtydole 2027 1st": 3, "dirtydole 2027 2nd": 13},
-    "AndNic31": {"AndNic31 2027 2nd": 14, "samlemonskoff 2027 1st": 6},
-    "bwood637": {"bwood637 2027 1st": 5, "bwood637 2027 2nd": 15},
-    "samlemonskoff": {"samlemonskoff 2027 2nd": 16},
-    "dccb31": {"dccb31 2027 1st": 7, "dccb31 2027 2nd": 17},
-    "jedmxk": {"jedmxk 2027 2nd": 18},
-    "justinmfftt": {"justinmfftt 2027 1st": 10, "jedmxk 2027 1st": 8},
+    "AndNic31": {"AndNic31 2027 2nd": 15, "samlemonskoff 2027 1st": 7},
+    "bwood637": {"bwood637 2027 1st": 4, "bwood637 2027 2nd": 14},
+    "samlemonskoff": {"samlemonskoff 2027 2nd": 17},
+    "dccb31": {"dccb31 2027 1st": 6, "dccb31 2027 2nd": 16},
+    "jedmxk": {"jedmxk 2027 2nd": 19},
+    "justinmfftt": {"justinmfftt 2027 1st": 10, "jedmxk 2027 1st": 9},
 }
 # My players an opponent has said he will not take, by Sleeper username. A sweep never
 # sends them to him, and a proposal that does is flagged. AndNic31 (Sam Lemon) on
@@ -105,6 +114,9 @@ KTC_MAX_PLAYER = 10000
 # by about 1,500 there on the Crowd + Trades values, so he is not treating its verdict as a
 # hard line.
 KTC_SLACK = 1500
+# A sweep never offers a player of mine under this on KeepTradeCut: near the wire he reads
+# as trash in a package. Picks are exempt, and an explicit --give still prices anyone.
+KTC_FLOOR = 2500
 WORKERS = 8
 TOP_PER_SHAPE = 12
 TOP_PER_TARGET = 12
@@ -152,11 +164,21 @@ def pick_players(picks: dict[str, int]) -> dict[str, Player]:
     }
 
 
+def pick_seasons(name: str) -> int:
+    """Seasons of the 2027-28 horizon a pick's rookie plays: both for a 2027 pick, one for a 2028."""
+    return 2029 - int(name.split()[-2])
+
+
 def pick_lotteries(history: dict, picks: dict[str, int]) -> dict[str, list[Player]]:
-    """Each pick's outcomes: the rookies history put near its slot, as 2027-28 bodies."""
+    """Each pick's outcomes: the rookies history put near its slot, as 2027-28 bodies.
+
+    A 2028 rookie carries twice his first season, the two-season total he competes at for a
+    2028 lineup spot; Pricer.pick_value halves the gain back to the one season he plays.
+    """
     out: dict[str, list[Player]] = {}
     for i, (name, slot) in enumerate(picks.items()):
         near = [r for r in history["rows"] if abs(r["slot"] - slot) <= PICK_WINDOW]
+        both = pick_seasons(name) == 2
         out[name] = [
             Player(
                 player_id=-100 * (i + 1) - j,
@@ -166,7 +188,7 @@ def pick_lotteries(history: dict, picks: dict[str, int]) -> dict[str, list[Playe
                 age=None,
                 bye_week=None,
                 is_rookie=True,
-                points=round(row["yr1_points"] + row["yr2_points"]),
+                points=round(row["yr1_points"] + (row["yr2_points"] if both else row["yr1_points"])),
                 points_1yr=0,
                 provider_adp=None,
                 sleeper_id=None,
@@ -227,12 +249,17 @@ def market_values(picks: dict[str, int]) -> Market:
         year, rnd = name.split()[-2:]
         tier = pick_tier(slot)
         ktc[name] = ktc_picks[f"{year} {tier} {rnd}"]
-        fc[name] = fc_picks[f"{year} {rnd} ({tier})"]
+        # FantasyCalc tiers only next year's picks.
+        fc[name] = fc_picks[f"{year} {rnd} ({tier})" if year == "2027" else f"{year} {rnd}"]
     blend = {}
     for key in set(ktc) | set(fc):
         both = [v for v in (ktc.get(key), fc[key] * scale if key in fc else None) if v is not None]
         blend[key] = sum(both) / len(both)
     return {"mkt": blend, "ktc": ktc, "fc": fc}
+
+
+def offerable(market: Market, p: Player) -> bool:
+    return p.player_id < 0 or market["ktc"].get(p.sleeper_id, 0) >= KTC_FLOOR
 
 
 def worth(board: dict[str, float], assets) -> float:
@@ -389,7 +416,8 @@ class Pricer:
         return new, moves
 
     def pick_value(self, team: Team, pick: Player) -> float:
-        return lottery_value(team.bodies(), self.lotteries[pick.name], self.wire)
+        gain = lottery_value(team.bodies(), self.lotteries[pick.name], self.wire)
+        return gain * pick_seasons(pick.name) / 2
 
     def price(self, me: Team, him: Team, give: list[Player], get: list[Player]):
         me2, my_moves = self.after(me, give, get, him)
@@ -538,7 +566,7 @@ def main() -> int:
     shapes = {
         "1-for-1": (1, 1), "2-for-1": (2, 1), "1-for-2": (1, 2), "2-for-2": (2, 2),
     }
-    banned_ix = {i for i, p in enumerate(me.players()) if p.name in banned}
+    banned_ix = {i for i, p in enumerate(me.players()) if p.name in banned or not offerable(market, p)}
     found: dict[str, list] = {}
     with multiprocessing.get_context("fork").Pool(WORKERS) as pool:
         for shape, (n_give, n_get) in shapes.items():

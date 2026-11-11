@@ -151,8 +151,10 @@ history is the snapshot store, so weekly refreshes have to keep being committed.
 are 0 for players DraftSharks does not project, which in season is everyone past about
 395 QB/RB/WR/TE, and the source publishes no ADP then. The in-season rebuild overwrites
 the draft-time pool that `rankings.json` was ranked on; git history keeps that one. The
-best unrostered player at each position is the wire fallback, so a move's EV includes
-the fallback it spends or creates. Each free agent is shown with his best active-roster
+`ROS_OVERRIDE` in `waivers.py` replaces Sleeper's rest-of-season points for a player
+whose role I read differently (a named starter I expect to sit), for every script that
+loads players through it. The best unrostered player at each position is the wire
+fallback, so a move's EV includes the fallback it spends or creates. Each free agent is shown with his best active-roster
 drop. Moves are not additive. The refreshed provider ranks are shown only as context
 (`mkt`) and never enter EV.
 
@@ -173,15 +175,19 @@ roster is refilled to the league shape afterwards: incoming players keep IR or t
 spot is open, a surplus active body is cut cheapest-first, and an open spot takes the best
 free agent.
 
-My 2027 picks that I still own are tradeable, and so are the opponent's, all priced as
-lotteries rather than projections.
+My 2027 2nd and my 2028 picks are tradeable, and so are the opponent's 2027 firsts and
+seconds, all priced as lotteries rather than projections.
 Valuing a mid first as one averaged rookie made it bench depth worth +2 points, because
 the average rookie never starts while the hit does. Instead a pick is the expectation, over
 the players history put within two slots of its own, of the lineup value each would add to
 the roster holding the pick, carrying his own position and his real first two seasons of
 scoring as the pick's 2027-28 points. A pick that moves loses that value on the sender's
 roster and gains it on the receiver's post-trade roster; one that stays put is taken as
-worth the same before and after. `MY_2027_SLOT` in `trades.py` fixes my slot, and
+worth the same before and after. A 2028 pick's rookie plays only the second season of the
+2027-28 horizon, so he is weighed at twice his first season against the roster's
+two-season totals and the pick keeps half the gain (`--give "2028 1st"`); my 2028 picks
+sit at my 2027 slot, and FantasyCalc prices them without a tier. `MY_2027_SLOT` in
+`trades.py` fixes my slot, and
 `HIS_PICKS` lists each opponent's 2027 firsts and seconds at the slot the standings point to, named by
 the team whose finish sets the slot (`--get "nedjh2 2027 1st"`). The
 history comes from `uv run league_pipeline/fetch_pick_history.py`, which proxies
@@ -204,8 +210,10 @@ on 2027-28 only with `--tanking`. His EV is printed but a sweep filters on what 
 actually check: it lists packages that are +EV for me and on which the calculator favors me
 by at most `KTC_SLACK`, about what his own offer conceded there. `BLACKLIST` in `trades.py`
 holds, per opponent, the players of mine he has said he will not take: a sweep (here and in
-`sweep.py`) never sends them to him, and a proposal that does is flagged. A sweep runs on up
-to eight worker processes.
+`sweep.py`) never sends them to him, and a proposal that does is flagged. Neither sweep
+offers a player of mine under `KTC_FLOOR` (2,500 on KeepTradeCut's Crowd + Trades values):
+near the wire he reads as trash in a package. Picks are exempt, and an explicit `--give`
+still prices anyone. A sweep runs on up to eight worker processes.
 
 Turn a priced trade into chances of winning each target year:
 
@@ -244,7 +252,8 @@ package is also dumped to `sweep_rows.json`. A package never mixes a filler piec
 under `FILLER_TITLES`, one point of cumulative title odds, to me on its own) with a real
 one: a zero-value piece added to balance the calculator reads to the other side as
 diluting the package, not sweetening it, so those packages are not priced; a package of
-only filler is consolidation and is. His own
+only filler is consolidation and is, and a pick is never filler: it is currency he can ask
+for, not a body. His own
 change in title odds is shown but never filtered on: he judges a package on the calculator
 and on what he is trying to do, not on this model. So a package is sendable when
 KeepTradeCut's calculator scores it in his favor (its value adjustment already prices star

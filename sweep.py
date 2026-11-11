@@ -32,8 +32,9 @@ consolidation, so its three pieces come from my depth: players worth under DEPTH
 to me on their own. A package never mixes a filler piece, one worth under FILLER_TITLES
 to me on its own, with a real one: a zero-value piece added to balance the calculator
 reads to the other side as diluting the package rather than sweetening it, so those
-packages are not priced. A package of only filler is consolidation and is. Nor is a
-package that sends an opponent a player on his BLACKLIST in trades.py.
+packages are not priced. A package of only filler is consolidation and is; a pick is
+never filler. Nor is a package that offers a player of mine under KTC_FLOOR in trades.py,
+or one that sends an opponent a player on his BLACKLIST there.
 
 numpy comes from the inline script metadata, so `uv run sweep.py` resolves it on its own
 (`uv run --offline sweep.py` once it is cached). Reads what waivers.py refreshed, plus
@@ -61,8 +62,9 @@ import numpy as np  # noqa: E402
 from odds import FUTURE_WEEKS, PLAYOFF_TEAMS, live_season, random_schedule  # noqa: E402
 from ranker.value import HORIZONS  # noqa: E402
 from trades import (  # noqa: E402
-    BLACKLIST, HIS_PICKS, KTC_SLACK, LEAGUE, MY_PICKS, PICK_HISTORY, POOL, REPO_ROOT, Pricer,
-    Team, ktc_calculator, label, load_team, market_values, pick_lotteries, pick_players, worth,
+    BLACKLIST, HIS_PICKS, KTC_FLOOR, KTC_SLACK, LEAGUE, MY_PICKS, PICK_HISTORY, POOL, REPO_ROOT,
+    Pricer, Team, ktc_calculator, label, load_team, market_values, offerable, pick_lotteries,
+    pick_players, worth,
 )
 from waivers import load_players, roster_value  # noqa: E402
 
@@ -327,13 +329,17 @@ def main() -> int:
         )
     my_grad = gradient(ctx, me)
     depth_ix = depth(ctx, my_grad, DEPTH_TITLES)
-    filler_ix = set(depth(ctx, my_grad, FILLER_TITLES))
+    # A pick is currency he can ask for, not a body that dilutes a package.
+    filler_ix = {i for i in depth(ctx, my_grad, FILLER_TITLES) if ctx.me.players()[i].player_id >= 0}
+    floored = {i for i, p in enumerate(ctx.me.players()) if not offerable(market, p)}
     print(
         f"\none of my points is worth {my_grad[(me, 'yr1')]:.3%} of a title this season and "
         f"{my_grad[(me, 'yr23')]:.4%} in 2027-28; 3-for-1 pool: "
         f"{', '.join(label(ctx.me.players()[i]) for i in depth_ix)}\n"
         f"filler, never packaged with a real piece: "
         f"{', '.join(label(ctx.me.players()[i]) for i in sorted(filler_ix))}\n"
+        f"under {KTC_FLOOR} on KeepTradeCut, never offered: "
+        f"{', '.join(label(ctx.me.players()[i]) for i in sorted(floored))}\n"
         "columns: my cumulative title odds (2026 + 2 x 27/28), his; lineup points per horizon; "
         f"KTCcalc is my margin on the calculator, at most {KTC_SLACK}; mkt is my blended market delta"
     )
@@ -343,7 +349,7 @@ def main() -> int:
         ctx.opp = opp
         ctx.stance = stance(base_now[rid[opp]][0])
         ctx.grad = my_grad | gradient(ctx, rid[opp])
-        banned = {i for i, p in enumerate(ctx.me.players()) if p.name in BLACKLIST.get(opp, ())}
+        banned = floored | {i for i, p in enumerate(ctx.me.players()) if p.name in BLACKLIST.get(opp, ())}
         _CTX = ctx
         rows: list[dict] = []
         # A pool per opponent: the workers fork with this opponent's context.

@@ -62,6 +62,11 @@ MIN_EV = 0.05
 # built on before it counts as stale; a healthy player's weekly stat drift is under a tenth.
 FROZEN_GAP = 0.2
 
+# Rest-of-season points I overrule, by Sleeper name; 2027-28 is left as projected.
+# Kyler Murray: Sleeper projects him and Cousins both as Minnesota's starter, and my read on
+# 2026-11-11 is that Cousins starts barring injury.
+ROS_OVERRIDE = {"Kyler Murray": 0.0}
+
 Wire = dict[str, dict[str, float]]
 
 
@@ -132,6 +137,9 @@ def load_players(league: dict, pool: dict) -> dict[str, Player]:
         if ref is not None and abs(season - ref) >= ref * FROZEN_GAP:
             season = ref
         yr23[p["sleeper_id"]] = p["points_3yr"] * 2 / 3 if done else p["points_3yr"] - season
+    ros = {sid: ROS_OVERRIDE.get(row["name"], row["ros_points"]) for sid, row in league["players"].items()}
+    if unknown := set(ROS_OVERRIDE) - {row["name"] for row in league["players"].values()}:
+        sys.exit(f"error: ROS_OVERRIDE names {sorted(unknown)}, who have no Sleeper projection row")
     return {
         sid: Player(
             player_id=int(sid),
@@ -141,8 +149,8 @@ def load_players(league: dict, pool: dict) -> dict[str, Player]:
             age=None,
             bye_week=None,
             is_rookie=False,
-            points=row["ros_points"] + yr23.get(sid, 0),
-            points_1yr=row["ros_points"],
+            points=ros[sid] + yr23.get(sid, 0),
+            points_1yr=ros[sid],
             provider_adp=None,
             sleeper_id=sid,
         )

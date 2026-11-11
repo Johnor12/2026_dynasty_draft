@@ -1,6 +1,6 @@
 {
   "source_file": "projections.json",
-  "source_player_count": 892,
+  "source_player_count": 895,
   "scoring_scheme": {
     "name": "half_ppr_te_premium_superflex",
     "description": "0.5 points per reception for every position plus a 0.5/rec tight end premium (so 1.0/rec for TEs), superflex roster format.",
@@ -21,13 +21,13 @@
     "WR",
     "TE"
   ],
-  "player_count": 414,
+  "player_count": 415,
   "excluded": {
     "by_position": {
       "DB": 162,
       "DL": 157,
       "LB": 91,
-      "K": 33,
+      "K": 35,
       "DEF": 32
     },
     "no_usable_projection": 4,
@@ -36,7 +36,7 @@
   "adjustments": [
     "Justin Fields (10754): not in source, skipped",
     "Mac Jones: fully synthetic row, absent from source (comp-median, see SYNTHETIC_PLAYERS)",
-    "Samaje Perine: half_ppr 3yr 80 -> 96 (1yr exceeded the retirement-discounted 3yr; future seasons zeroed)"
+    "Samaje Perine: half_ppr 3yr 80 -> 94 (1yr exceeded the retirement-discounted 3yr; future seasons zeroed)"
   ],
   "fields": {
     "rank": "Pool rank, 1..N, by points_3yr descending (ties broken by the provider's dynasty rank). Unique and gap-free.",
@@ -95,8 +95,8 @@
       "age": 25.8,
       "bye_week": 7,
       "is_rookie": false,
-      "points_3yr": 976,
-      "points_1yr": 277,
+      "points_3yr": 974,
+      "points_1yr": 268,
       "adp": null
     },
     {
@@ -111,7 +111,7 @@
       "bye_week": 11,
       "is_rookie": false,
       "points_3yr": 969,
-      "points_1yr": 320,
+      "points_1yr": 319,
       "adp": null
     },
     {
@@ -122,16 +122,31 @@
       "name": "Joe Burrow",
       "position": "QB",
       "team": "CIN",
-      "age": 29.8,
+      "age": 29.9,
       "bye_week": 6,
       "is_rookie": false,
       "points_3yr": 966,
-      "points_1yr": 327,
+      "points_1yr": 328,
       "adp": null
     },
     {
       "rank": 6,
       "positional_rank": 6,
+      "player_id": 10489,
+      "sleeper_id": "6804",
+      "name": "Jordan Love",
+      "position": "QB",
+      "team": "GB",
+      "age": 28,
+      "bye_week": 11,
+      "is_rookie": false,
+      "points_3yr": 919,
+      "points_1yr": 304,
+      "adp": null
+    },
+    {
+      "rank": 7,
+      "positional_rank": 7,
       "player_id": 12737,
       "sleeper_id": "8183",
       "name": "Brock Purdy",
@@ -141,12 +156,12 @@
       "bye_week": 8,
       "is_rookie": false,
       "points_3yr": 912,
-      "points_1yr": 317,
+      "points_1yr": 319,
       "adp": null
     },
     {
-      "rank": 7,
-      "positional_rank": 7,
+      "rank": 8,
+      "positional_rank": 8,
       "player_id": 9964,
       "sleeper_id": "4881",
       "name": "Lamar Jackson",
@@ -160,21 +175,6 @@
       "adp": null
     },
     {
-      "rank": 8,
-      "positional_rank": 8,
-      "player_id": 10489,
-      "sleeper_id": "6804",
-      "name": "Jordan Love",
-      "position": "QB",
-      "team": "GB",
-      "age": 28,
-      "bye_week": 11,
-      "is_rookie": false,
-      "points_3yr": 905,
-      "points_1yr": 306,
-      "adp": null
-    },
-    {
       "rank": 9,
       "positional_rank": 9,
       "player_id": 10490,
@@ -182,7 +182,7 @@
       "name": "Jalen Hurts",
       "position": "QB",
       "team": "PHI",
-      "age": 28.2,
+      "age": 28.3,
       "bye_week": 10,
       "is_rookie": false,
       "points_3yr": 892,
@@ -207,21 +207,6 @@
     {
       "rank": 11,
       "positional_rank": 11,
-      "player_id": 7453,
-      "sleeper_id": "3294",
-      "name": "Dak Prescott",
-      "position": "QB",
-      "team": "DAL",
-      "age": 33.3,
-      "bye_week": 14,
-      "is_rookie": false,
-      "points_3yr": 886,
-      "points_1yr": 318,
-      "adp": null
-    },
-    {
-      "rank": 12,
-      "positional_rank": 12,
       "player_id": 35312,
       "sleeper_id": "12508",
       "name": "Jaxson Dart",
@@ -232,6 +217,21 @@
       "is_rookie": false,
       "points_3yr": 866,
       "points_1yr": 36,
+      "adp": null
+    },
+    {
+      "rank": 12,
+      "positional_rank": 12,
+      "player_id": 7453,
+      "sleeper_id": "3294",
+      "name": "Dak Prescott",
+      "position": "QB",
+      "team": "DAL",
+      "age": 33.3,
+      "bye_week": 14,
+      "is_rookie": false,
+      "points_3yr": 865,
+      "points_1yr": 317,
       "adp": null
     },
     {
@@ -246,7 +246,7 @@
       "bye_week": 5,
       "is_rookie": false,
       "points_3yr": 863,
-      "points_1yr": 295,
+      "points_1yr": 296,
       "adp": null
     },
     {
@@ -257,11 +257,11 @@
       "name": "Justin Herbert",
       "position": "QB",
       "team": "LAC",
-      "age": 28.6,
+      "age": 28.7,
       "bye_week": 7,
       "is_rookie": false,
-      "points_3yr": 842,
-      "points_1yr": 267,
+      "points_3yr": 836,
+      "points_1yr": 264,
       "adp": null
     },
     {
@@ -276,7 +276,7 @@
       "bye_week": 14,
       "is_rookie": false,
       "points_3yr": 829,
-      "points_1yr": 258,
+      "points_1yr": 243,
       "adp": null
     },
     {
@@ -306,42 +306,12 @@
       "bye_week": 13,
       "is_rookie": false,
       "points_3yr": 822,
-      "points_1yr": 241,
+      "points_1yr": 239,
       "adp": null
     },
     {
       "rank": 18,
       "positional_rank": 16,
-      "player_id": 35915,
-      "sleeper_id": "13269",
-      "name": "Fernando Mendoza",
-      "position": "QB",
-      "team": "LVR",
-      "age": 23.1,
-      "bye_week": 13,
-      "is_rookie": true,
-      "points_3yr": 816,
-      "points_1yr": 0,
-      "adp": null
-    },
-    {
-      "rank": 19,
-      "positional_rank": 17,
-      "player_id": 10217,
-      "sleeper_id": "5849",
-      "name": "Kyler Murray",
-      "position": "QB",
-      "team": "MIN",
-      "age": 29.2,
-      "bye_week": 6,
-      "is_rookie": false,
-      "points_3yr": 815,
-      "points_1yr": 245,
-      "adp": null
-    },
-    {
-      "rank": 20,
-      "positional_rank": 18,
       "player_id": 35510,
       "sleeper_id": "12545",
       "name": "Tyler Shough",
@@ -351,12 +321,12 @@
       "bye_week": 8,
       "is_rookie": false,
       "points_3yr": 813,
-      "points_1yr": 296,
+      "points_1yr": 289,
       "adp": null
     },
     {
-      "rank": 21,
-      "positional_rank": 19,
+      "rank": 19,
+      "positional_rank": 17,
       "player_id": 34984,
       "sleeper_id": "11563",
       "name": "Bo Nix",
@@ -366,11 +336,11 @@
       "bye_week": 10,
       "is_rookie": false,
       "points_3yr": 809,
-      "points_1yr": 275,
+      "points_1yr": 274,
       "adp": null
     },
     {
-      "rank": 22,
+      "rank": 20,
       "positional_rank": 1,
       "player_id": 13542,
       "sleeper_id": "9221",
@@ -381,12 +351,12 @@
       "bye_week": 6,
       "is_rookie": false,
       "points_3yr": 796,
-      "points_1yr": 333,
+      "points_1yr": 334,
       "adp": null
     },
     {
-      "rank": 23,
-      "positional_rank": 20,
+      "rank": 21,
+      "positional_rank": 18,
       "player_id": 12572,
       "sleeper_id": "8161",
       "name": "Malik Willis",
@@ -396,11 +366,26 @@
       "bye_week": 6,
       "is_rookie": false,
       "points_3yr": 796,
-      "points_1yr": 265,
+      "points_1yr": 201,
       "adp": null
     },
     {
-      "rank": 24,
+      "rank": 22,
+      "positional_rank": 19,
+      "player_id": 35915,
+      "sleeper_id": "13269",
+      "name": "Fernando Mendoza",
+      "position": "QB",
+      "team": "LVR",
+      "age": 23.1,
+      "bye_week": 13,
+      "is_rookie": true,
+      "points_3yr": 792,
+      "points_1yr": 127,
+      "adp": null
+    },
+    {
+      "rank": 23,
       "positional_rank": 1,
       "player_id": 10771,
       "sleeper_id": "7564",
@@ -411,7 +396,22 @@
       "bye_week": 6,
       "is_rookie": false,
       "points_3yr": 789,
-      "points_1yr": 262,
+      "points_1yr": 264,
+      "adp": null
+    },
+    {
+      "rank": 24,
+      "positional_rank": 20,
+      "player_id": 13539,
+      "sleeper_id": "9758",
+      "name": "C.J. Stroud",
+      "position": "QB",
+      "team": "HOU",
+      "age": 25.1,
+      "bye_week": 8,
+      "is_rookie": false,
+      "points_3yr": 789,
+      "points_1yr": 281,
       "adp": null
     },
     {
@@ -426,26 +426,11 @@
       "bye_week": 5,
       "is_rookie": false,
       "points_3yr": 789,
-      "points_1yr": 275,
+      "points_1yr": 273,
       "adp": null
     },
     {
       "rank": 26,
-      "positional_rank": 22,
-      "player_id": 13539,
-      "sleeper_id": "9758",
-      "name": "C.J. Stroud",
-      "position": "QB",
-      "team": "HOU",
-      "age": 25.1,
-      "bye_week": 8,
-      "is_rookie": false,
-      "points_3yr": 784,
-      "points_1yr": 281,
-      "adp": null
-    },
-    {
-      "rank": 27,
       "positional_rank": 2,
       "player_id": 13547,
       "sleeper_id": "9488",
@@ -460,8 +445,8 @@
       "adp": null
     },
     {
-      "rank": 28,
-      "positional_rank": 23,
+      "rank": 27,
+      "positional_rank": 22,
       "player_id": 9960,
       "sleeper_id": "4892",
       "name": "Baker Mayfield",
@@ -471,11 +456,11 @@
       "bye_week": 10,
       "is_rookie": false,
       "points_3yr": 765,
-      "points_1yr": 221,
+      "points_1yr": 222,
       "adp": null
     },
     {
-      "rank": 29,
+      "rank": 28,
       "positional_rank": 2,
       "player_id": 13541,
       "sleeper_id": "9509",
@@ -486,12 +471,12 @@
       "bye_week": 11,
       "is_rookie": false,
       "points_3yr": 763,
-      "points_1yr": 310,
+      "points_1yr": 308,
       "adp": null
     },
     {
-      "rank": 30,
-      "positional_rank": 24,
+      "rank": 29,
+      "positional_rank": 23,
       "player_id": 9963,
       "sleeper_id": "4943",
       "name": "Sam Darnold",
@@ -501,26 +486,26 @@
       "bye_week": 11,
       "is_rookie": false,
       "points_3yr": 762,
-      "points_1yr": 230,
+      "points_1yr": 218,
       "adp": null
     },
     {
-      "rank": 31,
-      "positional_rank": 25,
+      "rank": 30,
+      "positional_rank": 24,
       "player_id": 34983,
       "sleeper_id": "11559",
       "name": "Michael Penix Jr.",
       "position": "QB",
       "team": "ATL",
-      "age": 26.4,
+      "age": 26.5,
       "bye_week": 11,
       "is_rookie": false,
       "points_3yr": 753,
-      "points_1yr": 215,
+      "points_1yr": 213,
       "adp": null
     },
     {
-      "rank": 32,
+      "rank": 31,
       "positional_rank": 3,
       "player_id": 13680,
       "sleeper_id": "9493",
@@ -531,12 +516,12 @@
       "bye_week": 11,
       "is_rookie": false,
       "points_3yr": 741,
-      "points_1yr": 226,
+      "points_1yr": 165,
       "adp": null
     },
     {
-      "rank": 33,
-      "positional_rank": 26,
+      "rank": 32,
+      "positional_rank": 25,
       "player_id": 35310,
       "sleeper_id": "12522",
       "name": "Cameron Ward",
@@ -546,11 +531,11 @@
       "bye_week": 9,
       "is_rookie": false,
       "points_3yr": 740,
-      "points_1yr": 239,
+      "points_1yr": 238,
       "adp": null
     },
     {
-      "rank": 34,
+      "rank": 33,
       "positional_rank": 3,
       "player_id": 12579,
       "sleeper_id": "8151",
@@ -561,18 +546,18 @@
       "bye_week": 5,
       "is_rookie": false,
       "points_3yr": 732,
-      "points_1yr": 296,
+      "points_1yr": 304,
       "adp": null
     },
     {
-      "rank": 35,
+      "rank": 34,
       "positional_rank": 3,
       "player_id": 35360,
       "sleeper_id": "12517",
       "name": "Colston Loveland",
       "position": "TE",
       "team": "CHI",
-      "age": 22.5,
+      "age": 22.6,
       "bye_week": 10,
       "is_rookie": false,
       "points_3yr": 715,
@@ -580,22 +565,22 @@
       "adp": null
     },
     {
-      "rank": 36,
+      "rank": 35,
       "positional_rank": 4,
       "player_id": 10590,
       "sleeper_id": "6786",
       "name": "CeeDee Lamb",
       "position": "WR",
       "team": "DAL",
-      "age": 27.5,
+      "age": 27.6,
       "bye_week": 14,
       "is_rookie": false,
       "points_3yr": 714,
-      "points_1yr": 252,
+      "points_1yr": 253,
       "adp": null
     },
     {
-      "rank": 37,
+      "rank": 36,
       "positional_rank": 5,
       "player_id": 10783,
       "sleeper_id": "7547",
@@ -606,26 +591,11 @@
       "bye_week": 6,
       "is_rookie": false,
       "points_3yr": 704,
-      "points_1yr": 252,
+      "points_1yr": 253,
       "adp": null
     },
     {
-      "rank": 38,
-      "positional_rank": 27,
-      "player_id": 10225,
-      "sleeper_id": "5870",
-      "name": "Daniel Jones",
-      "position": "QB",
-      "team": "IND",
-      "age": 29.4,
-      "bye_week": 13,
-      "is_rookie": false,
-      "points_3yr": 702,
-      "points_1yr": 249,
-      "adp": null
-    },
-    {
-      "rank": 39,
+      "rank": 37,
       "positional_rank": 6,
       "player_id": 34977,
       "sleeper_id": "11632",
@@ -636,26 +606,41 @@
       "bye_week": 8,
       "is_rookie": false,
       "points_3yr": 696,
-      "points_1yr": 222,
+      "points_1yr": 218,
       "adp": null
     },
     {
-      "rank": 40,
-      "positional_rank": 28,
+      "rank": 38,
+      "positional_rank": 26,
       "player_id": 2,
       "sleeper_id": "421",
       "name": "Matthew Stafford",
       "position": "QB",
       "team": "LAR",
-      "age": 38.7,
+      "age": 38.8,
       "bye_week": 11,
       "is_rookie": false,
       "points_3yr": 688,
-      "points_1yr": 293,
+      "points_1yr": 282,
       "adp": null
     },
     {
-      "rank": 41,
+      "rank": 39,
+      "positional_rank": 27,
+      "player_id": 10225,
+      "sleeper_id": "5870",
+      "name": "Daniel Jones",
+      "position": "QB",
+      "team": "IND",
+      "age": 29.4,
+      "bye_week": 13,
+      "is_rookie": false,
+      "points_3yr": 675,
+      "points_1yr": 246,
+      "adp": null
+    },
+    {
+      "rank": 40,
       "positional_rank": 7,
       "player_id": 10586,
       "sleeper_id": "6794",
@@ -666,11 +651,11 @@
       "bye_week": 6,
       "is_rookie": false,
       "points_3yr": 672,
-      "points_1yr": 211,
+      "points_1yr": 191,
       "adp": null
     },
     {
-      "rank": 42,
+      "rank": 41,
       "positional_rank": 4,
       "player_id": 35925,
       "sleeper_id": "13287",
@@ -685,7 +670,7 @@
       "adp": null
     },
     {
-      "rank": 43,
+      "rank": 42,
       "positional_rank": 4,
       "player_id": 35359,
       "sleeper_id": "12518",
@@ -696,11 +681,11 @@
       "bye_week": 13,
       "is_rookie": false,
       "points_3yr": 670,
-      "points_1yr": 179,
+      "points_1yr": 178,
       "adp": null
     },
     {
-      "rank": 44,
+      "rank": 43,
       "positional_rank": 5,
       "player_id": 13576,
       "sleeper_id": "10859",
@@ -711,26 +696,26 @@
       "bye_week": 6,
       "is_rookie": false,
       "points_3yr": 665,
-      "points_1yr": 196,
+      "points_1yr": 194,
       "adp": null
     },
     {
-      "rank": 45,
+      "rank": 44,
       "positional_rank": 8,
       "player_id": 13550,
       "sleeper_id": "9997",
       "name": "Zay Flowers",
       "position": "WR",
       "team": "BAL",
-      "age": 26.1,
+      "age": 26.2,
       "bye_week": 13,
       "is_rookie": false,
       "points_3yr": 663,
-      "points_1yr": 183,
+      "points_1yr": 182,
       "adp": null
     },
     {
-      "rank": 46,
+      "rank": 45,
       "positional_rank": 9,
       "player_id": 12594,
       "sleeper_id": "8112",
@@ -745,7 +730,7 @@
       "adp": null
     },
     {
-      "rank": 47,
+      "rank": 46,
       "positional_rank": 10,
       "player_id": 10796,
       "sleeper_id": "7569",
@@ -756,11 +741,11 @@
       "bye_week": 8,
       "is_rookie": false,
       "points_3yr": 620,
-      "points_1yr": 198,
+      "points_1yr": 175,
       "adp": null
     },
     {
-      "rank": 48,
+      "rank": 47,
       "positional_rank": 11,
       "player_id": 12596,
       "sleeper_id": "8144",
@@ -771,11 +756,11 @@
       "bye_week": 8,
       "is_rookie": false,
       "points_3yr": 619,
-      "points_1yr": 230,
+      "points_1yr": 210,
       "adp": null
     },
     {
-      "rank": 49,
+      "rank": 48,
       "positional_rank": 5,
       "player_id": 35317,
       "sleeper_id": "12527",
@@ -786,11 +771,11 @@
       "bye_week": 13,
       "is_rookie": false,
       "points_3yr": 613,
-      "points_1yr": 218,
+      "points_1yr": 216,
       "adp": null
     },
     {
-      "rank": 50,
+      "rank": 49,
       "positional_rank": 6,
       "player_id": 13573,
       "sleeper_id": "10236",
@@ -801,11 +786,11 @@
       "bye_week": 7,
       "is_rookie": false,
       "points_3yr": 606,
-      "points_1yr": 186,
+      "points_1yr": 185,
       "adp": null
     },
     {
-      "rank": 51,
+      "rank": 50,
       "positional_rank": 12,
       "player_id": 35333,
       "sleeper_id": "12526",
@@ -816,11 +801,41 @@
       "bye_week": 5,
       "is_rookie": false,
       "points_3yr": 605,
-      "points_1yr": 193,
+      "points_1yr": 190,
+      "adp": null
+    },
+    {
+      "rank": 51,
+      "positional_rank": 28,
+      "player_id": 35918,
+      "sleeper_id": "13275",
+      "name": "Ty Simpson",
+      "position": "QB",
+      "team": "LAR",
+      "age": 23.8,
+      "bye_week": 11,
+      "is_rookie": true,
+      "points_3yr": 597,
+      "points_1yr": 0,
       "adp": null
     },
     {
       "rank": 52,
+      "positional_rank": 29,
+      "player_id": 10217,
+      "sleeper_id": "5849",
+      "name": "Kyler Murray",
+      "position": "QB",
+      "team": "MIN",
+      "age": 29.3,
+      "bye_week": 6,
+      "is_rookie": false,
+      "points_3yr": 590,
+      "points_1yr": 101,
+      "adp": null
+    },
+    {
+      "rank": 53,
       "positional_rank": 7,
       "player_id": 13575,
       "sleeper_id": "9484",
@@ -831,11 +846,11 @@
       "bye_week": 11,
       "is_rookie": false,
       "points_3yr": 589,
-      "points_1yr": 192,
+      "points_1yr": 189,
       "adp": null
     },
     {
-      "rank": 53,
+      "rank": 54,
       "positional_rank": 8,
       "player_id": 35361,
       "sleeper_id": "12506",
@@ -850,7 +865,7 @@
       "adp": null
     },
     {
-      "rank": 54,
+      "rank": 55,
       "positional_rank": 6,
       "player_id": 12585,
       "sleeper_id": "8138",
@@ -865,7 +880,7 @@
       "adp": null
     },
     {
-      "rank": 55,
+      "rank": 56,
       "positional_rank": 7,
       "player_id": 10500,
       "sleeper_id": "6813",
@@ -876,11 +891,11 @@
       "bye_week": 13,
       "is_rookie": false,
       "points_3yr": 570,
-      "points_1yr": 268,
+      "points_1yr": 254,
       "adp": null
     },
     {
-      "rank": 56,
+      "rank": 57,
       "positional_rank": 8,
       "player_id": 13563,
       "sleeper_id": "9226",
@@ -895,7 +910,7 @@
       "adp": null
     },
     {
-      "rank": 57,
+      "rank": 58,
       "positional_rank": 13,
       "player_id": 12599,
       "sleeper_id": "8137",
@@ -906,11 +921,11 @@
       "bye_week": 14,
       "is_rookie": false,
       "points_3yr": 568,
-      "points_1yr": 201,
+      "points_1yr": 189,
       "adp": null
     },
     {
-      "rank": 58,
+      "rank": 59,
       "positional_rank": 14,
       "player_id": 10607,
       "sleeper_id": "6801",
@@ -921,22 +936,7 @@
       "bye_week": 6,
       "is_rookie": false,
       "points_3yr": 566,
-      "points_1yr": 207,
-      "adp": null
-    },
-    {
-      "rank": 59,
-      "positional_rank": 29,
-      "player_id": 35918,
-      "sleeper_id": "13275",
-      "name": "Ty Simpson",
-      "position": "QB",
-      "team": "LAR",
-      "age": 23.8,
-      "bye_week": 11,
-      "is_rookie": true,
-      "points_3yr": 560,
-      "points_1yr": 0,
+      "points_1yr": 208,
       "adp": null
     },
     {
@@ -951,7 +951,7 @@
       "bye_week": 11,
       "is_rookie": false,
       "points_3yr": 520,
-      "points_1yr": 212,
+      "points_1yr": 211,
       "adp": null
     },
     {
@@ -962,11 +962,11 @@
       "name": "Christian McCaffrey",
       "position": "RB",
       "team": "SF",
-      "age": 30.3,
+      "age": 30.4,
       "bye_week": 8,
       "is_rookie": false,
       "points_3yr": 517,
-      "points_1yr": 290,
+      "points_1yr": 291,
       "adp": null
     },
     {
@@ -996,7 +996,7 @@
       "bye_week": 11,
       "is_rookie": false,
       "points_3yr": 505,
-      "points_1yr": 126,
+      "points_1yr": 114,
       "adp": null
     },
     {
@@ -1026,7 +1026,7 @@
       "bye_week": 13,
       "is_rookie": false,
       "points_3yr": 496,
-      "points_1yr": 153,
+      "points_1yr": 144,
       "adp": null
     },
     {
@@ -1056,7 +1056,7 @@
       "bye_week": 7,
       "is_rookie": false,
       "points_3yr": 495,
-      "points_1yr": 190,
+      "points_1yr": 189,
       "adp": null
     },
     {
@@ -1101,7 +1101,7 @@
       "bye_week": 10,
       "is_rookie": false,
       "points_3yr": 490,
-      "points_1yr": 165,
+      "points_1yr": 164,
       "adp": null
     },
     {
@@ -1116,7 +1116,7 @@
       "bye_week": 9,
       "is_rookie": true,
       "points_3yr": 485,
-      "points_1yr": 152,
+      "points_1yr": 153,
       "adp": null
     },
     {
@@ -1127,11 +1127,11 @@
       "name": "George Kittle",
       "position": "TE",
       "team": "SF",
-      "age": 33,
+      "age": 33.1,
       "bye_week": 8,
       "is_rookie": false,
       "points_3yr": 484,
-      "points_1yr": 207,
+      "points_1yr": 211,
       "adp": null
     },
     {
@@ -1142,11 +1142,11 @@
       "name": "Ladd McConkey",
       "position": "WR",
       "team": "LAC",
-      "age": 24.9,
+      "age": 25,
       "bye_week": 7,
       "is_rookie": false,
       "points_3yr": 478,
-      "points_1yr": 162,
+      "points_1yr": 156,
       "adp": null
     },
     {
@@ -1161,7 +1161,7 @@
       "bye_week": 10,
       "is_rookie": false,
       "points_3yr": 477,
-      "points_1yr": 175,
+      "points_1yr": 183,
       "adp": null
     },
     {
@@ -1176,7 +1176,7 @@
       "bye_week": 5,
       "is_rookie": false,
       "points_3yr": 476,
-      "points_1yr": 150,
+      "points_1yr": 153,
       "adp": null
     },
     {
@@ -1191,7 +1191,7 @@
       "bye_week": 13,
       "is_rookie": true,
       "points_3yr": 470,
-      "points_1yr": 134,
+      "points_1yr": 131,
       "adp": null
     },
     {
@@ -1206,7 +1206,7 @@
       "bye_week": 14,
       "is_rookie": true,
       "points_3yr": 470,
-      "points_1yr": 56,
+      "points_1yr": 90,
       "adp": null
     },
     {
@@ -1221,7 +1221,7 @@
       "bye_week": 11,
       "is_rookie": false,
       "points_3yr": 463,
-      "points_1yr": 232,
+      "points_1yr": 234,
       "adp": null
     },
     {
@@ -1236,7 +1236,7 @@
       "bye_week": 14,
       "is_rookie": false,
       "points_3yr": 461,
-      "points_1yr": 170,
+      "points_1yr": 89,
       "adp": null
     },
     {
@@ -1266,7 +1266,7 @@
       "bye_week": 11,
       "is_rookie": false,
       "points_3yr": 459,
-      "points_1yr": 179,
+      "points_1yr": 170,
       "adp": null
     },
     {
@@ -1281,7 +1281,7 @@
       "bye_week": 10,
       "is_rookie": false,
       "points_3yr": 456,
-      "points_1yr": 142,
+      "points_1yr": 143,
       "adp": null
     },
     {
@@ -1311,7 +1311,7 @@
       "bye_week": 7,
       "is_rookie": false,
       "points_3yr": 455,
-      "points_1yr": 164,
+      "points_1yr": 160,
       "adp": null
     },
     {
@@ -1341,7 +1341,7 @@
       "bye_week": 10,
       "is_rookie": true,
       "points_3yr": 454,
-      "points_1yr": 128,
+      "points_1yr": 127,
       "adp": null
     },
     {
@@ -1371,7 +1371,7 @@
       "bye_week": 8,
       "is_rookie": true,
       "points_3yr": 451,
-      "points_1yr": 89,
+      "points_1yr": 86,
       "adp": null
     },
     {
@@ -1416,7 +1416,7 @@
       "bye_week": 11,
       "is_rookie": true,
       "points_3yr": 445,
-      "points_1yr": 153,
+      "points_1yr": 152,
       "adp": null
     },
     {
@@ -1427,11 +1427,11 @@
       "name": "Jacoby Brissett",
       "position": "QB",
       "team": "BAL",
-      "age": 33.8,
+      "age": 33.9,
       "bye_week": 13,
       "is_rookie": false,
       "points_3yr": 445,
-      "points_1yr": 124,
+      "points_1yr": 238,
       "adp": null
     },
     {
@@ -1446,7 +1446,7 @@
       "bye_week": 10,
       "is_rookie": false,
       "points_3yr": 437,
-      "points_1yr": 208,
+      "points_1yr": 218,
       "adp": null
     },
     {
@@ -1461,7 +1461,7 @@
       "bye_week": 11,
       "is_rookie": false,
       "points_3yr": 436,
-      "points_1yr": 165,
+      "points_1yr": 164,
       "adp": null
     },
     {
@@ -1476,7 +1476,7 @@
       "bye_week": 7,
       "is_rookie": false,
       "points_3yr": 434,
-      "points_1yr": 160,
+      "points_1yr": 159,
       "adp": null
     },
     {
@@ -1487,11 +1487,11 @@
       "name": "Jadarian Price",
       "position": "RB",
       "team": "SEA",
-      "age": 23,
+      "age": 23.1,
       "bye_week": 11,
       "is_rookie": true,
       "points_3yr": 431,
-      "points_1yr": 115,
+      "points_1yr": 117,
       "adp": null
     },
     {
@@ -1521,7 +1521,7 @@
       "bye_week": 6,
       "is_rookie": false,
       "points_3yr": 422,
-      "points_1yr": 144,
+      "points_1yr": 137,
       "adp": null
     },
     {
@@ -1536,26 +1536,11 @@
       "bye_week": 9,
       "is_rookie": false,
       "points_3yr": 420,
-      "points_1yr": 167,
+      "points_1yr": 166,
       "adp": null
     },
     {
       "rank": 100,
-      "positional_rank": 17,
-      "player_id": 10195,
-      "sleeper_id": "5850",
-      "name": "Josh Jacobs",
-      "position": "RB",
-      "team": "GB",
-      "age": 28.7,
-      "bye_week": 11,
-      "is_rookie": false,
-      "points_3yr": 413,
-      "points_1yr": 136,
-      "adp": null
-    },
-    {
-      "rank": 101,
       "positional_rank": 40,
       "player_id": 36057,
       "sleeper_id": "13417",
@@ -1570,22 +1555,22 @@
       "adp": null
     },
     {
-      "rank": 102,
+      "rank": 101,
       "positional_rank": 41,
       "player_id": 10364,
       "sleeper_id": "5947",
       "name": "Jakobi Meyers",
       "position": "WR",
       "team": "JAC",
-      "age": 29.9,
+      "age": 30,
       "bye_week": 7,
       "is_rookie": false,
       "points_3yr": 406,
-      "points_1yr": 141,
+      "points_1yr": 140,
       "adp": null
     },
     {
-      "rank": 103,
+      "rank": 102,
       "positional_rank": 33,
       "player_id": 900001,
       "sleeper_id": "7527",
@@ -1600,37 +1585,37 @@
       "adp": 222
     },
     {
-      "rank": 104,
+      "rank": 103,
       "positional_rank": 42,
       "player_id": 9968,
       "sleeper_id": "5045",
       "name": "Courtland Sutton",
       "position": "WR",
       "team": "DEN",
-      "age": 31,
+      "age": 31.1,
       "bye_week": 10,
       "is_rookie": false,
       "points_3yr": 404,
-      "points_1yr": 144,
+      "points_1yr": 139,
       "adp": null
     },
     {
-      "rank": 105,
+      "rank": 104,
       "positional_rank": 34,
       "player_id": 6653,
       "sleeper_id": "1373",
       "name": "Geno Smith",
       "position": "QB",
       "team": "NYJ",
-      "age": 36,
+      "age": 36.1,
       "bye_week": 13,
       "is_rookie": false,
       "points_3yr": 403,
-      "points_1yr": 260,
+      "points_1yr": 259,
       "adp": null
     },
     {
-      "rank": 106,
+      "rank": 105,
       "positional_rank": 43,
       "player_id": 6938,
       "sleeper_id": "2216",
@@ -1641,11 +1626,11 @@
       "bye_week": 8,
       "is_rookie": false,
       "points_3yr": 402,
-      "points_1yr": 160,
+      "points_1yr": 129,
       "adp": null
     },
     {
-      "rank": 107,
+      "rank": 106,
       "positional_rank": 44,
       "player_id": 7783,
       "sleeper_id": "4037",
@@ -1656,11 +1641,11 @@
       "bye_week": 10,
       "is_rookie": false,
       "points_3yr": 400,
-      "points_1yr": 137,
+      "points_1yr": 136,
       "adp": null
     },
     {
-      "rank": 108,
+      "rank": 107,
       "positional_rank": 35,
       "player_id": 13544,
       "sleeper_id": "9229",
@@ -1675,14 +1660,14 @@
       "adp": null
     },
     {
-      "rank": 109,
+      "rank": 108,
       "positional_rank": 45,
       "player_id": 35023,
       "sleeper_id": "11638",
       "name": "Ricky Pearsall",
       "position": "WR",
       "team": "SF",
-      "age": 26.1,
+      "age": 26.2,
       "bye_week": 8,
       "is_rookie": false,
       "points_3yr": 398,
@@ -1690,7 +1675,7 @@
       "adp": null
     },
     {
-      "rank": 110,
+      "rank": 109,
       "positional_rank": 46,
       "player_id": 10584,
       "sleeper_id": "6819",
@@ -1701,12 +1686,12 @@
       "bye_week": 9,
       "is_rookie": false,
       "points_3yr": 396,
-      "points_1yr": 98,
+      "points_1yr": 92,
       "adp": null
     },
     {
-      "rank": 111,
-      "positional_rank": 18,
+      "rank": 110,
+      "positional_rank": 17,
       "player_id": 35323,
       "sleeper_id": "12529",
       "name": "TreVeyon Henderson",
@@ -1716,11 +1701,11 @@
       "bye_week": 11,
       "is_rookie": false,
       "points_3yr": 395,
-      "points_1yr": 132,
+      "points_1yr": 122,
       "adp": null
     },
     {
-      "rank": 112,
+      "rank": 111,
       "positional_rank": 47,
       "player_id": 35970,
       "sleeper_id": "13276",
@@ -1731,11 +1716,11 @@
       "bye_week": 13,
       "is_rookie": true,
       "points_3yr": 395,
-      "points_1yr": 102,
+      "points_1yr": 95,
       "adp": null
     },
     {
-      "rank": 113,
+      "rank": 112,
       "positional_rank": 13,
       "player_id": 6709,
       "sleeper_id": "1466",
@@ -1750,7 +1735,7 @@
       "adp": null
     },
     {
-      "rank": 114,
+      "rank": 113,
       "positional_rank": 48,
       "player_id": 12605,
       "sleeper_id": "8142",
@@ -1761,11 +1746,11 @@
       "bye_week": 13,
       "is_rookie": false,
       "points_3yr": 393,
-      "points_1yr": 87,
+      "points_1yr": 79,
       "adp": null
     },
     {
-      "rank": 115,
+      "rank": 114,
       "positional_rank": 49,
       "player_id": 35953,
       "sleeper_id": "13274",
@@ -1780,67 +1765,67 @@
       "adp": null
     },
     {
-      "rank": 116,
-      "positional_rank": 19,
+      "rank": 115,
+      "positional_rank": 18,
       "player_id": 9994,
       "sleeper_id": "4866",
       "name": "Saquon Barkley",
       "position": "RB",
       "team": "PHI",
-      "age": 29.7,
+      "age": 29.8,
       "bye_week": 10,
       "is_rookie": false,
       "points_3yr": 389,
-      "points_1yr": 194,
+      "points_1yr": 191,
       "adp": null
     },
     {
-      "rank": 117,
+      "rank": 116,
       "positional_rank": 14,
       "player_id": 7470,
       "sleeper_id": "3214",
       "name": "Hunter Henry",
       "position": "TE",
       "team": "NE",
-      "age": 31.8,
+      "age": 31.9,
       "bye_week": 11,
       "is_rookie": false,
       "points_3yr": 388,
-      "points_1yr": 149,
+      "points_1yr": 157,
       "adp": null
     },
     {
-      "rank": 118,
+      "rank": 117,
       "positional_rank": 50,
       "player_id": 34975,
       "sleeper_id": "11628",
       "name": "Marvin Harrison Jr.",
       "position": "WR",
       "team": "HOU",
-      "age": 24.2,
+      "age": 24.3,
       "bye_week": 8,
       "is_rookie": false,
       "points_3yr": 387,
-      "points_1yr": 126,
+      "points_1yr": 125,
       "adp": null
     },
     {
-      "rank": 119,
+      "rank": 118,
       "positional_rank": 51,
       "player_id": 35014,
       "sleeper_id": "11631",
       "name": "Brian Thomas Jr.",
       "position": "WR",
       "team": "JAC",
-      "age": 24,
+      "age": 24.1,
       "bye_week": 7,
       "is_rookie": false,
       "points_3yr": 387,
-      "points_1yr": 121,
+      "points_1yr": 116,
       "adp": null
     },
     {
-      "rank": 120,
+      "rank": 119,
       "positional_rank": 52,
       "player_id": 13545,
       "sleeper_id": "9754",
@@ -1851,11 +1836,11 @@
       "bye_week": 7,
       "is_rookie": false,
       "points_3yr": 383,
-      "points_1yr": 120,
+      "points_1yr": 118,
       "adp": null
     },
     {
-      "rank": 121,
+      "rank": 120,
       "positional_rank": 15,
       "player_id": 13686,
       "sleeper_id": "9480",
@@ -1866,11 +1851,11 @@
       "bye_week": 7,
       "is_rookie": false,
       "points_3yr": 382,
-      "points_1yr": 157,
+      "points_1yr": 156,
       "adp": null
     },
     {
-      "rank": 122,
+      "rank": 121,
       "positional_rank": 53,
       "player_id": 35021,
       "sleeper_id": "11624",
@@ -1881,11 +1866,11 @@
       "bye_week": 5,
       "is_rookie": false,
       "points_3yr": 380,
-      "points_1yr": 138,
+      "points_1yr": 131,
       "adp": null
     },
     {
-      "rank": 123,
+      "rank": 122,
       "positional_rank": 54,
       "player_id": 35345,
       "sleeper_id": "12484",
@@ -1900,22 +1885,22 @@
       "adp": null
     },
     {
-      "rank": 124,
+      "rank": 123,
       "positional_rank": 55,
       "player_id": 35990,
       "sleeper_id": "13296",
       "name": "Caleb Douglas",
       "position": "WR",
       "team": "MIA",
-      "age": 23.1,
+      "age": 23.2,
       "bye_week": 6,
       "is_rookie": true,
       "points_3yr": 377,
-      "points_1yr": 104,
+      "points_1yr": 113,
       "adp": null
     },
     {
-      "rank": 125,
+      "rank": 124,
       "positional_rank": 16,
       "player_id": 12426,
       "sleeper_id": "7002",
@@ -1926,11 +1911,11 @@
       "bye_week": 8,
       "is_rookie": false,
       "points_3yr": 377,
-      "points_1yr": 159,
+      "points_1yr": 157,
       "adp": null
     },
     {
-      "rank": 126,
+      "rank": 125,
       "positional_rank": 17,
       "player_id": 12708,
       "sleeper_id": "8110",
@@ -1941,11 +1926,11 @@
       "bye_week": 14,
       "is_rookie": false,
       "points_3yr": 376,
-      "points_1yr": 124,
+      "points_1yr": 114,
       "adp": null
     },
     {
-      "rank": 127,
+      "rank": 126,
       "positional_rank": 56,
       "player_id": 35955,
       "sleeper_id": "13293",
@@ -1956,11 +1941,11 @@
       "bye_week": 13,
       "is_rookie": true,
       "points_3yr": 374,
-      "points_1yr": 85,
+      "points_1yr": 82,
       "adp": null
     },
     {
-      "rank": 128,
+      "rank": 127,
       "positional_rank": 57,
       "player_id": 10205,
       "sleeper_id": "5872",
@@ -1971,11 +1956,11 @@
       "bye_week": 8,
       "is_rookie": false,
       "points_3yr": 374,
-      "points_1yr": 131,
+      "points_1yr": 128,
       "adp": null
     },
     {
-      "rank": 129,
+      "rank": 128,
       "positional_rank": 58,
       "player_id": 35957,
       "sleeper_id": "13301",
@@ -1986,11 +1971,11 @@
       "bye_week": 7,
       "is_rookie": true,
       "points_3yr": 373,
-      "points_1yr": 122,
+      "points_1yr": 123,
       "adp": null
     },
     {
-      "rank": 130,
+      "rank": 129,
       "positional_rank": 59,
       "player_id": 12600,
       "sleeper_id": "8126",
@@ -2005,7 +1990,7 @@
       "adp": null
     },
     {
-      "rank": 131,
+      "rank": 130,
       "positional_rank": 60,
       "player_id": 7280,
       "sleeper_id": "2449",
@@ -2016,11 +2001,11 @@
       "bye_week": 7,
       "is_rookie": false,
       "points_3yr": 372,
-      "points_1yr": 148,
+      "points_1yr": 147,
       "adp": null
     },
     {
-      "rank": 132,
+      "rank": 131,
       "positional_rank": 18,
       "player_id": 10059,
       "sleeper_id": "5001",
@@ -2031,11 +2016,11 @@
       "bye_week": 8,
       "is_rookie": false,
       "points_3yr": 372,
-      "points_1yr": 152,
+      "points_1yr": 151,
       "adp": null
     },
     {
-      "rank": 133,
+      "rank": 132,
       "positional_rank": 61,
       "player_id": 12603,
       "sleeper_id": "8134",
@@ -2050,7 +2035,7 @@
       "adp": null
     },
     {
-      "rank": 134,
+      "rank": 133,
       "positional_rank": 62,
       "player_id": 35132,
       "sleeper_id": "11783",
@@ -2061,11 +2046,11 @@
       "bye_week": 14,
       "is_rookie": false,
       "points_3yr": 371,
-      "points_1yr": 129,
+      "points_1yr": 132,
       "adp": null
     },
     {
-      "rank": 135,
+      "rank": 134,
       "positional_rank": 19,
       "player_id": 9997,
       "sleeper_id": "5022",
@@ -2080,7 +2065,7 @@
       "adp": null
     },
     {
-      "rank": 136,
+      "rank": 135,
       "positional_rank": 63,
       "player_id": 35339,
       "sleeper_id": "12509",
@@ -2091,41 +2076,41 @@
       "bye_week": 7,
       "is_rookie": false,
       "points_3yr": 368,
-      "points_1yr": 117,
+      "points_1yr": 115,
       "adp": null
     },
     {
-      "rank": 137,
+      "rank": 136,
       "positional_rank": 20,
       "player_id": 35364,
       "sleeper_id": "12487",
       "name": "Terrance Ferguson",
       "position": "TE",
       "team": "LAR",
-      "age": 23.6,
+      "age": 23.7,
       "bye_week": 11,
       "is_rookie": false,
       "points_3yr": 366,
-      "points_1yr": 110,
+      "points_1yr": 89,
       "adp": null
     },
     {
-      "rank": 138,
+      "rank": 137,
       "positional_rank": 64,
       "player_id": 13548,
       "sleeper_id": "9500",
       "name": "Josh Downs",
       "position": "WR",
-      "team": "IND",
+      "team": "KC",
       "age": 25.2,
-      "bye_week": 13,
+      "bye_week": 5,
       "is_rookie": false,
       "points_3yr": 365,
-      "points_1yr": 152,
+      "points_1yr": 139,
       "adp": null
     },
     {
-      "rank": 139,
+      "rank": 138,
       "positional_rank": 21,
       "player_id": 35974,
       "sleeper_id": "13349",
@@ -2140,6 +2125,21 @@
       "adp": null
     },
     {
+      "rank": 139,
+      "positional_rank": 65,
+      "player_id": 13552,
+      "sleeper_id": "9502",
+      "name": "Nathaniel Dell",
+      "position": "WR",
+      "team": "HOU",
+      "age": 27,
+      "bye_week": 8,
+      "is_rookie": false,
+      "points_3yr": 364,
+      "points_1yr": 79,
+      "adp": null
+    },
+    {
       "rank": 140,
       "positional_rank": 22,
       "player_id": 10749,
@@ -2151,7 +2151,7 @@
       "bye_week": 9,
       "is_rookie": false,
       "points_3yr": 364,
-      "points_1yr": 158,
+      "points_1yr": 148,
       "adp": null
     },
     {
@@ -2171,22 +2171,22 @@
     },
     {
       "rank": 142,
-      "positional_rank": 65,
+      "positional_rank": 66,
       "player_id": 35952,
       "sleeper_id": "13311",
       "name": "Chris Bell",
       "position": "WR",
       "team": "MIA",
-      "age": 22.3,
+      "age": 22.4,
       "bye_week": 6,
       "is_rookie": true,
       "points_3yr": 362,
-      "points_1yr": 105,
+      "points_1yr": 103,
       "adp": null
     },
     {
       "rank": 143,
-      "positional_rank": 66,
+      "positional_rank": 67,
       "player_id": 35961,
       "sleeper_id": "13285",
       "name": "Malachi Fields",
@@ -2196,12 +2196,12 @@
       "bye_week": 8,
       "is_rookie": true,
       "points_3yr": 362,
-      "points_1yr": 97,
+      "points_1yr": 98,
       "adp": null
     },
     {
       "rank": 144,
-      "positional_rank": 67,
+      "positional_rank": 68,
       "player_id": 12606,
       "sleeper_id": "8121",
       "name": "Romeo Doubs",
@@ -2222,7 +2222,7 @@
       "name": "Chigoziem Okonkwo",
       "position": "TE",
       "team": "WAS",
-      "age": 27.1,
+      "age": 27.2,
       "bye_week": 7,
       "is_rookie": false,
       "points_3yr": 362,
@@ -2231,7 +2231,7 @@
     },
     {
       "rank": 146,
-      "positional_rank": 68,
+      "positional_rank": 69,
       "player_id": 13557,
       "sleeper_id": "10222",
       "name": "Jayden Reed",
@@ -2256,42 +2256,42 @@
       "bye_week": 11,
       "is_rookie": false,
       "points_3yr": 361,
-      "points_1yr": 252,
+      "points_1yr": 251,
       "adp": null
     },
     {
       "rank": 148,
-      "positional_rank": 69,
+      "positional_rank": 70,
       "player_id": 35018,
       "sleeper_id": "11625",
       "name": "Adonai Mitchell",
       "position": "WR",
       "team": "NYJ",
-      "age": 24,
+      "age": 24.1,
       "bye_week": 13,
       "is_rookie": false,
       "points_3yr": 359,
-      "points_1yr": 98,
+      "points_1yr": 96,
       "adp": null
     },
     {
       "rank": 149,
-      "positional_rank": 70,
+      "positional_rank": 71,
       "player_id": 13739,
       "sleeper_id": "10213",
       "name": "Tre Tucker",
       "position": "WR",
       "team": "LVR",
-      "age": 25.6,
+      "age": 25.7,
       "bye_week": 13,
       "is_rookie": false,
       "points_3yr": 358,
-      "points_1yr": 147,
+      "points_1yr": 145,
       "adp": null
     },
     {
       "rank": 150,
-      "positional_rank": 71,
+      "positional_rank": 72,
       "player_id": 10776,
       "sleeper_id": "7571",
       "name": "Rashod Bateman",
@@ -2301,7 +2301,7 @@
       "bye_week": 13,
       "is_rookie": false,
       "points_3yr": 358,
-      "points_1yr": 107,
+      "points_1yr": 105,
       "adp": null
     },
     {
@@ -2316,7 +2316,7 @@
       "bye_week": 13,
       "is_rookie": false,
       "points_3yr": 357,
-      "points_1yr": 154,
+      "points_1yr": 151,
       "adp": null
     },
     {
@@ -2331,12 +2331,12 @@
       "bye_week": 13,
       "is_rookie": false,
       "points_3yr": 354,
-      "points_1yr": 149,
+      "points_1yr": 147,
       "adp": null
     },
     {
       "rank": 153,
-      "positional_rank": 72,
+      "positional_rank": 73,
       "player_id": 35134,
       "sleeper_id": "11834",
       "name": "Devaughn Vele",
@@ -2346,12 +2346,12 @@
       "bye_week": 8,
       "is_rookie": false,
       "points_3yr": 351,
-      "points_1yr": 143,
+      "points_1yr": 134,
       "adp": null
     },
     {
       "rank": 154,
-      "positional_rank": 73,
+      "positional_rank": 74,
       "player_id": 35956,
       "sleeper_id": "13353",
       "name": "Chris Brazzell II",
@@ -2366,7 +2366,7 @@
     },
     {
       "rank": 155,
-      "positional_rank": 74,
+      "positional_rank": 75,
       "player_id": 35963,
       "sleeper_id": "13317",
       "name": "Ted Hurst",
@@ -2386,17 +2386,17 @@
       "sleeper_id": "1166",
       "name": "Kirk Cousins",
       "position": "QB",
-      "team": "LVR",
+      "team": "MIN",
       "age": 38.2,
-      "bye_week": 13,
+      "bye_week": 6,
       "is_rookie": false,
       "points_3yr": 349,
-      "points_1yr": 274,
+      "points_1yr": 254,
       "adp": null
     },
     {
       "rank": 157,
-      "positional_rank": 20,
+      "positional_rank": 19,
       "player_id": 36026,
       "sleeper_id": "13414",
       "name": "Kaelon Black",
@@ -2406,12 +2406,12 @@
       "bye_week": 8,
       "is_rookie": true,
       "points_3yr": 348,
-      "points_1yr": 98,
+      "points_1yr": 97,
       "adp": null
     },
     {
       "rank": 158,
-      "positional_rank": 21,
+      "positional_rank": 20,
       "player_id": 10759,
       "sleeper_id": "7588",
       "name": "Javonte Williams",
@@ -2421,33 +2421,33 @@
       "bye_week": 14,
       "is_rookie": false,
       "points_3yr": 347,
-      "points_1yr": 235,
+      "points_1yr": 236,
       "adp": null
     },
     {
       "rank": 159,
-      "positional_rank": 75,
+      "positional_rank": 76,
       "player_id": 35355,
       "sleeper_id": "12492",
       "name": "Pat Bryant",
       "position": "WR",
       "team": "DEN",
-      "age": 23.8,
+      "age": 23.9,
       "bye_week": 10,
       "is_rookie": false,
       "points_3yr": 344,
-      "points_1yr": 79,
+      "points_1yr": 88,
       "adp": null
     },
     {
       "rank": 160,
-      "positional_rank": 22,
+      "positional_rank": 21,
       "player_id": 10766,
       "sleeper_id": "7594",
       "name": "Chuba Hubbard",
       "position": "RB",
       "team": "CAR",
-      "age": 27.3,
+      "age": 27.4,
       "bye_week": 5,
       "is_rookie": false,
       "points_3yr": 341,
@@ -2471,7 +2471,22 @@
     },
     {
       "rank": 162,
-      "positional_rank": 76,
+      "positional_rank": 22,
+      "player_id": 10195,
+      "sleeper_id": "5850",
+      "name": "Josh Jacobs",
+      "position": "RB",
+      "team": "GB",
+      "age": 28.8,
+      "bye_week": 11,
+      "is_rookie": false,
+      "points_3yr": 340,
+      "points_1yr": 112,
+      "adp": null
+    },
+    {
+      "rank": 163,
+      "positional_rank": 77,
       "player_id": 35357,
       "sleeper_id": "12536",
       "name": "Jaylin Noel",
@@ -2485,8 +2500,8 @@
       "adp": null
     },
     {
-      "rank": 163,
-      "positional_rank": 77,
+      "rank": 164,
+      "positional_rank": 78,
       "player_id": 35017,
       "sleeper_id": "11637",
       "name": "Keon Coleman",
@@ -2496,12 +2511,12 @@
       "bye_week": 7,
       "is_rookie": false,
       "points_3yr": 335,
-      "points_1yr": 117,
+      "points_1yr": 116,
       "adp": null
     },
     {
-      "rank": 164,
-      "positional_rank": 78,
+      "rank": 165,
+      "positional_rank": 79,
       "player_id": 7572,
       "sleeper_id": "3321",
       "name": "Tyreek Hill",
@@ -2511,12 +2526,12 @@
       "bye_week": null,
       "is_rookie": false,
       "points_3yr": 334,
-      "points_1yr": 11,
+      "points_1yr": 10,
       "adp": null
     },
     {
-      "rank": 165,
-      "positional_rank": 79,
+      "rank": 166,
+      "positional_rank": 80,
       "player_id": 13347,
       "sleeper_id": "8676",
       "name": "Rashid Shaheed",
@@ -2526,11 +2541,11 @@
       "bye_week": 11,
       "is_rookie": false,
       "points_3yr": 333,
-      "points_1yr": 103,
+      "points_1yr": 96,
       "adp": null
     },
     {
-      "rank": 166,
+      "rank": 167,
       "positional_rank": 28,
       "player_id": 36072,
       "sleeper_id": "13421",
@@ -2541,12 +2556,12 @@
       "bye_week": 11,
       "is_rookie": true,
       "points_3yr": 333,
-      "points_1yr": 88,
+      "points_1yr": 86,
       "adp": null
     },
     {
-      "rank": 167,
-      "positional_rank": 80,
+      "rank": 168,
+      "positional_rank": 81,
       "player_id": 35349,
       "sleeper_id": "12497",
       "name": "Tory Horton",
@@ -2556,11 +2571,11 @@
       "bye_week": 11,
       "is_rookie": false,
       "points_3yr": 332,
-      "points_1yr": 56,
+      "points_1yr": 58,
       "adp": null
     },
     {
-      "rank": 168,
+      "rank": 169,
       "positional_rank": 29,
       "player_id": 35009,
       "sleeper_id": "11603",
@@ -2571,11 +2586,11 @@
       "bye_week": 11,
       "is_rookie": false,
       "points_3yr": 332,
-      "points_1yr": 135,
+      "points_1yr": 133,
       "adp": null
     },
     {
-      "rank": 169,
+      "rank": 170,
       "positional_rank": 23,
       "player_id": 10476,
       "sleeper_id": "6790",
@@ -2586,11 +2601,11 @@
       "bye_week": 10,
       "is_rookie": false,
       "points_3yr": 331,
-      "points_1yr": 220,
+      "points_1yr": 219,
       "adp": null
     },
     {
-      "rank": 170,
+      "rank": 171,
       "positional_rank": 30,
       "player_id": 35532,
       "sleeper_id": "12493",
@@ -2601,12 +2616,12 @@
       "bye_week": 7,
       "is_rookie": false,
       "points_3yr": 331,
-      "points_1yr": 124,
+      "points_1yr": 121,
       "adp": null
     },
     {
-      "rank": 171,
-      "positional_rank": 81,
+      "rank": 172,
+      "positional_rank": 82,
       "player_id": 35954,
       "sleeper_id": "13268",
       "name": "Elijah Sarratt",
@@ -2616,11 +2631,11 @@
       "bye_week": 13,
       "is_rookie": true,
       "points_3yr": 330,
-      "points_1yr": 14,
+      "points_1yr": 13,
       "adp": null
     },
     {
-      "rank": 172,
+      "rank": 173,
       "positional_rank": 31,
       "player_id": 35365,
       "sleeper_id": "12502",
@@ -2635,7 +2650,7 @@
       "adp": null
     },
     {
-      "rank": 173,
+      "rank": 174,
       "positional_rank": 24,
       "player_id": 13564,
       "sleeper_id": "9753",
@@ -2646,11 +2661,11 @@
       "bye_week": 11,
       "is_rookie": false,
       "points_3yr": 328,
-      "points_1yr": 75,
+      "points_1yr": 82,
       "adp": null
     },
     {
-      "rank": 174,
+      "rank": 175,
       "positional_rank": 25,
       "player_id": 10757,
       "sleeper_id": "7543",
@@ -2661,12 +2676,12 @@
       "bye_week": 8,
       "is_rookie": false,
       "points_3yr": 327,
-      "points_1yr": 125,
+      "points_1yr": 115,
       "adp": null
     },
     {
-      "rank": 175,
-      "positional_rank": 82,
+      "rank": 176,
+      "positional_rank": 83,
       "player_id": 35045,
       "sleeper_id": "11610",
       "name": "Malik Washington",
@@ -2676,11 +2691,11 @@
       "bye_week": 6,
       "is_rookie": false,
       "points_3yr": 327,
-      "points_1yr": 140,
+      "points_1yr": 139,
       "adp": null
     },
     {
-      "rank": 176,
+      "rank": 177,
       "positional_rank": 38,
       "player_id": 35385,
       "sleeper_id": "9230",
@@ -2691,12 +2706,12 @@
       "bye_week": 10,
       "is_rookie": false,
       "points_3yr": 326,
-      "points_1yr": 150,
+      "points_1yr": 36,
       "adp": null
     },
     {
-      "rank": 177,
-      "positional_rank": 83,
+      "rank": 178,
+      "positional_rank": 84,
       "player_id": 35993,
       "sleeper_id": "13320",
       "name": "Zachariah Branch",
@@ -2706,11 +2721,11 @@
       "bye_week": 11,
       "is_rookie": true,
       "points_3yr": 324,
-      "points_1yr": 49,
+      "points_1yr": 46,
       "adp": null
     },
     {
-      "rank": 178,
+      "rank": 179,
       "positional_rank": 26,
       "player_id": 34990,
       "sleeper_id": "11586",
@@ -2725,8 +2740,8 @@
       "adp": null
     },
     {
-      "rank": 179,
-      "positional_rank": 84,
+      "rank": 180,
+      "positional_rank": 85,
       "player_id": 35338,
       "sleeper_id": "12499",
       "name": "Elic Ayomanor",
@@ -2740,8 +2755,8 @@
       "adp": null
     },
     {
-      "rank": 180,
-      "positional_rank": 85,
+      "rank": 181,
+      "positional_rank": 86,
       "player_id": 35025,
       "sleeper_id": "11630",
       "name": "Roman Wilson",
@@ -2751,11 +2766,11 @@
       "bye_week": 9,
       "is_rookie": false,
       "points_3yr": 323,
-      "points_1yr": 80,
+      "points_1yr": 74,
       "adp": null
     },
     {
-      "rank": 181,
+      "rank": 182,
       "positional_rank": 27,
       "player_id": 7461,
       "sleeper_id": "3198",
@@ -2770,8 +2785,8 @@
       "adp": null
     },
     {
-      "rank": 182,
-      "positional_rank": 86,
+      "rank": 183,
+      "positional_rank": 87,
       "player_id": 35960,
       "sleeper_id": "13420",
       "name": "Bryce Lance",
@@ -2781,12 +2796,12 @@
       "bye_week": 8,
       "is_rookie": true,
       "points_3yr": 322,
-      "points_1yr": 70,
+      "points_1yr": 68,
       "adp": null
     },
     {
-      "rank": 183,
-      "positional_rank": 87,
+      "rank": 184,
+      "positional_rank": 88,
       "player_id": 36058,
       "sleeper_id": "13411",
       "name": "Zavion Thomas",
@@ -2800,8 +2815,8 @@
       "adp": null
     },
     {
-      "rank": 184,
-      "positional_rank": 88,
+      "rank": 185,
+      "positional_rank": 89,
       "player_id": 35572,
       "sleeper_id": "12535",
       "name": "Isaac TeSlaa",
@@ -2811,12 +2826,12 @@
       "bye_week": 6,
       "is_rookie": false,
       "points_3yr": 322,
-      "points_1yr": 79,
+      "points_1yr": 78,
       "adp": null
     },
     {
-      "rank": 185,
-      "positional_rank": 89,
+      "rank": 186,
+      "positional_rank": 90,
       "player_id": 13562,
       "sleeper_id": "9486",
       "name": "Dontayvion Wicks",
@@ -2830,8 +2845,8 @@
       "adp": null
     },
     {
-      "rank": 186,
-      "positional_rank": 90,
+      "rank": 187,
+      "positional_rank": 91,
       "player_id": 35371,
       "sleeper_id": "12530",
       "name": "Travis Hunter",
@@ -2841,12 +2856,12 @@
       "bye_week": 7,
       "is_rookie": false,
       "points_3yr": 320,
-      "points_1yr": 69,
+      "points_1yr": 65,
       "adp": null
     },
     {
-      "rank": 187,
-      "positional_rank": 91,
+      "rank": 188,
+      "positional_rank": 92,
       "player_id": 10598,
       "sleeper_id": "6783",
       "name": "Jerry Jeudy",
@@ -2856,12 +2871,12 @@
       "bye_week": 11,
       "is_rookie": false,
       "points_3yr": 320,
-      "points_1yr": 92,
+      "points_1yr": 91,
       "adp": null
     },
     {
-      "rank": 188,
-      "positional_rank": 92,
+      "rank": 189,
+      "positional_rank": 93,
       "player_id": 34981,
       "sleeper_id": "11627",
       "name": "Troy Franklin",
@@ -2875,48 +2890,33 @@
       "adp": null
     },
     {
-      "rank": 189,
-      "positional_rank": 93,
+      "rank": 190,
+      "positional_rank": 94,
       "player_id": 36031,
       "sleeper_id": "13413",
       "name": "Cyrus Allen",
       "position": "WR",
       "team": "KC",
-      "age": 23.7,
+      "age": 23.8,
       "bye_week": 5,
       "is_rookie": true,
       "points_3yr": 319,
-      "points_1yr": 69,
-      "adp": null
-    },
-    {
-      "rank": 190,
-      "positional_rank": 94,
-      "player_id": 13582,
-      "sleeper_id": "9504",
-      "name": "Kayshon Boutte",
-      "position": "WR",
-      "team": "HOU",
-      "age": 24.4,
-      "bye_week": 8,
-      "is_rookie": false,
-      "points_3yr": 318,
-      "points_1yr": 97,
+      "points_1yr": 67,
       "adp": null
     },
     {
       "rank": 191,
       "positional_rank": 95,
-      "player_id": 13552,
-      "sleeper_id": "9502",
-      "name": "Nathaniel Dell",
+      "player_id": 13582,
+      "sleeper_id": "9504",
+      "name": "Kayshon Boutte",
       "position": "WR",
       "team": "HOU",
-      "age": 27,
+      "age": 24.5,
       "bye_week": 8,
       "is_rookie": false,
       "points_3yr": 318,
-      "points_1yr": 49,
+      "points_1yr": 95,
       "adp": null
     },
     {
@@ -2931,7 +2931,7 @@
       "bye_week": 8,
       "is_rookie": true,
       "points_3yr": 317,
-      "points_1yr": 34,
+      "points_1yr": 32,
       "adp": null
     },
     {
@@ -2942,11 +2942,11 @@
       "name": "Emmett Johnson",
       "position": "RB",
       "team": "KC",
-      "age": 23,
+      "age": 23.1,
       "bye_week": 5,
       "is_rookie": true,
       "points_3yr": 316,
-      "points_1yr": 87,
+      "points_1yr": 91,
       "adp": null
     },
     {
@@ -2961,7 +2961,7 @@
       "bye_week": 9,
       "is_rookie": false,
       "points_3yr": 315,
-      "points_1yr": 261,
+      "points_1yr": 260,
       "adp": null
     },
     {
@@ -2976,7 +2976,7 @@
       "bye_week": 7,
       "is_rookie": true,
       "points_3yr": 314,
-      "points_1yr": 56,
+      "points_1yr": 55,
       "adp": null
     },
     {
@@ -3002,7 +3002,7 @@
       "name": "Demario Douglas",
       "position": "WR",
       "team": "NE",
-      "age": 25.8,
+      "age": 25.9,
       "bye_week": 11,
       "is_rookie": false,
       "points_3yr": 313,
@@ -3021,7 +3021,7 @@
       "bye_week": 8,
       "is_rookie": false,
       "points_3yr": 312,
-      "points_1yr": 180,
+      "points_1yr": 179,
       "adp": null
     },
     {
@@ -3047,7 +3047,7 @@
       "name": "Jalen McMillan",
       "position": "WR",
       "team": "TB",
-      "age": 24.8,
+      "age": 24.9,
       "bye_week": 10,
       "is_rookie": false,
       "points_3yr": 308,
@@ -3066,7 +3066,7 @@
       "bye_week": 7,
       "is_rookie": true,
       "points_3yr": 308,
-      "points_1yr": 23,
+      "points_1yr": 21,
       "adp": null
     },
     {
@@ -3081,7 +3081,7 @@
       "bye_week": 13,
       "is_rookie": true,
       "points_3yr": 307,
-      "points_1yr": 26,
+      "points_1yr": 25,
       "adp": null
     },
     {
@@ -3111,7 +3111,7 @@
       "bye_week": 11,
       "is_rookie": false,
       "points_3yr": 306,
-      "points_1yr": 201,
+      "points_1yr": 163,
       "adp": null
     },
     {
@@ -3126,7 +3126,7 @@
       "bye_week": 13,
       "is_rookie": false,
       "points_3yr": 306,
-      "points_1yr": 50,
+      "points_1yr": 52,
       "adp": null
     },
     {
@@ -3141,7 +3141,7 @@
       "bye_week": 11,
       "is_rookie": false,
       "points_3yr": 305,
-      "points_1yr": 80,
+      "points_1yr": 76,
       "adp": null
     },
     {
@@ -3171,7 +3171,7 @@
       "bye_week": 13,
       "is_rookie": false,
       "points_3yr": 302,
-      "points_1yr": 90,
+      "points_1yr": 89,
       "adp": null
     },
     {
@@ -3201,7 +3201,7 @@
       "bye_week": 7,
       "is_rookie": false,
       "points_3yr": 298,
-      "points_1yr": 199,
+      "points_1yr": 201,
       "adp": null
     },
     {
@@ -3246,7 +3246,7 @@
       "bye_week": 10,
       "is_rookie": true,
       "points_3yr": 291,
-      "points_1yr": 125,
+      "points_1yr": 126,
       "adp": null
     },
     {
@@ -3261,7 +3261,7 @@
       "bye_week": 7,
       "is_rookie": true,
       "points_3yr": 290,
-      "points_1yr": 30,
+      "points_1yr": 27,
       "adp": null
     },
     {
@@ -3276,7 +3276,7 @@
       "bye_week": 10,
       "is_rookie": false,
       "points_3yr": 290,
-      "points_1yr": 113,
+      "points_1yr": 112,
       "adp": null
     },
     {
@@ -3291,7 +3291,7 @@
       "bye_week": 5,
       "is_rookie": false,
       "points_3yr": 289,
-      "points_1yr": 56,
+      "points_1yr": 55,
       "adp": null
     },
     {
@@ -3317,7 +3317,7 @@
       "name": "Shedeur Sanders",
       "position": "QB",
       "team": "CLE",
-      "age": 24.7,
+      "age": 24.8,
       "bye_week": 11,
       "is_rookie": false,
       "points_3yr": 287,
@@ -3336,7 +3336,7 @@
       "bye_week": 6,
       "is_rookie": false,
       "points_3yr": 285,
-      "points_1yr": 117,
+      "points_1yr": 114,
       "adp": null
     },
     {
@@ -3347,11 +3347,11 @@
       "name": "Kevin Coleman Jr.",
       "position": "WR",
       "team": "MIA",
-      "age": 23.1,
+      "age": 23.2,
       "bye_week": 6,
       "is_rookie": true,
       "points_3yr": 285,
-      "points_1yr": 43,
+      "points_1yr": 42,
       "adp": null
     },
     {
@@ -3366,7 +3366,7 @@
       "bye_week": 9,
       "is_rookie": false,
       "points_3yr": 284,
-      "points_1yr": 29,
+      "points_1yr": 42,
       "adp": null
     },
     {
@@ -3396,7 +3396,7 @@
       "bye_week": 8,
       "is_rookie": true,
       "points_3yr": 282,
-      "points_1yr": 37,
+      "points_1yr": 36,
       "adp": null
     },
     {
@@ -3411,7 +3411,7 @@
       "bye_week": 8,
       "is_rookie": false,
       "points_3yr": 282,
-      "points_1yr": 49,
+      "points_1yr": 48,
       "adp": null
     },
     {
@@ -3426,7 +3426,7 @@
       "bye_week": 6,
       "is_rookie": false,
       "points_3yr": 281,
-      "points_1yr": 83,
+      "points_1yr": 74,
       "adp": null
     },
     {
@@ -3456,7 +3456,7 @@
       "bye_week": 7,
       "is_rookie": false,
       "points_3yr": 279,
-      "points_1yr": 95,
+      "points_1yr": 107,
       "adp": null
     },
     {
@@ -3471,7 +3471,7 @@
       "bye_week": 8,
       "is_rookie": false,
       "points_3yr": 279,
-      "points_1yr": 31,
+      "points_1yr": 80,
       "adp": null
     },
     {
@@ -3501,7 +3501,7 @@
       "bye_week": 13,
       "is_rookie": true,
       "points_3yr": 278,
-      "points_1yr": 108,
+      "points_1yr": 104,
       "adp": null
     },
     {
@@ -3516,7 +3516,7 @@
       "bye_week": 11,
       "is_rookie": true,
       "points_3yr": 278,
-      "points_1yr": 6,
+      "points_1yr": 7,
       "adp": null
     },
     {
@@ -3531,7 +3531,7 @@
       "bye_week": 11,
       "is_rookie": false,
       "points_3yr": 278,
-      "points_1yr": 83,
+      "points_1yr": 100,
       "adp": null
     },
     {
@@ -3541,12 +3541,12 @@
       "sleeper_id": "1479",
       "name": "Keenan Allen",
       "position": "WR",
-      "team": "IND",
+      "team": "SF",
       "age": 34.5,
-      "bye_week": 13,
+      "bye_week": 8,
       "is_rookie": false,
       "points_3yr": 277,
-      "points_1yr": 127,
+      "points_1yr": 115,
       "adp": null
     },
     {
@@ -3561,7 +3561,7 @@
       "bye_week": 9,
       "is_rookie": false,
       "points_3yr": 274,
-      "points_1yr": 109,
+      "points_1yr": 111,
       "adp": null
     },
     {
@@ -3591,7 +3591,7 @@
       "bye_week": 5,
       "is_rookie": false,
       "points_3yr": 272,
-      "points_1yr": 44,
+      "points_1yr": 40,
       "adp": null
     },
     {
@@ -3606,7 +3606,7 @@
       "bye_week": 8,
       "is_rookie": false,
       "points_3yr": 271,
-      "points_1yr": 73,
+      "points_1yr": 74,
       "adp": null
     },
     {
@@ -3621,7 +3621,7 @@
       "bye_week": 13,
       "is_rookie": false,
       "points_3yr": 269,
-      "points_1yr": 150,
+      "points_1yr": 143,
       "adp": null
     },
     {
@@ -3636,7 +3636,7 @@
       "bye_week": 11,
       "is_rookie": false,
       "points_3yr": 269,
-      "points_1yr": 54,
+      "points_1yr": 35,
       "adp": null
     },
     {
@@ -3651,7 +3651,7 @@
       "bye_week": 8,
       "is_rookie": false,
       "points_3yr": 267,
-      "points_1yr": 154,
+      "points_1yr": 157,
       "adp": null
     },
     {
@@ -3666,7 +3666,7 @@
       "bye_week": 9,
       "is_rookie": false,
       "points_3yr": 266,
-      "points_1yr": 163,
+      "points_1yr": 165,
       "adp": null
     },
     {
@@ -3681,7 +3681,7 @@
       "bye_week": 6,
       "is_rookie": false,
       "points_3yr": 264,
-      "points_1yr": 148,
+      "points_1yr": 150,
       "adp": null
     },
     {
@@ -3696,7 +3696,7 @@
       "bye_week": 7,
       "is_rookie": false,
       "points_3yr": 264,
-      "points_1yr": 61,
+      "points_1yr": 48,
       "adp": null
     },
     {
@@ -3741,7 +3741,7 @@
       "bye_week": 9,
       "is_rookie": false,
       "points_3yr": 261,
-      "points_1yr": 72,
+      "points_1yr": 71,
       "adp": null
     },
     {
@@ -3786,7 +3786,7 @@
       "bye_week": 7,
       "is_rookie": false,
       "points_3yr": 258,
-      "points_1yr": 67,
+      "points_1yr": 68,
       "adp": null
     },
     {
@@ -3801,7 +3801,7 @@
       "bye_week": 13,
       "is_rookie": true,
       "points_3yr": 257,
-      "points_1yr": 104,
+      "points_1yr": 10,
       "adp": null
     },
     {
@@ -3812,11 +3812,11 @@
       "name": "Mason Taylor",
       "position": "TE",
       "team": "NYJ",
-      "age": 22.4,
+      "age": 22.5,
       "bye_week": 13,
       "is_rookie": false,
       "points_3yr": 255,
-      "points_1yr": 101,
+      "points_1yr": 100,
       "adp": null
     },
     {
@@ -3846,7 +3846,7 @@
       "bye_week": 7,
       "is_rookie": true,
       "points_3yr": 255,
-      "points_1yr": 44,
+      "points_1yr": 45,
       "adp": null
     },
     {
@@ -3861,7 +3861,7 @@
       "bye_week": 13,
       "is_rookie": true,
       "points_3yr": 252,
-      "points_1yr": 17,
+      "points_1yr": 21,
       "adp": null
     },
     {
@@ -3891,7 +3891,7 @@
       "bye_week": 10,
       "is_rookie": false,
       "points_3yr": 249,
-      "points_1yr": 45,
+      "points_1yr": 59,
       "adp": null
     },
     {
@@ -3906,7 +3906,7 @@
       "bye_week": 11,
       "is_rookie": false,
       "points_3yr": 247,
-      "points_1yr": 85,
+      "points_1yr": 67,
       "adp": null
     },
     {
@@ -3921,7 +3921,7 @@
       "bye_week": 6,
       "is_rookie": true,
       "points_3yr": 247,
-      "points_1yr": 26,
+      "points_1yr": 25,
       "adp": null
     },
     {
@@ -3936,7 +3936,7 @@
       "bye_week": 11,
       "is_rookie": true,
       "points_3yr": 245,
-      "points_1yr": 9,
+      "points_1yr": 27,
       "adp": null
     },
     {
@@ -3947,11 +3947,11 @@
       "name": "Charlie Kolar",
       "position": "TE",
       "team": "LAC",
-      "age": 27.7,
+      "age": 27.8,
       "bye_week": 7,
       "is_rookie": false,
       "points_3yr": 245,
-      "points_1yr": 53,
+      "points_1yr": 58,
       "adp": null
     },
     {
@@ -3981,7 +3981,7 @@
       "bye_week": 9,
       "is_rookie": false,
       "points_3yr": 243,
-      "points_1yr": 100,
+      "points_1yr": 94,
       "adp": null
     },
     {
@@ -3996,7 +3996,7 @@
       "bye_week": 6,
       "is_rookie": false,
       "points_3yr": 243,
-      "points_1yr": 152,
+      "points_1yr": 151,
       "adp": null
     },
     {
@@ -4011,7 +4011,7 @@
       "bye_week": 11,
       "is_rookie": false,
       "points_3yr": 243,
-      "points_1yr": 52,
+      "points_1yr": 53,
       "adp": null
     },
     {
@@ -4026,7 +4026,7 @@
       "bye_week": 11,
       "is_rookie": false,
       "points_3yr": 240,
-      "points_1yr": 52,
+      "points_1yr": 88,
       "adp": null
     },
     {
@@ -4041,7 +4041,7 @@
       "bye_week": 6,
       "is_rookie": false,
       "points_3yr": 239,
-      "points_1yr": 47,
+      "points_1yr": 43,
       "adp": null
     },
     {
@@ -4071,7 +4071,7 @@
       "bye_week": 9,
       "is_rookie": true,
       "points_3yr": 236,
-      "points_1yr": 24,
+      "points_1yr": 22,
       "adp": null
     },
     {
@@ -4086,7 +4086,7 @@
       "bye_week": 9,
       "is_rookie": false,
       "points_3yr": 236,
-      "points_1yr": 84,
+      "points_1yr": 86,
       "adp": null
     },
     {
@@ -4101,7 +4101,7 @@
       "bye_week": 11,
       "is_rookie": false,
       "points_3yr": 235,
-      "points_1yr": 94,
+      "points_1yr": 87,
       "adp": null
     },
     {
@@ -4112,7 +4112,7 @@
       "name": "Matthew Hibner",
       "position": "TE",
       "team": "BAL",
-      "age": 24.6,
+      "age": 24.7,
       "bye_week": 13,
       "is_rookie": true,
       "points_3yr": 235,
@@ -4142,7 +4142,7 @@
       "name": "Tyquan Thornton",
       "position": "WR",
       "team": "KC",
-      "age": 26.2,
+      "age": 26.3,
       "bye_week": 5,
       "is_rookie": false,
       "points_3yr": 233,
@@ -4191,7 +4191,7 @@
       "bye_week": 5,
       "is_rookie": false,
       "points_3yr": 229,
-      "points_1yr": 118,
+      "points_1yr": 123,
       "adp": null
     },
     {
@@ -4206,7 +4206,7 @@
       "bye_week": 7,
       "is_rookie": true,
       "points_3yr": 229,
-      "points_1yr": 18,
+      "points_1yr": 16,
       "adp": null
     },
     {
@@ -4221,7 +4221,7 @@
       "bye_week": 7,
       "is_rookie": false,
       "points_3yr": 227,
-      "points_1yr": 98,
+      "points_1yr": 99,
       "adp": null
     },
     {
@@ -4232,7 +4232,7 @@
       "name": "Cole Kmet",
       "position": "TE",
       "team": "CHI",
-      "age": 27.6,
+      "age": 27.7,
       "bye_week": 10,
       "is_rookie": false,
       "points_3yr": 227,
@@ -4251,7 +4251,7 @@
       "bye_week": 13,
       "is_rookie": false,
       "points_3yr": 225,
-      "points_1yr": 14,
+      "points_1yr": 13,
       "adp": null
     },
     {
@@ -4266,7 +4266,7 @@
       "bye_week": 5,
       "is_rookie": false,
       "points_3yr": 225,
-      "points_1yr": 11,
+      "points_1yr": 10,
       "adp": null
     },
     {
@@ -4281,7 +4281,7 @@
       "bye_week": 7,
       "is_rookie": false,
       "points_3yr": 224,
-      "points_1yr": 124,
+      "points_1yr": 126,
       "adp": null
     },
     {
@@ -4296,7 +4296,7 @@
       "bye_week": 7,
       "is_rookie": false,
       "points_3yr": 220,
-      "points_1yr": 101,
+      "points_1yr": 98,
       "adp": null
     },
     {
@@ -4326,7 +4326,7 @@
       "bye_week": 7,
       "is_rookie": false,
       "points_3yr": 217,
-      "points_1yr": 111,
+      "points_1yr": 110,
       "adp": null
     },
     {
@@ -4341,7 +4341,7 @@
       "bye_week": 8,
       "is_rookie": false,
       "points_3yr": 217,
-      "points_1yr": 64,
+      "points_1yr": 63,
       "adp": null
     },
     {
@@ -4356,7 +4356,7 @@
       "bye_week": 14,
       "is_rookie": false,
       "points_3yr": 215,
-      "points_1yr": 140,
+      "points_1yr": 143,
       "adp": null
     },
     {
@@ -4367,11 +4367,11 @@
       "name": "Arian Smith",
       "position": "WR",
       "team": "NYJ",
-      "age": 25,
+      "age": 25.1,
       "bye_week": 13,
       "is_rookie": false,
       "points_3yr": 214,
-      "points_1yr": 12,
+      "points_1yr": 11,
       "adp": null
     },
     {
@@ -4386,7 +4386,7 @@
       "bye_week": 13,
       "is_rookie": true,
       "points_3yr": 211,
-      "points_1yr": 34,
+      "points_1yr": 35,
       "adp": null
     },
     {
@@ -4401,12 +4401,27 @@
       "bye_week": 8,
       "is_rookie": false,
       "points_3yr": 210,
-      "points_1yr": 99,
+      "points_1yr": 102,
       "adp": null
     },
     {
       "rank": 291,
       "positional_rank": 135,
+      "player_id": 13556,
+      "sleeper_id": "10218",
+      "name": "Xavier Hutchinson",
+      "position": "WR",
+      "team": "HOU",
+      "age": 26.4,
+      "bye_week": 8,
+      "is_rookie": false,
+      "points_3yr": 209,
+      "points_1yr": 69,
+      "adp": null
+    },
+    {
+      "rank": 292,
+      "positional_rank": 136,
       "player_id": 36036,
       "sleeper_id": "13316",
       "name": "Eric Rivers",
@@ -4417,21 +4432,6 @@
       "is_rookie": true,
       "points_3yr": 209,
       "points_1yr": 0,
-      "adp": null
-    },
-    {
-      "rank": 292,
-      "positional_rank": 136,
-      "player_id": 13556,
-      "sleeper_id": "10218",
-      "name": "Xavier Hutchinson",
-      "position": "WR",
-      "team": "HOU",
-      "age": 26.4,
-      "bye_week": 8,
-      "is_rookie": false,
-      "points_3yr": 209,
-      "points_1yr": 51,
       "adp": null
     },
     {
@@ -4461,7 +4461,7 @@
       "bye_week": 14,
       "is_rookie": true,
       "points_3yr": 203,
-      "points_1yr": 35,
+      "points_1yr": 67,
       "adp": null
     },
     {
@@ -4517,11 +4517,11 @@
       "name": "Kaden Wetjen",
       "position": "WR",
       "team": "PIT",
-      "age": 24.6,
+      "age": 24.7,
       "bye_week": 9,
       "is_rookie": true,
       "points_3yr": 198,
-      "points_1yr": 10,
+      "points_1yr": 9,
       "adp": null
     },
     {
@@ -4547,11 +4547,11 @@
       "name": "David Montgomery",
       "position": "RB",
       "team": "HOU",
-      "age": 29.3,
+      "age": 29.4,
       "bye_week": 8,
       "is_rookie": false,
       "points_3yr": 196,
-      "points_1yr": 142,
+      "points_1yr": 132,
       "adp": null
     },
     {
@@ -4581,7 +4581,7 @@
       "bye_week": 14,
       "is_rookie": false,
       "points_3yr": 196,
-      "points_1yr": 36,
+      "points_1yr": 35,
       "adp": null
     },
     {
@@ -4592,7 +4592,7 @@
       "name": "Kalif Raymond",
       "position": "WR",
       "team": "CHI",
-      "age": 32.2,
+      "age": 32.3,
       "bye_week": 10,
       "is_rookie": false,
       "points_3yr": 196,
@@ -4611,7 +4611,7 @@
       "bye_week": 13,
       "is_rookie": true,
       "points_3yr": 194,
-      "points_1yr": 53,
+      "points_1yr": 77,
       "adp": null
     },
     {
@@ -4626,7 +4626,7 @@
       "bye_week": 11,
       "is_rookie": false,
       "points_3yr": 188,
-      "points_1yr": 74,
+      "points_1yr": 75,
       "adp": null
     },
     {
@@ -4637,11 +4637,11 @@
       "name": "Demond Claiborne",
       "position": "RB",
       "team": "MIN",
-      "age": 23,
+      "age": 23.1,
       "bye_week": 6,
       "is_rookie": true,
       "points_3yr": 188,
-      "points_1yr": 32,
+      "points_1yr": 30,
       "adp": null
     },
     {
@@ -4656,7 +4656,7 @@
       "bye_week": 13,
       "is_rookie": true,
       "points_3yr": 188,
-      "points_1yr": 18,
+      "points_1yr": 15,
       "adp": null
     },
     {
@@ -4671,7 +4671,7 @@
       "bye_week": 13,
       "is_rookie": false,
       "points_3yr": 188,
-      "points_1yr": 38,
+      "points_1yr": 37,
       "adp": null
     },
     {
@@ -4681,12 +4681,12 @@
       "sleeper_id": "9757",
       "name": "Kendre Miller",
       "position": "RB",
-      "team": "NO",
-      "age": 24.3,
-      "bye_week": 8,
+      "team": "DAL",
+      "age": 24.4,
+      "bye_week": 14,
       "is_rookie": false,
       "points_3yr": 185,
-      "points_1yr": 81,
+      "points_1yr": 33,
       "adp": null
     },
     {
@@ -4697,11 +4697,11 @@
       "name": "Ray Davis",
       "position": "RB",
       "team": "BUF",
-      "age": 26.9,
+      "age": 27,
       "bye_week": 7,
       "is_rookie": false,
       "points_3yr": 184,
-      "points_1yr": 38,
+      "points_1yr": 37,
       "adp": null
     },
     {
@@ -4716,7 +4716,7 @@
       "bye_week": 5,
       "is_rookie": false,
       "points_3yr": 184,
-      "points_1yr": 46,
+      "points_1yr": 47,
       "adp": null
     },
     {
@@ -4746,7 +4746,7 @@
       "bye_week": 11,
       "is_rookie": false,
       "points_3yr": 182,
-      "points_1yr": 66,
+      "points_1yr": 61,
       "adp": null
     },
     {
@@ -4776,7 +4776,7 @@
       "bye_week": 8,
       "is_rookie": false,
       "points_3yr": 180,
-      "points_1yr": 33,
+      "points_1yr": 34,
       "adp": null
     },
     {
@@ -4791,7 +4791,7 @@
       "bye_week": 11,
       "is_rookie": true,
       "points_3yr": 178,
-      "points_1yr": 12,
+      "points_1yr": 11,
       "adp": null
     },
     {
@@ -4821,7 +4821,7 @@
       "bye_week": 8,
       "is_rookie": false,
       "points_3yr": 177,
-      "points_1yr": 51,
+      "points_1yr": 58,
       "adp": null
     },
     {
@@ -4851,7 +4851,7 @@
       "bye_week": 13,
       "is_rookie": false,
       "points_3yr": 172,
-      "points_1yr": 80,
+      "points_1yr": 85,
       "adp": null
     },
     {
@@ -4877,11 +4877,11 @@
       "name": "Tutu Atwell",
       "position": "WR",
       "team": "LAR",
-      "age": 27,
+      "age": 27.1,
       "bye_week": 11,
       "is_rookie": false,
       "points_3yr": 171,
-      "points_1yr": 34,
+      "points_1yr": 54,
       "adp": null
     },
     {
@@ -4911,7 +4911,7 @@
       "bye_week": 11,
       "is_rookie": false,
       "points_3yr": 170,
-      "points_1yr": 16,
+      "points_1yr": 14,
       "adp": null
     },
     {
@@ -4941,7 +4941,7 @@
       "bye_week": 6,
       "is_rookie": false,
       "points_3yr": 168,
-      "points_1yr": 11,
+      "points_1yr": 10,
       "adp": null
     },
     {
@@ -4956,7 +4956,7 @@
       "bye_week": 6,
       "is_rookie": false,
       "points_3yr": 167,
-      "points_1yr": 67,
+      "points_1yr": 51,
       "adp": null
     },
     {
@@ -4967,7 +4967,7 @@
       "name": "Emanuel Wilson",
       "position": "RB",
       "team": "SEA",
-      "age": 27.4,
+      "age": 27.5,
       "bye_week": 11,
       "is_rookie": false,
       "points_3yr": 166,
@@ -4976,6 +4976,21 @@
     },
     {
       "rank": 329,
+      "positional_rank": 46,
+      "player_id": 35539,
+      "sleeper_id": "12494",
+      "name": "Kyle McCord",
+      "position": "QB",
+      "team": "MIA",
+      "age": 24.1,
+      "bye_week": 6,
+      "is_rookie": false,
+      "points_3yr": 166,
+      "points_1yr": 38,
+      "adp": null
+    },
+    {
+      "rank": 330,
       "positional_rank": 64,
       "player_id": 35976,
       "sleeper_id": "13282",
@@ -4986,11 +5001,11 @@
       "bye_week": 6,
       "is_rookie": true,
       "points_3yr": 165,
-      "points_1yr": 14,
+      "points_1yr": 15,
       "adp": null
     },
     {
-      "rank": 330,
+      "rank": 331,
       "positional_rank": 65,
       "player_id": 36014,
       "sleeper_id": "13400",
@@ -5001,11 +5016,11 @@
       "bye_week": 6,
       "is_rookie": true,
       "points_3yr": 163,
-      "points_1yr": 18,
+      "points_1yr": 15,
       "adp": null
     },
     {
-      "rank": 331,
+      "rank": 332,
       "positional_rank": 66,
       "player_id": 36066,
       "sleeper_id": "13308",
@@ -5016,18 +5031,18 @@
       "bye_week": 10,
       "is_rookie": true,
       "points_3yr": 163,
-      "points_1yr": 8,
+      "points_1yr": 7,
       "adp": null
     },
     {
-      "rank": 332,
+      "rank": 333,
       "positional_rank": 67,
       "player_id": 36063,
       "sleeper_id": "13422",
       "name": "Jaren Kanak",
       "position": "TE",
       "team": "TEN",
-      "age": 22.7,
+      "age": 22.8,
       "bye_week": 9,
       "is_rookie": true,
       "points_3yr": 163,
@@ -5035,7 +5050,7 @@
       "adp": null
     },
     {
-      "rank": 333,
+      "rank": 334,
       "positional_rank": 72,
       "player_id": 35329,
       "sleeper_id": "12467",
@@ -5046,11 +5061,11 @@
       "bye_week": 8,
       "is_rookie": false,
       "points_3yr": 162,
-      "points_1yr": 16,
+      "points_1yr": 15,
       "adp": null
     },
     {
-      "rank": 334,
+      "rank": 335,
       "positional_rank": 73,
       "player_id": 34995,
       "sleeper_id": "11577",
@@ -5065,7 +5080,7 @@
       "adp": null
     },
     {
-      "rank": 335,
+      "rank": 336,
       "positional_rank": 150,
       "player_id": 36122,
       "sleeper_id": "13554",
@@ -5076,11 +5091,11 @@
       "bye_week": 7,
       "is_rookie": true,
       "points_3yr": 161,
-      "points_1yr": 7,
+      "points_1yr": 6,
       "adp": null
     },
     {
-      "rank": 336,
+      "rank": 337,
       "positional_rank": 151,
       "player_id": 35037,
       "sleeper_id": "11650",
@@ -5091,11 +5106,11 @@
       "bye_week": 7,
       "is_rookie": false,
       "points_3yr": 160,
-      "points_1yr": 31,
+      "points_1yr": 28,
       "adp": null
     },
     {
-      "rank": 337,
+      "rank": 338,
       "positional_rank": 68,
       "player_id": 35012,
       "sleeper_id": "11596",
@@ -5106,11 +5121,11 @@
       "bye_week": 7,
       "is_rookie": false,
       "points_3yr": 159,
-      "points_1yr": 38,
+      "points_1yr": 36,
       "adp": null
     },
     {
-      "rank": 338,
+      "rank": 339,
       "positional_rank": 69,
       "player_id": 10798,
       "sleeper_id": "7694",
@@ -5121,11 +5136,11 @@
       "bye_week": 5,
       "is_rookie": false,
       "points_3yr": 157,
-      "points_1yr": 71,
+      "points_1yr": 73,
       "adp": null
     },
     {
-      "rank": 339,
+      "rank": 340,
       "positional_rank": 70,
       "player_id": 36040,
       "sleeper_id": null,
@@ -5136,11 +5151,11 @@
       "bye_week": 9,
       "is_rookie": true,
       "points_3yr": 156,
-      "points_1yr": 15,
+      "points_1yr": 13,
       "adp": null
     },
     {
-      "rank": 340,
+      "rank": 341,
       "positional_rank": 74,
       "player_id": 35319,
       "sleeper_id": "12504",
@@ -5151,27 +5166,12 @@
       "bye_week": 11,
       "is_rookie": false,
       "points_3yr": 155,
-      "points_1yr": 29,
-      "adp": null
-    },
-    {
-      "rank": 341,
-      "positional_rank": 75,
-      "player_id": 35514,
-      "sleeper_id": "12544",
-      "name": "LeQuint Allen",
-      "position": "RB",
-      "team": "JAC",
-      "age": 22.3,
-      "bye_week": 7,
-      "is_rookie": false,
-      "points_3yr": 154,
-      "points_1yr": 43,
+      "points_1yr": 58,
       "adp": null
     },
     {
       "rank": 342,
-      "positional_rank": 76,
+      "positional_rank": 75,
       "player_id": 35553,
       "sleeper_id": "12491",
       "name": "Corey Kiner",
@@ -5181,11 +5181,26 @@
       "bye_week": 11,
       "is_rookie": false,
       "points_3yr": 154,
-      "points_1yr": 27,
+      "points_1yr": 45,
       "adp": null
     },
     {
       "rank": 343,
+      "positional_rank": 76,
+      "player_id": 35514,
+      "sleeper_id": "12544",
+      "name": "LeQuint Allen",
+      "position": "RB",
+      "team": "JAC",
+      "age": 22.3,
+      "bye_week": 7,
+      "is_rookie": false,
+      "points_3yr": 154,
+      "points_1yr": 42,
+      "adp": null
+    },
+    {
+      "rank": 344,
       "positional_rank": 152,
       "player_id": 12602,
       "sleeper_id": "8147",
@@ -5196,11 +5211,11 @@
       "bye_week": 5,
       "is_rookie": false,
       "points_3yr": 153,
-      "points_1yr": 40,
+      "points_1yr": 53,
       "adp": null
     },
     {
-      "rank": 344,
+      "rank": 345,
       "positional_rank": 77,
       "player_id": 7778,
       "sleeper_id": "4137",
@@ -5211,11 +5226,11 @@
       "bye_week": 14,
       "is_rookie": false,
       "points_3yr": 151,
-      "points_1yr": 10,
+      "points_1yr": 7,
       "adp": null
     },
     {
-      "rank": 345,
+      "rank": 346,
       "positional_rank": 78,
       "player_id": 35005,
       "sleeper_id": "11571",
@@ -5226,11 +5241,11 @@
       "bye_week": 13,
       "is_rookie": false,
       "points_3yr": 150,
-      "points_1yr": 47,
+      "points_1yr": 44,
       "adp": null
     },
     {
-      "rank": 346,
+      "rank": 347,
       "positional_rank": 153,
       "player_id": 36046,
       "sleeper_id": "13600",
@@ -5245,7 +5260,7 @@
       "adp": null
     },
     {
-      "rank": 347,
+      "rank": 348,
       "positional_rank": 79,
       "player_id": 13579,
       "sleeper_id": "10235",
@@ -5260,7 +5275,7 @@
       "adp": null
     },
     {
-      "rank": 348,
+      "rank": 349,
       "positional_rank": 154,
       "player_id": 36068,
       "sleeper_id": "13412",
@@ -5275,7 +5290,7 @@
       "adp": null
     },
     {
-      "rank": 349,
+      "rank": 350,
       "positional_rank": 80,
       "player_id": 35182,
       "sleeper_id": "11729",
@@ -5286,11 +5301,11 @@
       "bye_week": 6,
       "is_rookie": false,
       "points_3yr": 144,
-      "points_1yr": 54,
+      "points_1yr": 64,
       "adp": null
     },
     {
-      "rank": 350,
+      "rank": 351,
       "positional_rank": 71,
       "player_id": 35367,
       "sleeper_id": "12658",
@@ -5301,11 +5316,11 @@
       "bye_week": 7,
       "is_rookie": false,
       "points_3yr": 144,
-      "points_1yr": 26,
+      "points_1yr": 25,
       "adp": null
     },
     {
-      "rank": 351,
+      "rank": 352,
       "positional_rank": 81,
       "player_id": 10216,
       "sleeper_id": "6130",
@@ -5316,11 +5331,11 @@
       "bye_week": 8,
       "is_rookie": false,
       "points_3yr": 143,
-      "points_1yr": 63,
+      "points_1yr": 62,
       "adp": null
     },
     {
-      "rank": 352,
+      "rank": 353,
       "positional_rank": 72,
       "player_id": 10061,
       "sleeper_id": "5133",
@@ -5331,11 +5346,11 @@
       "bye_week": 6,
       "is_rookie": false,
       "points_3yr": 142,
-      "points_1yr": 1,
+      "points_1yr": 3,
       "adp": null
     },
     {
-      "rank": 353,
+      "rank": 354,
       "positional_rank": 155,
       "player_id": 36033,
       "sleeper_id": "13392",
@@ -5350,7 +5365,7 @@
       "adp": null
     },
     {
-      "rank": 354,
+      "rank": 355,
       "positional_rank": 82,
       "player_id": 12735,
       "sleeper_id": "8205",
@@ -5365,7 +5380,7 @@
       "adp": null
     },
     {
-      "rank": 355,
+      "rank": 356,
       "positional_rank": 83,
       "player_id": 35331,
       "sleeper_id": "11569",
@@ -5376,11 +5391,11 @@
       "bye_week": 8,
       "is_rookie": false,
       "points_3yr": 139,
-      "points_1yr": 11,
+      "points_1yr": 10,
       "adp": null
     },
     {
-      "rank": 356,
+      "rank": 357,
       "positional_rank": 84,
       "player_id": 36038,
       "sleeper_id": "13423",
@@ -5391,18 +5406,18 @@
       "bye_week": 9,
       "is_rookie": true,
       "points_3yr": 136,
-      "points_1yr": 19,
+      "points_1yr": 17,
       "adp": null
     },
     {
-      "rank": 357,
+      "rank": 358,
       "positional_rank": 85,
       "player_id": 35332,
       "sleeper_id": "12472",
       "name": "Raheim Sanders",
       "position": "RB",
       "team": "CLE",
-      "age": 24.3,
+      "age": 24.4,
       "bye_week": 11,
       "is_rookie": false,
       "points_3yr": 136,
@@ -5410,7 +5425,7 @@
       "adp": null
     },
     {
-      "rank": 358,
+      "rank": 359,
       "positional_rank": 156,
       "player_id": 10609,
       "sleeper_id": "6853",
@@ -5421,11 +5436,11 @@
       "bye_week": 7,
       "is_rookie": false,
       "points_3yr": 135,
-      "points_1yr": 3,
+      "points_1yr": 6,
       "adp": null
     },
     {
-      "rank": 359,
+      "rank": 360,
       "positional_rank": 157,
       "player_id": 35341,
       "sleeper_id": "12520",
@@ -5440,7 +5455,7 @@
       "adp": null
     },
     {
-      "rank": 360,
+      "rank": 361,
       "positional_rank": 86,
       "player_id": 35525,
       "sleeper_id": "12531",
@@ -5455,7 +5470,7 @@
       "adp": null
     },
     {
-      "rank": 361,
+      "rank": 362,
       "positional_rank": 73,
       "player_id": 36043,
       "sleeper_id": "13429",
@@ -5466,11 +5481,11 @@
       "bye_week": 6,
       "is_rookie": true,
       "points_3yr": 131,
-      "points_1yr": 9,
+      "points_1yr": 8,
       "adp": null
     },
     {
-      "rank": 362,
+      "rank": 363,
       "positional_rank": 158,
       "player_id": 35534,
       "sleeper_id": "12523",
@@ -5485,7 +5500,7 @@
       "adp": null
     },
     {
-      "rank": 363,
+      "rank": 364,
       "positional_rank": 87,
       "player_id": 35930,
       "sleeper_id": "13405",
@@ -5496,11 +5511,11 @@
       "bye_week": 6,
       "is_rookie": true,
       "points_3yr": 128,
-      "points_1yr": 10,
+      "points_1yr": 12,
       "adp": null
     },
     {
-      "rank": 364,
+      "rank": 365,
       "positional_rank": 159,
       "player_id": 36010,
       "sleeper_id": "13325",
@@ -5515,7 +5530,7 @@
       "adp": null
     },
     {
-      "rank": 365,
+      "rank": 366,
       "positional_rank": 74,
       "player_id": 13671,
       "sleeper_id": "10214",
@@ -5526,11 +5541,11 @@
       "bye_week": 11,
       "is_rookie": false,
       "points_3yr": 122,
-      "points_1yr": 39,
+      "points_1yr": 49,
       "adp": null
     },
     {
-      "rank": 366,
+      "rank": 367,
       "positional_rank": 160,
       "player_id": 36059,
       "sleeper_id": "13859",
@@ -5545,8 +5560,23 @@
       "adp": null
     },
     {
-      "rank": 367,
+      "rank": 368,
       "positional_rank": 75,
+      "player_id": 35363,
+      "sleeper_id": "12817",
+      "name": "Jake Briningstool",
+      "position": "TE",
+      "team": "KC",
+      "age": 23.9,
+      "bye_week": 5,
+      "is_rookie": false,
+      "points_3yr": 120,
+      "points_1yr": 7,
+      "adp": null
+    },
+    {
+      "rank": 369,
+      "positional_rank": 76,
       "player_id": 10309,
       "sleeper_id": "5985",
       "name": "Foster Moreau",
@@ -5555,27 +5585,12 @@
       "age": 29.5,
       "bye_week": 8,
       "is_rookie": false,
-      "points_3yr": 121,
+      "points_3yr": 120,
       "points_1yr": 48,
       "adp": null
     },
     {
-      "rank": 368,
-      "positional_rank": 76,
-      "player_id": 35363,
-      "sleeper_id": "12817",
-      "name": "Jake Briningstool",
-      "position": "TE",
-      "team": "KC",
-      "age": 23.8,
-      "bye_week": 5,
-      "is_rookie": false,
-      "points_3yr": 120,
-      "points_1yr": 8,
-      "adp": null
-    },
-    {
-      "rank": 369,
+      "rank": 370,
       "positional_rank": 161,
       "player_id": 35972,
       "sleeper_id": "13354",
@@ -5590,22 +5605,22 @@
       "adp": null
     },
     {
-      "rank": 370,
+      "rank": 371,
       "positional_rank": 88,
       "player_id": 35522,
       "sleeper_id": "12455",
       "name": "Brashard Smith",
       "position": "RB",
       "team": "KC",
-      "age": 23.5,
+      "age": 23.6,
       "bye_week": 5,
       "is_rookie": false,
       "points_3yr": 115,
-      "points_1yr": 32,
+      "points_1yr": 29,
       "adp": null
     },
     {
-      "rank": 371,
+      "rank": 372,
       "positional_rank": 77,
       "player_id": 35008,
       "sleeper_id": "11599",
@@ -5616,18 +5631,18 @@
       "bye_week": 8,
       "is_rookie": false,
       "points_3yr": 113,
-      "points_1yr": 30,
+      "points_1yr": 26,
       "adp": null
     },
     {
-      "rank": 372,
+      "rank": 373,
       "positional_rank": 78,
       "player_id": 35983,
       "sleeper_id": "13355",
       "name": "DJ Rogers",
       "position": "TE",
       "team": "DAL",
-      "age": 24.9,
+      "age": 25,
       "bye_week": 14,
       "is_rookie": true,
       "points_3yr": 112,
@@ -5635,22 +5650,22 @@
       "adp": null
     },
     {
-      "rank": 373,
+      "rank": 374,
       "positional_rank": 79,
       "player_id": 12701,
       "sleeper_id": "8145",
       "name": "Jeremy Ruckert",
       "position": "TE",
       "team": "NYJ",
-      "age": 26.2,
+      "age": 26.3,
       "bye_week": 13,
       "is_rookie": false,
       "points_3yr": 106,
-      "points_1yr": 23,
+      "points_1yr": 22,
       "adp": null
     },
     {
-      "rank": 374,
+      "rank": 375,
       "positional_rank": 80,
       "player_id": 35575,
       "sleeper_id": "12984",
@@ -5665,7 +5680,7 @@
       "adp": null
     },
     {
-      "rank": 375,
+      "rank": 376,
       "positional_rank": 81,
       "player_id": 13672,
       "sleeper_id": "10871",
@@ -5680,7 +5695,7 @@
       "adp": null
     },
     {
-      "rank": 376,
+      "rank": 377,
       "positional_rank": 89,
       "player_id": 35121,
       "sleeper_id": "11570",
@@ -5691,12 +5706,12 @@
       "bye_week": 13,
       "is_rookie": false,
       "points_3yr": 97,
-      "points_1yr": 15,
+      "points_1yr": 14,
       "adp": null
     },
     {
-      "rank": 377,
-      "positional_rank": 46,
+      "rank": 378,
+      "positional_rank": 47,
       "player_id": 35316,
       "sleeper_id": "12470",
       "name": "Riley Leonard",
@@ -5707,21 +5722,6 @@
       "is_rookie": false,
       "points_3yr": 97,
       "points_1yr": 0,
-      "adp": null
-    },
-    {
-      "rank": 378,
-      "positional_rank": 90,
-      "player_id": 7756,
-      "sleeper_id": "4147",
-      "name": "Samaje Perine",
-      "position": "RB",
-      "team": "CIN",
-      "age": 31.1,
-      "bye_week": 6,
-      "is_rookie": false,
-      "points_3yr": 96,
-      "points_1yr": 96,
       "adp": null
     },
     {
@@ -5741,6 +5741,21 @@
     },
     {
       "rank": 380,
+      "positional_rank": 90,
+      "player_id": 7756,
+      "sleeper_id": "4147",
+      "name": "Samaje Perine",
+      "position": "RB",
+      "team": "CIN",
+      "age": 31.1,
+      "bye_week": 6,
+      "is_rookie": false,
+      "points_3yr": 94,
+      "points_1yr": 94,
+      "adp": null
+    },
+    {
+      "rank": 381,
       "positional_rank": 162,
       "player_id": 13549,
       "sleeper_id": "9497",
@@ -5755,14 +5770,14 @@
       "adp": null
     },
     {
-      "rank": 381,
+      "rank": 382,
       "positional_rank": 83,
       "player_id": 36013,
       "sleeper_id": "13342",
       "name": "John Michael Gyllenborg",
       "position": "TE",
       "team": "KC",
-      "age": 24.2,
+      "age": 24.3,
       "bye_week": 5,
       "is_rookie": true,
       "points_3yr": 91,
@@ -5770,14 +5785,14 @@
       "adp": null
     },
     {
-      "rank": 382,
+      "rank": 383,
       "positional_rank": 163,
       "player_id": 14138,
       "sleeper_id": "10234",
       "name": "Derius Davis",
       "position": "WR",
       "team": "LAC",
-      "age": 26.1,
+      "age": 26.2,
       "bye_week": 7,
       "is_rookie": false,
       "points_3yr": 89,
@@ -5785,7 +5800,7 @@
       "adp": null
     },
     {
-      "rank": 383,
+      "rank": 384,
       "positional_rank": 91,
       "player_id": 35528,
       "sleeper_id": "12471",
@@ -5796,11 +5811,11 @@
       "bye_week": 13,
       "is_rookie": false,
       "points_3yr": 88,
-      "points_1yr": 11,
+      "points_1yr": 9,
       "adp": null
     },
     {
-      "rank": 384,
+      "rank": 385,
       "positional_rank": 92,
       "player_id": 10342,
       "sleeper_id": "6039",
@@ -5815,7 +5830,7 @@
       "adp": null
     },
     {
-      "rank": 385,
+      "rank": 386,
       "positional_rank": 84,
       "player_id": 36065,
       "sleeper_id": "13430",
@@ -5830,22 +5845,22 @@
       "adp": null
     },
     {
-      "rank": 386,
+      "rank": 387,
       "positional_rank": 93,
       "player_id": 13148,
       "sleeper_id": "8207",
       "name": "Tyler Goodson",
       "position": "RB",
       "team": "DAL",
-      "age": 25.9,
+      "age": 26,
       "bye_week": 14,
       "is_rookie": false,
       "points_3yr": 81,
-      "points_1yr": 46,
+      "points_1yr": 44,
       "adp": null
     },
     {
-      "rank": 387,
+      "rank": 388,
       "positional_rank": 164,
       "player_id": 10312,
       "sleeper_id": "5955",
@@ -5860,7 +5875,7 @@
       "adp": null
     },
     {
-      "rank": 388,
+      "rank": 389,
       "positional_rank": 85,
       "player_id": 14308,
       "sleeper_id": "11371",
@@ -5875,14 +5890,14 @@
       "adp": null
     },
     {
-      "rank": 389,
+      "rank": 390,
       "positional_rank": 165,
       "player_id": 10629,
       "sleeper_id": "7066",
       "name": "K.J. Osborn",
       "position": "WR",
       "team": "UNS",
-      "age": 29.3,
+      "age": 29.4,
       "bye_week": null,
       "is_rookie": false,
       "points_3yr": 77,
@@ -5890,7 +5905,7 @@
       "adp": null
     },
     {
-      "rank": 390,
+      "rank": 391,
       "positional_rank": 94,
       "player_id": 35003,
       "sleeper_id": "11651",
@@ -5905,7 +5920,7 @@
       "adp": null
     },
     {
-      "rank": 391,
+      "rank": 392,
       "positional_rank": 86,
       "player_id": 35084,
       "sleeper_id": "11716",
@@ -5916,11 +5931,11 @@
       "bye_week": 14,
       "is_rookie": false,
       "points_3yr": 75,
-      "points_1yr": 9,
+      "points_1yr": 8,
       "adp": null
     },
     {
-      "rank": 392,
+      "rank": 393,
       "positional_rank": 87,
       "player_id": 10193,
       "sleeper_id": "4381",
@@ -5935,7 +5950,22 @@
       "adp": null
     },
     {
-      "rank": 393,
+      "rank": 394,
+      "positional_rank": 166,
+      "player_id": 35230,
+      "sleeper_id": "11168",
+      "name": "Xavier Smith",
+      "position": "WR",
+      "team": "LAR",
+      "age": 29.1,
+      "bye_week": 11,
+      "is_rookie": false,
+      "points_3yr": 65,
+      "points_1yr": 11,
+      "adp": null
+    },
+    {
+      "rank": 395,
       "positional_rank": 88,
       "player_id": 35135,
       "sleeper_id": "11820",
@@ -5950,8 +5980,8 @@
       "adp": null
     },
     {
-      "rank": 394,
-      "positional_rank": 166,
+      "rank": 396,
+      "positional_rank": 167,
       "player_id": 35123,
       "sleeper_id": "11748",
       "name": "Bub Means",
@@ -5965,22 +5995,22 @@
       "adp": null
     },
     {
-      "rank": 395,
+      "rank": 397,
       "positional_rank": 95,
       "player_id": 14427,
       "sleeper_id": "11199",
       "name": "Emari Demercado",
       "position": "RB",
-      "team": "DAL",
+      "team": "HOU",
       "age": 27.8,
-      "bye_week": 14,
+      "bye_week": 8,
       "is_rookie": false,
       "points_3yr": 58,
-      "points_1yr": 9,
+      "points_1yr": 12,
       "adp": null
     },
     {
-      "rank": 396,
+      "rank": 398,
       "positional_rank": 96,
       "player_id": 35942,
       "sleeper_id": "13438",
@@ -5995,7 +6025,7 @@
       "adp": null
     },
     {
-      "rank": 397,
+      "rank": 399,
       "positional_rank": 89,
       "player_id": 35047,
       "sleeper_id": "11592",
@@ -6010,14 +6040,14 @@
       "adp": null
     },
     {
-      "rank": 398,
-      "positional_rank": 167,
+      "rank": 400,
+      "positional_rank": 168,
       "player_id": 35536,
       "sleeper_id": "12732",
       "name": "Dominic Lovett",
       "position": "WR",
       "team": "UNS",
-      "age": 23.9,
+      "age": 24,
       "bye_week": null,
       "is_rookie": false,
       "points_3yr": 51,
@@ -6025,22 +6055,7 @@
       "adp": null
     },
     {
-      "rank": 399,
-      "positional_rank": 168,
-      "player_id": 35230,
-      "sleeper_id": "11168",
-      "name": "Xavier Smith",
-      "position": "WR",
-      "team": "UNS",
-      "age": 29.1,
-      "bye_week": null,
-      "is_rookie": false,
-      "points_3yr": 50,
-      "points_1yr": 8,
-      "adp": null
-    },
-    {
-      "rank": 400,
+      "rank": 401,
       "positional_rank": 169,
       "player_id": 35125,
       "sleeper_id": "11806",
@@ -6055,14 +6070,14 @@
       "adp": null
     },
     {
-      "rank": 401,
+      "rank": 402,
       "positional_rank": 170,
       "player_id": 35022,
       "sleeper_id": "11619",
       "name": "Ja'Lynn Polk",
       "position": "WR",
       "team": "UNS",
-      "age": 25.5,
+      "age": 25.6,
       "bye_week": null,
       "is_rookie": false,
       "points_3yr": 44,
@@ -6070,22 +6085,22 @@
       "adp": null
     },
     {
-      "rank": 402,
+      "rank": 403,
       "positional_rank": 97,
       "player_id": 35533,
       "sleeper_id": "12457",
       "name": "Jaydon Blue",
       "position": "RB",
-      "team": "PHI",
+      "team": "UNS",
       "age": 22.8,
-      "bye_week": 10,
+      "bye_week": null,
       "is_rookie": false,
       "points_3yr": 43,
       "points_1yr": 4,
       "adp": null
     },
     {
-      "rank": 403,
+      "rank": 404,
       "positional_rank": 171,
       "player_id": 36006,
       "sleeper_id": "13670",
@@ -6096,11 +6111,11 @@
       "bye_week": 14,
       "is_rookie": true,
       "points_3yr": 35,
-      "points_1yr": 1,
+      "points_1yr": 3,
       "adp": null
     },
     {
-      "rank": 404,
+      "rank": 405,
       "positional_rank": 172,
       "player_id": 36029,
       "sleeper_id": "13309",
@@ -6115,7 +6130,7 @@
       "adp": null
     },
     {
-      "rank": 405,
+      "rank": 406,
       "positional_rank": 173,
       "player_id": 35039,
       "sleeper_id": "11762",
@@ -6130,7 +6145,7 @@
       "adp": null
     },
     {
-      "rank": 406,
+      "rank": 407,
       "positional_rank": 174,
       "player_id": 36069,
       "sleeper_id": "13409",
@@ -6145,7 +6160,7 @@
       "adp": null
     },
     {
-      "rank": 407,
+      "rank": 408,
       "positional_rank": 98,
       "player_id": 36020,
       "sleeper_id": "13419",
@@ -6160,7 +6175,22 @@
       "adp": null
     },
     {
-      "rank": 408,
+      "rank": 409,
+      "positional_rank": 90,
+      "player_id": 12717,
+      "sleeper_id": "8227",
+      "name": "Teagan Quitoriano",
+      "position": "TE",
+      "team": "ARI",
+      "age": 26.6,
+      "bye_week": 14,
+      "is_rookie": false,
+      "points_3yr": 18,
+      "points_1yr": 11,
+      "adp": null
+    },
+    {
+      "rank": 410,
       "positional_rank": 99,
       "player_id": 36003,
       "sleeper_id": "13277",
@@ -6171,12 +6201,12 @@
       "bye_week": 8,
       "is_rookie": true,
       "points_3yr": 17,
-      "points_1yr": 13,
+      "points_1yr": 15,
       "adp": null
     },
     {
-      "rank": 409,
-      "positional_rank": 90,
+      "rank": 411,
+      "positional_rank": 91,
       "player_id": 35981,
       "sleeper_id": "13292",
       "name": "Lake McRee",
@@ -6190,7 +6220,7 @@
       "adp": null
     },
     {
-      "rank": 410,
+      "rank": 412,
       "positional_rank": 175,
       "player_id": 35968,
       "sleeper_id": "13318",
@@ -6205,29 +6235,14 @@
       "adp": null
     },
     {
-      "rank": 411,
-      "positional_rank": 91,
-      "player_id": 12717,
-      "sleeper_id": "8227",
-      "name": "Teagan Quitoriano",
-      "position": "TE",
-      "team": "ARI",
-      "age": 26.6,
-      "bye_week": 14,
-      "is_rookie": false,
-      "points_3yr": 15,
-      "points_1yr": 9,
-      "adp": null
-    },
-    {
-      "rank": 412,
+      "rank": 413,
       "positional_rank": 176,
       "player_id": 35526,
       "sleeper_id": "11056",
       "name": "Jared Wayne",
       "position": "WR",
       "team": "MIA",
-      "age": 26,
+      "age": 26.1,
       "bye_week": 6,
       "is_rookie": false,
       "points_3yr": 14,
@@ -6235,7 +6250,7 @@
       "adp": null
     },
     {
-      "rank": 413,
+      "rank": 414,
       "positional_rank": 177,
       "player_id": 36007,
       "sleeper_id": "13826",
@@ -6250,7 +6265,7 @@
       "adp": null
     },
     {
-      "rank": 414,
+      "rank": 415,
       "positional_rank": 92,
       "player_id": 36169,
       "sleeper_id": "11942",
@@ -6270,10 +6285,10 @@
     "fetched_at": "2026-10-21T14:39:03+00:00",
     "dump_player_count": 12229,
     "dump_offensive_count": 4161,
-    "matched": 413,
+    "matched": 414,
     "unmatched": 1,
     "matched_by": {
-      "name": 387,
+      "name": 388,
       "name_without_suffix": 19,
       "last_name_team": 7
     },
